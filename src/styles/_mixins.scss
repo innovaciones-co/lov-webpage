@@ -1,0 +1,60 @@
+@use 'sass:meta' as meta;
+@use 'sass:color' as color;
+
+
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-center-column {
+    @include flex-center;
+    flex-direction: column;
+}
+
+@mixin flex-center-vert {
+    display: flex;
+    align-items: center;
+}
+
+@mixin flex-center-horiz {
+    display: flex;
+    justify-content: center;
+}
+
+$tablet: 768px;
+$large: 1024px;
+$desktop: 1280px;
+
+@mixin tablet {
+    @media only screen and (min-width: $tablet) {
+        @content;
+    }
+}
+
+@mixin large {
+    @media only screen and (min-width: $large) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media only screen and (min-width: $desktop) {
+        @content;
+    }
+}
+
+
+/// Returns a color lightened by a percentage (works with any color format)
+/// @param {Color} $color - The base color
+/// @param {Number} $amount - Percentage to lighten (0–100)
+@function color-lighten($color, $amount) {
+
+    @return color.mix(white, $color, $amount * 1%);
+}

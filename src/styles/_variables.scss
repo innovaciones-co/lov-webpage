@@ -1,0 +1,19 @@
+// Color palette (OKLCH and fallback HEX)
+$color-primary: rgba(61, 61, 63, 1);
+$color-primary-light: white;
+$color-secondary: rgba(238, 108, 104, 1);
+$color-secondary-light: rgba(255, 179, 177, 1);
+$color-accent: oklch(69.02% 0.277 332.77);
+$color-danger: oklch(61.42% 0.238 15.34);
+$color-warning: oklch(63.32% 0.24 31.68);
+$color-success: oklch(47.66% 0.246 305.88);
+
+$gray-900: oklch(19.37% 0.006 300.98);
+$gray-700: oklch(36.98% 0.014 302.71);
+$gray-400: oklch(70.9% 0.015 304.04);
+
+$background: #fff;
+$text-color: #222;
+
+$font-family-base: 'Titillium Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+$font-family-tight: 'Inter Tight', $font-family-base;
