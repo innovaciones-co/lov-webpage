@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+
 // Color palette (OKLCH and fallback HEX)
 $color-primary: rgba(61, 61, 63, 1);
 $color-primary-light: white;
-$color-secondary: rgba(238, 108, 104, 1);
-$color-secondary-light: rgba(255, 179, 177, 1);
+$color-secondary: #e42320;
+$color-secondary-light: rgb(190, 62, 58);
 $color-accent: oklch(69.02% 0.277 332.77);
 $color-danger: oklch(61.42% 0.238 15.34);
 $color-warning: oklch(63.32% 0.24 31.68);

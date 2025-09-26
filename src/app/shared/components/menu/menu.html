@@ -1,42 +1,45 @@
 <nav class="header">
     <div class="nav-container">
-        <a href="#" class="logo">
-            <span class="logo-icon"></span>
-            ColorNav
-        </a>
-
-        <div class="menu-toggle" [class.active]="isActive" (click)="onClick()">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+        <div class="logo-container">
+            <a href="#" class="logo">
+                <img src="logo-lov.png" alt="Logo">
+            </a>
         </div>
 
-        <ul #navMenu [className]="isActive ? 'nav-menu active' : 'nav-menu'">
-            <li class="nav-item">
-                <a href="#" class="nav-link active" data-index="0">Home</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link" data-index="1">Services</a>
-                <div class="dropdown-menu">
-                    <a href="#" class="dropdown-item">Web Design</a>
-                    <a href="#" class="dropdown-item">Graphic Design</a>
-                    <a href="#" class="dropdown-item">SEO Optimization</a>
-                    <a href="#" class="dropdown-item">Content Creation</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" data-index="2">Portfolio</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link" data-index="3">About</a>
-                <div class="dropdown-menu">
-                    <a href="#" class="dropdown-item">Our Team</a>
-                    <a href="#" class="dropdown-item">Our Story</a>
-                    <a href="#" class="dropdown-item">Mission & Vision</a>
-                </div>
-            </li>
 
-            <div class="nav-indicator"></div>
-        </ul>
+        <div class="main-menu">
+            <ul #navMenu [className]="isActive ? 'nav-menu active' : 'nav-menu'">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-index="0">Home</a>
+                </li>
+                <li class="nav-item dropdown" (click)="toggleDropdown($event)">
+                    <a href="#" class="nav-link" data-index="1">Services</a>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">Web Design</a>
+                        <a href="#" class="dropdown-item">Graphic Design</a>
+                        <a href="#" class="dropdown-item">SEO Optimization</a>
+                        <a href="#" class="dropdown-item">Content Creation</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-index="2">Portfolio</a>
+                </li>
+                <li class="nav-item dropdown" (click)="toggleDropdown($event)">
+                    <a href="#" class="nav-link" data-index="3">About</a>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">Our Team</a>
+                        <a href="#" class="dropdown-item">Our Story</a>
+                        <a href="#" class="dropdown-item">Mission & Vision</a>
+                    </div>
+                </li>
+
+            </ul>
+
+            <div class="menu-toggle" [class.active]="isActive" (click)="onClick()">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
     </div>
 </nav>
