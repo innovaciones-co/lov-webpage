@@ -1,0 +1,13 @@
+@use '../styles/mixins' as *;
+
+.main {
+    padding-top: 62px;
+
+    @include tablet {
+        padding-top: 72px;
+    }
+
+    @include desktop {
+        padding-top: 82px;
+    }
+}

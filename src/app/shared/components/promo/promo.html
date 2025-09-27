@@ -1,0 +1,12 @@
+<aside class="promo" [ngClass]="direction() === 'right' ? 'reverse' : ''">
+    <div class="image-container">
+        <img [ngSrc]="image()" [alt]="title()" width="500" height="300" priority>
+    </div>
+    <div class="text">
+        @if (logo()) {
+        <img class="logo" [ngSrc]="logo()!" alt="Logo" width="100" height="50">
+        }
+        <h2>{{ title() }}</h2>
+        <p>{{ description() }}</p>
+    </div>
+</aside>
