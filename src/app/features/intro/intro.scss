@@ -1,0 +1,72 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 50vh;
+    justify-content: center;
+}
+
+
+
+.hearth {
+    height: 80px;
+    width: 100px;
+    position: relative;
+    animation: heartbeat 10s infinite;
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        height: 45px;
+        width: 22.5px;
+        border-radius: 25px 25px 0 0;
+        background-color: #e42320;
+        left: 40px;
+    }
+
+    &::before {
+        transform: rotate(-45deg);
+        transform-origin: 100% 100%;
+    }
+
+    &::after {
+        transform: rotate(45deg) translateY(22.5px);
+        transform-origin: 100% 100%;
+    }
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(.75);
+    }
+
+    20% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(.75);
+    }
+
+    60% {
+        transform: scale(1);
+    }
+
+    80% {
+        transform: scale(.75);
+    }
+
+    100% {
+        transform: scale(.75);
+    }
+}
