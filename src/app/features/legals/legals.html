@@ -1,0 +1,115 @@
+<div class="legals-container">
+    <div class="legals-content">
+        <div class="legals-grid">
+            <div class="left-column">
+                <div class="legals-header">
+                    <h1>Documentos Legales</h1>
+                    <p class="legals-subtitle">Consulta toda la información legal y regulatoria de LOV</p>
+                </div>
+
+                <div class="documents-section">
+                    <!-- Términos y Condiciones -->
+                    <div class="document-category">
+                        <h2 class="category-title">Términos y Condiciones</h2>
+                        <div class="document-list">
+                            @for (doc of getDocumentsByCategory('terms'); track doc.fileName) {
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h3 class="document-title">{{ doc.title }}</h3>
+                                    <p class="document-description">{{ doc.description }}</p>
+                                </div>
+                                <button class="download-btn" (click)="downloadDocument(doc.fileName)" type="button"
+                                    aria-label="Descargar {{ doc.title }}">
+                                    <span class="material-symbols-outlined">
+                                        download_2
+                                    </span>
+                                    <!-- <span class="download-icon"></span> -->
+                                    Descargar
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Privacidad y Datos -->
+                    <div class="document-category">
+                        <h2 class="category-title">Privacidad y Protección de Datos</h2>
+                        <div class="document-list">
+                            @for (doc of getDocumentsByCategory('privacy'); track doc.fileName) {
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h3 class="document-title">{{ doc.title }}</h3>
+                                    <p class="document-description">{{ doc.description }}</p>
+                                </div>
+                                <button class="download-btn" (click)="downloadDocument(doc.fileName)" type="button"
+                                    aria-label="Descargar {{ doc.title }}">
+                                    <span class="material-symbols-outlined">
+                                        download_2
+                                    </span>
+                                    Descargar
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Información Regulatoria -->
+                    <div class="document-category">
+                        <h2 class="category-title">Información Regulatoria</h2>
+                        <div class="document-list">
+                            @for (doc of getDocumentsByCategory('regulatory'); track doc.fileName) {
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h3 class="document-title">{{ doc.title }}</h3>
+                                    <p class="document-description">{{ doc.description }}</p>
+                                </div>
+                                <button class="download-btn" (click)="downloadDocument(doc.fileName)" type="button"
+                                    aria-label="Descargar {{ doc.title }}">
+                                    <span class="material-symbols-outlined">
+                                        download_2
+                                    </span>
+                                    Descargar
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Información al Usuario -->
+                    <div class="document-category">
+                        <h2 class="category-title">Información al Usuario</h2>
+                        <div class="document-list">
+                            @for (doc of getDocumentsByCategory('user-info'); track doc.fileName) {
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h3 class="document-title">{{ doc.title }}</h3>
+                                    <p class="document-description">{{ doc.description }}</p>
+                                </div>
+                                <button class="download-btn" (click)="downloadDocument(doc.fileName)" type="button"
+                                    aria-label="Descargar {{ doc.title }}">
+                                    <span class="material-symbols-outlined">
+                                        download_2
+                                    </span>
+                                    Descargar
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="legal-image-container">
+                    <img src="/promo.png" alt="LOV - Documentos Legales" class="legal-image" loading="lazy">
+                    <div class="image-overlay">
+                        <h3>¿Necesitas ayuda?</h3>
+                        <p>Contacta con nuestro equipo de soporte para resolver cualquier duda sobre nuestros documentos
+                            legales.</p>
+                        <a href="tel:*777" class="contact-btn">Llamar *777</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
