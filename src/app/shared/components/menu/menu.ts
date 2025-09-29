@@ -1,13 +1,18 @@
-import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.html',
   styleUrls: ['./menu.scss'],
   standalone: true,
+  imports: [RouterLink, RouterLinkActive],
 })
 export class Menu implements OnInit {
   isActive = false;
+  private activatedRoute = inject(ActivatedRoute);
+
+  constructor() { console.log(this.activatedRoute); }
 
   @ViewChild('navMenu', { static: true }) navMenuRef!: ElementRef<HTMLUListElement>;
 
@@ -46,7 +51,7 @@ export class Menu implements OnInit {
     if (window.innerWidth >= 768) {
       return;
     }
-    
+
     const target = event.target as HTMLElement;
     const dropdownMenu = target.parentElement;
 
