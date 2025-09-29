@@ -4,8 +4,22 @@
 .footer {
     background-color: #1a1a1a;
     color: #ffffff;
-    padding: 3rem 0 1rem 0;
+    padding: 1.5rem 0 1rem 0;
     margin-top: auto;
+
+    @include tablet {
+        padding: 2rem 0 1rem 0;
+    }
+
+    @include desktop {
+        padding: 3rem 0 1rem 0;
+    }
+
+    .heart {
+        animation: none;
+        transform: rotate(45deg) scale(0.8);
+        left: -12px;
+    }
 
     &-container {
         max-width: 1200px;
@@ -27,12 +41,9 @@
 
     &-column {
         .footer-title {
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            color: #ffffff;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 0.5rem;
             display: inline-block;
         }
 
@@ -42,7 +53,7 @@
             margin: 0;
 
             li {
-                margin-bottom: 0.75rem;
+                margin-bottom: 0.35rem;
 
                 a,
                 span {
