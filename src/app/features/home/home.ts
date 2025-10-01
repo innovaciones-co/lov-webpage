@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Promo } from "../../shared/components/promo/promo";
-import { Intro } from "../intro/intro";
+import { Faq } from "../faq/faq";
 import { IntroPortability } from "../intro-portability/intro-portability";
-import { Legals } from "../legals/legals";
+import { Intro } from "../intro/intro";
 
 @Component({
   selector: 'app-home',
-  imports: [Promo, Intro, IntroPortability, Legals],
+  imports: [Promo, Intro, IntroPortability, Faq],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })

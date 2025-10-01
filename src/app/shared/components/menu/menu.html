@@ -13,17 +13,18 @@
                     <a routerLink="/" class="nav-link" routerLinkActive="active"
                         [routerLinkActiveOptions]="{exact: true}" data-index="0">Home</a>
                 </li>
-                <li class="nav-item dropdown" (click)="toggleDropdown($event)">
-                    <a href="#" class="nav-link" data-index="1">Services</a>
+                <li class="nav-item dropdown" routerLinkActive="active" (click)="toggleDropdown($event)">
+                    <a class="nav-link" routerLinkActive="active" data-index="1">Información para el usuario</a>
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">Web Design</a>
-                        <a href="#" class="dropdown-item">Graphic Design</a>
-                        <a href="#" class="dropdown-item">SEO Optimization</a>
-                        <a href="#" class="dropdown-item">Content Creation</a>
+                        <a class="dropdown-item" routerLink="/preguntas-frecuentes" routerLinkActive="active">Preguntas
+                            Frecuentes</a>
+                        <a class="dropdown-item" routerLink="/legales" routerLinkActive="active">Información legal</a>
+                        <a class="dropdown-item" routerLink="/legales" routerLinkActive="active">SEO Optimization</a>
+                        <a class="dropdown-item" routerLink="/legales" routerLinkActive="active">Content Creation</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a routerLink="/legales" class="nav-link" routerLinkActive="active" data-index="2">Legal</a>
+                    <a routerLink="/legales" routerLinkActive="active" class="nav-link" data-index="2">Legal</a>
                 </li>
                 <li class="nav-item dropdown" (click)="toggleDropdown($event)">
                     <a href="#" class="nav-link" data-index="3">About</a>

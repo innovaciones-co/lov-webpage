@@ -12,8 +12,6 @@ export class Menu implements OnInit {
   isActive = false;
   private activatedRoute = inject(ActivatedRoute);
 
-  constructor() { console.log(this.activatedRoute); }
-
   @ViewChild('navMenu', { static: true }) navMenuRef!: ElementRef<HTMLUListElement>;
 
   ngOnInit() {

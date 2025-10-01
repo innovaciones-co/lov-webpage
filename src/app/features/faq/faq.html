@@ -1,0 +1,68 @@
+<div class="faq-container">
+    <div class="faq-content">
+        <!-- Header -->
+        <div class="faq-header">
+            <h1>Preguntas Frecuentes</h1>
+            <p class="faq-subtitle">Encuentra respuestas a las preguntas más comunes sobre LOV</p>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="category-filter">
+            <div class="category-tabs">
+                <button class="category-tab" [class.active]="selectedCategory === null" (click)="selectCategory(null)">
+                    <span class="tab-text">Todas</span>
+                    <span class="tab-count">{{ getCategoryCount(null) }}</span>
+                </button>
+                @for (category of categories; track category.id) {
+                <button class="category-tab" [class.active]="selectedCategory === category.id"
+                    (click)="selectCategory(category.id)">
+                    <span class="tab-text">{{ category.name }}</span>
+                    <span class="tab-count">{{ getCategoryCount(category.id) }}</span>
+                </button>
+                }
+            </div>
+        </div>
+
+        <!-- FAQ List -->
+        <div class="faq-list">
+            @if (isLoading && faqs.length === 0) {
+            <div class="loading-skeleton">
+                @for (item of [1,2,3]; track item) {
+                <div class="skeleton-item"></div>
+                }
+            </div>
+            } @else if (faqs.length === 0) {
+            <div class="no-results">
+                <div class="no-results-icon">❓</div>
+                <h3>No se encontraron preguntas</h3>
+                <p>No hay preguntas disponibles para la categoría seleccionada.</p>
+            </div>
+            } @else {
+            @for (faq of faqs; track faq.id) {
+            <div class="faq-item" [class.expanded]="expandedFaqId === faq.id">
+                <div class="faq-question" (click)="toggleFAQ(faq.id)">
+                    <div class="question-content">
+                        <span class="category-tag">{{ getCategoryName(faq.category) }}</span>
+                        <h3>{{ faq.question }}</h3>
+                    </div>
+                    <div class="expand-icon" [class.rotated]="expandedFaqId === faq.id">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="faq-answer" [class.show]="expandedFaqId === faq.id">
+                    <div class="answer-content" [innerHTML]="formatAnswer(faq.answer)"></div>
+                </div>
+            </div>
+            }
+            }
+        </div>
+
+
+
+
+    </div>
+</div>
