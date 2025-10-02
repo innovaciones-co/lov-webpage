@@ -141,6 +141,13 @@ $menu-background: white;
                     margin: 0 5px;
                 }
 
+                @include desktop {
+                    width: auto;
+                    max-width: none;
+                    margin: 0 8px;
+                    flex-shrink: 0;
+                }
+
                 .nav-link {
                     color: $color-primary;
                     text-decoration: none;
@@ -150,17 +157,51 @@ $menu-background: white;
                     border-radius: 50px;
                     padding: 10px 20px;
                     transition: all 0.3s ease, color 0.3s ease, background 0.3s ease;
+                    position: relative;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
 
-
-
-                    &:hover {
-                        background-image: linear-gradient(to right, $color-secondary 0%, color-lighten($color-secondary, 20) var(--hover-x, 51%), $color-secondary 100%);
-                        color: $color-primary-light;
+                    @include desktop {
+                        width: auto;
+                        display: inline-block;
+                        padding: 12px 24px;
+                        font-size: 16px;
+                        white-space: nowrap;
+                        min-width: fit-content;
                     }
 
+                    // Allow wrapping only if text is too long and space is limited
+                    @media (max-width: 1024px) {
+                        @include desktop {
+                            white-space: normal;
+                            word-break: break-word;
+                            hyphens: auto;
+                            line-height: 1.2;
+                        }
+                    }
+
+                    // Hover effects only for pointer devices (not touch)
+                    @media (pointer: fine) {
+                        &:hover {
+                            background-image: linear-gradient(to right, $color-secondary 0%, color-lighten($color-secondary, 20) var(--hover-x, 51%), $color-secondary 100%);
+                            color: $color-primary-light;
+                        }
+                    }
+
+                    // Active state that works on all devices
                     &.active {
-                        background-image: linear-gradient(to right, $color-secondary 0%, color-lighten($color-secondary, 20) var(--hover-x, 51%), $color-secondary 100%);
-                        color: $color-primary-light;
+                        background-image: linear-gradient(to right, $color-secondary 0%, color-lighten($color-secondary, 20) 50%, $color-secondary 100%);
+                        color: $color-primary-light !important;
+                        font-weight: 600;
+                    }
+
+                    // Touch device active state
+                    @media (pointer: coarse) {
+                        &.active {
+                            background-color: $color-secondary;
+                            color: $color-primary-light !important;
+                        }
                     }
                 }
 
@@ -234,18 +275,20 @@ $menu-background: white;
                         .dropdown-menu {
                             position: absolute;
                             top: 100%;
-                            left: 0;
+                            left: 50%;
+                            transform: translateX(-50%) translateY(20px);
                             background-color: #fff;
                             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
                             border-radius: 8px;
-                            min-width: 200px;
-                            width: 100%;
+                            min-width: 220px;
+                            width: auto;
+                            max-width: 300px;
                             padding: 10px 0;
                             opacity: 0;
                             visibility: hidden;
-                            transform: translateY(20px);
                             transition: all 0.5s ease;
                             z-index: 100;
+                            white-space: nowrap;
                         }
 
                         &:hover>.dropdown-menu {
@@ -253,7 +296,7 @@ $menu-background: white;
                             height: auto;
                             max-height: 500px;
                             opacity: 1;
-                            transform: translateY(5px);
+                            transform: translateX(-50%) translateY(5px);
                         }
                     }
                 }
@@ -268,6 +311,10 @@ $menu-background: white;
                 height: auto;
                 background: none;
                 overflow: visible;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: nowrap;
+                gap: 0;
             }
         }
     }
