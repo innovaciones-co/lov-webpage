@@ -1,0 +1,98 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.parent-container {
+  background-color: #fafafa;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 50vh;
+    justify-content: center;
+
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .sections-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+
+      @include tablet {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @include large {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .section {
+        display: flex;
+        flex-direction: column;
+
+        .heart {
+          animation: none;
+          transform: scale(0.55);
+          align-self: center;
+          bottom: -10px;
+
+          &::before,
+          &::after {
+            background-color: $color-extra-1;
+          }
+
+          @include tablet {
+            transform: scale(0.28);
+            align-self: baseline;
+            left: -40px;
+          }
+        }
+
+        .section-title {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 10px;
+          text-wrap: balance;
+          margin-bottom: 25px;
+
+          @include desktop {
+            margin-bottom: 0px;
+            min-height: 48px;
+          }
+        }
+
+        .section-text {
+          font-size: 16px;
+          color: #333;
+
+          @include desktop {
+            min-height: 100px;
+          }
+        }
+
+        .link {
+          font-size: 16px;
+          color: #0066cc;
+          text-decoration: none;
+          font-weight: bold;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

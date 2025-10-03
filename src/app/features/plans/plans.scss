@@ -1,0 +1,129 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.container {
+  padding: 4rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 50vh;
+  justify-content: center;
+
+  .cards-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+
+    @include large {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .card {
+      width: 80%;
+      max-width: 350px;
+      border-radius: 30px;
+      box-shadow: 0px 6px 16px 0px #0000001a;
+
+      @include large {
+        position: relative;
+
+        &:hover {
+          background-color: $color-extra-1;
+          border-radius: 30px 30px 0px 0px;
+
+          .card-body {
+            border: 1px solid $color-extra-1;
+            box-shadow: 0px 6px 16px 0px #0000001a;
+          }
+
+          .card-button {
+            transform: translateY(0);
+            overflow: hidden;
+          }
+        }
+      }
+
+      .card-body {
+        padding: 20px 25px 10px 25px;
+        border-radius: 30px 30px 0px 0px;
+        border: 1px solid transparent;
+        background-color: white;
+
+        @include large {
+          z-index: 2;
+          position: relative;
+          border-radius: 30px;
+        }
+
+        .card-title {
+        }
+
+        .card-price {
+          font-size: 30px;
+          font-weight: 600;
+          margin: 0 0 12px;
+        }
+
+        .divider {
+          border: none;
+          border-top: 2px solid #eee;
+          margin: 12px 0;
+        }
+
+        .card-features {
+          list-style: none;
+          padding: 0;
+          margin: 20px 0 20px;
+
+          li {
+            font-size: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .material-symbols-outlined {
+              font-size: 20px;
+            }
+          }
+        }
+      }
+
+      .card-button {
+        width: 100%;
+        padding: 16px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        background: $color-extra-1;
+        color: #fff;
+        border: none;
+        border-radius: 0px 0px 30px 30px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+
+        &:hover {
+          background: color-darken($color-extra-1);
+        }
+
+        @include large {
+          position: absolute;
+          z-index: 1;
+          transform: translateY(-100%);
+
+          &:hover {
+            background: $color-extra-1;
+          }
+        }
+
+        span {
+          font-size: 20px;
+          align-self: center;
+        }
+      }
+    }
+  }
+}
