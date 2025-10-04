@@ -1,0 +1,21 @@
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  &.invalid {
+    border-color: #e74c3c;
+  }
+}
+.error {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}

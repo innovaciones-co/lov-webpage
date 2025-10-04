@@ -1,0 +1,7 @@
+<label [attr.for]="id()">
+  <input type="checkbox" [id]="id()" [formControl]="control()" (blur)="onBlur()" />
+  {{ label() }}
+</label>
+@if (control().invalid && control().touched) {
+<div class="error">{{ error() }}</div>
+}
