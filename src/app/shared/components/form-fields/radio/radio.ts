@@ -10,7 +10,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'radio',
+  selector: 'radio-field',
   template: `
     <fieldset>
       <legend>{{ label() }}</legend>

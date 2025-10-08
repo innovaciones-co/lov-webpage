@@ -10,7 +10,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'select',
+  selector: 'select-field',
   template: `
     <label [attr.for]="id()">{{ label() }}</label>
     <select

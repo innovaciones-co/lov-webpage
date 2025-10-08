@@ -10,7 +10,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'checkbox',
+  selector: 'checkbox-field',
   template: `
     <label [attr.for]="id()">
       <input type="checkbox" [id]="id()" [formControl]="control()" (blur)="onBlur()" />

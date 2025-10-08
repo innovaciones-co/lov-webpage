@@ -10,7 +10,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'input-text',
+  selector: 'input-text-field',
   template: `
     <label [attr.for]="id()">{{ label() }}</label>
     <input

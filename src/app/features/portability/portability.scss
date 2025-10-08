@@ -1,0 +1,37 @@
+.form-container {
+  width: 40vw;
+  min-width: 320px;
+  max-width: 480px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: 2px 0 16px #0001;
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+button[type='submit'] {
+  align-self: flex-start;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #0057b8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+}
