@@ -101,21 +101,26 @@ select {
 
 // Buttons
 .btn {
-    background: $color-primary;
-    color: #fff;
+    background: $color-extra-1;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    cursor: pointer;
 
-    &:hover,
-    &:focus {
-        background: $color-secondary;
+    &:hover {
+        background: color-darken($color-extra-1)
     }
 
     &:active {
-        background: $color-accent;
+        background: color-lighten($color-extra-1)
     }
 
     &:disabled {
-        background: $gray-400;
-        color: $gray-700;
+        background: $gray-200;
+        color: white;
         cursor: not-allowed;
     }
 }

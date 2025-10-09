@@ -1,38 +1,20 @@
 <div class="form-container">
   <form [formGroup]="form()">
-    <input-text-field
-      [label]="'Nombre completo'"
-      [placeholder]="'Ingresa tu nombre'"
-      [control]="form().controls.name"
-      [error]="'Este campo es obligatorio'"
-    ></input-text-field>
+    <input-text-field [label]="'Nombre completo'" [placeholder]="'Ingresa tu nombre'" [control]="form().controls.name"
+      [error]="'Este campo es obligatorio'"></input-text-field>
 
-    <select-field
-      [label]="'Tipo de documento'"
-      [options]="documentOptions()"
-      [control]="form().controls.documentType"
-      [error]="'Selecciona un tipo de documento'"
-    ></select-field>
+    <select-field [label]="'Tipo de documento'" [options]="documentOptions()" [control]="form().controls.documentType"
+      [error]="'Selecciona un tipo de documento'"></select-field>
 
-    <radio-field
-      [label]="'Género'"
-      [options]="genderOptions()"
-      [control]="form().controls.gender"
-      [error]="'Selecciona tu género'"
-    ></radio-field>
+    <radio-field [label]="'Género'" [options]="genderOptions()" [control]="form().controls.gender"
+      [error]="'Selecciona tu género'"></radio-field>
 
-    <checkbox-field
-      [label]="'Acepto los términos y condiciones'"
-      [control]="form().controls.terms"
-      [error]="'Debes aceptar los términos'"
-    ></checkbox-field>
+    <checkbox-field [label]="'Acepto los términos y condiciones'" [control]="form().controls.terms"
+      [error]="'Debes aceptar los términos'"></checkbox-field>
 
-    <date-picker-field
-      [label]="'Fecha de nacimiento'"
-      [control]="form().controls.birthdate"
-      [error]="'Selecciona una fecha válida'"
-    ></date-picker-field>
+    <date-picker-field [label]="'Fecha de nacimiento'" [control]="form().controls.birthdate"
+      [error]="'Selecciona una fecha válida'"></date-picker-field>
 
-    <button type="submit" [disabled]="form().invalid">Enviar</button>
+    <button class="btn" type="submit" [disabled]="form().invalid">Enviar</button>
   </form>
 </div>

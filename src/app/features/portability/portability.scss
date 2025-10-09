@@ -18,20 +18,3 @@ form {
   flex-direction: column;
   gap: 1.5rem;
 }
-
-button[type='submit'] {
-  align-self: flex-start;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  background: #0057b8;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-  &:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
-}
