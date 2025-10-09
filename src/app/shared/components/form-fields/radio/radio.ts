@@ -11,25 +11,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'radio-field',
-  template: `
-    <fieldset>
-      <legend>{{ label() }}</legend>
-      @for (option of options(); track option.value) {
-      <input
-        type="radio"
-        [id]="id() + '-' + option.value"
-        [formControl]="control()"
-        [value]="option.value"
-        [attr.name]="id()"
-        (blur)="onBlur()"
-      />
-      <label [attr.for]="id() + '-' + option.value">{{ option.label }}</label>
-      }
-    </fieldset>
-    @if (control().invalid && control().touched) {
-    <div class="error">{{ error() }}</div>
-    }
-  `,
+  templateUrl: 'radio.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./radio.scss'],
   imports: [CommonModule, ReactiveFormsModule],

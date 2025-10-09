@@ -11,21 +11,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'input-text-field',
-  template: `
-    <label [attr.for]="id()">{{ label() }}</label>
-    <input
-      [id]="id()"
-      type="text"
-      [formControl]="control()"
-      [placeholder]="placeholder()"
-      [attr.aria-label]="label()"
-      (blur)="onBlur()"
-      [class.invalid]="control().invalid && control().touched"
-    />
-    @if (control().invalid && control().touched) {
-    <div class="error">{{ error() }}</div>
-    }
-  `,
+  templateUrl: 'input-text.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./input-text.scss'],
   imports: [CommonModule, ReactiveFormsModule],

@@ -11,23 +11,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'select-field',
-  template: `
-    <label [attr.for]="id()">{{ label() }}</label>
-    <select
-      [id]="id()"
-      [formControl]="control()"
-      [attr.aria-label]="label()"
-      (blur)="onBlur()"
-      [class.invalid]="control().invalid && control().touched"
-    >
-      @for (option of options(); track option.value) {
-      <option [value]="option.value">{{ option.label }}</option>
-      }
-    </select>
-    @if (control().invalid && control().touched) {
-    <div class="error">{{ error() }}</div>
-    }
-  `,
+  templateUrl: './select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./select.scss'],
   imports: [CommonModule, ReactiveFormsModule],

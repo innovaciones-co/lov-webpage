@@ -11,20 +11,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'date-picker-field',
-  template: `
-    <label [attr.for]="id()">{{ label() }}</label>
-    <input
-      [id]="id()"
-      type="date"
-      [formControl]="control()"
-      [attr.aria-label]="label()"
-      (blur)="onBlur()"
-      [class.invalid]="control().invalid && control().touched"
-    />
-    @if (control().invalid && control().touched) {
-    <div class="error">{{ error() }}</div>
-    }
-  `,
+  templateUrl: './date-picker.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./date-picker.scss'],
   imports: [CommonModule, ReactiveFormsModule],

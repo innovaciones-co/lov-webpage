@@ -1,20 +1,38 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
 fieldset {
   border: none;
   margin: 0;
   padding: 0;
+
+  legend {
+    margin-left: 6px;
+  }
+
+  .radio-option {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+
+    input[type='radio'] {
+      accent-color: $color-extra-1;
+      margin-right: 10px;
+      align-self: center;
+      width: auto;
+      cursor: pointer;
+    }
+
+    label {
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+  }
 }
-legend {
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-input[type='radio'] {
-  margin-right: 0.5rem;
-}
-label {
-  margin-right: 1rem;
-}
+
 .error {
-  color: #e74c3c;
-  font-size: 0.9rem;
-  margin-top: 0.25rem;
+  color: $color-warning;
+  font-size: 13px;
+  margin-left: 6px;
+  height: 20px;
 }

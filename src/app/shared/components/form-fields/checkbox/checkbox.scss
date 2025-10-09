@@ -1,14 +1,26 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
 label {
   display: flex;
-  align-items: center;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  flex-direction: row;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    accent-color: $color-extra-1;
+    margin: 0 10px;
+    align-self: center;
+    width: auto;
+  }
+
+  span {
+    margin-left: 15px;
+  }
 }
-input[type='checkbox'] {
-  margin-right: 0.5rem;
-}
+
 .error {
-  color: #e74c3c;
-  font-size: 0.9rem;
-  margin-top: 0.25rem;
+  color: $color-warning;
+  font-size: 13px;
+  margin-left: 6px;
+  height: 20px;
 }

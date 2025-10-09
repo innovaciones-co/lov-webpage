@@ -1,21 +1,35 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
 label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin-left: 6px;
+
 }
+
 input[type='date'] {
   width: 100%;
-  padding: 0.5rem;
-  border-radius: 4px;
+  margin: 5px 0;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 1rem;
   transition: border-color 0.2s;
+  cursor: pointer;
+
+  &:focus {
+    border-color: $color-extra-1;
+  }
+
   &.invalid {
-    border-color: #e74c3c;
+    border-color: $color-warning;
+  }
+
+  &::placeholder {
+    color: $gray-400;
   }
 }
+
 .error {
-  color: #e74c3c;
-  font-size: 0.9rem;
-  margin-top: 0.25rem;
+  color: $color-warning;
+  font-size: 13px;
+  margin-left: 6px;
+  height: 20px;
 }

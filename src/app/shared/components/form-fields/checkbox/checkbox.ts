@@ -11,15 +11,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'checkbox-field',
-  template: `
-    <label [attr.for]="id()">
-      <input type="checkbox" [id]="id()" [formControl]="control()" (blur)="onBlur()" />
-      {{ label() }}
-    </label>
-    @if (control().invalid && control().touched) {
-    <div class="error">{{ error() }}</div>
-    }
-  `,
+  templateUrl: './checkbox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./checkbox.scss'],
   imports: [CommonModule, ReactiveFormsModule],
