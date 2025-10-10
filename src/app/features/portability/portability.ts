@@ -6,6 +6,7 @@ import { SelectComponent } from '../../shared/components/form-fields/select/sele
 import { RadioComponent } from '../../shared/components/form-fields/radio/radio';
 import { CheckboxComponent } from '../../shared/components/form-fields/checkbox/checkbox';
 import { DatePickerComponent } from '../../shared/components/form-fields/date-picker/date-picker';
+import { NavigationTabsComponent } from "../../shared/components/navigation-tabs/navigation-tabs";
 
 @Component({
   selector: 'app-portability',
@@ -20,6 +21,7 @@ import { DatePickerComponent } from '../../shared/components/form-fields/date-pi
     RadioComponent,
     CheckboxComponent,
     DatePickerComponent,
+    NavigationTabsComponent
   ],
 })
 export class Portability {
@@ -32,6 +34,31 @@ export class Portability {
       birthdate: new FormControl('', Validators.required),
     })
   );
+
+  tabs = [
+    {
+      id: 'input_name',
+      title: 'Input',
+      component: InputTextComponent,
+      inputs: {
+        label: 'Nombre completo',
+        placeholder: 'Ingresa tu nombre',
+        control: this.form().controls.name,
+        error: 'Este campo es obligatorio'
+      }
+    },
+    {
+      id: 'input_surname',
+      title: 'Input',
+      component: InputTextComponent,
+      inputs: {
+        label: 'Apellido completo',
+        placeholder: 'Ingresa tu apellido',
+        control: this.form().controls.name,
+        error: 'Este campo es obligatorio'
+      }
+    },
+  ];
 
   documentOptions = signal([
     { label: 'DNI', value: 'dni' },

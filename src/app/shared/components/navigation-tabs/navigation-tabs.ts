@@ -1,10 +1,11 @@
-import { Component, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, output, signal, ChangeDetectionStrategy, Type } from '@angular/core';
+import { CommonModule, NgComponentOutlet } from '@angular/common';
 
 export interface Tab {
   id: string;
   title: string;
-  content: string;
+  component: Type<unknown>;
+  inputs?: Record<string, unknown>;
   closable?: boolean;
 }
 
@@ -13,7 +14,7 @@ export interface Tab {
   templateUrl: './navigation-tabs.html',
   styleUrl: './navigation-tabs.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [CommonModule, NgComponentOutlet],
 })
 export class NavigationTabsComponent {
   tabs = input<Tab[]>([]);

@@ -1,4 +1,5 @@
 <div class="form-container">
+  <app-navigation-tabs [tabs]="tabs"></app-navigation-tabs>
   <form [formGroup]="form()">
     <input-text-field [label]="'Nombre completo'" [placeholder]="'Ingresa tu nombre'" [control]="form().controls.name"
       [error]="'Este campo es obligatorio'"></input-text-field>
