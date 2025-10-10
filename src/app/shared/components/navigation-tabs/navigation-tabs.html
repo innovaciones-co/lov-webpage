@@ -1,0 +1,15 @@
+<div class="tab-header" role="tablist">
+    @for (tab of tabs(); track tab.id) {
+    <button role="tab" class="tablink" [class.active]="isActive(tab)" (click)="selectTab(tab.id)">
+        {{ tab.title }}
+    </button>
+    }
+</div>
+
+<div class="tab-content">
+    @for (tab of tabs(); track tab.id) {
+    <div class="tab-pane" role="tabpanel" [style.display]="isActive(tab) ? 'block' : 'none'">
+        {{ tab.content }}
+    </div>
+    }
+</div>
