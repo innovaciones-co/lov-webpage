@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { Faq } from './features/faq/faq';
 import { Home } from './features/home/home';
 import { Legals } from './features/legals/legals';
 import { Portability } from './features/portability/portability';
@@ -13,7 +14,7 @@ export const routes: Routes = [
     component: Legals,
   },
   {
-    path: 'portabilidad',
-    component: Portability,
-  },
+    path: 'preguntas-frecuentes',
+    component: Faq
+  }
 ];
