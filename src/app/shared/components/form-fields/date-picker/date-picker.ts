@@ -20,6 +20,7 @@ export class DatePickerComponent {
   id = signal<string>('date-' + Math.random().toString(36).substring(2));
   label = input<string>('');
   error = input<string>('');
+  placeholder = input<string>('');
   control = input<FormControl>(new FormControl(''));
   valueChange = output<string>();
 

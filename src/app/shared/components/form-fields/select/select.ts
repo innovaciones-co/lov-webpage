@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 export class SelectComponent {
   id = signal<string>('select-' + Math.random().toString(36).substring(2));
   label = input<string>('');
+  placeholder = input<string>('');
   error = input<string>('');
   options = input<{ label: string; value: string }[]>([]);
   control = input<FormControl>(new FormControl(''));
