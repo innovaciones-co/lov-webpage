@@ -16,5 +16,9 @@ export const routes: Routes = [
   {
     path: 'preguntas-frecuentes',
     component: Faq
+  },
+  {
+    path: 'portabilidad',
+    component: Portability
   }
 ];
