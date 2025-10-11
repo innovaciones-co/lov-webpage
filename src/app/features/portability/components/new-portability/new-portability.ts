@@ -2,7 +2,6 @@ import { Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
-import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
 import { CheckboxComponent } from '../../../../shared/components/form-fields/checkbox/checkbox';
 import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
 
@@ -15,31 +14,39 @@ import { DatePickerComponent } from '../../../../shared/components/form-fields/d
     ReactiveFormsModule,
     InputTextComponent,
     SelectComponent,
-    RadioComponent,
     CheckboxComponent,
     DatePickerComponent,
   ]
 })
 export class NewPortabilityComponent {
-  form = signal(
+  form_1 = signal(
     new FormGroup({
-      name: new FormControl('', Validators.required),
-      documentType: new FormControl('', Validators.required),
-      gender: new FormControl('', Validators.required),
-      terms: new FormControl(false, Validators.requiredTrue),
-      birthdate: new FormControl('', Validators.required),
+      donorNumber: new FormControl('', Validators.required),
+      donorPlan: new FormControl('', Validators.required),
+      lovNumber: new FormControl('', Validators.required),
+      iccidDigits: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{5}$')]),
     })
   );
 
-  documentOptions = signal([
-    { label: 'DNI', value: 'dni' },
-    { label: 'Pasaporte', value: 'passport' },
-    { label: 'Cédula', value: 'cedula' },
+  form_2 = signal(
+    new FormGroup({
+      nip: new FormControl(false, Validators.required),
+    })
+  );
+
+  form_3 = signal(
+    new FormGroup({
+      documentIssueDate: new FormControl('', Validators.required),
+      documentID: new FormControl('', Validators.required),
+      address: new FormControl('', Validators.required),
+      portinDate: new FormControl('', Validators.required),
+      terms: new FormControl(false, Validators.requiredTrue),
+    })
+  );
+
+  planOptions = signal([
+    { label: 'Pospago', value: 'pospay' },
+    { label: 'Prepago', value: 'pospaid' },
   ]);
 
-  genderOptions = signal([
-    { label: 'Femenino', value: 'female' },
-    { label: 'Masculino', value: 'male' },
-    { label: 'Otro', value: 'other' },
-  ]);
 }

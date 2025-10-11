@@ -25,8 +25,8 @@ export class Portability {
       component: NewPortabilityComponent,
     },
     {
-      id: 'input',
-      title: 'Input',
+      id: 'portability-state ',
+      title: 'Estado de la portabilidad',
       component: PortabilityStatusComponent,
       inputs: {}
     },
