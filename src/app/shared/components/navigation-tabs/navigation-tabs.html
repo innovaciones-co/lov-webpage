@@ -1,15 +1,17 @@
-<div class="tab-header" role="tablist">
-  @for (tab of tabs(); track tab.id) {
-    <button role="tab" class="tablink" [class.active]="isActive(tab)" (click)="selectTab(tab.id)">
-      {{ tab.title }}
-    </button>
-  }
-</div>
+<div class="navigations-tabs-container">
+    <div class="tab-header" role="tablist">
+        @for (tab of tabs(); track tab.id) {
+        <button role="tab" class="tablink" [class.active]="isActive(tab)" (click)="selectTab(tab.id)">
+            {{ tab.title }}
+        </button>
+        }
+    </div>
 
-<div class="tab-content">
-  @for (tab of tabs(); track tab.id) {
-    @if (isActive(tab)) {
-      <ng-container *ngComponentOutlet="tab.component; inputs: tab.inputs"></ng-container>
-    }
-  }
+    <div class="tab-content">
+        @for (tab of tabs(); track tab.id) {
+        @if (isActive(tab)) {
+        <ng-container *ngComponentOutlet="tab.component; inputs: tab.inputs"></ng-container>
+        }
+        }
+    </div>
 </div>
