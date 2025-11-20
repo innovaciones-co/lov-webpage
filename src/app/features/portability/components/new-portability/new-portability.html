@@ -1,44 +1,45 @@
-<form [formGroup]="form_1()">
-    <input-text-field [label]="'Número que deseas portar'" [placeholder]="'Ingresa el número que deseas portar a Lov.'"
-        [control]="form_1().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+<div class="stepper-container">
+    <!-- Stepper Navigation -->
+    <div class="stepper-nav">
+        @for (step of steps; let i = $index; track i) {
+        <div class="step-item" [class.active]="isStepActive(i)" [class.completed]="isStepCompleted(i)"
+            [class.clickable]="canNavigateToStep(i)" (click)="selectStep(i)">
 
-    <select-field [label]="'Tipo de plan'"
-        [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'" [options]="planOptions()"
-        [control]="form_1().controls.donorPlan" [error]="'Este campo es obligatorio'"></select-field>
+            <div class="step-indicator">
+                @if (isStepCompleted(i)) {
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="20,6 9,17 4,12"></polyline>
+                </svg>
+                } @else {
+                <span class="step-number">{{ i + 1 }}</span>
+                }
+            </div>
 
-    <input-text-field [label]="'Número Lov'" [placeholder]="'Ingresa el número Lov.'"
-        [control]="form_1().controls.lovNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+            <div class="step-content">
+                <div class="step-label">{{ step.label }}</div>
+            </div>
 
-    <input-text-field [label]="'Últimos 5 dígitos del código de barras'"
-        [placeholder]="'Ingresa los últimos 5 dígitos del código de barras ubicado en la tarjeta que acompaña tu SIM Lov'"
-        [control]="form_1().controls.iccidDigits" [error]="'Este campo es obligatorio'"></input-text-field>
+            @if (i < steps.length - 1) { <div class="step-connector">
+        </div>
+        }
+    </div>
+    }
+</div>
 
-    <button class="btn" type="submit" [disabled]="form_1().invalid">Continuar</button>
-</form>
-<form [formGroup]="form_2()">
-    <input-text-field
-        [label]="'En breve recibirás un mensaje de texto en el número que deseas portar. Cuando lo recibas, escribe el código aquí para seguir con el proceso.'"
-        [placeholder]="'xxxxx'" [control]="form_2().controls.nip"
-        [error]="'Este campo es obligatorio'"></input-text-field>
+<!-- Step Content -->
+<div class="step-content-container">
+    <ng-container [ngComponentOutlet]="currentStep().component"></ng-container>
+</div>
 
-    <button class="btn" type="submit" [disabled]="form_2().invalid">Continuar</button>
-</form>
-<form [formGroup]="form_3()">
-    <date-picker-field [label]="'Fecha de nacimiento'" [placeholder]="'Ingresa tu fecha de nacimiento.'"
-        [control]="form_3().controls.documentIssueDate" [error]="'Selecciona una fecha válida'"></date-picker-field>
+<!-- Navigation Buttons -->
+<div class="stepper-actions">
+    <button type="button" class="btn btn-secondary" [disabled]="currentStepIndex() === 0" (click)="previousStep()">
+        Anterior
+    </button>
 
-    <input-text-field [label]="'Documento'" [placeholder]="'Ingresa tu documento de identidad.'"
-        [control]="form_3().controls.documentID" [error]="'Este campo es obligatorio'"></input-text-field>
-
-    <input-text-field [label]="'Dirección'" [placeholder]="'Ingresa tu dirección.'"
-        [control]="form_3().controls.address" [error]="'Este campo es obligatorio'"></input-text-field>
-
-    <date-picker-field [label]="'Fecha de portabilidad'"
-        [placeholder]="'Ingresa la fecha en la que deseas que se active la portabilidad.'"
-        [control]="form_3().controls.portinDate" [error]="'Selecciona una fecha válida'"></date-picker-field>
-
-    <checkbox-field [label]="'Acepto los términos y condiciones'" [control]="form_3().controls.terms"
-        [error]="'Debes aceptar los términos'"></checkbox-field>
-
-    <button class="btn" type="submit" [disabled]="form_3().invalid">Enviar</button>
-</form>
+    <button type="button" class="btn btn-primary" [disabled]="currentStepIndex() === steps.length - 1"
+        (click)="nextStep()">
+        Siguiente
+    </button>
+</div>
+</div>

@@ -1,52 +1,62 @@
-import { Component, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
-import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
-import { CheckboxComponent } from '../../../../shared/components/form-fields/checkbox/checkbox';
-import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
+import { Component, signal, computed, Type } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
+import { NipRequestFormComponent } from '../nip-request-form/nip-request-form.component';
+import { PortinRequestFormComponent } from '../portin-request-form/portin-request-form.component';
+
+interface Step {
+  label: string;
+  component: Type<any>;
+  completed?: boolean;
+}
 
 @Component({
   selector: 'app-new-portability',
   templateUrl: './new-portability.html',
   styleUrl: './new-portability.scss',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    InputTextComponent,
-    SelectComponent,
-    CheckboxComponent,
-    DatePickerComponent,
-  ]
+  imports: [NgComponentOutlet]
 })
 export class NewPortabilityComponent {
-  form_1 = signal(
-    new FormGroup({
-      donorNumber: new FormControl('', Validators.required),
-      donorPlan: new FormControl('', Validators.required),
-      lovNumber: new FormControl('', Validators.required),
-      iccidDigits: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{5}$')]),
-    })
-  );
 
-  form_2 = signal(
-    new FormGroup({
-      nip: new FormControl(false, Validators.required),
-    })
-  );
+  steps: Step[] = [
+    { label: 'Solicitud NIP', component: NipRequestFormComponent, completed: false },
+    { label: 'Formulario Portabilidad', component: PortinRequestFormComponent, completed: false },
+  ];
 
-  form_3 = signal(
-    new FormGroup({
-      documentIssueDate: new FormControl('', Validators.required),
-      documentID: new FormControl('', Validators.required),
-      address: new FormControl('', Validators.required),
-      portinDate: new FormControl('', Validators.required),
-      terms: new FormControl(false, Validators.requiredTrue),
-    })
-  );
+  currentStepIndex = signal(0);
 
-  planOptions = signal([
-    { label: 'Pospago', value: 'pospay' },
-    { label: 'Prepago', value: 'pospaid' },
-  ]);
+  currentStep = computed(() => this.steps[this.currentStepIndex()]);
+
+  isStepCompleted(stepIndex: number): boolean {
+    return this.steps[stepIndex].completed || false;
+  }
+
+  isStepActive(stepIndex: number): boolean {
+    return this.currentStepIndex() === stepIndex;
+  }
+
+  canNavigateToStep(stepIndex: number): boolean {
+    // Can navigate to current step, next step, or any completed step
+    return stepIndex <= this.currentStepIndex() + 1 || this.isStepCompleted(stepIndex);
+  }
+
+  selectStep(stepIndex: number): void {
+    if (this.canNavigateToStep(stepIndex)) {
+      this.currentStepIndex.set(stepIndex);
+    }
+  }
+
+  nextStep(): void {
+    if (this.currentStepIndex() < this.steps.length - 1) {
+      // Mark current step as completed when moving to next
+      this.steps[this.currentStepIndex()].completed = true;
+      this.currentStepIndex.set(this.currentStepIndex() + 1);
+    }
+  }
+
+  previousStep(): void {
+    if (this.currentStepIndex() > 0) {
+      this.currentStepIndex.set(this.currentStepIndex() - 1);
+    }
+  }
 
 }
