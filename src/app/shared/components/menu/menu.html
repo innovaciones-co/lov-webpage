@@ -32,6 +32,10 @@
                         </a>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a routerLink="/ingreso" class="nav-link" routerLinkActive="active"
+                        (click)="closeMobileMenu()">Iniciar Sesión</a>
+                </li>
             </ul>
 
             <div class="menu-toggle" [class.active]="isActive" (click)="onClick()">

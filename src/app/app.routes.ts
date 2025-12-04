@@ -1,6 +1,9 @@
 import { Routes } from '@angular/router';
-import { Faq } from './features/faq/faq';
-import { Home } from './features/home/home';
+import { authGuard, guestGuard } from './core/guards/auth.guard';
+import { Login } from './features/authentication/components/login/login';
+import { Dashboard } from './features/dashboard/dashboard';
+import { Faq } from './features/faq/components/faq';
+import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
 
 export const routes: Routes = [
@@ -15,5 +18,19 @@ export const routes: Routes = [
     {
         path: 'preguntas-frecuentes',
         component: Faq
+    },
+    {
+        path: 'ingreso',
+        component: Login,
+        canActivate: [guestGuard]
+    },
+    {
+        path: 'dashboard',
+        component: Dashboard,
+        canActivate: [authGuard]
+    },
+    {
+        path: '**',
+        redirectTo: ''
     }
 ];

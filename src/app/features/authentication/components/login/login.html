@@ -1,0 +1,115 @@
+<div class="login-container">
+    <div class="login-card">
+        <!-- Header -->
+        <div class="login-header">
+            <h1 class="login-title">Iniciar Sesión</h1>
+            <p class="login-subtitle">
+                @if (currentState === AuthState.INITIAL) {
+                Ingresa tu número de celular para recibir un código de verificación
+                } @else if (currentState === AuthState.OTP_SENT) {
+                Ingresa el código que enviamos a tu celular
+                }
+            </p>
+        </div>
+
+        <!-- Error Display -->
+        @if (error) {
+        <div class="error-banner">
+            <span class="error-icon">⚠️</span>
+            <span class="error-message">{{ error.message }}</span>
+        </div>
+        }
+
+        <!-- MSISDN Form -->
+        @if (currentState === AuthState.INITIAL || currentState === AuthState.REQUESTING_OTP || currentState ===
+        AuthState.ERROR) {
+        <form [formGroup]="msisdnForm" (ngSubmit)="onRequestOtp()" class="auth-form">
+            <div class="form-group">
+                <label for="msisdn" class="form-label">Número de celular</label>
+                <div class="input-wrapper">
+                    <span class="country-code">+57</span>
+                    <input id="msisdn" type="tel" formControlName="msisdn" class="form-input"
+                        [class.invalid]="isMsisdnInvalid" placeholder="3001234567" maxlength="10" autocomplete="tel">
+                </div>
+                @if (isMsisdnInvalid) {
+                <span class="error-text">
+                    @if (msisdnControl?.errors?.['required']) {
+                    El número de celular es requerido
+                    } @else if (msisdnControl?.errors?.['pattern']) {
+                    Ingresa un número de celular válido (10 dígitos)
+                    }
+                </span>
+                }
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading || msisdnForm.invalid">
+                @if (isLoading) {
+                <span class="loading-spinner"></span>
+                Enviando...
+                } @else {
+                Enviar código
+                }
+            </button>
+        </form>
+        }
+
+        <!-- OTP Form -->
+        @if (currentState === AuthState.OTP_SENT || currentState === AuthState.VALIDATING_OTP) {
+        <form [formGroup]="otpForm" (ngSubmit)="onValidateOtp()" class="auth-form">
+            <div class="form-group">
+                <label for="otp" class="form-label">Código de verificación</label>
+                <input id="otp" type="text" formControlName="otp" class="form-input otp-input"
+                    [class.invalid]="isOtpInvalid" placeholder="123456" maxlength="6" autocomplete="one-time-code">
+                @if (isOtpInvalid) {
+                <span class="error-text">
+                    @if (otpControl?.errors?.['required']) {
+                    El código es requerido
+                    } @else if (otpControl?.errors?.['pattern']) {
+                    Ingresa un código válido
+                    }
+                </span>
+                }
+            </div>
+
+            <div class="otp-info">
+                <p class="otp-sent-to">
+                    Código enviado a +57 {{ msisdnControl?.value }}
+                </p>
+
+                @if (countdown > 0) {
+                <p class="countdown">
+                    Podrás solicitar un nuevo código en {{ getCountdownDisplay() }}
+                </p>
+                } @else {
+                <button type="button" class="btn btn-link resend-btn" (click)="onResendOtp()" [disabled]="isLoading">
+                    Enviar código nuevamente
+                </button>
+                }
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" (click)="onBack()" [disabled]="isLoading">
+                    Atrás
+                </button>
+
+                <button type="submit" class="btn btn-primary" [disabled]="isLoading || otpForm.invalid">
+                    @if (isLoading) {
+                    <span class="loading-spinner"></span>
+                    Verificando...
+                    } @else {
+                    Verificar código
+                    }
+                </button>
+            </div>
+        </form>
+        }
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <p class="help-text">
+                ¿Tienes problemas?
+                <a href="/soporte" class="help-link">Contáctanos</a>
+            </p>
+        </div>
+    </div>
+</div>
