@@ -27,9 +27,16 @@
   justify-content: center;
 }
 
+$mobile: 480px;
 $tablet: 768px;
 $large: 1024px;
 $desktop: 1280px;
+
+@mixin mobile {
+  @media only screen and (max-width: #{$mobile - 1px}) {
+    @content;
+  }
+}
 
 @mixin tablet {
   @media only screen and (min-width: $tablet) {
