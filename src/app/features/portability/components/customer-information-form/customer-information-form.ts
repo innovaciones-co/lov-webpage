@@ -1,9 +1,22 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, output } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CheckboxComponent } from '../../../../shared/components/form-fields/checkbox/checkbox';
 import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
+
+export interface CustomerInformationData {
+  name: string;
+  lastName: string;
+  documentType: string;
+  documentID: string;
+  email: string;
+  phoneNumber: string;
+  country: string;
+  city: string;
+  address: string;
+  addressOptional: string;
+}
 
 @Component({
   selector: 'app-customer-information-form',
@@ -28,14 +41,9 @@ export class CustomerInformationFormComponent {
       country: new FormControl('', Validators.required),
       city: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
-      addressOptional: new FormControl('', Validators.required),
+      addressOptional: new FormControl(''),
     })
   );
-
-  /* donorOperator = signal([
-    { label: 'Claro', value: 'claro' },
-    { label: 'Tigo', value: 'tigo' },
-  ]); */
 
   documentType = signal([
     { label: 'Cédula', value: 'ID' },
@@ -45,5 +53,13 @@ export class CustomerInformationFormComponent {
   country = signal([
     { label: 'Colombia', value: 'colombia' },
   ]);
+
+  formSubmit = output<CustomerInformationData>();
+
+  onSubmit(): void {
+    if (this.form().valid) {
+      this.formSubmit.emit(this.form().value as CustomerInformationData);
+    }
+  }
 
 }

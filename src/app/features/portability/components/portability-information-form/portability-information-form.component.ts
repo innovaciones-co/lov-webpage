@@ -1,7 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
+
+export interface PortabilityInformationData {
+  donorNumber: string;
+  iccidDigits: string;
+}
 
 @Component({
   selector: 'app-portability-information-form',
@@ -14,11 +19,18 @@ export class PortabilityInformation {
 
   form = signal(
     new FormGroup({
-      donorNumber: new FormControl('', Validators.required),
-      donorPlan: new FormControl('', Validators.required),
-      lovNumber: new FormControl('', Validators.required),
-      iccidDigits: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{5}$')]),
+      donorNumber: new FormControl(''),
+      iccidDigits: new FormControl('')//, [Validators.required, Validators.pattern('^[0-9]{5}$')]),
     })
   );
+
+  formSubmit = output<PortabilityInformationData>();
+
+  onSubmit(): void {
+    if (this.form().valid) {
+      this.formSubmit.emit(this.form().value as PortabilityInformationData);
+    }
+    console.log('Form submitted:', this.form().value);
+  }
 
 }

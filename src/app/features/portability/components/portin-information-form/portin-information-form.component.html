@@ -1,5 +1,5 @@
 <h3 class="step-title">Información de Portabilidad</h3>
-<form [formGroup]="form()">
+<form [formGroup]="form()" (ngSubmit)="onSubmit()">
     <input-text-field [label]="'Número temporal LOV'" [placeholder]="'000000000'"
         [control]="form().controls.portinNumber" [error]="'Este campo es obligatorio'"></input-text-field>
 

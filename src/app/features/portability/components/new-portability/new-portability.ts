@@ -1,8 +1,7 @@
 import { Component, signal, computed, Type } from '@angular/core';
-import { NgComponentOutlet } from '@angular/common';
-import { PortabilityInformation } from '../portability-information-form/portability-information-form.component';
-import { PortinInformationFormComponent } from '../portin-information-form/portin-information-form.component';
-import { CustomerInformationFormComponent } from '../customer-information-form/customer-information-form';
+import { PortabilityInformation, PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
+import { PortinInformationFormComponent, PortinInformationData } from '../portin-information-form/portin-information-form.component';
+import { CustomerInformationFormComponent, CustomerInformationData } from '../customer-information-form/customer-information-form';
 
 interface Step {
   label: string;
@@ -14,9 +13,13 @@ interface Step {
   selector: 'app-new-portability',
   templateUrl: './new-portability.html',
   styleUrl: './new-portability.scss',
-  imports: [NgComponentOutlet]
+  imports: [PortabilityInformation, PortinInformationFormComponent, CustomerInformationFormComponent]
 })
 export class NewPortabilityComponent {
+
+  portabilityData = signal<PortabilityInformationData | null>(null);
+  portinData = signal<PortinInformationData | null>(null);
+  customerData = signal<CustomerInformationData | null>(null);
 
   steps: Step[] = [
     { label: 'Info Portabilidad', component: PortabilityInformation, completed: false },
@@ -59,6 +62,29 @@ export class NewPortabilityComponent {
     if (this.currentStepIndex() > 0) {
       this.currentStepIndex.set(this.currentStepIndex() - 1);
     }
+  }
+
+  onPortabilityInformationSubmit(data: PortabilityInformationData): void {
+    this.portabilityData.set(data);
+    console.log('Portability Information Data:', data);
+    this.nextStep();
+  }
+
+  onPortinInformationSubmit(data: PortinInformationData): void {
+    this.portinData.set(data);
+    console.log('Portin Information Data:', data);
+    this.nextStep();
+  }
+
+  onCustomerInformationSubmit(data: CustomerInformationData): void {
+    this.customerData.set(data);
+    console.log('Customer Information Data:', data);
+    console.log('All Form Data:', {
+      portability: this.portabilityData(),
+      portin: this.portinData(),
+      customer: this.customerData()
+    });
+    // Here you can submit all the data to your backend
   }
 
 }

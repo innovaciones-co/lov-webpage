@@ -28,7 +28,18 @@
 
 <!-- Step Content -->
 <div class="step-content-container">
-    <ng-container [ngComponentOutlet]="currentStep().component"></ng-container>
+    @switch (currentStepIndex()) {
+    @case (0) {
+    <app-portability-information-form
+        (formSubmit)="onPortabilityInformationSubmit($event)"></app-portability-information-form>
+    }
+    @case (1) {
+    <app-portin-information-form (formSubmit)="onPortinInformationSubmit($event)"></app-portin-information-form>
+    }
+    @case (2) {
+    <app-customer-information-form (formSubmit)="onCustomerInformationSubmit($event)"></app-customer-information-form>
+    }
+    }
 </div>
 
 <!-- Navigation Buttons -->

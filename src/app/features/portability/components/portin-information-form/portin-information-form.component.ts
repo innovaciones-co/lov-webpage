@@ -1,9 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, output } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CheckboxComponent } from '../../../../shared/components/form-fields/checkbox/checkbox';
-import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
+
+export interface PortinInformationData {
+  portinNumber: string;
+  donorOperator: string;
+  donorNumber: string;
+}
 
 @Component({
   selector: 'app-portin-information-form',
@@ -30,5 +34,13 @@ export class PortinInformationFormComponent {
     { label: 'Claro', value: 'claro' },
     { label: 'Tigo', value: 'tigo' },
   ]);
+
+  formSubmit = output<PortinInformationData>();
+
+  onSubmit(): void {
+    if (this.form().valid) {
+      this.formSubmit.emit(this.form().value as PortinInformationData);
+    }
+  }
 
 }
