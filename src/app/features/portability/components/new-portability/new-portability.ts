@@ -1,7 +1,8 @@
 import { Component, signal, computed, Type } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { NipRequestFormComponent } from '../nip-request-form/nip-request-form.component';
-import { PortinRequestFormComponent } from '../portin-request-form/portin-request-form.component';
+import { PortabilityInformation } from '../portability-information-form/portability-information-form.component';
+import { PortinInformationFormComponent } from '../portin-information-form/portin-information-form.component';
+import { CustomerInformationFormComponent } from '../customer-information-form/customer-information-form';
 
 interface Step {
   label: string;
@@ -18,8 +19,9 @@ interface Step {
 export class NewPortabilityComponent {
 
   steps: Step[] = [
-    { label: 'Solicitud NIP', component: NipRequestFormComponent, completed: false },
-    { label: 'Formulario Portabilidad', component: PortinRequestFormComponent, completed: false },
+    { label: 'Info Portabilidad', component: PortabilityInformation, completed: false },
+    { label: 'Formulario Portabilidad', component: PortinInformationFormComponent, completed: false },
+    { label: 'Info cliente', component: CustomerInformationFormComponent, completed: false },
   ];
 
   currentStepIndex = signal(0);

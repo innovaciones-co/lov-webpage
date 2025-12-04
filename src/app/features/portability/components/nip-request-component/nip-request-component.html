@@ -1,0 +1,13 @@
+<h3 class="step-title">Solicitar portabilidad</h3>
+<form [formGroup]="form()">
+
+    <input-text-field [label]="'Últimos 5 números del código de barras de tu SIM'" [placeholder]="'00000'"
+        [control]="form().controls.iccidDigits" [error]="'Este campo es obligatorio'"></input-text-field>
+
+    <select-field [label]="'Tipo de plan de tu operador'"
+        [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'" [options]="planOptions()"
+        [control]="form().controls.donorPlan" [error]="'Este campo es obligatorio'"></select-field>
+
+
+    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+</form>

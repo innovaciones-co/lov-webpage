@@ -1,0 +1,17 @@
+<h3 class="step-title">Información de Portabilidad</h3>
+<form [formGroup]="form()">
+    <input-text-field [label]="'Número temporal LOV'" [placeholder]="'000000000'"
+        [control]="form().controls.portinNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+
+    <select-field [label]="'Operador movil anterior'"
+        [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'" [options]="donorOperator()"
+        [control]="form().controls.donorOperator" [error]="'Este campo es obligatorio'"></select-field>
+
+    <input-text-field [label]="'Número a portar'" [placeholder]="'0000000000'" [control]="form().controls.donorNumber"
+        [error]="'Este campo es obligatorio'"></input-text-field>
+
+    <input-text-field [label]="'Confirmar número a portar'" [placeholder]="'0000000000'"
+        [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+
+    <button class="btn" type="submit" [disabled]="form().invalid">Enviar</button>
+</form>

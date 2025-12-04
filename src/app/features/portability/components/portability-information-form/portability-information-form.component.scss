@@ -1,0 +1,7 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+.step-title {
+    color: $color-extra-1;
+    font-weight: 600;
+}

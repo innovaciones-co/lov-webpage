@@ -1,16 +1,15 @@
 import { Component, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 
 @Component({
-  selector: 'app-nip-request-form',
-  standalone: true,
+  selector: 'app-nip-request-component',
   imports: [ReactiveFormsModule, InputTextComponent, SelectComponent],
-  templateUrl: './nip-request-form.component.html',
-  styleUrl: './nip-request-form.component.scss'
+  templateUrl: './nip-request-component.html',
+  styleUrl: './nip-request-component.scss'
 })
-export class NipRequestFormComponent {
+export class NipRequestComponent {
 
   form = signal(
     new FormGroup({
