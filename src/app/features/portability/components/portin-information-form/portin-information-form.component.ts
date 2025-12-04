@@ -4,9 +4,9 @@ import { InputTextComponent } from '../../../../shared/components/form-fields/in
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
 
 export interface PortinInformationData {
-  portinNumber: string;
-  donorOperator: string;
   donorNumber: string;
+  donorOperator: string;
+  donorPlan: string;
 }
 
 @Component({
@@ -24,15 +24,20 @@ export class PortinInformationFormComponent {
 
   form = signal(
     new FormGroup({
-      portinNumber: new FormControl('', Validators.required),
-      donorOperator: new FormControl('', Validators.required),
       donorNumber: new FormControl('', Validators.required),
+      donorOperator: new FormControl('', Validators.required),
+      donorPlan: new FormControl('', Validators.required),
     })
   );
 
   donorOperator = signal([
     { label: 'Claro', value: 'claro' },
     { label: 'Tigo', value: 'tigo' },
+  ]);
+
+  planOptions = signal([
+    { label: 'Pospago', value: 'pospay' },
+    { label: 'Prepago', value: 'pospaid' },
   ]);
 
   formSubmit = output<PortinInformationData>();
