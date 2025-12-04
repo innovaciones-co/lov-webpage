@@ -2,12 +2,15 @@
 <form [formGroup]="form()">
 
     <input-text-field [label]="'Últimos 5 números del código de barras de tu SIM'" [placeholder]="'00000'"
-        [control]="form().controls.iccidDigits" [error]="'Este campo es obligatorio'"></input-text-field>
+        [control]="form().controls.nip" [error]="'Este campo es obligatorio'"></input-text-field>
 
     <select-field [label]="'Tipo de plan de tu operador'"
         [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'" [options]="planOptions()"
         [control]="form().controls.donorPlan" [error]="'Este campo es obligatorio'"></select-field>
 
+    <date-picker-field [label]="'Fecha de portabilidad'"
+        [placeholder]="'Ingresa la fecha en la que deseas que se active la portabilidad.'"
+        [control]="form().controls.portinDate" [error]="'Selecciona una fecha válida'"></date-picker-field>
 
     <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
 </form>
