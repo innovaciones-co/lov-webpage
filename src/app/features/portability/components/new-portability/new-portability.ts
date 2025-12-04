@@ -1,4 +1,6 @@
-import { Component, signal, computed, Type } from '@angular/core';
+import { Component, signal, computed, Type, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../../environments/environment';
 import { PortabilityInformation, PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
 import { PortinInformationFormComponent, PortinInformationData } from '../portin-information-form/portin-information-form.component';
 import { CustomerInformationFormComponent, CustomerInformationData } from '../customer-information-form/customer-information-form';
@@ -16,6 +18,8 @@ interface Step {
   imports: [PortabilityInformation, PortinInformationFormComponent, CustomerInformationFormComponent]
 })
 export class NewPortabilityComponent {
+
+  private http = inject(HttpClient);
 
   portabilityData = signal<PortabilityInformationData | null>(null);
   portinData = signal<PortinInformationData | null>(null);
@@ -73,7 +77,22 @@ export class NewPortabilityComponent {
   onPortinInformationSubmit(data: PortinInformationData): void {
     this.portinData.set(data);
     console.log('Portin Information Data:', data);
-    this.nextStep();
+
+    // Make GET request to lookup donorNumber
+    const url = `${environment.apiUrl}/mnp/lookup/${data.donorNumber}`;
+    console.log('Making GET request to:', url);
+
+    this.http.get(url).subscribe({
+      next: (response) => {
+        console.log('MNP Lookup response:', response);
+        this.nextStep();
+      },
+      error: (error) => {
+        console.error('MNP Lookup error:', error);
+        // For now, no proceeding to next step
+        // this.nextStep();
+      }
+    });
   }
 
   onCustomerInformationSubmit(data: CustomerInformationData): void {
