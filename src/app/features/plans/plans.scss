@@ -24,6 +24,7 @@
       max-width: 350px;
       border-radius: 30px;
       box-shadow: 0px 6px 16px 0px #0000001a;
+      padding: 0;
 
       @include large {
         position: relative;
@@ -54,9 +55,6 @@
           z-index: 2;
           position: relative;
           border-radius: 30px;
-        }
-
-        .card-title {
         }
 
         .card-price {

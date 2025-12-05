@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
-import { BillingInfo } from '../../models/billing-info.model';
 import { PaymentService } from '../../services/payment.service';
 
 interface BillingInfoForm {
@@ -62,33 +61,17 @@ export class BillingInfoComponent {
       address: new FormControl('', { validators: [Validators.required, Validators.minLength(5)], nonNullable: true }),
       additionalInfo: new FormControl('', { nonNullable: true })
     });
-  }
 
-  onSubmit() {
-    if (this.billingInfoForm.valid) {
-      console.log('Billing info:', this.billingInfoForm.value);
-      const formValue = this.billingInfoForm.value;
+    // Register the form with the payment service
+    this.paymentService.billingForm.set(this.billingInfoForm);
 
-      const billingInfo: BillingInfo = {
-        firstName: formValue.firstName!,
-        lastName: formValue.lastName!,
-        documentType: formValue.documentType!,
-        documentNumber: Number(formValue.documentNumber!),
-        email: formValue.email!,
-        phone: formValue.phone!,
-        country: formValue.country!,
-        city: formValue.city!,
-        address: formValue.address!,
-        additionalInfo: formValue.additionalInfo || undefined
-      };
+    // Track form validity changes
+    this.billingInfoForm.statusChanges.subscribe(() => {
+      this.paymentService.setFormValidityStatus(this.billingInfoForm.valid);
+    });
 
-      this.paymentService.billingInfo.set(billingInfo);
-    } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.billingInfoForm.controls).forEach(key => {
-        this.billingInfoForm.get(key)?.markAsTouched();
-      });
-    }
+    // Initial validity check
+    this.paymentService.setFormValidityStatus(this.billingInfoForm.valid);
   }
 
   getFieldError(fieldName: string): string {

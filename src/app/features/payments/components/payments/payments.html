@@ -1,4 +1,23 @@
-<div id="summary" class="flex">
+<!-- Mobile Layout -->
+@if (isMobile()) {
+  <div id="mobile-payment" class="mobile-layout">
+    <app-summary class="summary-section"></app-summary>
+    <app-billing-info class="billing-section"></app-billing-info>
+    <div class="button-section">
+      <button class="btn" [disabled]="!canContinue()" (click)="onContinue()">Continuar</button>
+    </div>
+  </div>
+}
+
+<!-- Desktop Layout -->
+@else {
+  <div id="summary" class="flex">
     <app-billing-info class="col-8"></app-billing-info>
-    <app-summary class="col-4"></app-summary>
-</div>
+    <div class="col-4">
+      <app-summary></app-summary>
+      <div class="button-section">
+        <button class="btn" [disabled]="!canContinue()" (click)="onContinue()">Continuar</button>
+      </div>
+    </div>
+  </div>
+}

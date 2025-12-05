@@ -1,17 +1,11 @@
-import { Component } from '@angular/core';
-import { PaymentService } from '../../services/payment.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-summary',
   imports: [],
   templateUrl: './summary.html',
-  styleUrl: './summary.scss'
+  styleUrl: './summary.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Summary {
-  constructor(private paymentService: PaymentService) { }
-
-  continue() {
-    console.log('Continue button clicked', this.paymentService.canCheckout());
-    return this.paymentService.canCheckout();
-  }
 }

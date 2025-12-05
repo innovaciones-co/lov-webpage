@@ -1,103 +1,74 @@
 <section class="card">
     <h2 class="card-title">Información de Facturación</h2>
 
-    <form [formGroup]="billingInfoForm" (ngSubmit)="onSubmit()" class="billing-form">
+    <form [formGroup]="billingInfoForm" class="billing-form">
         <div class="form-grid">
             <!-- Nombre y Apellido -->
             <div class="form-row">
-                <div class="form-field">
-                    <input-text-field label="Nombre" placeholder="Ingrese su nombre"
-                        [control]="billingInfoForm.controls.firstName" [error]="getFieldError('firstName')"
-                        (valueChange)="billingInfoForm.get('firstName')?.setValue($event)">
-                    </input-text-field>
-                </div>
-                <div class="form-field">
-                    <input-text-field label="Apellido" placeholder="Ingrese su apellido"
-                        [control]="billingInfoForm.controls.lastName" [error]="getFieldError('lastName')"
-                        (valueChange)="billingInfoForm.get('lastName')?.setValue($event)">
-                    </input-text-field>
-                </div>
+                <input-text-field label="Nombre" placeholder="Ingrese su nombre"
+                    [control]="billingInfoForm.controls.firstName" [error]="getFieldError('firstName')"
+                    (valueChange)="billingInfoForm.get('firstName')?.setValue($event)">
+                </input-text-field>
+
+                <input-text-field label="Apellido" placeholder="Ingrese su apellido"
+                    [control]="billingInfoForm.controls.lastName" [error]="getFieldError('lastName')"
+                    (valueChange)="billingInfoForm.get('lastName')?.setValue($event)">
+                </input-text-field>
             </div>
 
             <!-- Tipo y Número de documento -->
             <div class="form-row">
-                <div class="form-field">
-                    <select-field label="Tipo de documento" placeholder="Seleccione el tipo" [options]="documentTypes()"
-                        [control]="billingInfoForm.controls.documentType" [error]="getFieldError('documentType')"
-                        (valueChange)="billingInfoForm.get('documentType')?.setValue($event)">
-                    </select-field>
-                </div>
-                <div class="form-field">
-                    <input-text-field label="Número de documento" placeholder="Ingrese el número"
-                        [control]="billingInfoForm.controls.documentNumber" [error]="getFieldError('documentNumber')"
-                        (valueChange)="billingInfoForm.get('documentNumber')?.setValue($event)">
-                    </input-text-field>
-                </div>
+                <select-field label="Tipo de documento" placeholder="Seleccione el tipo" [options]="documentTypes()"
+                    [control]="billingInfoForm.controls.documentType" [error]="getFieldError('documentType')"
+                    (valueChange)="billingInfoForm.get('documentType')?.setValue($event)">
+                </select-field>
+
+                <input-text-field label="Número de documento" placeholder="Ingrese el número"
+                    [control]="billingInfoForm.controls.documentNumber" [error]="getFieldError('documentNumber')"
+                    (valueChange)="billingInfoForm.get('documentNumber')?.setValue($event)">
+                </input-text-field>
             </div>
 
-            <!-- Correo electrónico -->
-            <div class="form-row">
-                <div class="form-field full-width">
-                    <input-text-field label="Correo electrónico" placeholder="ejemplo@correo.com"
-                        [control]="billingInfoForm.controls.email" [error]="getFieldError('email')"
-                        (valueChange)="billingInfoForm.get('email')?.setValue($event)">
-                    </input-text-field>
-                </div>
-            </div>
+            <input-text-field label="Correo electrónico" placeholder="ejemplo@correo.com"
+                [control]="billingInfoForm.controls.email" [error]="getFieldError('email')"
+                (valueChange)="billingInfoForm.get('email')?.setValue($event)">
+            </input-text-field>
 
             <!-- Teléfono -->
-            <div class="form-row">
-                <div class="form-field full-width">
-                    <input-text-field label="Teléfono" placeholder="+57 300 123 4567"
-                        [control]="billingInfoForm.controls.phone" [error]="getFieldError('phone')"
-                        (valueChange)="billingInfoForm.get('phone')?.setValue($event)">
-                    </input-text-field>
-                </div>
-            </div>
+
+            <input-text-field label="Teléfono" placeholder="+57 300 123 4567" [control]="billingInfoForm.controls.phone"
+                [error]="getFieldError('phone')" (valueChange)="billingInfoForm.get('phone')?.setValue($event)">
+            </input-text-field>
 
             <!-- País y Ciudad -->
             <div class="form-row">
-                <div class="form-field">
-                    <select-field label="País" placeholder="Seleccione el país" [options]="countries()"
-                        [control]="billingInfoForm.controls.country" [error]="getFieldError('country')"
-                        (valueChange)="billingInfoForm.get('country')?.setValue($event)">
-                    </select-field>
-                </div>
-                <div class="form-field">
-                    <input-text-field label="Ciudad" placeholder="Ingrese la ciudad"
-                        [control]="billingInfoForm.controls.city" [error]="getFieldError('city')"
-                        (valueChange)="billingInfoForm.get('city')?.setValue($event)">
-                    </input-text-field>
-                </div>
+                <select-field label="País" placeholder="Seleccione el país" [options]="countries()"
+                    [control]="billingInfoForm.controls.country" [error]="getFieldError('country')"
+                    (valueChange)="billingInfoForm.get('country')?.setValue($event)">
+                </select-field>
+
+                <input-text-field label="Ciudad" placeholder="Ingrese la ciudad"
+                    [control]="billingInfoForm.controls.city" [error]="getFieldError('city')"
+                    (valueChange)="billingInfoForm.get('city')?.setValue($event)">
+                </input-text-field>
             </div>
 
             <!-- Dirección -->
-            <div class="form-row">
-                <div class="form-field full-width">
-                    <input-text-field label="Dirección" placeholder="Calle 123 #45-67"
-                        [control]="billingInfoForm.controls.address" [error]="getFieldError('address')"
-                        (valueChange)="billingInfoForm.get('address')?.setValue($event)">
-                    </input-text-field>
-                </div>
-            </div>
+
+            <input-text-field label="Dirección" placeholder="Calle 123 #45-67"
+                [control]="billingInfoForm.controls.address" [error]="getFieldError('address')"
+                (valueChange)="billingInfoForm.get('address')?.setValue($event)">
+            </input-text-field>
+
 
             <!-- Información complementaria -->
-            <div class="form-row">
-                <div class="form-field full-width">
-                    <input-text-field label="Información complementaria (opcional)"
-                        placeholder="Apartamento, oficina, referencias adicionales"
-                        [control]="billingInfoForm.controls.additionalInfo" [error]="getFieldError('additionalInfo')"
-                        (valueChange)="billingInfoForm.get('additionalInfo')?.setValue($event)">
-                    </input-text-field>
-                </div>
-            </div>
-        </div>
 
-        <!-- Submit button -->
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary" [disabled]="!billingInfoForm.valid">
-                Guardar información de facturación
-            </button>
+            <input-text-field label="Información complementaria (opcional)"
+                placeholder="Apartamento, oficina, referencias adicionales"
+                [control]="billingInfoForm.controls.additionalInfo" [error]="getFieldError('additionalInfo')"
+                (valueChange)="billingInfoForm.get('additionalInfo')?.setValue($event)">
+            </input-text-field>
+
         </div>
     </form>
 </section>
