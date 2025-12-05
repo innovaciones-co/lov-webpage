@@ -6,6 +6,8 @@ import { InputTextComponent } from '../../../../shared/components/form-fields/in
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
 
 export interface CustomerInformationData {
+  nip: string;
+  portinDate: string;
   name: string;
   lastName: string;
   documentType: string;
@@ -23,7 +25,8 @@ export interface CustomerInformationData {
   imports: [
     ReactiveFormsModule,
     InputTextComponent,
-    SelectComponent
+    SelectComponent,
+    DatePickerComponent
   ],
   templateUrl: './customer-information-form.html',
   styleUrl: './customer-information-form.scss'
@@ -32,6 +35,8 @@ export class CustomerInformationFormComponent {
 
   form = signal(
     new FormGroup({
+      nip: new FormControl('', Validators.required),
+      portinDate: new FormControl('', Validators.required),
       name: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       documentType: new FormControl('', Validators.required),

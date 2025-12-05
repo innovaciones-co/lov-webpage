@@ -1,6 +1,6 @@
 <div class="stepper-container">
     <!-- Step Content -->
-    <div class="step-content-container card">
+    <div class="step-content-container">
         @switch (currentStepIndex()) {
         @case (0) {
         <app-portability-information-form
@@ -14,16 +14,5 @@
             (formSubmit)="onCustomerInformationSubmit($event)"></app-customer-information-form>
         }
         }
-    </div>
-
-    <!-- Navigation Buttons -->
-    <div class="stepper-actions">
-        <button type="button" class="btn btn-secondary" [disabled]="currentStepIndex() === 0" (click)="previousStep()">
-            Anterior
-        </button>
-
-        <button type="button" class="btn btn-primary" [disabled]="currentStepIndex() === 2" (click)="nextStep()">
-            Siguiente
-        </button>
     </div>
 </div>
