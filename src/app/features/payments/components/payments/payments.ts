@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { BillingInfo } from "./billing-info/billing-info";
-import { Summary } from "./summary/summary";
+import { Summary } from "../summary/summary";
+import { BillingInfoComponent } from "../billing-info/billing-info";
 
 @Component({
   selector: 'app-payments',
-  imports: [BillingInfo, Summary],
+  imports: [Summary, BillingInfoComponent],
   templateUrl: './payments.html',
   styleUrl: './payments.scss'
 })

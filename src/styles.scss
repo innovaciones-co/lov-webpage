@@ -1,7 +1,7 @@
 @use 'styles/variables' as *;
 @use 'styles/reset' as *;
 @use 'styles/mixins' as *;
-
+@use "sass:math";
 
 .material-symbols-outlined {
     font-variation-settings:
@@ -216,8 +216,8 @@ select {
 // Mobile columns (default, no prefix)
 @for $i from 1 through 12 {
     .col-#{$i} {
-        flex: 0 0 percentage($i / 12);
-        max-width: percentage($i / 12);
+        flex: 0 0 math.percentage(calc($i / 12));
+        max-width: math.percentage(calc($i / 12));
         padding: 0 0.5rem;
     }
 }
@@ -226,8 +226,8 @@ select {
 @include tablet {
     @for $i from 1 through 12 {
         .col-sm-#{$i} {
-            flex: 0 0 percentage($i / 12);
-            max-width: percentage($i / 12);
+            flex: 0 0 math.percentage(calc($i / 12));
+            max-width: math.percentage(calc($i / 12));
             padding: 0 0.5rem;
         }
     }
@@ -242,8 +242,8 @@ select {
 @include large {
     @for $i from 1 through 12 {
         .col-md-#{$i} {
-            flex: 0 0 percentage($i / 12);
-            max-width: percentage($i / 12);
+            flex: 0 0 math.percentage(calc($i / 12));
+            max-width: math.percentage(calc($i / 12));
             padding: 0 0.5rem;
         }
     }
@@ -258,8 +258,8 @@ select {
 @include desktop {
     @for $i from 1 through 12 {
         .col-lg-#{$i} {
-            flex: 0 0 percentage($i / 12);
-            max-width: percentage($i / 12);
+            flex: 0 0 math.percentage(calc($i / 12));
+            max-width: math.percentage(calc($i / 12));
             padding: 0 0.5rem;
         }
     }
@@ -685,7 +685,7 @@ select {
 // Offset utilities (mobile first)
 @for $i from 0 through 11 {
     .offset-#{$i} {
-        margin-left: percentage($i / 12);
+        margin-left: math.percentage(calc($i / 12));
     }
 }
 
@@ -693,7 +693,7 @@ select {
 @include tablet {
     @for $i from 0 through 11 {
         .offset-sm-#{$i} {
-            margin-left: percentage($i / 12);
+            margin-left: math.percentage(calc($i / 12));
         }
     }
 }
@@ -701,7 +701,7 @@ select {
 @include large {
     @for $i from 0 through 11 {
         .offset-md-#{$i} {
-            margin-left: percentage($i / 12);
+            margin-left: math.percentage(calc($i / 12));
         }
     }
 }
@@ -709,7 +709,7 @@ select {
 @include desktop {
     @for $i from 0 through 11 {
         .offset-lg-#{$i} {
-            margin-left: percentage($i / 12);
+            margin-left: math.percentage(calc($i / 12));
         }
     }
 }
@@ -873,6 +873,15 @@ select {
     padding: 2rem;
     box-shadow: 0 2px 10px $shadow-color;
     margin-bottom: 2rem;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 24px 0;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 @keyframes heartbeat {

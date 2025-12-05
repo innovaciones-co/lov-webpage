@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputTextComponent } from '../../../shared/components/form-fields/input-text/input-text';
-import { SelectComponent } from '../../../shared/components/form-fields/select/select';
+import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
+import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
+import { BillingInfo } from '../../models/billing-info.model';
+import { PaymentService } from '../../services/payment.service';
 
 interface BillingInfoForm {
   firstName: FormControl<string>;
@@ -23,7 +25,7 @@ interface BillingInfoForm {
   styleUrl: './billing-info.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BillingInfo {
+export class BillingInfoComponent {
   billingInfoForm: FormGroup<BillingInfoForm>;
 
   documentTypes = signal([
@@ -47,7 +49,7 @@ export class BillingInfo {
     { label: 'Paraguay', value: 'PY' }
   ]);
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private paymentService: PaymentService) {
     this.billingInfoForm = this.fb.group({
       firstName: new FormControl('', { validators: [Validators.required, Validators.minLength(2)], nonNullable: true }),
       lastName: new FormControl('', { validators: [Validators.required, Validators.minLength(2)], nonNullable: true }),
@@ -65,7 +67,22 @@ export class BillingInfo {
   onSubmit() {
     if (this.billingInfoForm.valid) {
       console.log('Billing info:', this.billingInfoForm.value);
-      // Handle form submission here
+      const formValue = this.billingInfoForm.value;
+
+      const billingInfo: BillingInfo = {
+        firstName: formValue.firstName!,
+        lastName: formValue.lastName!,
+        documentType: formValue.documentType!,
+        documentNumber: Number(formValue.documentNumber!),
+        email: formValue.email!,
+        phone: formValue.phone!,
+        country: formValue.country!,
+        city: formValue.city!,
+        address: formValue.address!,
+        additionalInfo: formValue.additionalInfo || undefined
+      };
+
+      this.paymentService.billingInfo.set(billingInfo);
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.billingInfoForm.controls).forEach(key => {
@@ -103,3 +120,4 @@ export class BillingInfo {
     return labels[fieldName] || fieldName;
   }
 }
+

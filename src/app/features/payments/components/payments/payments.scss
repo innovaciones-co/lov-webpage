@@ -1,0 +1,13 @@
+@use '../../../../../styles/variables' as *;
+
+
+:host {
+    background: $background;
+    display: block;
+    padding: 2rem 4rem;
+}
+
+#summary {
+    max-width: 1600px;
+    margin: 0 auto;
+}
