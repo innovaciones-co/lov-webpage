@@ -1,13 +1,15 @@
 <form [formGroup]="form()" (ngSubmit)="onSubmit()">
     <div class="card">
         <h3 class="form-subtitle">Ingresa tú número LOV</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'0000000000'"
+                    [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
 
-        <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'0000000000'"
-            [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
-
-        <input-text-field [label]="'Últimos 5 números del código de barras de tu SIM'" [placeholder]="'00000'"
-            [control]="form().controls.iccidDigits" [error]="'Este campo es obligatorio'"></input-text-field>
+                <input-text-field [label]="'Últimos 5 números del código de barras de tu SIM'" [placeholder]="'00000'"
+                    [control]="form().controls.iccidDigits" [error]="'Este campo es obligatorio'"></input-text-field>
+            </div>
+        </div>
     </div>
-
     <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
 </form>

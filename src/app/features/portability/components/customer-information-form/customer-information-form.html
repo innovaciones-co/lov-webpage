@@ -1,61 +1,64 @@
 <form [formGroup]="form()" (ngSubmit)="onSubmit()">
     <div class="card">
         <h3 class="form-subtitle">Solicitar portabilidad</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'NIP'" [placeholder]="'00000'" [control]="form().controls.nip"
+                    [error]="'Código de 5 digitos que te legó por SMS'"></input-text-field>
 
-        <input-text-field [label]="'NIP'" [placeholder]="'00000'" [control]="form().controls.nip"
-            [error]="'Código de 5 digitos que te legó por SMS'"></input-text-field>
-
-        <date-picker-field [label]="'Fecha de portabilidad'"
-            [placeholder]="'Ingresa la fecha en la que deseas que se active la portabilidad.'"
-            [control]="form().controls.portinDate" [error]="'Selecciona una fecha válida'"></date-picker-field>
+                <date-picker-field [label]="'Fecha de portabilidad'"
+                    [placeholder]="'Ingresa la fecha en la que deseas que se active la portabilidad.'"
+                    [control]="form().controls.portinDate" [error]="'Selecciona una fecha válida'"></date-picker-field>
+            </div>
+        </div>
     </div>
     <div class="card">
         <h3 class="form-subtitle">Información personal</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'Nombre'" [placeholder]="'Arturo'" [control]="form().controls.name"
+                    [error]="'Este campo es obligatorio'"></input-text-field>
 
-        <input-text-field [label]="'Nombre'" [placeholder]="'Arturo'" [control]="form().controls.name"
-            [error]="'Este campo es obligatorio'"></input-text-field>
+                <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'"
+                    [control]="form().controls.lastName" [error]="'Este campo es obligatorio'"></input-text-field>
+            </div>
+            <div class="form-row">
+                <select-field [label]="'Tipo de documento'" [placeholder]="''" [options]="documentType()"
+                    [control]="form().controls.documentType" [error]="'Este campo es obligatorio'"></select-field>
 
-        <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'" [control]="form().controls.lastName"
-            [error]="'Este campo es obligatorio'"></input-text-field>
-
-        <select-field [label]="'Tipo de documento'" [placeholder]="''" [options]="documentType()"
-            [control]="form().controls.documentType" [error]="'Este campo es obligatorio'"></select-field>
-
-        <input-text-field [label]="'Documento'" [placeholder]="'000000000'" [control]="form().controls.documentID"
-            [error]="'Este campo es obligatorio'"></input-text-field>
-
+                <input-text-field [label]="'Documento'" [placeholder]="'000000000'"
+                    [control]="form().controls.documentID" [error]="'Este campo es obligatorio'"></input-text-field>
+            </div>
+        </div>
         <h3 class="form-subtitle">Información de contacto</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'Correo electrónico'" [placeholder]="'andres@myemail.com'"
+                    [control]="form().controls.email" [error]="'Este campo es obligatorio'"></input-text-field>
 
-        <input-text-field [label]="'Correo electrónico'" [placeholder]="'andres@myemail.com'"
-            [control]="form().controls.email" [error]="'Este campo es obligatorio'"></input-text-field>
+                <input-text-field [label]="'Teléfono'" [placeholder]="'0000000000'"
+                    [control]="form().controls.phoneNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+            </div>
+            <div class="form-row">
+                <select-field [label]="'País'" [placeholder]="''" [options]="country()"
+                    [control]="form().controls.country" [error]="'Este campo es obligatorio'"></select-field>
 
-        <input-text-field [label]="'Teléfono'" [placeholder]="'0000000000'" [control]="form().controls.phoneNumber"
-            [error]="'Este campo es obligatorio'"></input-text-field>
+                <input-text-field [label]="'Ciudad'" [placeholder]="''" [control]="form().controls.city"
+                    [error]="'Este campo es obligatorio'"></input-text-field>
+            </div>
+            <div class="form-row">
+                <input-text-field [label]="'Dirección'" [placeholder]="'Cra 00 #00-00'"
+                    [control]="form().controls.address" [error]="'Este campo es obligatorio'"></input-text-field>
 
-        <select-field [label]="'País'" [placeholder]="''" [options]="country()" [control]="form().controls.country"
-            [error]="'Este campo es obligatorio'"></select-field>
-
-        <input-text-field [label]="'Ciudad'" [placeholder]="''" [control]="form().controls.city"
-            [error]="'Este campo es obligatorio'"></input-text-field>
-
-        <input-text-field [label]="'Dirección'" [placeholder]="'Cra 00 #00-00'" [control]="form().controls.address"
-            [error]="'Este campo es obligatorio'"></input-text-field>
-
-        <input-text-field [label]="'Información complementaria'"
-            [placeholder]="'Conjunto, casa, torre, apartamento, etc.'" [control]="form().controls.addressOptional"
-            [error]="'Este campo es obligatorio'"></input-text-field>
-
-        <!-- <date-picker-field [label]="'Fecha de nacimiento'" [placeholder]="'Ingresa tu fecha de nacimiento.'"
-        [control]="form().controls.documentIssueDate" [error]="'Selecciona una fecha válida'"></date-picker-field>
-
-
-    <date-picker-field [label]="'Fecha de portabilidad'"
-        [placeholder]="'Ingresa la fecha en la que deseas que se active la portabilidad.'"
-        [control]="form().controls.portinDate" [error]="'Selecciona una fecha válida'"></date-picker-field>
-
+                <input-text-field [label]="'Información complementaria'"
+                    [placeholder]="'Conjunto, casa, torre, apartamento, etc.'"
+                    [control]="form().controls.addressOptional"
+                    [error]="'Este campo es obligatorio'"></input-text-field>
+            </div>
+            <!-- 
     <checkbox-field [label]="'Acepto los términos y condiciones'" [control]="form().controls.terms"
         [error]="'Debes aceptar los términos'"></checkbox-field> -->
+        </div>
     </div>
-
     <button class="btn" type="submit" [disabled]="form().invalid">Solicitar portabilidad</button>
 </form>

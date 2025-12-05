@@ -1,5 +1,5 @@
 .stepper-container {
-    padding: 32px 0;
+    margin: 1rem 0;
 }
 
 .step-content-container {
@@ -8,9 +8,6 @@
 
 // Responsive design
 @media (max-width: 768px) {
-    .stepper-container {
-        padding: 1rem;
-    }
 
     .step-content-container {
         padding: 1.5rem;
