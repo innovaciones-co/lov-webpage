@@ -19,8 +19,10 @@ $gray-700: oklch(36.98% 0 0);
 $gray-400: oklch(70.9% 0 0);
 $gray-200: oklch(87% 0 0);
 
-$background: #fff;
+$background: #fafafa;
+$card-background: white;
 $text-color: #222;
+$shadow-color: rgba(0, 0, 0, 0.1);
 
 $font-family-base: 'Titillium Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 $font-family-tight: 'Inter Tight', $font-family-base;

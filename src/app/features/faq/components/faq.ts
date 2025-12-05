@@ -3,12 +3,12 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 // Models
-import { FAQ, FAQCategory } from './models/faq.models';
+import { FAQ, FAQCategory } from '../models/faq.models';
 
 // Services
-import { DeviceDetectionService } from '../../core/services/device-detection.service';
-import { ScrollDetectionService } from '../../core/services/scroll-detection.service';
-import { FaqService } from './services/faq.service';
+import { DeviceDetectionService } from '../../../core/services/device-detection.service';
+import { ScrollDetectionService } from '../../../core/services/scroll-detection.service';
+import { FaqService } from '../services/faq.service';
 
 @Component({
   selector: 'app-faq',
