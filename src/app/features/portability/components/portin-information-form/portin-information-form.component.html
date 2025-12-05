@@ -1,6 +1,6 @@
 <form [formGroup]="form()" (ngSubmit)="onSubmit()">
     <div class="card">
-        <h3 class="step-title">Información de Portabilidad</h3>
+        <h3 class="form-subtitle">Información de Portabilidad</h3>
 
         <input-text-field [label]="'Número a portar'" [placeholder]="'0000000000'"
             [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>

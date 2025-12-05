@@ -1,6 +1,6 @@
 <form [formGroup]="form()" (ngSubmit)="onSubmit()">
     <div class="card">
-        <h3 class="step-title">Ingresa tú número LOV</h3>
+        <h3 class="form-subtitle">Ingresa tú número LOV</h3>
 
         <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'0000000000'"
             [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
