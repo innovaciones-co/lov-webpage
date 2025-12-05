@@ -159,6 +159,683 @@ select {
     color: $gray-700 !important;
 }
 
+// =======================
+// FLEX GRID SYSTEM (Mobile First)
+// =======================
+
+// Container
+.container {
+    width: 100%;
+    padding: 0 1rem;
+    margin: 0 auto;
+
+    @include tablet {
+        padding: 0 1.5rem;
+        max-width: 720px;
+    }
+
+    @include large {
+        padding: 0 2rem;
+        max-width: 960px;
+    }
+
+    @include desktop {
+        max-width: 1200px;
+    }
+}
+
+.container-fluid {
+    width: 100%;
+    padding: 0 1rem;
+
+    @include tablet {
+        padding: 0 1.5rem;
+    }
+}
+
+// Flex container (row)
+.flex,
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.5rem;
+}
+
+.row-nowrap {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 0 -0.5rem;
+}
+
+// Base columns (mobile first)
+.col {
+    flex: 1 0 0%;
+    padding: 0 0.5rem;
+}
+
+// Mobile columns (default, no prefix)
+@for $i from 1 through 12 {
+    .col-#{$i} {
+        flex: 0 0 percentage($i / 12);
+        max-width: percentage($i / 12);
+        padding: 0 0.5rem;
+    }
+}
+
+// Tablet columns (768px+)
+@include tablet {
+    @for $i from 1 through 12 {
+        .col-sm-#{$i} {
+            flex: 0 0 percentage($i / 12);
+            max-width: percentage($i / 12);
+            padding: 0 0.5rem;
+        }
+    }
+
+    .col-sm {
+        flex: 1 0 0%;
+        padding: 0 0.5rem;
+    }
+}
+
+// Large screens (1024px+)
+@include large {
+    @for $i from 1 through 12 {
+        .col-md-#{$i} {
+            flex: 0 0 percentage($i / 12);
+            max-width: percentage($i / 12);
+            padding: 0 0.5rem;
+        }
+    }
+
+    .col-md {
+        flex: 1 0 0%;
+        padding: 0 0.5rem;
+    }
+}
+
+// Desktop screens (1280px+)
+@include desktop {
+    @for $i from 1 through 12 {
+        .col-lg-#{$i} {
+            flex: 0 0 percentage($i / 12);
+            max-width: percentage($i / 12);
+            padding: 0 0.5rem;
+        }
+    }
+
+    .col-lg {
+        flex: 1 0 0%;
+        padding: 0 0.5rem;
+    }
+}
+
+// Flex direction utilities
+.flex-row {
+    flex-direction: row !important;
+}
+
+.flex-row-reverse {
+    flex-direction: row-reverse !important;
+}
+
+.flex-column {
+    @include flex-column;
+}
+
+.flex-column-reverse {
+    flex-direction: column-reverse !important;
+}
+
+// Flex wrap utilities
+.flex-wrap {
+    flex-wrap: wrap !important;
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap !important;
+}
+
+.flex-wrap-reverse {
+    flex-wrap: wrap-reverse !important;
+}
+
+// Justify content utilities
+.justify-start {
+    justify-content: flex-start !important;
+}
+
+.justify-center {
+    @include flex-center-horiz;
+}
+
+.justify-end {
+    justify-content: flex-end !important;
+}
+
+.justify-between {
+    justify-content: space-between !important;
+}
+
+.justify-around {
+    justify-content: space-around !important;
+}
+
+.justify-evenly {
+    justify-content: space-evenly !important;
+}
+
+// Align items utilities
+.align-start {
+    align-items: flex-start !important;
+}
+
+.align-center {
+    @include flex-center-vert;
+}
+
+.align-end {
+    align-items: flex-end !important;
+}
+
+.align-baseline {
+    align-items: baseline !important;
+}
+
+.align-stretch {
+    align-items: stretch !important;
+}
+
+// Flex center utilities using mixins
+.flex-center {
+    @include flex-center;
+}
+
+.flex-center-column {
+    @include flex-center-column;
+}
+
+.flex-center-vert {
+    @include flex-center-vert;
+}
+
+.flex-center-horiz {
+    @include flex-center-horiz;
+}
+
+// Align self utilities
+.align-self-start {
+    align-self: flex-start !important;
+}
+
+.align-self-center {
+    align-self: center !important;
+}
+
+.align-self-end {
+    align-self: flex-end !important;
+}
+
+.align-self-baseline {
+    align-self: baseline !important;
+}
+
+.align-self-stretch {
+    align-self: stretch !important;
+}
+
+// Flex grow and shrink utilities
+.flex-grow-0 {
+    flex-grow: 0 !important;
+}
+
+.flex-grow-1 {
+    flex-grow: 1 !important;
+}
+
+.flex-shrink-0 {
+    flex-shrink: 0 !important;
+}
+
+.flex-shrink-1 {
+    flex-shrink: 1 !important;
+}
+
+// Gap utilities (mobile first)
+.gap-0 {
+    gap: 0 !important;
+}
+
+.gap-1 {
+    gap: 0.25rem !important;
+}
+
+.gap-2 {
+    gap: 0.5rem !important;
+}
+
+.gap-3 {
+    gap: 0.75rem !important;
+}
+
+.gap-4 {
+    gap: 1rem !important;
+}
+
+.gap-5 {
+    gap: 1.25rem !important;
+}
+
+.gap-6 {
+    gap: 1.5rem !important;
+}
+
+.gap-8 {
+    gap: 2rem !important;
+}
+
+.gap-10 {
+    gap: 2.5rem !important;
+}
+
+.gap-12 {
+    gap: 3rem !important;
+}
+
+// Responsive gap utilities
+@include tablet {
+    .gap-sm-0 {
+        gap: 0 !important;
+    }
+
+    .gap-sm-1 {
+        gap: 0.25rem !important;
+    }
+
+    .gap-sm-2 {
+        gap: 0.5rem !important;
+    }
+
+    .gap-sm-3 {
+        gap: 0.75rem !important;
+    }
+
+    .gap-sm-4 {
+        gap: 1rem !important;
+    }
+
+    .gap-sm-5 {
+        gap: 1.25rem !important;
+    }
+
+    .gap-sm-6 {
+        gap: 1.5rem !important;
+    }
+
+    .gap-sm-8 {
+        gap: 2rem !important;
+    }
+}
+
+@include large {
+    .gap-md-0 {
+        gap: 0 !important;
+    }
+
+    .gap-md-1 {
+        gap: 0.25rem !important;
+    }
+
+    .gap-md-2 {
+        gap: 0.5rem !important;
+    }
+
+    .gap-md-3 {
+        gap: 0.75rem !important;
+    }
+
+    .gap-md-4 {
+        gap: 1rem !important;
+    }
+
+    .gap-md-5 {
+        gap: 1.25rem !important;
+    }
+
+    .gap-md-6 {
+        gap: 1.5rem !important;
+    }
+
+    .gap-md-8 {
+        gap: 2rem !important;
+    }
+}
+
+@include desktop {
+    .gap-lg-0 {
+        gap: 0 !important;
+    }
+
+    .gap-lg-1 {
+        gap: 0.25rem !important;
+    }
+
+    .gap-lg-2 {
+        gap: 0.5rem !important;
+    }
+
+    .gap-lg-3 {
+        gap: 0.75rem !important;
+    }
+
+    .gap-lg-4 {
+        gap: 1rem !important;
+    }
+
+    .gap-lg-5 {
+        gap: 1.25rem !important;
+    }
+
+    .gap-lg-6 {
+        gap: 1.5rem !important;
+    }
+
+    .gap-lg-8 {
+        gap: 2rem !important;
+    }
+}
+
+// Row gap utilities
+.row-gap-0 {
+    row-gap: 0 !important;
+}
+
+.row-gap-1 {
+    row-gap: 0.25rem !important;
+}
+
+.row-gap-2 {
+    row-gap: 0.5rem !important;
+}
+
+.row-gap-3 {
+    row-gap: 0.75rem !important;
+}
+
+.row-gap-4 {
+    row-gap: 1rem !important;
+}
+
+.row-gap-5 {
+    row-gap: 1.25rem !important;
+}
+
+.row-gap-6 {
+    row-gap: 1.5rem !important;
+}
+
+.row-gap-8 {
+    row-gap: 2rem !important;
+}
+
+// Column gap utilities
+.col-gap-0 {
+    column-gap: 0 !important;
+}
+
+.col-gap-1 {
+    column-gap: 0.25rem !important;
+}
+
+.col-gap-2 {
+    column-gap: 0.5rem !important;
+}
+
+.col-gap-3 {
+    column-gap: 0.75rem !important;
+}
+
+.col-gap-4 {
+    column-gap: 1rem !important;
+}
+
+.col-gap-5 {
+    column-gap: 1.25rem !important;
+}
+
+.col-gap-6 {
+    column-gap: 1.5rem !important;
+}
+
+.col-gap-8 {
+    column-gap: 2rem !important;
+}
+
+// Order utilities
+@for $i from 0 through 12 {
+    .order-#{$i} {
+        order: #{$i} !important;
+    }
+}
+
+.order-first {
+    order: -1 !important;
+}
+
+.order-last {
+    order: 13 !important;
+}
+
+// Responsive order utilities
+@include tablet {
+    @for $i from 0 through 12 {
+        .order-sm-#{$i} {
+            order: #{$i} !important;
+        }
+    }
+
+    .order-sm-first {
+        order: -1 !important;
+    }
+
+    .order-sm-last {
+        order: 13 !important;
+    }
+}
+
+@include large {
+    @for $i from 0 through 12 {
+        .order-md-#{$i} {
+            order: #{$i} !important;
+        }
+    }
+
+    .order-md-first {
+        order: -1 !important;
+    }
+
+    .order-md-last {
+        order: 13 !important;
+    }
+}
+
+@include desktop {
+    @for $i from 0 through 12 {
+        .order-lg-#{$i} {
+            order: #{$i} !important;
+        }
+    }
+
+    .order-lg-first {
+        order: -1 !important;
+    }
+
+    .order-lg-last {
+        order: 13 !important;
+    }
+}
+
+// Auto columns
+.col-auto {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 0 0.5rem;
+}
+
+// Offset utilities (mobile first)
+@for $i from 0 through 11 {
+    .offset-#{$i} {
+        margin-left: percentage($i / 12);
+    }
+}
+
+// Responsive offset utilities
+@include tablet {
+    @for $i from 0 through 11 {
+        .offset-sm-#{$i} {
+            margin-left: percentage($i / 12);
+        }
+    }
+}
+
+@include large {
+    @for $i from 0 through 11 {
+        .offset-md-#{$i} {
+            margin-left: percentage($i / 12);
+        }
+    }
+}
+
+@include desktop {
+    @for $i from 0 through 11 {
+        .offset-lg-#{$i} {
+            margin-left: percentage($i / 12);
+        }
+    }
+}
+
+// Responsive flex utilities
+@include tablet {
+    .flex-sm-row {
+        flex-direction: row !important;
+    }
+
+    .flex-sm-column {
+        @include flex-column;
+    }
+
+    .justify-sm-start {
+        justify-content: flex-start !important;
+    }
+
+    .justify-sm-center {
+        @include flex-center-horiz;
+    }
+
+    .justify-sm-end {
+        justify-content: flex-end !important;
+    }
+
+    .align-sm-start {
+        align-items: flex-start !important;
+    }
+
+    .align-sm-center {
+        @include flex-center-vert;
+    }
+
+    .align-sm-end {
+        align-items: flex-end !important;
+    }
+}
+
+@include large {
+    .flex-md-row {
+        flex-direction: row !important;
+    }
+
+    .flex-md-column {
+        @include flex-column;
+    }
+
+    .justify-md-start {
+        justify-content: flex-start !important;
+    }
+
+    .justify-md-center {
+        @include flex-center-horiz;
+    }
+
+    .justify-md-end {
+        justify-content: flex-end !important;
+    }
+
+    .align-md-start {
+        align-items: flex-start !important;
+    }
+
+    .align-md-center {
+        @include flex-center-vert;
+    }
+
+    .align-md-end {
+        align-items: flex-end !important;
+    }
+}
+
+@include desktop {
+    .flex-lg-row {
+        flex-direction: row !important;
+    }
+
+    .flex-lg-column {
+        @include flex-column;
+    }
+
+    .justify-lg-start {
+        justify-content: flex-start !important;
+    }
+
+    .justify-lg-center {
+        @include flex-center-horiz;
+    }
+
+    .justify-lg-end {
+        justify-content: flex-end !important;
+    }
+
+    .align-lg-start {
+        align-items: flex-start !important;
+    }
+
+    .align-lg-center {
+        @include flex-center-vert;
+    }
+
+    .align-lg-end {
+        align-items: flex-end !important;
+    }
+}
+
+// Mobile-only utilities
+@include mobile {
+    .mobile-hidden {
+        display: none !important;
+    }
+
+    .mobile-flex-column {
+        @include flex-column;
+    }
+
+    .mobile-text-center {
+        text-align: center !important;
+    }
+}
+
+// =======================
+// END FLEX GRID SYSTEM
+// =======================
+
 /* You can add global styles to this file, and also import other style files */
 
 .heart {
@@ -188,6 +865,14 @@ select {
         transform: rotate(45deg) translateY(20px);
         transform-origin: 100% 100%;
     }
+}
+
+.card {
+    background: $card-background;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px $shadow-color;
+    margin-bottom: 2rem;
 }
 
 @keyframes heartbeat {

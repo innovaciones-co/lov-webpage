@@ -5,6 +5,7 @@ import { Dashboard } from './features/dashboard/dashboard';
 import { Faq } from './features/faq/components/faq';
 import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
+import { Payments } from './features/payments/payments';
 import { Portability } from './features/portability/portability';
 
 export const routes: Routes = [
@@ -32,6 +33,11 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         component: Dashboard,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'pagos',
+        component: Payments,
         canActivate: [authGuard]
     },
     {
