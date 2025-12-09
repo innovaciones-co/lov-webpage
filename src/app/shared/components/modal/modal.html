@@ -1,0 +1,36 @@
+@if (isOpen()) {
+<div class="modal-backdrop" (click)="onBackdropClick($event)" role="dialog" [attr.aria-modal]="true"
+    [attr.aria-labelledby]="title() ? 'modal-title' : null">
+
+    <div class="modal-container" [class]="'modal-' + size()">
+        <div class="modal-content" (click)="$event.stopPropagation()" tabindex="-1" role="document">
+
+            @if (showHeader()) {
+            <header class="modal-header">
+                @if (title()) {
+                <h2 class="modal-title" id="modal-title">{{ title() }}</h2>
+                } @else {
+                <ng-content select="[slot=header]"></ng-content>
+                }
+
+                @if (closable()) {
+                <button type="button" class="modal-close-btn" (click)="closeModal()" aria-label="Cerrar modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                }
+            </header>
+            }
+
+            <main class="modal-body">
+                <ng-content></ng-content>
+            </main>
+
+            @if (showFooter()) {
+            <footer class="modal-footer">
+                <ng-content select="[slot=footer]"></ng-content>
+            </footer>
+            }
+        </div>
+    </div>
+</div>
+}
