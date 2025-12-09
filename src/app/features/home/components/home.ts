@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Promo } from '../../../shared/components/promo/promo';
 import { IntroPortability } from '../../intro-portability/intro-portability';
 import { Intro } from '../../intro/intro';
-import { Plans } from '../../plans/plans';
+import { Plans } from '../../plans/components/plans/plans';
 
 @Component({
   selector: 'app-home',

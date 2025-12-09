@@ -1,6 +1,7 @@
 import { computed, Injectable, Signal, signal } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { BillingInfo } from "../models/billing-info.model";
+import { Product } from "../models/product.model";
 
 @Injectable({
     providedIn: 'root'
@@ -8,17 +9,31 @@ import { BillingInfo } from "../models/billing-info.model";
 export class PaymentService {
     billingInfo = signal<BillingInfo | undefined>(undefined);
     billingForm = signal<FormGroup | undefined>(undefined);
+    selectedProduct = signal<Product | undefined>(undefined);
     private _formValid = signal<boolean>(false);
-    
-    canCheckout: Signal<boolean> = computed(() => this._formValid());
+
+    canCheckout: Signal<boolean> = computed(() => {
+        return this._formValid() && this.selectedProduct() !== undefined;
+    });
 
     setFormValidityStatus(isValid: boolean) {
         this._formValid.set(isValid);
     }
 
+    selectProduct(product: Product) {
+        this.selectedProduct.set(product);
+        console.log('Product selected:', product.getSummaryView());
+    }
+
+    clearProduct() {
+        this.selectedProduct.set(undefined);
+    }
+
     submitBillingInfo(): boolean {
         const form = this.billingForm();
-        if (!form || !form.valid) {
+        const product = this.selectedProduct();
+
+        if (!form || !form.valid || !product) {
             // Mark all fields as touched to show validation errors
             if (form) {
                 Object.keys(form.controls).forEach(key => {
@@ -44,6 +59,7 @@ export class PaymentService {
 
         this.billingInfo.set(billingInfo);
         console.log('Billing info submitted:', billingInfo);
+        console.log('Selected product:', product.getSummaryView());
         return true;
     }
 }

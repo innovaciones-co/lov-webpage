@@ -1,13 +1,29 @@
 @use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
 
 
 :host {
     background: $background;
     display: block;
-    padding: 2rem 4rem;
+    padding: 2rem 1rem;
+
+    @include large {
+        padding: 2rem 2rem;
+    }
 }
 
 #summary {
     max-width: 1600px;
     margin: 0 auto;
+}
+
+.button-section {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@include tablet {
+    .btn {
+        width: 100% !important;
+    }
 }

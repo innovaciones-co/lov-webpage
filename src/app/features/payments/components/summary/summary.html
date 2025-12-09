@@ -1,4 +1,42 @@
 <div class="card">
+    @if (productSummary(); as summary) {
+    <div class="product-summary">
+        <div class="product-header">
+            @if (summary.imageUrl) {
+            <img [src]="summary.imageUrl" [alt]="summary.title" class="product-image">
+            }
+            <div class="product-info">
+                <h3 class="product-title">{{ summary.title }}</h3>
+                @if (summary.subtitle) {
+                <p class="product-subtitle">{{ summary.subtitle }}</p>
+                }
+                <p class="product-price">{{ summary.price }}</p>
+            </div>
+        </div>
 
-    <p>summary works!</p>
+        <div class="product-details">
+            <h4>Detalles:</h4>
+            <ul>
+                @for (detail of summary.details; track detail) {
+                <li>{{ detail }}</li>
+                }
+            </ul>
+        </div>
+
+        @if (summary.type === ProductType.PLAN) {
+        <div class="plan-badge">
+            <span class="badge">Plan de Datos</span>
+        </div>
+        } @else if (summary.type === ProductType.RECHARGE) {
+        <div class="recharge-badge">
+            <span class="badge">Recarga</span>
+        </div>
+        }
+    </div>
+    } @else {
+    <div class="no-product">
+        <p>No hay producto seleccionado</p>
+        <small>Selecciona un plan o recarga para continuar</small>
+    </div>
+    }
 </div>

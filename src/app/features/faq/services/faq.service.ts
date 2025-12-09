@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, finalize, Observable } from 'rxjs';
-import { FAQ, FAQCategory, FAQResponse, PaginationState } from '../models/faq.models';
+import { PaginationState, Paginator } from '../../../core/models/paginator.model';
+import { FAQ, FAQCategory } from '../models/faq.models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +11,11 @@ import { FAQ, FAQCategory, FAQResponse, PaginationState } from '../models/faq.mo
 export class FaqService {
     private http = inject(HttpClient);
 
-    private readonly baseUrl = 'https://lov-webservices-dev.innovaciones.co/api';
+    private readonly baseUrl;
+
+    constructor() {
+        this.baseUrl = environment.apiUrl;
+    }
 
     // State management
     private faqsSubject = new BehaviorSubject<FAQ[]>([]);
@@ -32,13 +38,13 @@ export class FaqService {
         return this.http.get<FAQCategory[]>(`${this.baseUrl}/faqCategories`);
     }
 
-    loadFAQs(page: number = 0, categoryId: number | null = null, pageSize: number = 5): Observable<FAQResponse> {
+    loadFAQs(page: number = 0, categoryId: number | null = null, pageSize: number = 5): Observable<Paginator<FAQ>> {
         this.loadingSubject.next(true);
 
         const categoryParam = categoryId ? `&category=${categoryId}` : '';
         const url = `${this.baseUrl}/faqs?size=${pageSize}&page=${page}${categoryParam}`;
 
-        return this.http.get<FAQResponse>(url).pipe(
+        return this.http.get<Paginator<FAQ>>(url).pipe(
             finalize(() => this.loadingSubject.next(false))
         );
     }

@@ -12,19 +12,3 @@ export interface FAQCategory {
     name: string;
 }
 
-export interface FAQResponse {
-    content: FAQ[];
-    page: {
-        size: number;
-        number: number;
-        totalElements: number;
-        totalPages: number;
-    };
-}
-
-export interface PaginationState {
-    currentPage: number;
-    totalPages: number;
-    pageSize: number;
-    hasMorePages: boolean;
-}
