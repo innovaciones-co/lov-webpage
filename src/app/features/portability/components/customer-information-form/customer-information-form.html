@@ -4,11 +4,11 @@
         <div class="form-grid">
             <div class="form-row">
                 <input-text-field [label]="'NIP'" [placeholder]="'00000'" [control]="form().controls.nip"
-                    [error]="'Código de 5 digitos que te legó por SMS'"></input-text-field>
+                    [error]="getFieldErrorMessage('nip')"></input-text-field>
 
                 <date-picker-field [label]="'Fecha de portabilidad'"
                     [placeholder]="'Ingresa la fecha en la que deseas que se active la portabilidad.'"
-                    [control]="form().controls.portinDate" [error]="'Selecciona una fecha válida'"></date-picker-field>
+                    [control]="form().controls.portinDate" [error]="getFieldErrorMessage('portinDate')"></date-picker-field>
             </div>
         </div>
     </div>
@@ -17,43 +17,43 @@
         <div class="form-grid">
             <div class="form-row">
                 <input-text-field [label]="'Nombre'" [placeholder]="'Arturo'" [control]="form().controls.name"
-                    [error]="'Este campo es obligatorio'"></input-text-field>
+                    [error]="getFieldErrorMessage('name')"></input-text-field>
 
                 <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'"
-                    [control]="form().controls.lastName" [error]="'Este campo es obligatorio'"></input-text-field>
+                    [control]="form().controls.lastName" [error]="getFieldErrorMessage('lastName')"></input-text-field>
             </div>
             <div class="form-row">
                 <select-field [label]="'Tipo de documento'" [placeholder]="''" [options]="documentType()"
-                    [control]="form().controls.documentType" [error]="'Este campo es obligatorio'"></select-field>
+                    [control]="form().controls.documentType" [error]="getFieldErrorMessage('documentType')"></select-field>
 
                 <input-text-field [label]="'Documento'" [placeholder]="'000000000'"
-                    [control]="form().controls.documentID" [error]="'Este campo es obligatorio'"></input-text-field>
+                    [control]="form().controls.documentID" [error]="getFieldErrorMessage('documentID')"></input-text-field>
             </div>
         </div>
         <h3 class="form-subtitle">Información de contacto</h3>
         <div class="form-grid">
             <div class="form-row">
                 <input-text-field [label]="'Correo electrónico'" [placeholder]="'andres@myemail.com'"
-                    [control]="form().controls.email" [error]="'Este campo es obligatorio'"></input-text-field>
+                    [control]="form().controls.email" [error]="getFieldErrorMessage('email')"></input-text-field>
 
                 <input-text-field [label]="'Teléfono'" [placeholder]="'0000000000'"
-                    [control]="form().controls.phoneNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+                    [control]="form().controls.phoneNumber" [error]="getFieldErrorMessage('phoneNumber')"></input-text-field>
             </div>
             <div class="form-row">
                 <select-field [label]="'País'" [placeholder]="''" [options]="country()"
-                    [control]="form().controls.country" [error]="'Este campo es obligatorio'"></select-field>
+                    [control]="form().controls.country" [error]="getFieldErrorMessage('country')"></select-field>
 
                 <input-text-field [label]="'Ciudad'" [placeholder]="''" [control]="form().controls.city"
-                    [error]="'Este campo es obligatorio'"></input-text-field>
+                    [error]="getFieldErrorMessage('city')"></input-text-field>
             </div>
             <div class="form-row">
                 <input-text-field [label]="'Dirección'" [placeholder]="'Cra 00 #00-00'"
-                    [control]="form().controls.address" [error]="'Este campo es obligatorio'"></input-text-field>
+                    [control]="form().controls.address" [error]="getFieldErrorMessage('address')"></input-text-field>
 
                 <input-text-field [label]="'Información complementaria'"
                     [placeholder]="'Conjunto, casa, torre, apartamento, etc.'"
                     [control]="form().controls.addressOptional"
-                    [error]="'Este campo es obligatorio'"></input-text-field>
+                    [error]="getFieldErrorMessage('addressOptional')"></input-text-field>
             </div>
             <!-- 
     <checkbox-field [label]="'Acepto los términos y condiciones'" [control]="form().controls.terms"

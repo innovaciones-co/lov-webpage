@@ -4,21 +4,23 @@
         <div class="form-grid">
             <div class="form-row">
                 <input-text-field [label]="'Número a portar'" [placeholder]="'0000000000'"
-                    [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+                    [control]="form().controls.donorNumber"
+                    [error]="getFieldErrorMessage('donorNumber')"></input-text-field>
 
                 <input-text-field [label]="'Confirmar número a portar'" [placeholder]="'0000000000'"
-                    [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+                    [control]="form().controls.donorNumberConfirm"
+                    [error]="getFieldErrorMessage('donorNumberConfirm')"></input-text-field>
             </div>
             <div class="form-row">
                 <select-field [label]="'Operador movil anterior'"
                     [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'"
                     [options]="donorOperator()" [control]="form().controls.donorOperator"
-                    [error]="'Este campo es obligatorio'"></select-field>
+                    [error]="getFieldErrorMessage('donorOperator')"></select-field>
 
                 <select-field [label]="'Tipo de plan de tu operador anterior'"
                     [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'"
                     [options]="planOptions()" [control]="form().controls.donorPlan"
-                    [error]="'Este campo es obligatorio'"></select-field>
+                    [error]="getFieldErrorMessage('donorPlan')"></select-field>
             </div>
         </div>
     </div>

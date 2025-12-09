@@ -1,10 +1,9 @@
 import { Component, signal, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
-import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 
 export interface PortabilityInformationData {
-  donorNumber: string;
+  lovNumber: string;
   iccidDigits: string;
 }
 
@@ -16,15 +15,39 @@ export interface PortabilityInformationData {
   styleUrl: './portability-information-form.component.scss'
 })
 export class PortabilityInformation {
+  formSubmit = output<PortabilityInformationData>();
+
+  // Error messages map
+  errorMessages: Record<string, Record<string, string>> = {
+    lovNumber: {
+      pattern: 'El número debe tener 10 dígitos numéricos'
+    },
+    iccidDigits: {
+      pattern: 'El campo debe tener 5 dígitos numéricos'
+    }
+  };
 
   form = signal(
     new FormGroup({
-      donorNumber: new FormControl(''),
-      iccidDigits: new FormControl('')//, [Validators.required, Validators.pattern('^[0-9]{5}$')]),
+      lovNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+      iccidDigits: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{5}$')]),
     })
   );
 
-  formSubmit = output<PortabilityInformationData>();
+  // Get error message for a specific field
+  getFieldErrorMessage(fieldName: string): string {
+    const control = this.form().get(fieldName);
+    if (!control?.errors || !control.touched) return '';
+
+    const firstError = Object.keys(control.errors)[0];
+
+    // Validators.required automatically shows 'Este campo es obligatorio'
+    if (firstError === 'required') return 'Este campo es obligatorio';
+
+    // Field-specific messages
+    const fieldErrors = this.errorMessages[fieldName];
+    return fieldErrors?.[firstError] || 'Error de validación';
+  }
 
   onSubmit(): void {
     if (this.form().valid) {
