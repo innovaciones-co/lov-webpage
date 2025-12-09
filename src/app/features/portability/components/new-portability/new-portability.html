@@ -1,45 +1,18 @@
 <div class="stepper-container">
-    <!-- Stepper Navigation -->
-    <div class="stepper-nav">
-        @for (step of steps; let i = $index; track i) {
-        <div class="step-item" [class.active]="isStepActive(i)" [class.completed]="isStepCompleted(i)"
-            [class.clickable]="canNavigateToStep(i)" (click)="selectStep(i)">
-
-            <div class="step-indicator">
-                @if (isStepCompleted(i)) {
-                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <polyline points="20,6 9,17 4,12"></polyline>
-                </svg>
-                } @else {
-                <span class="step-number">{{ i + 1 }}</span>
-                }
-            </div>
-
-            <div class="step-content">
-                <div class="step-label">{{ step.label }}</div>
-            </div>
-
-            @if (i < steps.length - 1) { <div class="step-connector">
-        </div>
+    <!-- Step Content -->
+    <div class="step-content-container">
+        @switch (currentStepIndex()) {
+        @case (0) {
+        <app-portability-information-form
+            (formSubmit)="onPortabilityInformationSubmit($event)"></app-portability-information-form>
+        }
+        @case (1) {
+        <app-portin-information-form (formSubmit)="onPortinInformationSubmit($event)"></app-portin-information-form>
+        }
+        @case (2) {
+        <app-customer-information-form
+            (formSubmit)="onCustomerInformationSubmit($event)"></app-customer-information-form>
+        }
         }
     </div>
-    }
-</div>
-
-<!-- Step Content -->
-<div class="step-content-container card">
-    <ng-container [ngComponentOutlet]="currentStep().component"></ng-container>
-</div>
-
-<!-- Navigation Buttons -->
-<div class="stepper-actions">
-    <button type="button" class="btn btn-secondary" [disabled]="currentStepIndex() === 0" (click)="previousStep()">
-        Anterior
-    </button>
-
-    <button type="button" class="btn btn-primary" [disabled]="currentStepIndex() === steps.length - 1"
-        (click)="nextStep()">
-        Siguiente
-    </button>
-</div>
 </div>

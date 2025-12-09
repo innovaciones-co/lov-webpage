@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NipRequestFormComponent } from './nip-request-form.component';
+import { CustomerInformationForm } from './customer-information-form';
 
-describe('NipRequestFormComponent', () => {
-  let component: NipRequestFormComponent;
-  let fixture: ComponentFixture<NipRequestFormComponent>;
+describe('CustomerInformationForm', () => {
+  let component: CustomerInformationForm;
+  let fixture: ComponentFixture<CustomerInformationForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NipRequestFormComponent]
+      imports: [CustomerInformationForm]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NipRequestFormComponent);
+    fixture = TestBed.createComponent(CustomerInformationForm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

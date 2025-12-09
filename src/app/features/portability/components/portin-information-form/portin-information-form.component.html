@@ -1,0 +1,27 @@
+<form [formGroup]="form()" (ngSubmit)="onSubmit()">
+    <div class="card">
+        <h3 class="form-subtitle">Información de Portabilidad</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'Número a portar'" [placeholder]="'0000000000'"
+                    [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+
+                <input-text-field [label]="'Confirmar número a portar'" [placeholder]="'0000000000'"
+                    [control]="form().controls.donorNumber" [error]="'Este campo es obligatorio'"></input-text-field>
+            </div>
+            <div class="form-row">
+                <select-field [label]="'Operador movil anterior'"
+                    [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'"
+                    [options]="donorOperator()" [control]="form().controls.donorOperator"
+                    [error]="'Este campo es obligatorio'"></select-field>
+
+                <select-field [label]="'Tipo de plan de tu operador anterior'"
+                    [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'"
+                    [options]="planOptions()" [control]="form().controls.donorPlan"
+                    [error]="'Este campo es obligatorio'"></select-field>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+</form>
