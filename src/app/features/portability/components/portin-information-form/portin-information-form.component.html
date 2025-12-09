@@ -27,3 +27,22 @@
 
     <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
 </form>
+
+<app-modal [isOpen]="showModal()" [size]="'md'" [closable]="false" (closed)="onCancelModal()">
+
+    <div class="modal-content-info">
+        <p class="info-content-title">Antes de continuar, asegúrate de esto</p>
+        <div class="info-section">
+            <p>Para que podamos completar tu portabilidad sin inconvenientes, verifica que:</p>
+            <ul>
+                <li>La SIM del operador actual (Claro, Movistar, Virgin, etc.) esté activa.</li>
+                <li>La tengas insertada en un teléfono encendido al momento de hacer el cambio.</li>
+            </ul>
+            <p>Esto nos ayudará a validar tu número correctamente y evitar retrasos en el proceso.</p>
+        </div>
+    </div>
+    <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancelModal()">Cancelar</button>
+        <button type="button" class="btn" (click)="onContinueModal()">Entiendo</button>
+    </div>
+</app-modal>

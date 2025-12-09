@@ -2,6 +2,7 @@ import { Component, signal, output, effect } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
+import { Modal } from '../../../../shared/components/modal/modal';
 
 export interface PortinInformationData {
   donorNumber: string;
@@ -15,13 +16,16 @@ export interface PortinInformationData {
   imports: [
     ReactiveFormsModule,
     InputTextComponent,
-    SelectComponent
+    SelectComponent,
+    Modal
   ],
   templateUrl: './portin-information-form.component.html',
   styleUrl: './portin-information-form.component.scss'
 })
 export class PortinInformationFormComponent {
   formSubmit = output<PortinInformationData>();
+
+  showModal = signal(false);
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
@@ -96,8 +100,17 @@ export class PortinInformationFormComponent {
 
   onSubmit(): void {
     if (this.form().valid) {
-      this.formSubmit.emit(this.form().value as PortinInformationData);
+      this.showModal.set(true);
     }
+  }
+
+  onContinueModal(): void {
+    this.formSubmit.emit(this.form().value as PortinInformationData);
+    this.showModal.set(false);
+  }
+
+  onCancelModal(): void {
+    this.showModal.set(false);
   }
 
 }
