@@ -123,6 +123,16 @@ select {
         color: white;
         cursor: not-allowed;
     }
+
+
+    &.btn-secondary {
+        background-color: transparent;
+        color: $color-extra-1;
+
+        &:hover {
+            background: color-lighten($color-extra-1, 90)
+        }
+    }
 }
 
 .btn--danger {
