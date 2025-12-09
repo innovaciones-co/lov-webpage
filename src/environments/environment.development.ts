@@ -1,3 +1,4 @@
 export const environment = {
-    apiUrl: 'http://lov-gateway.innovaciones.co/api' // Replace with your development API URL
+    production: false,
+    apiUrl: 'http://localhost:8080/api'
 };

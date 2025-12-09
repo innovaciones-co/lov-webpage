@@ -1,4 +1,4 @@
 export const environment = {
-    production: true,
+    production: false,
     apiUrl: 'https://lov-webservices-dev.innovaciones.co/api'
 };

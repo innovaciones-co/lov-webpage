@@ -1,0 +1,413 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, $color-primary 0%, color-lighten($color-primary, 10) 100%);
+    padding: 15px;
+
+    @include tablet {
+        padding: 20px;
+    }
+}
+
+.login-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    padding: 25px 20px;
+    width: 100%;
+    max-width: 320px;
+    animation: slideUp 0.3s ease-out;
+
+    @include tablet {
+        padding: 40px;
+        max-width: 400px;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 25px;
+
+    @include tablet {
+        margin-bottom: 30px;
+    }
+
+    .login-title {
+        color: $color-primary;
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 6px 0;
+        line-height: 1.2;
+
+        @include tablet {
+            font-size: 28px;
+            margin: 0 0 8px 0;
+        }
+    }
+
+    .login-subtitle {
+        color: color-darken($color-primary, 20);
+        font-size: 13px;
+        line-height: 1.4;
+        margin: 0;
+        padding: 0 5px;
+
+        @include tablet {
+            font-size: 14px;
+            padding: 0;
+        }
+    }
+}
+
+.error-banner {
+    background: color-lighten(#ff4757, 90);
+    border: 1px solid color-lighten(#ff4757, 70);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    @include tablet {
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        gap: 8px;
+    }
+
+    .error-icon {
+        font-size: 14px;
+        flex-shrink: 0;
+
+        @include tablet {
+            font-size: 16px;
+        }
+    }
+
+    .error-message {
+        color: color-darken(#ff4757, 20);
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.3;
+
+        @include tablet {
+            font-size: 14px;
+        }
+    }
+}
+
+.auth-form {
+    .form-group {
+        margin-bottom: 16px;
+
+        @include tablet {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: $color-primary;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+
+            @include tablet {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            .country-code {
+                position: absolute;
+                left: 12px;
+                color: color-darken($color-primary, 20);
+                font-weight: 600;
+                font-size: 14px;
+                z-index: 1;
+
+                @include tablet {
+                    left: 16px;
+                    font-size: 16px;
+                }
+            }
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid color-lighten($color-primary, 80);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background: white;
+
+            @include tablet {
+                padding: 14px 16px;
+                border-radius: 8px;
+            }
+
+            &:focus {
+                outline: none;
+                border-color: $color-secondary;
+                box-shadow: 0 0 0 3px rgba($color-secondary, 0.1);
+            }
+
+            &.invalid {
+                border-color: #ff4757;
+                box-shadow: 0 0 0 3px rgba(#ff4757, 0.1);
+            }
+
+            &::placeholder {
+                color: color-lighten($color-primary, 40);
+                font-size: 15px;
+
+                @include tablet {
+                    font-size: 16px;
+                }
+            }
+
+            // MSISDN input with country code
+            &:not(.otp-input) {
+                padding-left: 50px;
+
+                @include tablet {
+                    padding-left: 60px;
+                }
+            }
+
+            // OTP input styling
+            &.otp-input {
+                text-align: center;
+                font-size: 18px;
+                font-weight: 600;
+                letter-spacing: 1.5px;
+
+                @include tablet {
+                    font-size: 20px;
+                    letter-spacing: 2px;
+                }
+            }
+        }
+
+        .error-text {
+            color: #ff4757;
+            font-size: 11px;
+            margin-top: 3px;
+            display: block;
+            line-height: 1.3;
+
+            @include tablet {
+                font-size: 12px;
+                margin-top: 4px;
+            }
+        }
+    }
+}
+
+.otp-info {
+    text-align: center;
+    margin: 16px 0;
+
+    @include tablet {
+        margin: 20px 0;
+    }
+
+    .otp-sent-to {
+        color: color-darken($color-primary, 20);
+        font-size: 13px;
+        margin: 0 0 6px 0;
+        line-height: 1.3;
+
+        @include tablet {
+            font-size: 14px;
+            margin: 0 0 8px 0;
+        }
+    }
+
+    .countdown {
+        color: $color-secondary;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 0;
+
+        @include tablet {
+            font-size: 13px;
+        }
+    }
+
+    .resend-btn {
+        font-size: 13px;
+        padding: 0;
+        margin: 0;
+
+        @include tablet {
+            font-size: 14px;
+        }
+    }
+}
+
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+
+    @include tablet {
+        flex-direction: row;
+        gap: 12px;
+        margin-top: 24px;
+    }
+}
+
+.btn {
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    min-height: 44px;
+
+    @include tablet {
+        padding: 14px 24px;
+        border-radius: 8px;
+        gap: 8px;
+        min-height: 48px;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    &.btn-primary {
+        background: linear-gradient(135deg, $color-secondary 0%, color-darken($color-secondary, 10) 100%);
+        color: white;
+        flex: 1;
+
+        &:not(:disabled):hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba($color-secondary, 0.3);
+        }
+    }
+
+    &.btn-secondary {
+        background: color-lighten($color-primary, 95);
+        color: $color-primary;
+        border: 2px solid color-lighten($color-primary, 80);
+        order: 2;
+
+        @include tablet {
+            order: 0;
+        }
+
+        &:not(:disabled):hover {
+            background: color-lighten($color-primary, 90);
+            border-color: color-lighten($color-primary, 70);
+        }
+    }
+
+    &.btn-link {
+        background: transparent;
+        color: $color-secondary;
+        padding: 6px;
+        font-size: 13px;
+        text-decoration: underline;
+        min-height: auto;
+
+        @include tablet {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        &:not(:disabled):hover {
+            color: color-darken($color-secondary, 10);
+        }
+    }
+}
+
+
+.login-footer {
+    margin-top: 25px;
+    text-align: center;
+
+    @include tablet {
+        margin-top: 30px;
+    }
+
+    .help-text {
+        color: color-lighten($color-primary, 20);
+        font-size: 12px;
+        margin: 0;
+        line-height: 1.4;
+
+        @include tablet {
+            font-size: 13px;
+        }
+
+        .help-link {
+            color: $color-secondary;
+            text-decoration: none;
+            font-weight: 600;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+// Touch-friendly adjustments for mobile
+@include mobile {
+    .form-input {
+        appearance: none;
+        -webkit-appearance: none;
+        border-radius: 6px;
+        -webkit-border-radius: 6px;
+    }
+
+    .btn {
+        appearance: none;
+        -webkit-appearance: none;
+        border-radius: 6px;
+        -webkit-border-radius: 6px;
+    }
+}
+
+// Prevent zoom on iOS
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .form-input {
+        font-size: 16px !important;
+    }
+}
