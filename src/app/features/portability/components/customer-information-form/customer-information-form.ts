@@ -1,5 +1,6 @@
-import { Component, signal, output } from '@angular/core';
+import { Component, signal, output, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CheckboxComponent } from '../../../../shared/components/form-fields/checkbox/checkbox';
 import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
@@ -32,6 +33,8 @@ export interface CustomerInformationData {
   styleUrl: './customer-information-form.scss'
 })
 export class CustomerInformationFormComponent {
+  private router = inject(Router);
+  
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
     nip: {
@@ -114,6 +117,7 @@ export class CustomerInformationFormComponent {
   onSubmit(): void {
     if (this.form().valid) {
       this.formSubmit.emit(this.form().value as CustomerInformationData);
+      this.router.navigate(['/portability/successful']);
     }
   }
 

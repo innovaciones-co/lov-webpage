@@ -18,6 +18,7 @@ export interface Tab {
 })
 export class NavigationTabsComponent {
   tabs = input<Tab[]>([]);
+  initialActiveTabId = input<string | null>(null);
   activeTabId = signal<string | null>(null);
   tabClosed = output<string>();
 
@@ -42,7 +43,11 @@ export class NavigationTabsComponent {
 
   ngOnInit() {
     const tabs = this.tabs();
-    if (tabs.length > 0) {
+    const initialTab = this.initialActiveTabId();
+    
+    if (initialTab && tabs.find(t => t.id === initialTab)) {
+      this.activeTabId.set(initialTab);
+    } else if (tabs.length > 0) {
       this.activeTabId.set(tabs[0].id);
     }
   }
