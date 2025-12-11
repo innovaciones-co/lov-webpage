@@ -1,9 +1,10 @@
-import { Component, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
+import { PortabilityService } from '../../services/portability.service';
+import { CustomerInformationData, CustomerInformationFormComponent } from '../customer-information-form/customer-information-form';
 import { PortabilityInformation, PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
-import { PortinInformationFormComponent, PortinInformationData } from '../portin-information-form/portin-information-form.component';
-import { CustomerInformationFormComponent, CustomerInformationData } from '../customer-information-form/customer-information-form';
+import { PortinInformationData, PortinInformationFormComponent } from '../portin-information-form/portin-information-form.component';
 
 @Component({
   selector: 'app-new-portability',
@@ -14,6 +15,7 @@ import { CustomerInformationFormComponent, CustomerInformationData } from '../cu
 export class NewPortabilityComponent {
 
   private http = inject(HttpClient);
+  private portabilityService = inject(PortabilityService);
 
   portabilityData = signal<PortabilityInformationData | null>(null);
   portinData = signal<PortinInformationData | null>(null);
@@ -33,7 +35,14 @@ export class NewPortabilityComponent {
     }
   }
 
-  onPortabilityInformationSubmit(data: PortabilityInformationData): void {
+  async onPortabilityInformationSubmit(data: PortabilityInformationData): Promise<void> {
+    const isValid = await this.portabilityService.validateSimCard(data.lovNumber, data.iccidDigits);
+
+    if (!isValid) {
+      console.log('SIM is not valid!');
+      return;
+    }
+
     this.portabilityData.set(data);
     console.log('Portability Information Data:', data);
     this.nextStep();
@@ -44,8 +53,8 @@ export class NewPortabilityComponent {
     console.log('Portin Information Data:', data);
     this.nextStep();
 
-    /* // Make GET request to lookup donorNumber
-    const url = `${environment.apiUrl}/mnp/lookup/${data.donorNumber}`;
+    // Make GET request to lookup donorNumber
+    const url = `${environment.gatewayUrl}/mnp/lookup/${data.donorNumber}`;
     console.log('Making GET request to:', url);
 
     this.http.get(url).subscribe({
@@ -58,7 +67,7 @@ export class NewPortabilityComponent {
         // For now, no proceeding to next step
         // this.nextStep();
       }
-    }); */
+    });
   }
 
   onCustomerInformationSubmit(data: CustomerInformationData): void {
@@ -70,6 +79,17 @@ export class NewPortabilityComponent {
       customer: this.customerData()
     });
     // Here you can submit all the data to your backend
+  }
+
+
+  // Validate donor number
+  async validateDonor() {
+    await this.portabilityService.validateDonorNumber('3330701090');
+
+    // Access results via signals
+    const isLoading = this.portabilityService.isValidatingDonorNumber();
+    const result = this.portabilityService.donorValidationResult();
+    const error = this.portabilityService.donorValidationError();
   }
 
 }

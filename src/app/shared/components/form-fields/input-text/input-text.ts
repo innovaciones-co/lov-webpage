@@ -1,13 +1,37 @@
+import { CommonModule } from '@angular/common';
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
   input,
   output,
-  EventEmitter,
-  signal,
+  signal
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
+// Predefined autocomplete values based on HTML autocomplete attribute specification
+export type AutocompleteValue =
+  | 'off'
+  | 'on'
+  | 'name'
+  | 'given-name'
+  | 'family-name'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'tel'
+  | 'tel-national'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-csc'
+  | 'bday';
 
 @Component({
   selector: 'input-text-field',
@@ -22,6 +46,7 @@ export class InputTextComponent {
   placeholder = input<string>('');
   error = input<string>('');
   control = input<FormControl>(new FormControl(''));
+  autocomplete = input<AutocompleteValue>('off');
   valueChange = output<string>();
 
   onBlur() {

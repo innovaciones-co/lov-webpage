@@ -4,6 +4,7 @@ import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError, timer } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { MsisdnPipe } from '../../../core/pipes/msisdn.pipe';
 import {
     AuthError,
     AuthResponse,
@@ -31,6 +32,8 @@ export class AuthService {
     private userSubject = new BehaviorSubject<User | null>(null);
     private errorSubject = new BehaviorSubject<AuthError | null>(null);
     private otpCountdownSubject = new BehaviorSubject<number>(0);
+
+    private msisdnPipe = new MsisdnPipe();
 
     // Public observables
     authState$ = this.authStateSubject.asObservable();
@@ -66,7 +69,9 @@ export class AuthService {
         this.authStateSubject.next(AuthState.REQUESTING_OTP);
         this.clearError();
 
-        const otpRequest: OtpRequest = { msisdn: this.formatMsisdn(msisdn) };
+        const otpRequest: OtpRequest = {
+            msisdn: this.msisdnPipe.transform(msisdn)
+        };
 
         return this.http.post<OtpResponse>(`${this.API_BASE_URL}/otp/request`, otpRequest)
             .pipe(
@@ -90,7 +95,7 @@ export class AuthService {
         this.clearError();
 
         const validation: OtpValidation = {
-            msisdn: this.formatMsisdn(msisdn),
+            msisdn: this.msisdnPipe.transform(msisdn),
             otp
         };
 
@@ -217,17 +222,7 @@ export class AuthService {
         return userData ? JSON.parse(userData) : null;
     }
 
-    private formatMsisdn(msisdn: string): string {
-        // Remove any non-digit characters and ensure proper format
-        const cleaned = msisdn.replace(/\D/g, '');
 
-        // Add country code if not present (assuming Colombia +57)
-        if (cleaned.length === 10 && !cleaned.startsWith('57')) {
-            return `57${cleaned}`;
-        }
-
-        return cleaned;
-    }
 
     private startOtpCountdown(seconds: number): void {
         this.stopOtpCountdown();
