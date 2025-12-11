@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { NavigationTabsComponent } from "../../shared/components/navigation-tabs/navigation-tabs";
 import { NewPortabilityComponent } from './components/new-portability/new-portability';
 import { PortabilityStatusComponent } from './components/portability-status/portability-status';
@@ -16,7 +17,10 @@ import { PortabilityStatusComponent } from './components/portability-status/port
     NavigationTabsComponent
   ],
 })
-export class Portability {
+export class Portability implements OnInit {
+  private route = inject(ActivatedRoute);
+
+  activeTabId = signal<string | null>(null);
 
   tabs = [
     {
@@ -25,11 +29,23 @@ export class Portability {
       component: NewPortabilityComponent,
     },
     {
-      id: 'portability-state ',
+      id: 'portability-status ',
       title: 'Estado de la portabilidad',
       component: PortabilityStatusComponent,
       inputs: {}
     },
   ];
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const tabId = params['tab'];
+      if (tabId) {
+        const tab = this.tabs.find(t => t.id.trim() === tabId);
+        if (tab) {
+          this.activeTabId.set(tab.id);
+        }
+      }
+    });
+  }
 
 }
