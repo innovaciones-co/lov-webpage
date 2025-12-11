@@ -1,5 +1,13 @@
 @use '../../../../../styles/variables' as *;
 
+form {
+
+    .btn {
+        display: block;
+        margin-left: auto;
+    }
+}
+
 .modal-content-info {
 
     .info-content-title {
