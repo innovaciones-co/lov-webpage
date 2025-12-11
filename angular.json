@@ -85,6 +85,9 @@
             "production": {
               "buildTarget": "lov-webpage:build:production"
             },
+            "staging": {
+              "buildTarget": "lov-webpage:build:staging"
+            },
             "development": {
               "buildTarget": "lov-webpage:build:development"
             }
