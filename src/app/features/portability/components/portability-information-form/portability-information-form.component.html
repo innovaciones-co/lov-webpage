@@ -15,3 +15,23 @@
     </div>
     <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
 </form>
+
+<app-modal [isOpen]="simInvalidModalOpen()" [size]="'md'" [closable]="false" (closed)="onCancelModal()">
+
+    <div class="modal-content-info">
+        <p class="info-content-title">Parece que hay un problema con tu información</p>
+        <div class="info-section">
+            <p>Los datos de tu número no han podido ser verificados correctamente.</p>
+            <p>Por favor, asegúrate de que:</p>
+            <ul>
+                <li>El número LOV ingresado es correcto.</li>
+                <li>Los últimos 5 dígitos del código de barras coinciden con los de tu SIM LOV.</li>
+            </ul>
+            <p>Si el problema persiste, te recomendamos contactar a nuestro servicio al cliente para asistencia
+                adicional.</p>
+        </div>
+    </div>
+    <div class="modal-actions">
+        <button type="button" class="btn" (click)="onContinueModal()">Regresar</button>
+    </div>
+</app-modal>

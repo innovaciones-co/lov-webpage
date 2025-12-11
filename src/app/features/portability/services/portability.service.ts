@@ -2,80 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { ApiResponse } from '../../../core/models/api-response.model';
 import { MsisdnPipe } from '../../../core/pipes/msisdn.pipe';
-
-// Interface for the API response structure
-interface SubscriptionResponse {
-  additionalInformationPlaceHolder?: {
-    additionalInformationString?: string | null;
-  };
-  address?: {
-    city: string;
-    country: string;
-    line1: string;
-    state: string;
-  };
-  childCustomerIds?: any;
-  consentToShareData?: boolean;
-  contacts?: {
-    portalAccount: string;
-  };
-  customerType?: string;
-  document?: {
-    id: string;
-    type: string;
-  };
-  email?: string;
-  emailVerified?: boolean;
-  familyName?: string;
-  givenName?: string;
-  id?: number;
-  languageId?: any;
-  lastModified?: string;
-  optedOutFromHouseholdDataShare?: boolean;
-  parentCustomerId?: any;
-  providerId?: number;
-  registrationChannel?: string;
-  registrationDate?: string;
-  state?: string;
-  subscriptions: Subscription[];
-};
-
-interface ApiResponse<T> {
-  correlationId: string;
-  payload: T;
-  providerId: number;
-  responseCode: number;
-  responseDetail: string;
-}
-
-interface Subscription {
-  activationDate?: string;
-  currentDevice?: any;
-  customerId?: string;
-  iccid: string;
-  id?: number;
-  imsi?: string;
-  initialDevice?: any;
-  isPhoneDirectoryRegistered?: boolean;
-  msisdn?: string;
-  paymentType?: string;
-  phoneDirectoryRegistered?: boolean;
-  providerId?: number;
-  state?: string;
-  tariff?: {
-    tariffId: number;
-    tariffName: string;
-  };
-  type?: string;
-}
-
-interface LookupResponse {
-  msisdn: string;
-  operatorCode: string;
-  operatorName: string;
-  routingCode: string;
-}
+import { LookupResponse, SubscriptionResponse } from '../models/portability.models';
 
 @Injectable({
   providedIn: 'root'

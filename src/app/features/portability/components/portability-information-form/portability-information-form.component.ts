@@ -1,6 +1,8 @@
-import { Component, signal, output } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
+import { Modal } from "../../../../shared/components/modal/modal";
+import { PortabilityService } from '../../services/portability.service';
 
 export interface PortabilityInformationData {
   lovNumber: string;
@@ -10,12 +12,15 @@ export interface PortabilityInformationData {
 @Component({
   selector: 'app-portability-information-form',
   standalone: true,
-  imports: [ReactiveFormsModule, InputTextComponent],
+  imports: [ReactiveFormsModule, InputTextComponent, Modal],
   templateUrl: './portability-information-form.component.html',
   styleUrl: './portability-information-form.component.scss'
 })
 export class PortabilityInformation {
+  private portabilityService = inject(PortabilityService);
+
   formSubmit = output<PortabilityInformationData>();
+  simInvalidModalOpen = signal(false);
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
@@ -49,11 +54,28 @@ export class PortabilityInformation {
     return fieldErrors?.[firstError] || 'Error de validación';
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.form().valid) {
+      const lovNumber = this.form().value.lovNumber ?? '';
+      const iccidDigits = this.form().value.iccidDigits ?? '';
+      const isValid = await this.portabilityService.validateSimCard(lovNumber, iccidDigits);
+
+      if (!isValid) {
+        this.simInvalidModalOpen.set(true);
+        return;
+      }
+
       this.formSubmit.emit(this.form().value as PortabilityInformationData);
     }
     console.log('Form submitted:', this.form().value);
+  }
+
+  onCancelModal(): void {
+    this.simInvalidModalOpen.set(false);
+  }
+
+  onContinueModal(): void {
+    this.simInvalidModalOpen.set(false);
   }
 
 }

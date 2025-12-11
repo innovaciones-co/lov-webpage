@@ -36,12 +36,7 @@ export class NewPortabilityComponent {
   }
 
   async onPortabilityInformationSubmit(data: PortabilityInformationData): Promise<void> {
-    const isValid = await this.portabilityService.validateSimCard(data.lovNumber, data.iccidDigits);
-
-    if (!isValid) {
-      console.log('SIM is not valid!');
-      return;
-    }
+    
 
     this.portabilityData.set(data);
     console.log('Portability Information Data:', data);
