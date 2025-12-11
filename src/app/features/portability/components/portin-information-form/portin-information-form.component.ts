@@ -1,8 +1,10 @@
-import { Component, signal, output, effect } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms';
+import { Component, inject, output, signal } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { combineLatest, debounceTime, filter } from 'rxjs';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
 import { Modal } from '../../../../shared/components/modal/modal';
+import { PortabilityService } from '../../services/portability.service';
 
 export interface PortinInformationData {
   donorNumber: string;
@@ -23,6 +25,8 @@ export interface PortinInformationData {
   styleUrl: './portin-information-form.component.scss'
 })
 export class PortinInformationFormComponent {
+  private portabilityService = inject(PortabilityService);
+
   formSubmit = output<PortinInformationData>();
 
   showModal = signal(false);
@@ -30,7 +34,8 @@ export class PortinInformationFormComponent {
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
     donorNumber: {
-      pattern: 'El número debe tener 10 dígitos numéricos'
+      pattern: 'El número debe tener 10 dígitos numéricos',
+      operatorNotDetected: 'No se pudo detectar el operador de este número'
     },
     donorNumberConfirm: {
       pattern: 'El número debe tener 10 dígitos numéricos',
@@ -57,34 +62,82 @@ export class PortinInformationFormComponent {
       donorNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
       donorNumberConfirm: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$'), this.matchValidator('donorNumber')]),
       donorOperator: new FormControl('', Validators.required),
+      donorOperatorCode: new FormControl('', Validators.required),
       donorPlan: new FormControl('', Validators.required),
     })
   );
 
   constructor() {
-    // Setup cross-field validation when form is accessed
-    effect(() => {
-      const formInstance = this.form();
-      const donorNumberControl = formInstance.get('donorNumber');
-      const donorNumberConfirmControl = formInstance.get('donorNumberConfirm');
+    const donorNumberControl = this.form().get('donorNumber');
+    const donorNumberConfirmControl = this.form().get('donorNumberConfirm');
+    const donorOperator = this.form().get('donorOperator');
 
-      if (donorNumberControl && donorNumberConfirmControl) {
-        donorNumberControl.valueChanges.subscribe(() => {
-          donorNumberConfirmControl.updateValueAndValidity();
-        });
-      }
-    });
+    // Keep donorOperator disabled to prevent manual editing
+    donorOperator?.disable();
+
+    if (donorNumberControl && donorNumberConfirmControl) {
+      // Cross-field validation
+      donorNumberControl.valueChanges.subscribe(() => {
+        donorNumberConfirmControl.updateValueAndValidity();
+      });
+
+      // Auto-lookup with both fields
+      combineLatest([
+        donorNumberControl.valueChanges,
+        donorNumberConfirmControl.valueChanges
+      ]).pipe(
+        debounceTime(500),
+        filter(([num1, num2]) => {
+          return num1 === num2 &&
+            donorNumberControl.valid &&
+            donorNumberConfirmControl.valid &&
+            !donorNumberConfirmControl.errors?.['mismatch'];
+        })
+      ).subscribe(([donorNumber]) => {
+        if (donorNumber) {
+          this.lookupDonorOperator(donorNumber);
+        }
+      });
+    }
   }
-
-  donorOperator = signal([
-    { label: 'Claro', value: 'claro' },
-    { label: 'Tigo', value: 'tigo' },
-  ]);
 
   planOptions = signal([
     { label: 'Pospago', value: 'pospay' },
     { label: 'Prepago', value: 'pospaid' },
   ]);
+
+  private async lookupDonorOperator(donorNumber: string): Promise<void> {
+    console.debug(`Looking up donor operator for number: ${donorNumber}`);
+
+    // Clear any previous operator detection errors
+    const donorNumberControl = this.form().get('donorNumber');
+    const donorOperatorControl = this.form().get('donorOperator');
+    const donorOperatorCodeControl = this.form().get('donorOperatorCode');
+
+    if (donorNumberControl?.errors?.['operatorNotDetected']) {
+      const { operatorNotDetected, ...otherErrors } = donorNumberControl.errors;
+      const hasOtherErrors = Object.keys(otherErrors).length > 0;
+      donorNumberControl.setErrors(hasOtherErrors ? otherErrors : null);
+    }
+
+    const lookupResult = await this.portabilityService.lookupByMsisdn(donorNumber);
+
+    if (lookupResult && lookupResult.operatorCode) {
+      donorOperatorCodeControl?.setValue(lookupResult.operatorCode);
+      donorOperatorControl?.setValue(lookupResult.operatorName);
+    } else {
+      console.log('Donor operator could not be detected.');
+      // Set error on the donor number field to show in the input
+      donorNumberControl?.setErrors({
+        ...donorNumberControl?.errors,
+        operatorNotDetected: true
+      });
+      donorNumberControl?.markAsTouched(); // Mark as touched to ensure error displays
+
+      donorOperatorCodeControl?.setValue(null);
+      donorOperatorControl?.setValue(null);
+    }
+  }
 
   // Get error message for a specific field
   getFieldErrorMessage(fieldName: string): string {
@@ -92,6 +145,7 @@ export class PortinInformationFormComponent {
     if (!control?.errors || !control.touched) return '';
 
     const firstError = Object.keys(control.errors)[0];
+    console.log(`First error for field ${fieldName}:`, firstError);
 
     if (firstError === 'required') return 'Este campo es obligatorio';
 

@@ -36,7 +36,7 @@ export class NewPortabilityComponent {
   }
 
   async onPortabilityInformationSubmit(data: PortabilityInformationData): Promise<void> {
-    
+
 
     this.portabilityData.set(data);
     console.log('Portability Information Data:', data);
