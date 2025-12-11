@@ -7,6 +7,7 @@ import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
 import { Payments } from './features/payments/components/payments/payments';
 import { Portability } from './features/portability/portability';
+import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 
 export const routes: Routes = [
     {
@@ -24,6 +25,10 @@ export const routes: Routes = [
     {
         path: 'portabilidad',
         component: Portability
+    },
+    {
+        path: 'portabilidad/exitoso',
+        component: SuccessfulPortability
     },
     {
         path: 'ingreso',
