@@ -1,1 +1,13 @@
-<p>portability-status works!</p>
+<div class="portability-status-container">
+    <form [formGroup]="form()" (ngSubmit)="onSubmit()">
+        <div class="card">
+            <h3 class="form-subtitle">Ingresa tú número LOV</h3>
+            <div class="form-grid">
+                <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'0000000000'"
+                    [control]="form().controls.lovNumber"
+                    [error]="getFieldErrorMessage('lovNumber')"></input-text-field>
+            </div>
+        </div>
+        <button class="btn" type="submit" [disabled]="form().invalid">Consultar</button>
+    </form>
+</div>
