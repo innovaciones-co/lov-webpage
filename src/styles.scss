@@ -58,13 +58,14 @@ small,
 }
 
 a {
-    color: $color-primary;
+    color: $color-extra-1;
     text-decoration: underline;
     transition: color 0.2s;
+    font-weight: 600;
 
     &:hover,
     &:focus {
-        color: $color-secondary;
+        color: color-lighten($color-extra-1, 30);
     }
 }
 
