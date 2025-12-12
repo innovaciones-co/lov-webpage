@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PlansService } from '../../services/plan.service';
 import { CurrencyPipe } from "../../../../core/pipes/currency.pipe";
+import { PlanItem } from "../plan-item/plan-item";
 
 @Component({
   selector: 'app-plans',
-  imports: [CurrencyPipe],
+  imports: [PlanItem],
   templateUrl: './plans.html',
   styleUrl: './plans.scss'
 })
