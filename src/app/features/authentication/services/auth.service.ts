@@ -4,6 +4,7 @@ import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError, timer } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 import { MsisdnPipe } from '../../../core/pipes/msisdn.pipe';
 import {
     AuthError,
@@ -26,7 +27,6 @@ export class AuthService {
     private readonly TOKEN_KEY = 'auth_token';
     private readonly REFRESH_TOKEN_KEY = 'refresh_token';
     private readonly USER_KEY = 'user_data';
-    private readonly API_BASE_URL = 'http://localhost:8080/api/authentication'; // Update with your actual API base URL
 
     private authStateSubject = new BehaviorSubject<AuthState>(AuthState.INITIAL);
     private userSubject = new BehaviorSubject<User | null>(null);
@@ -50,6 +50,8 @@ export class AuthService {
 
     constructor() {
         this.initializeAuth();
+
+
     }
 
     private initializeAuth(): void {
@@ -73,7 +75,7 @@ export class AuthService {
             msisdn: this.msisdnPipe.transform(msisdn)
         };
 
-        return this.http.post<OtpResponse>(`${this.API_BASE_URL}/otp/request`, otpRequest)
+        return this.http.post<OtpResponse>(`${environment.apiUrl}/authentication/otp/request`, otpRequest)
             .pipe(
                 tap(response => {
                     if (response.success) {
@@ -99,7 +101,7 @@ export class AuthService {
             otp
         };
 
-        return this.http.post<AuthResponse>(`${this.API_BASE_URL}/otp/verify`, validation)
+        return this.http.post<AuthResponse>(`${environment.apiUrl}/authentication/otp/verify`, validation)
             .pipe(
                 tap(response => {
                     // If we reach this point, the HTTP request was successful (status 200-299)
@@ -143,7 +145,7 @@ export class AuthService {
             return throwError(() => new Error('No refresh token available'));
         }
 
-        return this.http.post<AuthResponse>(`${this.API_BASE_URL}/refresh?refreshToken=${refreshToken}`, null)
+        return this.http.post<AuthResponse>(`${environment.apiUrl}/authentication/refresh?refreshToken=${refreshToken}`, null)
             .pipe(
                 tap(response => {
                     // If we reach this point, the HTTP request was successful (status 200-299)

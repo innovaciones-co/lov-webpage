@@ -13,9 +13,25 @@
                     <a routerLink="/" class="nav-link" routerLinkActive="active"
                         [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Inicio</a>
                 </li>
+                <li class="nav-item dropdown" (click)="toggleDropdown($event)">
+                    <a class="nav-link" [class.active]="isDropdownActive(['planes', 'recargas'])">
+                        Planes y Recargas
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" routerLink="/planes" routerLinkActive="active"
+                            (click)="closeMobileMenu()">
+                            Planes
+                        </a>
+                        <a class="dropdown-item" routerLink="/recargas" routerLinkActive="active"
+                            (click)="closeMobileMenu()">
+                            Recargas
+                        </a>
+                    </div>
+                </li>
+
                 <li class="nav-item">
-                    <a routerLink="/recargas" class="nav-link" routerLinkActive="active"
-                        (click)="closeMobileMenu()">Recargas</a>
+                    <a routerLink="/portabilidad" class="nav-link" routerLinkActive="active"
+                        (click)="closeMobileMenu()">Portabilidad</a>
                 </li>
                 <li class="nav-item dropdown" (click)="toggleDropdown($event)">
                     <a class="nav-link" [class.active]="isDropdownActive(['preguntas-frecuentes', 'legales'])">

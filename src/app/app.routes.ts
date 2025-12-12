@@ -6,8 +6,10 @@ import { Faq } from './features/faq/components/faq';
 import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
 import { Payments } from './features/payments/components/payments/payments';
-import { Portability } from './features/portability/portability';
+import { PlansIntro } from './features/plans/components/plans-intro/plans-intro';
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
+import { Portability } from './features/portability/portability';
+import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
 
 export const routes: Routes = [
     {
@@ -39,6 +41,16 @@ export const routes: Routes = [
         path: 'dashboard',
         component: Dashboard,
         canActivate: [authGuard]
+    },
+    {
+        path: 'planes',
+        component: PlansIntro,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'recargas',
+        component: RechargesIntro,
+        canActivate: [guestGuard]
     },
     {
         path: 'pagos',
