@@ -12,6 +12,13 @@
     }
 }
 
+#cart-container {
+    @include tablet {
+        position: sticky;
+        top: 6rem;
+    }
+}
+
 #summary {
     max-width: 1600px;
     margin: 0 auto;
