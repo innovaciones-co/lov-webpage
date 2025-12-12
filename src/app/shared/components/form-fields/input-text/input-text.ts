@@ -48,6 +48,7 @@ export class InputTextComponent {
   control = input<FormControl>(new FormControl(''));
   autocomplete = input<AutocompleteValue>('off');
   valueChange = output<string>();
+  type = input<string>('text');
 
   onBlur() {
     if (this.control().valid) {

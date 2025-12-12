@@ -1,1 +1,39 @@
-<p>recharges-intro works!</p>
+<aside id="recharges-intro">
+    <div class="image-container">
+        <img [src]="'promo.png'" width="500" height="300" priority>
+    </div>
+    <div class="form-container">
+        <div class="heart"></div>
+        <h2>¡Recarga sonrisas!</h2>
+        <p>Recargar en LOV significa recargar los corazones de las personas cuyos sueños se transforman en realidad,
+            pero también es llenar tu corazón de alegría para seguir dando</p>
+
+        <form [formGroup]="form()" (ngSubmit)="onSubmit()">
+            <div class="card">
+                <h3 class="form-subtitle">Información de la recarga</h3>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <input-text-field [label]="'Número celular'" [placeholder]="'3001234567'"
+                            [control]="form().controls.msisdn" [error]="getFieldErrorMessage('msisdn')"
+                            [autocomplete]="'tel'"></input-text-field>
+
+                        <input-text-field [label]="'Confirmar número celular'" [placeholder]="'3001234567'"
+                            [control]="form().controls.msisdnConfirmation"
+                            [error]="getFieldErrorMessage('msisdnConfirmation')"
+                            [autocomplete]="'tel'"></input-text-field>
+                    </div>
+                    <div class="form-row">
+                        <input-number-field [label]="'Valor a recargar'" [placeholder]="'10000'"
+                            [control]="form().controls.rechargeValue" [step]="1000"
+                            [error]="getFieldErrorMessage('rechargeValue')"></input-number-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+            </div>
+        </form>
+    </div>
+
+</aside>

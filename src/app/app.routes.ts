@@ -50,7 +50,6 @@ export const routes: Routes = [
     {
         path: 'recargas',
         component: RechargesIntro,
-        canActivate: [guestGuard]
     },
     {
         path: 'pagos',
