@@ -14,9 +14,11 @@
 <div id="summary" class="flex">
     <app-billing-info class="col-8"></app-billing-info>
     <div class="col-4">
-        <app-summary></app-summary>
-        <div class="button-section">
-            <button class="btn" [disabled]="!canContinue()" (click)="onContinue()">Continuar</button>
+        <div id="cart-container">
+            <app-summary></app-summary>
+            <div class="button-section">
+                <button class="btn" [disabled]="!canContinue()" (click)="onContinue()">Continuar</button>
+            </div>
         </div>
     </div>
 </div>
