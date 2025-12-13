@@ -1,17 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Router } from "@angular/router";
 import { InputNumberComponent } from "../../../../shared/components/form-fields/input-number/input-number";
 import { InputTextComponent } from "../../../../shared/components/form-fields/input-text/input-text";
 import { Product } from '../../../payments/models/product.model';
 import { PaymentService } from '../../../payments/services/payment.service';
 import { ProductFactoryService } from '../../../payments/services/product-factory.service';
-import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-recharges-intro',
   templateUrl: './recharges-intro.html',
   styleUrl: './recharges-intro.scss',
-  imports: [InputTextComponent, ReactiveFormsModule, InputNumberComponent, RouterLink]
+  imports: [InputTextComponent, ReactiveFormsModule, InputNumberComponent]
 })
 export class RechargesIntro {
 
