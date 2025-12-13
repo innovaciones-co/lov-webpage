@@ -1,0 +1,47 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+label {
+    margin-left: 6px;
+}
+
+input[type="number"] {
+    width: 100%;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: border-color 0.2s;
+    padding: 0.5rem;
+
+    &:focus {
+        border-color: $color-extra-1;
+        outline: none;
+    }
+
+    &.invalid {
+        border-color: $color-warning;
+    }
+
+    &::placeholder {
+        color: $gray-400;
+    }
+
+    // // Hide number input arrows in webkit browsers
+    // &::-webkit-outer-spin-button,
+    // &::-webkit-inner-spin-button {
+    //     -webkit-appearance: none;
+    //     margin: 0;
+    // }
+
+    // // Hide number input arrows in Firefox
+    // &[type="number"] {
+    //     -moz-appearance: textfield;
+    // }
+}
+
+.error {
+    color: $color-warning;
+    font-size: 13px;
+    margin-left: 6px;
+    height: 20px;
+}
