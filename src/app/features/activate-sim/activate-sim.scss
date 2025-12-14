@@ -1,0 +1,16 @@
+.stepper-container {
+    margin: 1rem 0;
+}
+
+.step-content-container {
+    min-height: 400px;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+
+    .step-content-container {
+        padding: 1.5rem;
+        min-height: 300px;
+    }
+}

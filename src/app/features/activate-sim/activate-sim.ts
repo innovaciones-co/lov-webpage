@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { IccidValidationForm } from "./components/iccid-validation-form/iccid-validation-form";
+import { IccidValidationForm, IccidValidationFormData } from "./components/iccid-validation-form/iccid-validation-form";
 import { ActivateSimForm } from './components/activate-sim-form/activate-sim-form';
 
 @Component({
@@ -27,7 +27,7 @@ export class ActivateSim {
     }
   }
 
-  onIccidValidationFormSubmit($event: Event) {
+  onIccidValidationFormSubmit(data: IccidValidationFormData): void {
     /* this.iccidData.set(data);
     console.log('ICCID Data:', data); */
     this.nextStep();
