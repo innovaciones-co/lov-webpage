@@ -1,1 +1,16 @@
-<p>activate-sim works!</p>
+<div class="container">
+    <h1>Activa tu SIM en minutos</h1>
+    <p>Solo necesitarás tus datos personales y el número de tu SIM.
+    </p>
+    <div class="stepper-container">
+        <!-- Step Content -->
+        <div class="step-content-container">
+            @switch (currentStepIndex()) {
+            @case (0) {
+            <app-iccid-validation-form (formSubmit)="onIccidValidationFormSubmit($event)"></app-iccid-validation-form>
+            }
+            }
+        </div>
+    </div>
+
+</div>
