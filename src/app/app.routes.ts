@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
+import { ActivateSim } from './features/activate-sim/activate-sim';
 import { Login } from './features/authentication/components/login/login';
 import { Dashboard } from './features/dashboard/dashboard';
 import { Faq } from './features/faq/components/faq';
@@ -15,6 +16,10 @@ export const routes: Routes = [
     {
         path: '',
         component: Home
+    },
+    {
+        path: 'activar-sim',
+        component: ActivateSim
     },
     {
         path: 'legales',
