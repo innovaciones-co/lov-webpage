@@ -1,42 +1,28 @@
 import { Component, signal } from '@angular/core';
 import { IccidValidationForm, IccidValidationFormData } from "./components/iccid-validation-form/iccid-validation-form";
-import { ActivateSimForm } from './components/activate-sim-form/activate-sim-form';
+import { PersonalInfoFormData, PersonalInfoForm } from './components/personal-info-form/personal-info-form';
 
 @Component({
   selector: 'app-activate-sim',
-  imports: [IccidValidationForm, ActivateSimForm],
+  imports: [IccidValidationForm, PersonalInfoForm],
   templateUrl: './activate-sim.html',
   styleUrl: './activate-sim.scss',
 })
 export class ActivateSim {
 
   iccidData = signal<IccidValidationFormData | null>(null);
-  // activateSimData = signal<ActivateSimData | null>(null);
-
-  currentStepIndex = signal(0);
-
-  nextStep(): void {
-    if (this.currentStepIndex() < 1) { // 0, 1 (2 steps total)
-      this.currentStepIndex.set(this.currentStepIndex() + 1);
-    }
-  }
-
-  previousStep(): void {
-    if (this.currentStepIndex() > 0) {
-      this.currentStepIndex.set(this.currentStepIndex() - 1);
-    }
-  }
+  personalInfoFormData = signal<PersonalInfoFormData | null>(null);
+  showPersonalInfoForm = signal(false);
 
   onIccidValidationFormSubmit(data: IccidValidationFormData): void {
     this.iccidData.set(data);
-    console.log('ICCID Data:', data);
-    this.nextStep();
+    this.showPersonalInfoForm.set(true);
+    // console.log('ICCID Data:', data);
   }
 
-  onActivateSimFormSubmit($event: Event) {
-    /* this.activateSimData.set(data);
-    console.log('ActivateSim Data:', data); */
-    this.nextStep();
+  onPersonalInfoFormSubmit(data: PersonalInfoFormData): void {
+    this.personalInfoFormData.set(data);
+    // console.log('personalInfo Data:', data);
   }
 
 }

@@ -5,13 +5,9 @@
     <div class="stepper-container">
         <!-- Step Content -->
         <div class="step-content-container">
-            @switch (currentStepIndex()) {
-            @case (0) {
-            <app-iccid-validation-form (formSubmit)="onIccidValidationFormSubmit($event)"></app-iccid-validation-form>
-            }
-            @case (1) {
-            <app-activate-sim-form (formSubmit)="onActivateSimFormSubmit($event)"></app-activate-sim-form>
-            }
+            <app-iccid-validation-form [hideButton]="showPersonalInfoForm()" (formSubmit)="onIccidValidationFormSubmit($event)"></app-iccid-validation-form>
+            @if (showPersonalInfoForm()) {
+            <app-personal-info-form (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
             }
         </div>
     </div>

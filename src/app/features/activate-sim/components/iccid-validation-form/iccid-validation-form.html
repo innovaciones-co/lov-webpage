@@ -12,5 +12,7 @@
             </div>
         </div>
     </div>
-    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+    @if (!hideButton()) {
+        <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+    }
 </form>

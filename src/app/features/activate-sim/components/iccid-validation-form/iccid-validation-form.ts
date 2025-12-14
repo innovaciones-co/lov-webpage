@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, effect, input, output, signal } from '@angular/core';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -16,6 +16,7 @@ export interface IccidValidationFormData {
 })
 export class IccidValidationForm {
 
+  hideButton = input(false);
   formSubmit = output<IccidValidationFormData>();
 
   // Error messages map
@@ -34,6 +35,16 @@ export class IccidValidationForm {
       puk: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{8}$')]),
     })
   );
+
+  constructor() {
+    effect(() => {
+      if (this.hideButton()) {
+        this.form().disable();
+      } else {
+        this.form().enable();
+      }
+    });
+  }
 
   // Get error message for a specific field
   getFieldErrorMessage(fieldName: string): string {
