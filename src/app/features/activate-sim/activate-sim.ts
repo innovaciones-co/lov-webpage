@@ -10,7 +10,7 @@ import { ActivateSimForm } from './components/activate-sim-form/activate-sim-for
 })
 export class ActivateSim {
 
-  // iccidData = signal<IccidValidationData | null>(null);
+  iccidData = signal<IccidValidationFormData | null>(null);
   // activateSimData = signal<ActivateSimData | null>(null);
 
   currentStepIndex = signal(0);
@@ -28,8 +28,8 @@ export class ActivateSim {
   }
 
   onIccidValidationFormSubmit(data: IccidValidationFormData): void {
-    /* this.iccidData.set(data);
-    console.log('ICCID Data:', data); */
+    this.iccidData.set(data);
+    console.log('ICCID Data:', data);
     this.nextStep();
   }
 
