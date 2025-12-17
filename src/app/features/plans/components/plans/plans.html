@@ -1,12 +1,11 @@
-@if (loading()) {
-<span class="loading-spinner"></span>
-}
-@else {
 <div class="container">
-  <ul class="cards-list">
-    @for (plan of plans(); track $index) {
-    <app-plan-item [plan]="plan"></app-plan-item>
-    }
-  </ul>
+
+    <h1>Elige tu plan ahora</h1>
+
+    <p>Encuentra el plan perfecto entre nuestras opciones disponibles. Todos incluyen activación inmediata y sin
+        cláusula de
+        permanencia.</p>
+
+    <app-navigation-tabs [tabs]="tabs" [initialActiveTabId]="activeTabId()"></app-navigation-tabs>
+
 </div>
-}

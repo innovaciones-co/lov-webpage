@@ -1,64 +1,39 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { PlansService } from '../../services/plan.service';
-import { CurrencyPipe } from "../../../../core/pipes/currency.pipe";
-import { PlanItem } from "../plan-item/plan-item";
+import { Component, signal } from '@angular/core';
+import { NavigationTabsComponent } from "../../../../shared/components/navigation-tabs/navigation-tabs";
+import { PlansDashboard } from '../plans-dashboard/plans-dashboard';
 
 @Component({
   selector: 'app-plans',
-  imports: [PlanItem],
+  imports: [NavigationTabsComponent],
   templateUrl: './plans.html',
   styleUrl: './plans.scss'
 })
-export class Plans implements OnInit {
-  plansService = inject(PlansService);
+export class Plans {
+  activeTabId = signal<string | null>(null);
 
-  constructor() {
-    this.plansService.getPlans();
-  }
-
-  get plans() {
-    return this.plansService.getPlansSignal();
-  }
-
-  get pagination() {
-    return this.plansService.getPaginationSignal();
-  }
-
-  get loading() {
-    return this.plansService.getLoadingSignal();
-  }
-
-  loadMore() {
-    const currentPage = this.pagination().currentPage + 1;
-    this.plansService.getPlans(currentPage);
-  }
-
-  resetPagination() {
-    this.plansService.resetPagination();
-  }
-
-  ngOnDestroy() {
-    this.plansService.resetPagination();
-  }
-
-  ngOnInit() {
-    this.plansService.getPlans();
-  }
-
-  onCategoryChange(categoryId: number | null) {
-    this.plansService.getPlans(0, categoryId);
-  }
-
-  onPageChange(page: number) {
-    this.plansService.getPlans(page);
-  }
-
-  onPageSizeChange(pageSize: number) {
-    this.plansService.getPlans(0, null, pageSize);
-  }
-
-  onReset() {
-    this.resetPagination();
-    this.plansService.getPlans();
-  }
+  tabs = [
+    {
+      id: 'all',
+      title: 'Todos los planes',
+      component: PlansDashboard,
+    },
+    {
+      id: 'pre-paid',
+      title: 'Planes prepago',
+      component: PlansDashboard,
+      inputs: {}
+    },
+    {
+      id: 'post-paid',
+      title: 'Planes postpago',
+      component: PlansDashboard,
+      inputs: {}
+    },
+    {
+      id: 'data-only',
+      title: 'Solo datos',
+      component: PlansDashboard,
+      inputs: {}
+    },
+  ];
 }
