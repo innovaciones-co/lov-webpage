@@ -2,14 +2,10 @@
 
     <h1>Elige tu plan ahora</h1>
 
-    <p>Encuentra el plan perfecto entre nuestras opciones disponibles. Todos incluyen activación inmediata y sin
+    <p>Encuentra el plan perfecto entre nuestras opciones disponibles. Todos incluyen activación inmediata y sin
         cláusula de
         permanencia.</p>
 
-    @if (loading()) {
-    <span class="loading-spinner"></span>
-    }
-    @else {
-        
-    }
+    <app-navigation-tabs [tabs]="tabs" [initialActiveTabId]="activeTabId()"></app-navigation-tabs>
+
 </div>
