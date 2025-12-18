@@ -12,10 +12,6 @@ import { PlanItem } from "../plan-item/plan-item";
 export class PlansIntro implements OnInit {
   plansService = inject(PlansService);
 
-  constructor() {
-    this.plansService.getPlans();
-  }
-
   get plans() {
     return this.plansService.getPlansSignal();
   }
@@ -42,7 +38,7 @@ export class PlansIntro implements OnInit {
   }
 
   ngOnInit() {
-    this.plansService.getPlans();
+    this.plansService.getPlans(0, null, 5);
   }
 
   onCategoryChange(categoryId: number | null) {

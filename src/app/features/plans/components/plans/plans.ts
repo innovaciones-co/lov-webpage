@@ -21,19 +21,19 @@ export class Plans {
       id: 'pre-paid',
       title: 'Planes prepago',
       component: PlansDashboard,
-      inputs: {}
+      inputs: { categoryId: 10000 }
     },
     {
       id: 'post-paid',
       title: 'Planes postpago',
       component: PlansDashboard,
-      inputs: {}
+      inputs: { categoryId: 10001 }
     },
     {
       id: 'data-only',
       title: 'Solo datos',
       component: PlansDashboard,
-      inputs: {}
+      inputs: { categoryId: 10002 }
     },
   ];
 }

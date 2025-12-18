@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { PlanItem } from "../plan-item/plan-item";
 import { PlansService } from '../../services/plan.service';
 
@@ -9,11 +9,8 @@ import { PlansService } from '../../services/plan.service';
   styleUrl: './plans-dashboard.scss'
 })
 export class PlansDashboard implements OnInit {
+  categoryId = input<number | null>(null);
   plansService = inject(PlansService);
-
-  constructor() {
-    this.plansService.getPlans();
-  }
 
   get plans() {
     return this.plansService.getPlansSignal();
@@ -41,11 +38,7 @@ export class PlansDashboard implements OnInit {
   }
 
   ngOnInit() {
-    this.plansService.getPlans();
-  }
-
-  onCategoryChange(categoryId: number | null) {
-    this.plansService.getPlans(0, categoryId);
+    this.plansService.getPlans(0, this.categoryId());
   }
 
   onPageChange(page: number) {

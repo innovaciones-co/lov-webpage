@@ -24,12 +24,12 @@ export class PlansService {
         this.baseUrl = environment.apiUrl;
     }
 
-    getPlans(page: number = 0, categoryId: number | null = null, pageSize: number = 5) {
+    getPlans(page: number = 0, categoryId: number | null = null, pageSize: number = 100) {
         console.debug('Fetching plans:', { page, categoryId, pageSize });
         this.loading.set(true);
 
         const categoryParam = categoryId ? `&category=${categoryId}` : '';
-        const url = `${this.baseUrl}/plans?size=${pageSize}&page=${page}${categoryParam}`;
+        const url = `${this.baseUrl}/plans?&operator=10000&size=${pageSize}&page=${page}${categoryParam}`;
 
         return this.http.get<Paginator<Plan>>(url).subscribe({
             next: (data: Paginator<Plan>) => {
