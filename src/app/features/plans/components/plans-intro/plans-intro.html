@@ -5,7 +5,7 @@
 <div class="container">
   <ul class="cards-list">
     @for (plan of plans(); track $index) {
-    <app-plan-item [plan]="plan"></app-plan-item>
+    <app-plan-item [plan]="plan" [enableHoverEffect]="true"></app-plan-item>
     }
   </ul>
 </div>
