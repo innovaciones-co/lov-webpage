@@ -1,6 +1,1 @@
-.container {
-    padding: 4rem 1rem;
-    max-width: 1800px;
-    margin: 0 auto;
-    min-height: 60vh;
-}
+@use '../../../../../styles/mixins' as *;
