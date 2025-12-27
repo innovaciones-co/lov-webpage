@@ -1,4 +1,4 @@
-<li class="card">
+<li class="card" [class.hover-enabled]="enableHoverEffect()">
     <div class="card-body">
         <h3 class="card-title">{{plan.name}}</h3>
         <p class="card-price">{{plan.price | currency}}</p>

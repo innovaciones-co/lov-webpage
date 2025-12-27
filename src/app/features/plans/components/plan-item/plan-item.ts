@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, input, Input } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { CurrencyPipe } from "../../../../core/pipes/currency.pipe";
 import { PlanProduct } from '../../../payments/models/product.model';
@@ -14,6 +14,7 @@ import { Plan } from '../../models/plan.model';
 })
 export class PlanItem {
   @Input() plan!: Plan;
+  enableHoverEffect = input(false);
 
   private paymentService = inject(PaymentService);
   private productFactoryService = inject(ProductFactoryService);

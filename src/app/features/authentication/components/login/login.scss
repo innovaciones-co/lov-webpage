@@ -4,31 +4,17 @@
 .login-container {
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, $color-primary 0%, color-lighten($color-primary, 10) 100%);
     padding: 15px;
-
-    @include tablet {
-        padding: 20px;
-    }
 }
 
-.login-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    padding: 25px 20px;
+.auth-form-wrapper {
     width: 100%;
-    max-width: 320px;
-    animation: slideUp 0.3s ease-out;
-
-    @include tablet {
-        padding: 40px;
-        max-width: 400px;
-        border-radius: 16px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
+    max-width: 650px;
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes slideUp {
@@ -45,36 +31,20 @@
 
 .login-header {
     text-align: center;
-    margin-bottom: 25px;
-
-    @include tablet {
-        margin-bottom: 30px;
-    }
+    max-width: 650px;
+    width: 100%;
 
     .login-title {
-        color: $color-primary;
-        font-size: 22px;
+        font-size: 32px;
         font-weight: 700;
-        margin: 0 0 6px 0;
-        line-height: 1.2;
-
-        @include tablet {
-            font-size: 28px;
-            margin: 0 0 8px 0;
-        }
+        margin: 0 0 10px 0;
     }
 
     .login-subtitle {
-        color: color-darken($color-primary, 20);
-        font-size: 13px;
-        line-height: 1.4;
-        margin: 0;
-        padding: 0 5px;
-
-        @include tablet {
-            font-size: 14px;
-            padding: 0;
-        }
+        font-size: 1.1rem;
+        color: $gray-700;
+        margin-bottom: 32px;
+        padding: 0 16px;
     }
 }
 
@@ -117,6 +87,8 @@
 }
 
 .auth-form {
+
+    // TODO: Replace with input component
     .form-group {
         margin-bottom: 16px;
 
@@ -227,6 +199,24 @@
             }
         }
     }
+
+    .disclaimer {
+        display: flex;
+        gap: 10px;
+        padding: 16px;
+        border-radius: 10px;
+        background: #F9FAFB;
+
+        span {
+            font-size: 24px;
+            color: $color-extra-1;
+            font-variation-settings: 'wght' 300;
+        }
+
+        .disclaimer-body {
+            margin-top: 5px;
+        }
+    }
 }
 
 .otp-info {
@@ -284,80 +274,6 @@
     }
 }
 
-.btn {
-    padding: 12px 20px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    text-decoration: none;
-    min-height: 44px;
-
-    @include tablet {
-        padding: 14px 24px;
-        border-radius: 8px;
-        gap: 8px;
-        min-height: 48px;
-    }
-
-    &:disabled {
-        cursor: not-allowed;
-        opacity: 0.6;
-    }
-
-    &.btn-primary {
-        background: linear-gradient(135deg, $color-secondary 0%, color-darken($color-secondary, 10) 100%);
-        color: white;
-        flex: 1;
-
-        &:not(:disabled):hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba($color-secondary, 0.3);
-        }
-    }
-
-    &.btn-secondary {
-        background: color-lighten($color-primary, 95);
-        color: $color-primary;
-        border: 2px solid color-lighten($color-primary, 80);
-        order: 2;
-
-        @include tablet {
-            order: 0;
-        }
-
-        &:not(:disabled):hover {
-            background: color-lighten($color-primary, 90);
-            border-color: color-lighten($color-primary, 70);
-        }
-    }
-
-    &.btn-link {
-        background: transparent;
-        color: $color-secondary;
-        padding: 6px;
-        font-size: 13px;
-        text-decoration: underline;
-        min-height: auto;
-
-        @include tablet {
-            padding: 8px;
-            font-size: 14px;
-        }
-
-        &:not(:disabled):hover {
-            color: color-darken($color-secondary, 10);
-        }
-    }
-}
-
-
 .login-footer {
     margin-top: 25px;
     text-align: center;
@@ -391,13 +307,6 @@
 // Touch-friendly adjustments for mobile
 @include mobile {
     .form-input {
-        appearance: none;
-        -webkit-appearance: none;
-        border-radius: 6px;
-        -webkit-border-radius: 6px;
-    }
-
-    .btn {
         appearance: none;
         -webkit-appearance: none;
         border-radius: 6px;

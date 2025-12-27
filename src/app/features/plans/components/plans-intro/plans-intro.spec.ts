@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PlansIntro } from './plans-intro';
 
-describe('PlansIntro', () => {
+describe('PlansInt', () => {
   let component: PlansIntro;
   let fixture: ComponentFixture<PlansIntro>;
 
@@ -10,7 +10,7 @@ describe('PlansIntro', () => {
     await TestBed.configureTestingModule({
       imports: [PlansIntro]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(PlansIntro);
     component = fixture.componentInstance;

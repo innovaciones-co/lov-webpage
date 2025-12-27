@@ -1,0 +1,12 @@
+@if (loading()) {
+<span class="loading-spinner"></span>
+}
+@else {
+<div class="plans-dashboard-container">
+    <div class="plans-grid">
+        @for (plan of plans(); track $index) {
+        <app-plan-item [plan]="plan"></app-plan-item>
+        }
+    </div>
+</div>
+}

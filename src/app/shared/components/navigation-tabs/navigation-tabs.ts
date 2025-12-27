@@ -1,4 +1,4 @@
-import { Component, input, output, signal, ChangeDetectionStrategy, Type } from '@angular/core';
+import { Component, input, output, signal, ChangeDetectionStrategy, Type, OnInit } from '@angular/core';
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 
 export interface Tab {
@@ -16,7 +16,7 @@ export interface Tab {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgComponentOutlet],
 })
-export class NavigationTabsComponent {
+export class NavigationTabsComponent implements OnInit {
   tabs = input<Tab[]>([]);
   initialActiveTabId = input<string | null>(null);
   activeTabId = signal<string | null>(null);
@@ -44,7 +44,7 @@ export class NavigationTabsComponent {
   ngOnInit() {
     const tabs = this.tabs();
     const initialTab = this.initialActiveTabId();
-    
+
     if (initialTab && tabs.find(t => t.id === initialTab)) {
       this.activeTabId.set(initialTab);
     } else if (tabs.length > 0) {

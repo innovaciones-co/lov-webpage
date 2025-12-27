@@ -1,64 +1,37 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { PlansService } from '../../services/plan.service';
-import { CurrencyPipe } from "../../../../core/pipes/currency.pipe";
-import { PlanItem } from "../plan-item/plan-item";
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { NavigationTabsComponent } from "../../../../shared/components/navigation-tabs/navigation-tabs";
+import { PlansDashboard } from '../plans-dashboard/plans-dashboard';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-plans',
-  imports: [PlanItem],
+  imports: [NavigationTabsComponent],
   templateUrl: './plans.html',
   styleUrl: './plans.scss'
 })
 export class Plans implements OnInit {
-  plansService = inject(PlansService);
+  activeTabId = signal<string | null>(null);
+  categoryService = inject(CategoryService);
 
-  constructor() {
-    this.plansService.getPlans();
-  }
+  tabs = computed(() => {
+    const categories = this.categoryService.getCategoriesSignal();
 
-  get plans() {
-    return this.plansService.getPlansSignal();
-  }
-
-  get pagination() {
-    return this.plansService.getPaginationSignal();
-  }
-
-  get loading() {
-    return this.plansService.getLoadingSignal();
-  }
-
-  loadMore() {
-    const currentPage = this.pagination().currentPage + 1;
-    this.plansService.getPlans(currentPage);
-  }
-
-  resetPagination() {
-    this.plansService.resetPagination();
-  }
-
-  ngOnDestroy() {
-    this.plansService.resetPagination();
-  }
+    return [
+      {
+        id: 'all',
+        title: 'Todos los planes',
+        component: PlansDashboard,
+      },
+      ...categories().map(category => ({
+        id: `category-${category.id}`,
+        title: category.name,
+        component: PlansDashboard,
+        inputs: { categoryId: category.id }
+      }))
+    ];
+  });
 
   ngOnInit() {
-    this.plansService.getPlans();
-  }
-
-  onCategoryChange(categoryId: number | null) {
-    this.plansService.getPlans(0, categoryId);
-  }
-
-  onPageChange(page: number) {
-    this.plansService.getPlans(page);
-  }
-
-  onPageSizeChange(pageSize: number) {
-    this.plansService.getPlans(0, null, pageSize);
-  }
-
-  onReset() {
-    this.resetPagination();
-    this.plansService.getPlans();
+    this.categoryService.getCategories();
   }
 }

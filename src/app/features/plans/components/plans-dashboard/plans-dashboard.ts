@@ -1,15 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { PlansService } from '../../services/plan.service';
-import { CurrencyPipe } from "../../../../core/pipes/currency.pipe";
+import { Component, inject, input, OnInit } from '@angular/core';
 import { PlanItem } from "../plan-item/plan-item";
+import { PlansService } from '../../services/plan.service';
 
 @Component({
-  selector: 'app-plans-intro',
+  selector: 'app-plans-dashboard',
   imports: [PlanItem],
-  templateUrl: './plans-intro.html',
-  styleUrl: './plans-intro.scss'
+  templateUrl: './plans-dashboard.html',
+  styleUrl: './plans-dashboard.scss'
 })
-export class PlansIntro implements OnInit {
+export class PlansDashboard implements OnInit {
+  categoryId = input<number | null>(null);
   plansService = inject(PlansService);
 
   get plans() {
@@ -38,11 +38,7 @@ export class PlansIntro implements OnInit {
   }
 
   ngOnInit() {
-    this.plansService.getPlans(0, null, 5);
-  }
-
-  onCategoryChange(categoryId: number | null) {
-    this.plansService.getPlans(0, categoryId);
+    this.plansService.getPlans(0, this.categoryId());
   }
 
   onPageChange(page: number) {
