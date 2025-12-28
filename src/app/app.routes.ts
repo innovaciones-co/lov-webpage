@@ -11,6 +11,7 @@ import { PlansIntro } from './features/plans/components/plans-intro/plans-intro'
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 import { Portability } from './features/portability/portability';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
+import { DeviceLock } from './features/device-lock/device-lock';
 
 export const routes: Routes = [
     {
@@ -60,6 +61,10 @@ export const routes: Routes = [
         path: 'pagos',
         component: Payments,
         canActivate: [authGuard]
+    },
+    {
+        path: 'bloqueo-equipo',
+        component: DeviceLock,
     },
     {
         path: '**',
