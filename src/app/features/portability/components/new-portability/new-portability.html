@@ -3,15 +3,21 @@
     <div class="step-content-container">
         @switch (currentStepIndex()) {
         @case (0) {
-        <app-portability-information-form
-            (formSubmit)="onPortabilityInformationSubmit($event)"></app-portability-information-form>
+        <div class="form-wrapper">
+            <app-portability-information-form
+                (formSubmit)="onPortabilityInformationSubmit($event)"></app-portability-information-form>
+        </div>
         }
         @case (1) {
-        <app-portin-information-form (formSubmit)="onPortinInformationSubmit($event)"></app-portin-information-form>
+        <div class="form-wrapper">
+            <app-portin-information-form (formSubmit)="onPortinInformationSubmit($event)"></app-portin-information-form>
+        </div>
         }
         @case (2) {
-        <app-customer-information-form
-            (formSubmit)="onCustomerInformationSubmit($event)"></app-customer-information-form>
+        <div class="form-wrapper">
+            <app-customer-information-form
+                (formSubmit)="onCustomerInformationSubmit($event)"></app-customer-information-form>
+        </div>
         }
         }
     </div>

@@ -5,9 +5,14 @@
     <div class="stepper-container">
         <!-- Step Content -->
         <div class="step-content-container">
-            <app-iccid-validation-form [hideButton]="showPersonalInfoForm()" (formSubmit)="onIccidValidationFormSubmit($event)"></app-iccid-validation-form>
+            <div class="form-wrapper">
+                <app-iccid-validation-form [hideButton]="showPersonalInfoForm()"
+                    (formSubmit)="onIccidValidationFormSubmit($event)"></app-iccid-validation-form>
+            </div>
             @if (showPersonalInfoForm()) {
-            <app-personal-info-form (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
+            <div class="form-wrapper">
+                <app-personal-info-form (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
+            </div>
             }
         </div>
     </div>
