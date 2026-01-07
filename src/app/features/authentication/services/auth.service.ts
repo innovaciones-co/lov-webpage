@@ -7,7 +7,6 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { MsisdnPipe } from '../../../core/pipes/msisdn.pipe';
 import {
-    AuthError,
     AuthResponse,
     AuthState,
     OtpRequest,
@@ -15,6 +14,9 @@ import {
     OtpValidation,
     User
 } from '../models/auth.models';
+import { AuthError } from '../models/error.models';
+import { AuthHttpErrorHandler } from './error-handler.service';
+import { AuthErrorStateManager } from './error-state.service';
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +25,8 @@ export class AuthService {
     private http = inject(HttpClient);
     private router = inject(Router);
     private platformId = inject(PLATFORM_ID);
+    private errorHandler = inject(AuthHttpErrorHandler);
+    private errorStateManager = inject(AuthErrorStateManager);
 
     private readonly TOKEN_KEY = 'auth_token';
     private readonly REFRESH_TOKEN_KEY = 'refresh_token';
@@ -31,7 +35,6 @@ export class AuthService {
 
     private authStateSubject = new BehaviorSubject<AuthState>(AuthState.INITIAL);
     private userSubject = new BehaviorSubject<User | null>(null);
-    private errorSubject = new BehaviorSubject<AuthError | null>(null);
     private otpCountdownSubject = new BehaviorSubject<number>(0);
 
     private msisdnPipe = new MsisdnPipe();
@@ -39,7 +42,7 @@ export class AuthService {
     // Public observables
     authState$ = this.authStateSubject.asObservable();
     user$ = this.userSubject.asObservable();
-    error$ = this.errorSubject.asObservable();
+    error$ = this.errorStateManager.error$;
     otpCountdown$ = this.otpCountdownSubject.asObservable();
 
     private currentSessionId: string | null = null;
@@ -68,7 +71,7 @@ export class AuthService {
      */
     requestOtp(msisdn: string): Observable<OtpResponse> {
         this.authStateSubject.next(AuthState.REQUESTING_OTP);
-        this.clearError();
+        this.errorStateManager.clearError();
 
         const otpRequest: OtpRequest = {
             msisdn: this.msisdnPipe.transform(msisdn)
@@ -81,7 +84,7 @@ export class AuthService {
                         this.authStateSubject.next(AuthState.OTP_SENT);
                         this.startOtpCountdown(60 * 2); // 2 minutes countdown
                     } else {
-                        this.handleError({ message: response.message, code: 'OTP_REQUEST_FAILED' });
+                        this.handleBusinessError({ message: response.message, code: 'OTP_REQUEST_FAILED' });
                     }
                 }),
                 catchError(this.handleHttpError.bind(this))
@@ -93,7 +96,7 @@ export class AuthService {
      */
     validateOtp(msisdn: string, otp: string): Observable<AuthResponse> {
         this.authStateSubject.next(AuthState.VALIDATING_OTP);
-        this.clearError();
+        this.errorStateManager.clearError();
 
         const validation: OtpValidation = {
             msisdn: this.msisdnPipe.transform(msisdn),
@@ -162,7 +165,7 @@ export class AuthService {
      */
     resetState(): void {
         this.authStateSubject.next(AuthState.INITIAL);
-        this.clearError();
+        this.errorStateManager.clearError();
         this.stopOtpCountdown();
         this.currentSessionId = null;
     }
@@ -172,6 +175,28 @@ export class AuthService {
      */
     resendOtp(msisdn: string): Observable<OtpResponse> {
         return this.requestOtp(msisdn);
+    }
+
+    /**
+     * Set OTP sent state (used when user already has a code)
+     */
+    setOtpSentState(): void {
+        this.authStateSubject.next(AuthState.OTP_SENT);
+        this.errorStateManager.clearError();
+    }
+
+    /**
+     * Get current error recovery action
+     */
+    getCurrentErrorRecoveryAction(): string | null {
+        return this.errorStateManager.getCurrentErrorRecoveryAction();
+    }
+
+    /**
+     * Check if current error is retryable
+     */
+    isCurrentErrorRetryable(): boolean {
+        return this.errorStateManager.isCurrentErrorRetryable();
     }
 
     // Private methods
@@ -252,86 +277,26 @@ export class AuthService {
         this.otpCountdownSubject.next(0);
     }
 
-    private handleError(error: AuthError): void {
-        this.errorSubject.next(error);
+    /**
+     * Handle business logic errors (not HTTP errors)
+     */
+    private handleBusinessError(error: AuthError): void {
+        this.errorStateManager.setError({
+            ...error,
+            timestamp: new Date(),
+            context: 'business'
+        });
         this.authStateSubject.next(AuthState.ERROR);
     }
 
-    private clearError(): void {
-        this.errorSubject.next(null);
-    }
-
-    private handleHttpError(error: HttpErrorResponse): Observable<never> {
-        let authError: AuthError;
-
-        switch (error.status) {
-            case 0:
-                authError = {
-                    message: 'No se pudo conectar al servidor. Por favor verifica tu conexión a internet.',
-                    code: 'NETWORK_ERROR'
-                };
-                break;
-            case 400:
-                authError = {
-                    message: error.error?.message || 'Solicitud inválida.',
-                    code: 'BAD_REQUEST'
-                };
-                break;
-            case 401:
-                authError = {
-                    message: 'No autorizado. Por favor verifica tus credenciales.',
-                    code: 'UNAUTHORIZED'
-                };
-                break;
-            case 404:
-                authError = {
-                    message: 'Recurso no encontrado.',
-                    code: 'NOT_FOUND'
-                };
-                break;
-            case 500:
-                console.log('Server error details:', JSON.stringify(error.error));
-                if (error.error.message == 'Invalid OTP code') {
-                    authError = {
-                        message: 'El código OTP es inválido. Por favor intenta nuevamente.',
-                        code: 'INVALID_OTP'
-                    };
-                    break;
-                }
-                authError = {
-                    message: 'Error interno del servidor. Por favor intenta nuevamente más tarde.',
-                    code: 'SERVER_ERROR'
-                };
-                break;
-            default:
-                authError = {
-                    message: 'Ha ocurrido un error inesperado. Por favor intenta nuevamente.',
-                    code: 'UNKNOWN_ERROR'
-                };
-        }
-
-        if (error.error && error.error.message) {
-            authError = {
-                message: error.error.message,
-                code: error.error.code || 'HTTP_ERROR'
-            };
-        } else {
-            authError = {
-                message: 'Ha ocurrido un error. Por favor intenta nuevamente.',
-                code: 'NETWORK_ERROR'
-            };
-        }
-
-        this.handleError(authError);
-        return throwError(() => authError);
-    }
-
     /**
-     * Set OTP sent state (used when user already has a code)
+     * Handle HTTP errors using the dedicated error handler
      */
-    setOtpSentState(): void {
-        this.authStateSubject.next(AuthState.OTP_SENT);
-        this.clearError();
+    private handleHttpError(error: HttpErrorResponse): Observable<never> {
+        const processedError = this.errorHandler.handle(error);
+        this.errorStateManager.setError(processedError);
+        this.authStateSubject.next(AuthState.ERROR);
+        return throwError(() => processedError);
     }
 
     // Safe localStorage wrapper methods

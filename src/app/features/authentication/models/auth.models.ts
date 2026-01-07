@@ -31,11 +31,6 @@ export interface AuthResponse {
   }
 }
 
-export interface AuthError {
-  message: string;
-  code: string;
-}
-
 export enum AuthState {
   INITIAL = 'initial',
   REQUESTING_OTP = 'requesting-otp',

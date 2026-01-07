@@ -3,7 +3,8 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthError, AuthState } from '../../models/auth.models';
+import { AuthState } from '../../models/auth.models';
+import { AuthError } from '../../models/error.models';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
