@@ -15,6 +15,14 @@
       "request": "launch",
       "preLaunchTask": "npm: test",
       "url": "http://localhost:9876/debug.html"
+    },
+    {
+      "name": "ng serve prod",
+      "type": "firefox",
+      "request": "launch",
+      "url": "http://localhost:4200",
+      "preLaunchTask": "npm: start:prod",
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }

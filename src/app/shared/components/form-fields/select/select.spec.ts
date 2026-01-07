@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { SelectComponent } from '../select';
+import { SelectComponent } from './select';
 
 describe('SelectComponent', () => {
   let fixture: ComponentFixture<SelectComponent>;

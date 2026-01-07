@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { Portability } from '../portability';
 
-import { Portability } from './portability';
 
 describe('Portability', () => {
   let service: Portability;

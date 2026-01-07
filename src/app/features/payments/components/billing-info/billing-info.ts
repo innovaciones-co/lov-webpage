@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
+import { AuthService } from '../../../authentication/services/auth.service';
 import { PaymentService } from '../../services/payment.service';
 
 interface BillingInfoForm {
@@ -48,7 +50,7 @@ export class BillingInfoComponent {
     { label: 'Paraguay', value: 'PY' }
   ]);
 
-  constructor(private fb: FormBuilder, private paymentService: PaymentService) {
+  constructor(private fb: FormBuilder, private paymentService: PaymentService, private authService: AuthService, private subscriptionFacade: SubscriptionFacadeService) {
     this.billingInfoForm = this.fb.group({
       firstName: new FormControl('', { validators: [Validators.required, Validators.minLength(2)], nonNullable: true }),
       lastName: new FormControl('', { validators: [Validators.required, Validators.minLength(2)], nonNullable: true }),
@@ -61,6 +63,26 @@ export class BillingInfoComponent {
       address: new FormControl('', { validators: [Validators.required, Validators.minLength(5)], nonNullable: true }),
       additionalInfo: new FormControl('', { nonNullable: true })
     });
+
+    const storedMsisdn = this.authService.getStoredMsisdn();
+    if (storedMsisdn) {
+      this.subscriptionFacade.getCustomerInfo(storedMsisdn).subscribe(customerInfo => {
+        if (customerInfo) {
+          this.billingInfoForm.patchValue({
+            firstName: customerInfo.givenName,
+            lastName: customerInfo.familyName,
+            documentType: this.fromDocumentTypeValue(customerInfo.document.type),
+            documentNumber: customerInfo.document.id,
+            email: customerInfo.email,
+            country: customerInfo.address.country,
+            city: customerInfo.address.city,
+            address: customerInfo.address.line1,
+            additionalInfo: customerInfo.additionalInformationPlaceHolder.additionalInformationString || '',
+            phone: storedMsisdn
+          });
+        }
+      });
+    }
 
     // Register the form with the payment service
     this.paymentService.billingForm.set(this.billingInfoForm);
@@ -102,5 +124,25 @@ export class BillingInfoComponent {
     };
     return labels[fieldName] || fieldName;
   }
+
+  private fromDocumentTypeValue(value: string): string {
+    switch (value) {
+      case 'ID':
+        return 'CC';
+      case 'CC':
+        return 'CC';
+      case 'CE':
+        return 'CE';
+      case 'PP':
+        return 'PP';
+      case 'NIT':
+        return 'NIT';
+      case 'TI':
+        return 'TI';
+      default:
+        return value;
+    }
+  }
+
 }
 

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { CheckboxComponent } from '../checkbox';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { CheckboxComponent } from './checkbox';
 
 describe('CheckboxComponent', () => {
   let fixture: ComponentFixture<CheckboxComponent>;

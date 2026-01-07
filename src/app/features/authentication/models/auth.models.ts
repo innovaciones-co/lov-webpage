@@ -42,7 +42,8 @@ export enum AuthState {
   OTP_SENT = 'otp-sent',
   VALIDATING_OTP = 'validating-otp',
   AUTHENTICATED = 'authenticated',
-  ERROR = 'error'
+  ERROR = 'error',
+  ERROR_OTP = 'error-otp'
 }
 
 export interface User {

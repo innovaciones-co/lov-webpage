@@ -27,6 +27,7 @@ export class AuthService {
     private readonly TOKEN_KEY = 'auth_token';
     private readonly REFRESH_TOKEN_KEY = 'refresh_token';
     private readonly USER_KEY = 'user_data';
+    private readonly USER_MSISDN = 'user_msisdn';
 
     private authStateSubject = new BehaviorSubject<AuthState>(AuthState.INITIAL);
     private userSubject = new BehaviorSubject<User | null>(null);
@@ -50,8 +51,6 @@ export class AuthService {
 
     constructor() {
         this.initializeAuth();
-
-
     }
 
     private initializeAuth(): void {
@@ -80,7 +79,7 @@ export class AuthService {
                 tap(response => {
                     if (response.success) {
                         this.authStateSubject.next(AuthState.OTP_SENT);
-                        this.startOtpCountdown(300); // 5 minutes countdown
+                        this.startOtpCountdown(60 * 2); // 2 minutes countdown
                     } else {
                         this.handleError({ message: response.message, code: 'OTP_REQUEST_FAILED' });
                     }
@@ -105,7 +104,7 @@ export class AuthService {
             .pipe(
                 tap(response => {
                     // If we reach this point, the HTTP request was successful (status 200-299)
-                    this.handleAuthSuccess(response);
+                    this.handleAuthSuccess(response, this.msisdnPipe.transform(msisdn));
                 }),
                 catchError(this.handleHttpError.bind(this))
             );
@@ -177,8 +176,8 @@ export class AuthService {
 
     // Private methods
 
-    private handleAuthSuccess(response: AuthResponse): void {
-        this.storeAuthData(response);
+    private handleAuthSuccess(response: AuthResponse, msisdn: string): void {
+        this.storeAuthData(response, msisdn);
 
         const user: User = {
             id: response.user.id,
@@ -190,12 +189,9 @@ export class AuthService {
         this.userSubject.next(user);
         this.authStateSubject.next(AuthState.AUTHENTICATED);
         this.stopOtpCountdown();
-
-        // Navigate to dashboard or intended route
-        this.router.navigate(['/dashboard']);
     }
 
-    private storeAuthData(response: AuthResponse): void {
+    private storeAuthData(response: AuthResponse, msisdn?: string): void {
         if (!this.isBrowser) return;
 
         this.setItem(this.TOKEN_KEY, response.accessToken);
@@ -205,6 +201,9 @@ export class AuthService {
         }
 
         this.setItem(this.USER_KEY, JSON.stringify(response.user));
+        if (msisdn != undefined) {
+            this.setItem(this.USER_MSISDN, msisdn);
+        }
     }
 
     private clearAuthData(): void {
@@ -213,6 +212,7 @@ export class AuthService {
         this.removeItem(this.TOKEN_KEY);
         this.removeItem(this.REFRESH_TOKEN_KEY);
         this.removeItem(this.USER_KEY);
+        this.removeItem(this.USER_MSISDN);
     }
 
     private getStoredToken(): string | null {
@@ -224,7 +224,9 @@ export class AuthService {
         return userData ? JSON.parse(userData) : null;
     }
 
-
+    getStoredMsisdn(): string | null {
+        return this.getItem(this.USER_MSISDN);
+    }
 
     private startOtpCountdown(seconds: number): void {
         this.stopOtpCountdown();
@@ -262,6 +264,52 @@ export class AuthService {
     private handleHttpError(error: HttpErrorResponse): Observable<never> {
         let authError: AuthError;
 
+        switch (error.status) {
+            case 0:
+                authError = {
+                    message: 'No se pudo conectar al servidor. Por favor verifica tu conexión a internet.',
+                    code: 'NETWORK_ERROR'
+                };
+                break;
+            case 400:
+                authError = {
+                    message: error.error?.message || 'Solicitud inválida.',
+                    code: 'BAD_REQUEST'
+                };
+                break;
+            case 401:
+                authError = {
+                    message: 'No autorizado. Por favor verifica tus credenciales.',
+                    code: 'UNAUTHORIZED'
+                };
+                break;
+            case 404:
+                authError = {
+                    message: 'Recurso no encontrado.',
+                    code: 'NOT_FOUND'
+                };
+                break;
+            case 500:
+                console.log('Server error details:', JSON.stringify(error.error));
+                if (error.error.message == 'Invalid OTP code') {
+                    authError = {
+                        message: 'El código OTP es inválido. Por favor intenta nuevamente.',
+                        code: 'INVALID_OTP'
+                    };
+                    break;
+                }
+                authError = {
+                    message: 'Error interno del servidor. Por favor intenta nuevamente más tarde.',
+                    code: 'SERVER_ERROR'
+                };
+                break;
+            default:
+                authError = {
+                    message: 'Ha ocurrido un error inesperado. Por favor intenta nuevamente.',
+                    code: 'UNKNOWN_ERROR'
+                };
+        }
+
         if (error.error && error.error.message) {
             authError = {
                 message: error.error.message,
@@ -276,6 +324,14 @@ export class AuthService {
 
         this.handleError(authError);
         return throwError(() => authError);
+    }
+
+    /**
+     * Set OTP sent state (used when user already has a code)
+     */
+    setOtpSentState(): void {
+        this.authStateSubject.next(AuthState.OTP_SENT);
+        this.clearError();
     }
 
     // Safe localStorage wrapper methods

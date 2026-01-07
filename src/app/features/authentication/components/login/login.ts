@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.scss'
 })
 export class Login implements OnInit, OnDestroy {
+
   private destroy$ = new Subject<void>();
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -97,6 +98,16 @@ export class Login implements OnInit, OnDestroy {
       this.authService.validateOtp(msisdn, otp).subscribe();
     } else {
       this.markFormGroupTouched(this.otpForm);
+    }
+  }
+
+  onHaveCode() {
+    if (this.msisdnForm.valid) {
+      // Use the service to set state instead of directly setting component state
+      // This ensures consistent state management
+      this.authService.setOtpSentState();
+    } else {
+      this.markFormGroupTouched(this.msisdnForm);
     }
   }
 

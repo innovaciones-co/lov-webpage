@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { RadioComponent } from '../radio';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { RadioComponent } from './radio';
 
 describe('RadioComponent', () => {
   let fixture: ComponentFixture<RadioComponent>;

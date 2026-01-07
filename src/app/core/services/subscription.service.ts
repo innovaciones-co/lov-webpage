@@ -1,0 +1,54 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable, catchError, throwError } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
+import { ApiResponse } from '../models/api-response.model';
+import { CustomerSubscriptionResponse } from '../models/customer.model';
+
+export interface GetSubscriptionParams {
+    msisdn: string;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class SubscriptionService {
+    private readonly http = inject(HttpClient);
+    private readonly baseUrl = environment.gatewayUrl;
+
+    /**
+     * Retrieves subscription information for a given MSISDN
+     * @param params - Object containing the MSISDN
+     * @returns Observable of the subscription response
+     */
+    getSubscription(params: GetSubscriptionParams): Observable<ApiResponse<CustomerSubscriptionResponse>> {
+        const httpParams = new HttpParams().set('msisdn', params.msisdn);
+
+        return this.http.get<ApiResponse<CustomerSubscriptionResponse>>(
+            `${this.baseUrl}/api/subscriptions`,
+            { params: httpParams }
+        ).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    /**
+     * Retrieves subscription information by MSISDN (convenience method)
+     * @param msisdn - The MSISDN to query
+     * @returns Observable of the subscription response
+     */
+    getSubscriptionByMsisdn(msisdn: string): Observable<ApiResponse<CustomerSubscriptionResponse>> {
+        return this.getSubscription({ msisdn });
+    }
+
+    /**
+     * Handles HTTP errors
+     * @param error - The HTTP error
+     * @returns Observable error
+     */
+    private handleError(error: any): Observable<never> {
+        console.error('SubscriptionService error:', error);
+        return throwError(() => error);
+    }
+}

@@ -1,13 +1,36 @@
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
 
+.image-container img {
+    width: 100%;
+    max-width: 75px;
+    margin-bottom: 10px;
+
+    @include tablet {
+        max-width: 125px;
+        margin-bottom: 15px;
+    }
+
+    @include desktop {
+        max-width: 150px;
+        margin-bottom: 20px;
+    }
+}
+
 .login-container {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 15px;
+    justify-content: start;
+    padding: 45px 15px;
+    max-width: 100%;
+    width: 650px;
+    margin: auto;
+
+    .card {
+        width: 650px;
+        max-width: 100%;
+    }
 }
 
 .auth-form-wrapper {
@@ -206,6 +229,12 @@
         padding: 16px;
         border-radius: 10px;
         background: #F9FAFB;
+        display: none;
+
+        @include tablet {
+            display: block;
+        }
+
 
         span {
             font-size: 24px;
@@ -216,6 +245,7 @@
         .disclaimer-body {
             margin-top: 5px;
         }
+
     }
 }
 
@@ -266,6 +296,7 @@
     flex-direction: column;
     gap: 10px;
     margin-top: 20px;
+    justify-content: space-between;
 
     @include tablet {
         flex-direction: row;
