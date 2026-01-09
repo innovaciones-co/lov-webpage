@@ -19,7 +19,6 @@ export class CategoryService {
     }
 
     getCategories() {
-        console.debug('Fetching categories');
         this.loading.set(true);
 
         const url = `${this.baseUrl}/categories`;

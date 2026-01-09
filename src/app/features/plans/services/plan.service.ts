@@ -25,7 +25,6 @@ export class PlansService {
     }
 
     getPlans(page: number = 0, categoryId: number | null = null, pageSize: number = 100) {
-        console.debug('Fetching plans:', { page, categoryId, pageSize });
         this.loading.set(true);
 
         const categoryParam = categoryId ? `&category=${categoryId}` : '';

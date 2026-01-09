@@ -1,17 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { OtpInputComponent } from "../../../../shared/components/form-fields/otp-input/otp-input";
 import { AuthState } from '../../models/auth.models';
 import { AuthError } from '../../models/error.models';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, OtpInputComponent],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Login implements OnInit, OnDestroy {
 
@@ -20,15 +22,27 @@ export class Login implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   msisdnForm!: FormGroup;
   otpForm!: FormGroup;
+
+  otpFormArray = new FormArray([
+    new FormControl('', [Validators.required]),
+    new FormControl('', [Validators.required]),
+    new FormControl('', [Validators.required]),
+    new FormControl('', [Validators.required]),
+    new FormControl('', [Validators.required]),
+    new FormControl('', [Validators.required])
+  ], [this.otpCompleteValidator()]);
 
   currentState = AuthState.INITIAL;
   error: AuthError | null = null;
   countdown = 0;
   isLoading = false;
   returnUrl = '/';
+  currentOtpValue = signal<string>('');
+  isOtpComplete = signal<boolean>(false);
 
   // Expose AuthState enum to template
   AuthState = AuthState;
@@ -44,14 +58,57 @@ export class Login implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  // Custom validator to check if OTP is complete
+  private otpCompleteValidator() {
+    return (control: any) => {
+      if (control instanceof FormArray) {
+        const otpValue = control.controls
+          .map((ctrl: any) => ctrl.value || '')
+          .join('');
+
+        if (otpValue.length < 6) {
+          return { otpIncomplete: true };
+        }
+      }
+      return null;
+    };
+  }
+
+  onOtpComplete(otp: string) {
+    this.currentOtpValue.set(otp);
+    this.isOtpComplete.set(true);
+    console.log('OTP Complete:', otp);
+  }
+
+  onOtpChange(otp: string) {
+    this.currentOtpValue.set(otp);
+    this.isOtpComplete.set(otp.length === 6);
+    // Clear any existing errors when user types
+    if (this.error) {
+      this.error = null;
+      this.cdr.markForCheck(); // Trigger change detection
+    }
+  }
+
   private initializeForms() {
     this.msisdnForm = this.fb.group({
       msisdn: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]]
     });
 
     this.otpForm = this.fb.group({
-      otp: ['', [Validators.required, Validators.pattern(/^[0-9]{4,6}$/)]]
+      otp: this.otpFormArray
+      //otp: ['', [Validators.required, Validators.pattern(/^[0-9]{4,6}$/)]]
     });
+
+    // Clear errors when MSISDN changes
+    this.msisdnForm.get('msisdn')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        if (this.error) {
+          this.error = null;
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   private setupSubscriptions() {
@@ -66,6 +123,8 @@ export class Login implements OnInit, OnDestroy {
         if (state === AuthState.AUTHENTICATED) {
           this.router.navigate([this.returnUrl]);
         }
+
+        this.cdr.markForCheck(); // Trigger change detection
       });
 
     // Subscribe to errors
@@ -73,6 +132,7 @@ export class Login implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(error => {
         this.error = error;
+        this.cdr.markForCheck(); // Trigger change detection
       });
 
     // Subscribe to OTP countdown
@@ -93,12 +153,14 @@ export class Login implements OnInit, OnDestroy {
   }
 
   onValidateOtp() {
-    if (this.otpForm.valid && this.msisdnForm.valid) {
+    if (this.otpForm.valid && this.msisdnForm.valid && this.isOtpComplete()) {
       const msisdn = this.msisdnForm.get('msisdn')?.value;
-      const otp = this.otpForm.get('otp')?.value;
+      const otp = this.currentOtpValue();
       this.authService.validateOtp(msisdn, otp).subscribe();
     } else {
       this.markFormGroupTouched(this.otpForm);
+      // Mark the FormArray as touched to show validation errors
+      this.otpFormArray.markAllAsTouched();
     }
   }
 
@@ -115,6 +177,10 @@ export class Login implements OnInit, OnDestroy {
   onResendOtp() {
     if (this.msisdnForm.valid) {
       const msisdn = this.msisdnForm.get('msisdn')?.value;
+      // Clear OTP values when resending
+      this.otpFormArray.reset();
+      this.currentOtpValue.set('');
+      this.isOtpComplete.set(false);
       this.authService.resendOtp(msisdn).subscribe();
     }
   }
@@ -122,6 +188,9 @@ export class Login implements OnInit, OnDestroy {
   onBack() {
     this.authService.resetState();
     this.otpForm.reset();
+    this.otpFormArray.reset();
+    this.currentOtpValue.set('');
+    this.isOtpComplete.set(false);
   }
 
   getCountdownDisplay(): string {
@@ -147,7 +216,7 @@ export class Login implements OnInit, OnDestroy {
   }
 
   get otpControl() {
-    return this.otpForm.get('otp');
+    return this.otpForm.get('otp') as FormArray;
   }
 
   get isMsisdnInvalid() {
@@ -155,7 +224,35 @@ export class Login implements OnInit, OnDestroy {
   }
 
   get isOtpInvalid() {
-    return this.otpControl?.invalid && this.otpControl?.touched;
+    return this.otpFormArray?.invalid && this.otpFormArray?.touched;
+  }
+
+  get isOtpFormValid() {
+    return this.isOtpComplete() && this.otpFormArray.valid;
+  }
+
+  getOtpErrorMessage(): string {
+    if (this.otpFormArray.hasError('otpIncomplete') && this.otpFormArray.touched) {
+      return 'Ingresa el código de 6 dígitos completo';
+    }
+    return 'Código de verificación inválido';
+  }
+
+  // Helper methods to determine when to show errors
+  shouldShowMsisdnError(): boolean {
+    return !!(this.error && (
+      this.currentState === AuthState.INITIAL ||
+      this.currentState === AuthState.REQUESTING_OTP ||
+      this.currentState === AuthState.ERROR
+    ));
+  }
+
+  shouldShowOtpError(): boolean {
+    return !!(this.error && (
+      this.currentState === AuthState.OTP_SENT ||
+      this.currentState === AuthState.VALIDATING_OTP ||
+      this.currentState === AuthState.ERROR_OTP
+    ));
   }
 }
 

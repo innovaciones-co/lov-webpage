@@ -1,7 +1,7 @@
 <div class="login-container">
     <figure class="image-container">
         @if (currentState == AuthState.REQUESTING_OTP || currentState == AuthState.VALIDATING_OTP || currentState ==
-        AuthState.OTP_SENT) {
+        AuthState.OTP_SENT || currentState == AuthState.ERROR_OTP) {
         <img src="otp.png" alt="">
         } @else {
         <img src="login.png" alt="">
@@ -13,7 +13,8 @@
         @if (currentState === AuthState.INITIAL|| currentState === AuthState.REQUESTING_OTP || currentState ===
         AuthState.ERROR) {
         <h1 class="login-title">Inicia sesión con tu número de celular</h1>
-        } @else if (currentState === AuthState.OTP_SENT) {
+        } @else if (currentState === AuthState.OTP_SENT || currentState === AuthState.VALIDATING_OTP || currentState ===
+        AuthState.ERROR_OTP) {
         <h1 class="login-title">Ingresa el código</h1>
         }
 
@@ -21,7 +22,8 @@
             @if (currentState === AuthState.INITIAL|| currentState === AuthState.REQUESTING_OTP || currentState ===
             AuthState.ERROR) {
             Enviaremos un código de verificación para confirmar tu identidad y activar tu plan
-            } @else if (currentState === AuthState.OTP_SENT) {
+            } @else if (currentState === AuthState.OTP_SENT || currentState === AuthState.VALIDATING_OTP || currentState
+            === AuthState.ERROR_OTP) {
             Ingresa el código que enviamos a tu número de teléfono. Si no lo recibiste, podrás solicitar uno nuevo
             en unos segundos.
             }
@@ -34,10 +36,10 @@
     <form [formGroup]="msisdnForm" (ngSubmit)="onRequestOtp()" class="auth-form-wrapper">
         <div class="login card">
             <!-- Error Display -->
-            @if (error) {
+            @if (shouldShowMsisdnError()) {
             <div class="error-banner">
                 <span class="error-icon">⚠️</span>
-                <span class="error-message">{{ error.message }}</span>
+                <span class="error-message">{{ error?.message }}</span>
             </div>
             }
 
@@ -89,23 +91,20 @@
     }
 
     <!-- OTP Form -->
-    @if (currentState === AuthState.OTP_SENT || currentState === AuthState.VALIDATING_OTP) {
+    @if (currentState === AuthState.OTP_SENT || currentState === AuthState.VALIDATING_OTP || currentState ===
+    AuthState.ERROR_OTP) {
     <form [formGroup]="otpForm" (ngSubmit)="onValidateOtp()" class="auth-form">
         <div class="card">
-            <div class="form-group">
-                <label for="otp" class="form-label">Código de verificación</label>
-                <input id="otp" type="text" formControlName="otp" class="form-input otp-input"
-                    [class.invalid]="isOtpInvalid" placeholder="123456" maxlength="6" autocomplete="one-time-code">
-                @if (isOtpInvalid) {
-                <span class="error-text">
-                    @if (otpControl?.errors?.['required']) {
-                    El código es requerido
-                    } @else if (otpControl?.errors?.['pattern']) {
-                    Ingresa un código válido
-                    }
-                </span>
-                }
+            @if (shouldShowOtpError()) {
+            <div class="error-banner">
+                <span class="error-icon">⚠️</span>
+                <span class="error-message">{{ error?.message }}</span>
             </div>
+            }
+
+            <otp-input-field [error]="getOtpErrorMessage()" [control]="otpFormArray"
+                (otpComplete)="onOtpComplete($event)" (otpChange)="onOtpChange($event)">
+            </otp-input-field>
 
             <div class="otp-info">
                 <p class="otp-sent-to">
@@ -129,7 +128,7 @@
                 Atrás
             </button>
 
-            <button type="submit" class="btn btn-primary" [disabled]="isLoading || otpForm.invalid">
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading || !isOtpFormValid">
                 @if (isLoading) {
                 <span class="loading-spinner"></span>
                 Verificando...
@@ -140,12 +139,4 @@
         </div>
     </form>
     }
-
-    <!-- Footer -->
-    <div class="login-footer">
-        <p class="help-text">
-            ¿Tienes problemas?
-            <a href="/soporte" class="help-link">Contáctanos</a>
-        </p>
-    </div>
 </div>

@@ -21,8 +21,7 @@
       "type": "firefox",
       "request": "launch",
       "url": "http://localhost:4200",
-      "preLaunchTask": "npm: start:prod",
-      "webRoot": "${workspaceFolder}"
+      "preLaunchTask": "npm: start:prod"
     }
   ]
 }

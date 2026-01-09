@@ -1,0 +1,93 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+.otp-label {
+    display: block;
+    margin-left: 6px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.otp-container {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.otp-input {
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: #fff;
+
+    &:focus {
+        border-color: $color-extra-1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($color-extra-1, 0.1);
+        transform: scale(1.05);
+    }
+
+    &:hover:not(:focus) {
+        border-color: #c1c7cd;
+    }
+
+    &.invalid {
+        border-color: $color-warning;
+
+        &:focus {
+            box-shadow: 0 0 0 3px $color-warning;
+        }
+    }
+
+    // Remove default input styling
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    &[type="number"] {
+        -moz-appearance: textfield;
+    }
+}
+
+.error {
+    color: $color-warning;
+    font-size: 13px;
+    margin-left: 6px;
+    margin-top: 4px;
+    height: 20px;
+    text-align: center;
+}
+
+// Responsive design for smaller screens
+@media (max-width: 480px) {
+    .otp-container {
+        gap: 8px;
+    }
+
+    .otp-input {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    .otp-container {
+        gap: 6px;
+    }
+
+    .otp-input {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+}

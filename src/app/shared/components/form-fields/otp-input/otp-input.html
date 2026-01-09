@@ -1,0 +1,19 @@
+@if (label()) {
+<label class="otp-label">{{ label() }}</label>
+}
+
+<div class="otp-container" (paste)="onPaste($event)">
+    @for (inputIndex of otpInputs(); track inputIndex) {
+    <input #otpInput type="text" maxlength="1" [formControl]="getControl(inputIndex)"
+        [attr.aria-label]="'OTP digit ' + (inputIndex + 1)" [class.invalid]="hasError()"
+        (input)="onInput($event, inputIndex)" (keydown)="onKeyDown($event, inputIndex)" class="otp-input"
+        autocomplete="one-time-code" inputmode="numeric" />
+    }
+</div>
+
+@if (hasError()) {
+<div class="error">{{ getErrorMessage() }}</div>
+}
+@else {
+<div class="error"></div>
+}
