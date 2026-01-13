@@ -1,7 +1,8 @@
-import { computed, Injectable, Signal, signal } from "@angular/core";
+import { computed, inject, Injectable, Signal, signal } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { BillingInfo } from "../models/billing-info.model";
 import { Product } from "../models/product.model";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +12,7 @@ export class PaymentService {
     billingForm = signal<FormGroup | undefined>(undefined);
     selectedProduct = signal<Product | undefined>(undefined);
     private _formValid = signal<boolean>(false);
+    private httpClient = inject(HttpClient);
 
     canCheckout: Signal<boolean> = computed(() => {
         return this._formValid() && this.selectedProduct() !== undefined;

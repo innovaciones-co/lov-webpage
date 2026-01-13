@@ -52,6 +52,7 @@ export class PlanProduct extends Product {
     }
 
     getDisplayDescription(): string {
+        console.log('Plan description:', this.plan.description);
         return this.plan.description || this.description;
     }
 
@@ -61,8 +62,8 @@ export class PlanProduct extends Product {
 
     getSummaryView(): ProductSummaryView {
         const mainFeatures = this.plan.features
-            .filter(f => f.mainFeature || f.isMainFeature)
-            .map(f => `${f.quantity} ${f.measure} ${f.name}`);
+            //.filter(f => f.mainFeature || f.isMainFeature)
+            .map(f => `${f.name}`);
 
         return {
             title: this.getDisplayName(),
