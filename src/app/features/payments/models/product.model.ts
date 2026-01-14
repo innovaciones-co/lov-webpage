@@ -7,6 +7,7 @@ export abstract class Product {
         public name: string,
         public description: string,
         public price: number,
+        public productType: ProductType,
         public imageUrl?: string
     ) { }
 
@@ -20,8 +21,9 @@ export abstract class Product {
 
 // Product types enum
 export enum ProductType {
-    PLAN = 'PLAN',
-    RECHARGE = 'RECHARGE'
+    BUNDLE = 'BUNDLE',
+    TOPUP = 'TOPUP',
+    PLAN = 'PLAN'
 }
 
 // Interface for summary view data
@@ -42,9 +44,10 @@ export class PlanProduct extends Product {
         description: string,
         price: number,
         public plan: Plan,
+        productType: ProductType,
         imageUrl?: string
     ) {
-        super(id, name, description, price, imageUrl);
+        super(id, name, description, price, productType, imageUrl);
     }
 
     getDisplayName(): string {
@@ -71,12 +74,12 @@ export class PlanProduct extends Product {
             price: this.getDisplayPrice(),
             details: mainFeatures.length > 0 ? mainFeatures : [this.getDisplayDescription()],
             imageUrl: this.plan.image || this.imageUrl,
-            type: ProductType.PLAN
+            type: ProductType.BUNDLE
         };
     }
 
     getProductType(): ProductType {
-        return ProductType.PLAN;
+        return this.productType;
     }
 }
 
@@ -88,9 +91,10 @@ export class RechargeProduct extends Product {
         description: string,
         price: number,
         public amount: number,
-        imageUrl?: string
+        imageUrl?: string,
+        productType = ProductType.TOPUP
     ) {
-        super(id, name, description, price, imageUrl);
+        super(id, name, description, price, productType, imageUrl);
     }
 
     getDisplayName(): string {
@@ -115,11 +119,11 @@ export class RechargeProduct extends Product {
                 'Disponible inmediatamente después del pago'
             ],
             imageUrl: this.imageUrl,
-            type: ProductType.RECHARGE
+            type: ProductType.TOPUP
         };
     }
 
     getProductType(): ProductType {
-        return ProductType.RECHARGE;
+        return ProductType.TOPUP;
     }
 }

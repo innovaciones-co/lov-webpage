@@ -1,3 +1,5 @@
+import { Product, ProductType } from "../../payments/models/product.model";
+
 export interface Plan {
     id: number;
     name: string;
@@ -12,6 +14,10 @@ export interface Plan {
     category: number;
     active: boolean;
     isActive: boolean;
+    productType: ProductType;
+    smsQuantity: number;
+    voiceQuantity: number;
+    dataQuantity: number;
 }
 
 export interface Feature {

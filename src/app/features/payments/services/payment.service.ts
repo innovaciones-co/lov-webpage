@@ -1,8 +1,12 @@
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { computed, inject, Injectable, Signal, signal } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { Observable, throwError } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { environment } from "../../../../environments/environment";
 import { BillingInfo } from "../models/billing-info.model";
-import { Product } from "../models/product.model";
-import { HttpClient } from "@angular/common/http";
+import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderItemType } from "../models/order.model";
+import { Product, ProductType } from "../models/product.model";
 
 @Injectable({
     providedIn: 'root'
@@ -63,5 +67,151 @@ export class PaymentService {
         console.log('Billing info submitted:', billingInfo);
         console.log('Selected product:', product.getSummaryView());
         return true;
+    }
+
+    /**
+     * Creates an order with the payment service
+     * @param orderData The order creation request data
+     * @returns Observable with the order ID string on success
+     */
+    createOrder(orderData: CreateOrderRequest): Observable<string> {
+        const url = `${environment.apiUrl}/orders`;
+
+        return this.httpClient.post<string>(url, orderData, {
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            responseType: 'text' as 'json' // The API returns a string, not JSON
+        }).pipe(
+            catchError(this.handleOrderError)
+        );
+    }
+
+    /**
+     * Creates an order using the current billing info and selected product
+     * @param subscriberId The subscriber ID for the order
+     * @param msisdn The MSISDN in E.164 format (e.g., +1234567890)
+     * @param referenceCode Optional reference code, will be generated if not provided
+     * @returns Observable with the order ID string on success
+     */
+    createOrderFromCurrentState(subscriberId: number, msisdn: string, referenceCode?: string): Observable<string> {
+        const billingInfo = this.billingInfo();
+        const product = this.selectedProduct();
+
+        if (!billingInfo || !product) {
+            return throwError(() => new Error('Billing info and product must be selected before creating an order'));
+        }
+
+        const orderRequest = this.buildOrderRequest(billingInfo, product, subscriberId, msisdn, referenceCode);
+        return this.createOrder(orderRequest);
+    }
+
+    /**
+     * Builds a CreateOrderRequest from billing info and product data
+     * @param billingInfo The billing information
+     * @param product The selected product
+     * @param subscriberId The subscriber ID
+     * @param msisdn The MSISDN in E.164 format
+     * @param referenceCode Optional reference code
+     * @returns CreateOrderRequest object
+     */
+    private buildOrderRequest(
+        billingInfo: BillingInfo,
+        product: Product,
+        subscriberId: number,
+        msisdn: string,
+        referenceCode?: string
+    ): CreateOrderRequest {
+        const orderItem: OrderItem = {
+            name: product.name,
+            quantity: 1,
+            price: product.price,
+            productId: product.id,
+            tax: this.calculateTax(product.price),
+            taxReturnBase: 0,
+            type: this.mapProductTypeToOrderItemType(product.getProductType())
+        };
+
+        const e164msisdn = msisdn.startsWith('+') ? msisdn : `+${msisdn}`;
+
+        return {
+            description: `Order for ${product.name}`,
+            referenceCode: referenceCode || this.generateReferenceCode(),
+            currency: 'COP',
+            buyerEmail: billingInfo.email,
+            details: {
+                items: [orderItem]
+            },
+            subscriberId,
+            msisdn: e164msisdn,
+            buyerPhone: billingInfo.phone,
+            buyerFullName: billingInfo.firstName + ' ' + billingInfo.lastName,
+            buyerDocumentType: billingInfo.documentType,
+            buyerDocument: billingInfo.documentNumber.toString(),
+            billingCountry: billingInfo.country,
+            billingCity: billingInfo.city,
+            billingAddress: billingInfo.address,
+        };
+    }
+
+    /**
+     * Maps ProductType to OrderItemType
+     * @param productType The product type to map
+     * @returns The corresponding OrderItemType
+     */
+    private mapProductTypeToOrderItemType(productType: ProductType): OrderItemType {
+        // For now, all products map to BUNDLE
+        // This can be extended if more OrderItemTypes are added in the future
+        return OrderItemType.BUNDLE;
+    }
+
+    /**
+     * Calculates tax for a given price (currently 19% IVA for Colombia)
+     * @param price The base price
+     * @returns The tax amount
+     */
+    private calculateTax(price: number): number {
+        return price * 0.19; // 19% IVA
+    }
+
+    /**
+     * Generates a unique reference code for the order
+     * @returns A unique reference code
+     */
+    private generateReferenceCode(): string {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 8);
+        return `LOV-${timestamp}-${random}`.toUpperCase();
+    }
+
+    /**
+     * Handles HTTP errors from order creation
+     * @param error The HTTP error response
+     * @returns Observable error with formatted error information
+     */
+    private handleOrderError = (error: HttpErrorResponse): Observable<never> => {
+        let errorMessage = 'An unexpected error occurred';
+
+        if (error.error) {
+            try {
+                const orderError: OrderErrorResponse = typeof error.error === 'string'
+                    ? JSON.parse(error.error)
+                    : error.error;
+
+                if (orderError.fieldErrors && orderError.fieldErrors.length > 0) {
+                    errorMessage = orderError.fieldErrors
+                        .map(fieldError => `${fieldError.property}: ${fieldError.message}`)
+                        .join(', ');
+                } else {
+                    errorMessage = orderError.message || errorMessage;
+                }
+            } catch {
+                errorMessage = error.error?.message || error.message || errorMessage;
+            }
+        }
+
+        console.error('Order creation failed:', error);
+        return throwError(() => new Error(errorMessage));
     }
 }
