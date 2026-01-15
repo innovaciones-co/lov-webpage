@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 import { Router } from '@angular/router';
+import { ActivateSimService } from '../../services/activate-sim.service';
 
 export interface PersonalInfoFormData {
   name: string;
@@ -27,6 +28,7 @@ export interface PersonalInfoFormData {
   styleUrl: './personal-info-form.scss'
 })
 export class PersonalInfoForm {
+  private activateSimService = inject(ActivateSimService);
   private router = inject(Router);
 
   // Error messages map (only specific validations, required is automatic)
@@ -84,7 +86,9 @@ export class PersonalInfoForm {
 
   onSubmit(): void {
     if (this.form().valid) {
-      this.formSubmit.emit(this.form().value as PersonalInfoFormData);
+      /* const formData = this.form().value as PersonalInfoFormData;
+      this.activateSimService.submitPersonalInfo(formData);
+      this.formSubmit.emit(formData); */
       // this.router.navigate(['/portability/successful']);
     }
   }

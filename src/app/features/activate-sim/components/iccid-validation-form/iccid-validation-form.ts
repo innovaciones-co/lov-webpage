@@ -1,6 +1,7 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivateSimService } from '../../services/activate-sim.service';
 
 export interface IccidValidationFormData {
   iccid: string;
@@ -15,6 +16,8 @@ export interface IccidValidationFormData {
   styleUrl: './iccid-validation-form.scss'
 })
 export class IccidValidationForm {
+
+  private activateSimService = inject(ActivateSimService);
 
   hideButton = input(false);
   formSubmit = output<IccidValidationFormData>();
@@ -31,7 +34,7 @@ export class IccidValidationForm {
 
   form = signal(
     new FormGroup({
-      iccid: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // TODO: Update pattern as needed
+      iccid: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{19}$')]), // TODO: Update pattern as needed
       puk: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{8}$')]),
     })
   );
@@ -63,8 +66,19 @@ export class IccidValidationForm {
 
   onSubmit(): void {
     if (this.form().valid) {
-      this.formSubmit.emit(this.form().value as IccidValidationFormData);
+      const formData = this.form().value as IccidValidationFormData;
+
+      this.activateSimService.validateIccid(formData.iccid, formData.puk).subscribe({
+        next: (response) => {
+          console.log('Validación exitosa:', response);
+          this.activateSimService.setLoading(false);
+          this.formSubmit.emit(formData);
+        },
+        error: (error) => {
+          console.error('Error en la validación:', error);
+          this.activateSimService.setLoading(false);
+        }
+      });
     }
-    // console.log('Form submitted:', this.form().value);
   }
 }
