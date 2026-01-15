@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 import { DeviceDetectionService } from '../../../../core/services/device-detection.service';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
 import { AuthService } from '../../../authentication/services/auth.service';
+import { PaymentInitiationResponse } from '../../models/order.model';
 import { PaymentService } from '../../services/payment.service';
 import { BillingInfoComponent } from "../billing-info/billing-info";
 import { Summary } from "../summary/summary";
@@ -16,6 +18,8 @@ import { Summary } from "../summary/summary";
   styleUrl: './payments.scss'
 })
 export class Payments {
+  private document = inject(DOCUMENT);
+
   constructor(
     private deviceDetectionService: DeviceDetectionService,
     private paymentService: PaymentService,
@@ -39,7 +43,8 @@ export class Payments {
         switchMap(() => this.getMsisdn()),
         switchMap(msisdn => this.getActiveSubscription(msisdn)),
         switchMap(({ msisdn, subscriberId }) => this.createOrder(subscriberId, msisdn)),
-        tap(orderId => this.handleOrderSuccess(orderId)),
+        switchMap(orderId => this.initiatePayment(orderId)),
+        tap(paymentData => this.submitPaymentForm(paymentData)),
         catchError(error => this.handleError(error))
       )
       .subscribe();
@@ -110,13 +115,41 @@ export class Payments {
   }
 
   /**
-   * Handles successful order creation
-   * @param orderId The created order ID
+   * Initiates payment for the created order
+   * @param orderId The order ID to initiate payment for
+   * @returns Observable with the payment initiation response
    */
-  private handleOrderSuccess(orderId: string): void {
-    console.log('Order created successfully with ID:', orderId);
-    // TODO: Navigate to payment gateway or confirmation step
-    // this.router.navigate(['/payment-gateway'], { queryParams: { orderId } });
+  private initiatePayment(orderId: string): Observable<PaymentInitiationResponse> {
+    console.log('Initiating payment for order ID:', orderId);
+    return this.paymentService.initiatePayment(orderId);
+  }
+
+  /**
+   * Submits the payment form to PayU checkout
+   * @param paymentData The payment initiation response containing form data
+   */
+  private submitPaymentForm(paymentData: PaymentInitiationResponse): void {
+    console.log('Submitting payment form to PayU:', paymentData);
+
+    // Create a form element
+    const form = this.document.createElement('form');
+    form.method = 'post';
+    form.action = paymentData.action;
+    form.style.display = 'none';
+
+    // Add all payment fields as hidden inputs
+    Object.entries(paymentData.fields).forEach(([key, value]) => {
+      const input = this.document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      form.appendChild(input);
+    });
+
+    // Append form to body, submit, and remove
+    this.document.body.appendChild(form);
+    form.submit();
+    this.document.body.removeChild(form);
   }
 
   /**

@@ -1,3 +1,5 @@
+import { ProductType } from "./product.model";
+
 export interface CreateOrderRequest {
     description: string;
     referenceCode: string;
@@ -26,12 +28,9 @@ export interface OrderItem {
     productId: string;
     tax: number;
     taxReturnBase: number;
-    type: OrderItemType;
+    type: ProductType;
 }
 
-export enum OrderItemType {
-    BUNDLE = 'BUNDLE'
-}
 
 export interface FieldError {
     code: string;
@@ -46,4 +45,31 @@ export interface OrderErrorResponse {
     code: string;
     message: string;
     fieldErrors: FieldError[];
+}
+
+export interface PaymentInitiationResponse {
+    action: string;
+    fields: PaymentFields;
+}
+
+export interface PaymentFields {
+    merchantId: number;
+    accountId: number;
+    description: string;
+    referenceCode: string;
+    amount: number;
+    tax: number;
+    taxReturnBase: number;
+    currency: string;
+    signature: string;
+    buyerEmail: string;
+    buyerFullName: string,
+    buyerDocumentType: string,
+    buyerDocument: string,
+    billingAddress: string,
+    test: boolean;
+    responseUrl: string;
+    confirmationUrl: string;
+    extra1: string;
+    extra2: string;
 }

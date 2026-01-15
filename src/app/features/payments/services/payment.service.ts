@@ -2,10 +2,10 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { computed, inject, Injectable, Signal, signal } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Observable, throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { BillingInfo } from "../models/billing-info.model";
-import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderItemType } from "../models/order.model";
+import { CreateOrderRequest, OrderErrorResponse, OrderItem, PaymentInitiationResponse } from "../models/order.model";
 import { Product, ProductType } from "../models/product.model";
 
 @Injectable({
@@ -84,6 +84,15 @@ export class PaymentService {
             },
             responseType: 'text' as 'json' // The API returns a string, not JSON
         }).pipe(
+            map(response => {
+                // Remove quotes if the response is a JSON string like "orderId123"
+                try {
+                    return JSON.parse(response);
+                } catch {
+                    // If parsing fails, return the response as-is
+                    return response;
+                }
+            }),
             catchError(this.handleOrderError)
         );
     }
@@ -105,6 +114,23 @@ export class PaymentService {
 
         const orderRequest = this.buildOrderRequest(billingInfo, product, subscriberId, msisdn, referenceCode);
         return this.createOrder(orderRequest);
+    }
+
+    /**
+     * Initiates payment for an existing order
+     * @param orderId The order ID to initiate payment for
+     * @returns Observable with the payment initiation response containing PayU form data
+     */
+    initiatePayment(orderId: string): Observable<PaymentInitiationResponse> {
+        const url = `${environment.apiUrl}/orders/${orderId}/pay`;
+
+        return this.httpClient.put<PaymentInitiationResponse>(url, {}, {
+            headers: {
+                'accept': 'application/json'
+            }
+        }).pipe(
+            catchError(this.handleOrderError)
+        );
     }
 
     /**
@@ -130,7 +156,7 @@ export class PaymentService {
             productId: product.id,
             tax: this.calculateTax(product.price),
             taxReturnBase: 0,
-            type: this.mapProductTypeToOrderItemType(product.getProductType())
+            type: product.getProductType()
         };
 
         const e164msisdn = msisdn.startsWith('+') ? msisdn : `+${msisdn}`;
@@ -153,17 +179,6 @@ export class PaymentService {
             billingCity: billingInfo.city,
             billingAddress: billingInfo.address,
         };
-    }
-
-    /**
-     * Maps ProductType to OrderItemType
-     * @param productType The product type to map
-     * @returns The corresponding OrderItemType
-     */
-    private mapProductTypeToOrderItemType(productType: ProductType): OrderItemType {
-        // For now, all products map to BUNDLE
-        // This can be extended if more OrderItemTypes are added in the future
-        return OrderItemType.BUNDLE;
     }
 
     /**
