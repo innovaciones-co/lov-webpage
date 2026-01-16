@@ -4,12 +4,14 @@ import { InputTextComponent } from '../../../../shared/components/form-fields/in
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 import { Router } from '@angular/router';
 import { ActivateSimService } from '../../services/activate-sim.service';
+import { DatePickerComponent } from "../../../../shared/components/form-fields/date-picker/date-picker";
 
 export interface PersonalInfoFormData {
   name: string;
   lastName: string;
   documentType: string;
   documentID: string;
+  documentIssueDate: Date;
   email: string;
   phoneNumber: string;
   country: string;
@@ -22,14 +24,16 @@ export interface PersonalInfoFormData {
   selector: 'app-personal-info-form',
   imports: [ReactiveFormsModule,
     InputTextComponent,
-    SelectComponent
-  ],
+    SelectComponent,
+    DatePickerComponent],
   templateUrl: './personal-info-form.html',
   styleUrl: './personal-info-form.scss'
 })
 export class PersonalInfoForm {
   private activateSimService = inject(ActivateSimService);
   private router = inject(Router);
+
+  documentValidated = signal<boolean>(false);
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -50,6 +54,7 @@ export class PersonalInfoForm {
       lastName: new FormControl('', Validators.required),
       documentType: new FormControl('', Validators.required),
       documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
+      documentIssueDate: new FormControl<Date | null>(null, Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
       phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
       country: new FormControl('', Validators.required),
@@ -82,6 +87,34 @@ export class PersonalInfoForm {
 
     // Use field-specific message for any non-required error
     return this.errorMessages[fieldName]?.[firstError] || 'Error de validación';
+  }
+
+  onValidateDocument(): void {
+    const documentID = this.form().get('documentID')?.value;
+    const documentType = this.form().get('documentType')?.value;
+    const documentIssueDate = this.form().get('documentIssueDate')?.value;
+
+    // Validar que los campos requeridos estén completos
+    if (!documentID || !documentType || !documentIssueDate) {
+      return;
+    }
+
+    this.activateSimService.validateDocument(documentID, documentType, documentIssueDate).subscribe({
+      next: (response) => {
+        console.log('Documento validado exitosamente:', response);
+        this.activateSimService.setLoading(false);
+        this.documentValidated.set(true);
+
+        // Prellenar los campos con la información del documento si viene en la respuesta
+        if (response?.name) this.form().get('name')?.setValue(response.name);
+        if (response?.lastName) this.form().get('lastName')?.setValue(response.lastName);
+      },
+      error: (error) => {
+        console.error('Error al validar documento:', error);
+        this.activateSimService.setLoading(false);
+        this.documentValidated.set(false);
+      }
+    });
   }
 
   onSubmit(): void {

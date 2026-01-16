@@ -36,6 +36,31 @@ export class ActivateSimService {
         );
     }
 
+    validateDocument(documentID: string, documentType: string, documentIssueDate: Date): Observable<any> {
+        console.debug('Validating document');
+        this.loading.set(true);
+
+        const url = `${this.gatewayUrl}/personal-data/get`;
+
+        // Convertir a Date si es necesario y extraer el año
+        const date = documentIssueDate instanceof Date ? documentIssueDate : new Date(documentIssueDate);
+        const issueYear = date.getFullYear().toString();
+
+        const body = {
+            providerId: "6",
+            channel: "CRM",
+            user: "232",
+            msisdn: "573330701090", // TODO: Validad si es necesario cambiar este valor
+            serviceTypeTo: "CIFIN",
+            documentId: documentID,
+            documentType: "IDENTIFICATION_CARD",
+            verificationValue: issueYear,
+            verificationField: "DOCUMENT_ISSUE_YEAR"
+        };
+
+        return this.http.post(url, body);
+    }
+
     submitPersonalInfo(data: PersonalInfoFormData) {
         console.debug('Submitting personal info');
         this.loading.set(true);
