@@ -50,7 +50,7 @@ export class ActivateSimService {
             providerId: "6",
             channel: "CRM",
             user: "232",
-            msisdn: "573330701090", // TODO: Validad si es necesario cambiar este valor
+            msisdn: "573005555555",
             serviceTypeTo: "CIFIN",
             documentId: documentID,
             documentType: "IDENTIFICATION_CARD",

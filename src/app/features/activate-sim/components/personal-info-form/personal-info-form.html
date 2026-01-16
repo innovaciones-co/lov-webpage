@@ -3,31 +3,12 @@
         <h3 class="form-subtitle">Información personal</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Documento'" [placeholder]="'000000000'"
-                    [control]="form().controls.documentID"
-                    [error]="getFieldErrorMessage('documentID')"></input-text-field>
-
-                <select-field [label]="'Tipo de documento'" [placeholder]="''" [options]="documentType()"
-                    [control]="form().controls.documentType"
-                    [error]="getFieldErrorMessage('documentType')"></select-field>
-            </div>
-            <div class="form-row">
-                <date-picker-field [label]="'Fecha de expedición'"
-                    [placeholder]="'Ingresa la fecha de expedición de tu documento de identidad.'"
-                    [control]="form().controls.documentIssueDate"
-                    [error]="getFieldErrorMessage('documentIssueDate')"></date-picker-field>
-                <button class="btn btn-inline" type="button" (click)="onValidateDocument()">Validar documento</button>
-            </div>
-            <div class="form-row">
                 <input-text-field [label]="'Nombre'" [placeholder]="'Arturo'" [control]="form().controls.name"
                     [error]="getFieldErrorMessage('name')"></input-text-field>
 
                 <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'"
                     [control]="form().controls.lastName" [error]="getFieldErrorMessage('lastName')"></input-text-field>
             </div>
-        </div>
-        <h3 class="form-subtitle">Información de contacto</h3>
-        <div class="form-grid">
             <div class="form-row">
                 <input-text-field [label]="'Correo electrónico'" [placeholder]="'andres@myemail.com'"
                     [control]="form().controls.email" [error]="getFieldErrorMessage('email')"></input-text-field>

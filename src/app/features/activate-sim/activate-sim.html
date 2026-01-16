@@ -6,9 +6,14 @@
         <!-- Step Content -->
         <div class="step-content-container">
             <div class="form-wrapper">
-                <app-iccid-validation-form [hideButton]="showPersonalInfoForm()"
+                <app-iccid-validation-form [hideButton]="showDocumentValidationForm()"
                     (formSubmit)="onIccidValidationFormSubmit($event)"></app-iccid-validation-form>
             </div>
+            @if (showDocumentValidationForm()) {
+            <div class="form-wrapper">
+                <app-document-validation [hideButton]="showPersonalInfoForm()" (formSubmit)="onDocumentValidationFormSubmit($event)"></app-document-validation>
+            </div>
+            }
             @if (showPersonalInfoForm()) {
             <div class="form-wrapper">
                 <app-personal-info-form (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
