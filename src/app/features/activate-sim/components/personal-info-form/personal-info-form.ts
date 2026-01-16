@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, effect, inject, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
@@ -58,6 +58,36 @@ export class PersonalInfoForm {
   ]);
 
   formSubmit = output<PersonalInfoFormData>();
+
+  constructor() {
+    effect(() => {
+      const validationData = this.activateSimService.getDocumentValidationData()();
+
+      if (validationData) {
+        if (validationData.detailsGivenName) {
+          this.form().get('name')?.setValue(validationData.detailsGivenName);
+        }
+        if (validationData.detailsFamilyName) {
+          this.form().get('lastName')?.setValue(validationData.detailsFamilyName);
+        }
+        if (validationData.contactEmail) {
+          this.form().get('email')?.setValue(validationData.contactEmail);
+        }
+        if (validationData.contactPhone) {
+          this.form().get('phoneNumber')?.setValue(validationData.contactPhone);
+        }
+        if (validationData.addressCity) {
+          this.form().get('city')?.setValue(validationData.addressCity);
+        }
+        if (validationData.addressLine1) {
+          this.form().get('address')?.setValue(validationData.addressLine1);
+        }
+        if (validationData.addressCountry === 'Co') {
+          this.form().get('country')?.setValue('colombia');
+        }
+      }
+    });
+  }
 
   // Get error message for a specific field
   getFieldErrorMessage(fieldName: string): string {

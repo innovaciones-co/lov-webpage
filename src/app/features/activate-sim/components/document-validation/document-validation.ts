@@ -78,9 +78,12 @@ export class DocumentValidation {
         next: (response) => {
           console.log('Documento validado exitosamente:', response);
           this.activateSimService.setLoading(false);
-          this.formSubmit.emit(formData);
 
-          // TODO: Prellenar los campos con la información del documento si viene en la respuesta
+          if (response?.success && response?.data) {
+            this.activateSimService.setDocumentValidationData(response.data);
+          }
+
+          this.formSubmit.emit(formData);
         },
         error: (error) => {
           console.error('Error al validar documento:', error);

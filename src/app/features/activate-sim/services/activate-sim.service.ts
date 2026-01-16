@@ -14,6 +14,7 @@ export class ActivateSimService {
 
     private loading = signal<boolean>(false);
     private success = signal<boolean>(false);
+    private documentValidationData = signal<any>(null);
 
     constructor() {
         this.gatewayUrl = environment.gatewayUrl;
@@ -86,6 +87,14 @@ export class ActivateSimService {
 
     getSuccessSignal() {
         return this.success.asReadonly();
+    }
+
+    getDocumentValidationData() {
+        return this.documentValidationData.asReadonly();
+    }
+
+    setDocumentValidationData(data: any) {
+        this.documentValidationData.set(data);
     }
 
     setLoading(loading: boolean) {
