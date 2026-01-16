@@ -85,6 +85,10 @@ export class PersonalInfoForm {
         if (validationData.addressCountry === 'Co') {
           this.form().get('country')?.setValue('colombia');
         }
+
+        Object.keys(this.form().controls).forEach(key => {
+          this.form().get(key)?.markAsTouched();
+        });
       }
     });
   }
