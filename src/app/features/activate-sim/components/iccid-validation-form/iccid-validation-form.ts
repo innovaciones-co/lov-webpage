@@ -22,6 +22,8 @@ export class IccidValidationForm {
   hideButton = input(false);
   formSubmit = output<IccidValidationFormData>();
 
+  validationError = signal<string>('');
+
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
     lovNumber: {
@@ -68,6 +70,9 @@ export class IccidValidationForm {
     if (this.form().valid) {
       const formData = this.form().value as IccidValidationFormData;
 
+      // Limpiar error previo
+      this.validationError.set('');
+
       this.activateSimService.validateIccid(formData.iccid, formData.puk).subscribe({
         next: (response) => {
           console.log('Validación exitosa:', response);
@@ -77,6 +82,11 @@ export class IccidValidationForm {
         error: (error) => {
           console.error('Error en la validación:', error);
           this.activateSimService.setLoading(false);
+
+          // Mostrar mensaje de error al usuario
+          const errorMessage = error?.error?.message ||
+            'Los datos ingresados no son válidos. Por favor verifica el código de barras y el código PUK de tu SIM.';
+          this.validationError.set(errorMessage);
         }
       });
     }
