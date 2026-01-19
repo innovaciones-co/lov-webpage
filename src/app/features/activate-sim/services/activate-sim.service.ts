@@ -25,13 +25,13 @@ export class ActivateSimService {
         this.loading.set(true);
 
         // Primera solicitud GET
-        const firstUrl = `${this.gatewayUrl}/sim/validate?iccid=${iccid}&puk=${puk}`;
+        const firstUrl = `${this.gatewayUrl}/api/sim/validate?iccid=${iccid}&puk=${puk}`;
 
         return this.http.get(firstUrl).pipe(
             switchMap((firstResponse) => {
                 console.log('Primera solicitud exitosa:', firstResponse);
                 // Segunda solicitud GET - solo se ejecuta si la primera fue exitosa
-                const secondUrl = `${this.gatewayUrl}/subscriptions?iccid=${iccid}`;
+                const secondUrl = `${this.gatewayUrl}/api/subscriptions?iccid=${iccid}`;
                 return this.http.get(secondUrl);
             })
         );
@@ -41,7 +41,7 @@ export class ActivateSimService {
         console.debug('Validating document');
         this.loading.set(true);
 
-        const url = `${this.gatewayUrl}/personal-data/get`;
+        const url = `${this.gatewayUrl}/api/personal-data/get`;
 
         // Convertir a Date si es necesario y extraer el año
         const date = documentIssueDate instanceof Date ? documentIssueDate : new Date(documentIssueDate);
@@ -67,7 +67,7 @@ export class ActivateSimService {
         this.loading.set(true);
         this.success.set(false);
 
-        const url = `${this.gatewayUrl}/personal-info`; // TODO: Reemplazar con la URL correcta
+        const url = `${this.gatewayUrl}/api/personal-info`; // TODO: Reemplazar con la URL correcta
 
         return this.http.post(url, data).subscribe({
             next: () => {
