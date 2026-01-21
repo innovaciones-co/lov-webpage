@@ -15,6 +15,7 @@ export class ActivateSimService {
     private loading = signal<boolean>(false);
     private success = signal<boolean>(false);
     private documentValidationData = signal<any>(null);
+    private iccidValidationData = signal<any>(null);
 
     constructor() {
         this.gatewayUrl = environment.gatewayUrl;
@@ -81,6 +82,60 @@ export class ActivateSimService {
         });
     }
 
+    activateSim(personalData: PersonalInfoFormData, documentData: any): Observable<any> {
+        console.debug('Activating SIM - Starting three PUT requests');
+        this.loading.set(true);
+
+        const iccidData = this.iccidValidationData();
+        const customerId = iccidData?.payload?.id;
+        const subscription = iccidData?.payload?.subscriptions?.[0]?.id;
+
+        if (!customerId || !subscription) {
+            console.error('Missing customerId or subscription from ICCID validation');
+            throw new Error('Customer ID or Subscription ID not found');
+        }
+
+        // Validation full address PUT request
+        const firstUrl = `${this.gatewayUrl}/customers/${customerId}/address`;
+        const firstBody = {
+            country: personalData.country,
+            state: '', // TODO: Obtener el departamento
+            city: personalData.city,
+            line1: personalData.address
+        };
+
+        return this.http.put(firstUrl, firstBody).pipe(
+            switchMap((firstResponse) => {
+                console.log('Primer PUT exitoso:', firstResponse);
+
+                // Validation customer PUT request
+                const secondUrl = `${this.gatewayUrl}/customers/${customerId}/residential`;
+                const secondBody = {
+                    consentToShareData: true, // TODO: Agregar checkbox en el formulario
+                    email: personalData.email,
+                    familyName: personalData.lastName,
+                    givenName: personalData.name
+                };
+
+                return this.http.put(secondUrl, secondBody);
+            }),
+            switchMap((secondResponse) => {
+                console.log('Segundo PUT exitoso:', secondResponse);
+
+                // Activate SIM PUT request
+                const thirdUrl = `${this.gatewayUrl}/customers/${customerId}/subscriptions/${subscription}/sim/activate`;
+                const thirdBody = {
+                    transparentData: {
+                        documentId: documentData?.documentId || documentData?.documentID,
+                        documentType: documentData?.documentType
+                    }
+                };
+
+                return this.http.put(thirdUrl, thirdBody);
+            })
+        );
+    }
+
     getLoadingSignal() {
         return this.loading.asReadonly();
     }
@@ -95,6 +150,14 @@ export class ActivateSimService {
 
     setDocumentValidationData(data: any) {
         this.documentValidationData.set(data);
+    }
+
+    getIccidValidationData() {
+        return this.iccidValidationData.asReadonly();
+    }
+
+    setIccidValidationData(data: any) {
+        this.iccidValidationData.set(data);
     }
 
     setLoading(loading: boolean) {

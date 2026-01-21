@@ -77,6 +77,9 @@ export class IccidValidationForm {
         next: (response) => {
           console.log('Validación exitosa:', response);
           this.activateSimService.setLoading(false);
+
+          this.activateSimService.setIccidValidationData(response);
+
           this.formSubmit.emit(formData);
         },
         error: (error) => {
