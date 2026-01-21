@@ -30,13 +30,13 @@ export class IccidValidationForm {
       pattern: 'El número debe tener 10 dígitos numéricos' // TODO: Update message as needed
     },
     iccidDigits: {
-      pattern: 'El campo debe tener 8 dígitos numéricos' // TODO: Update message as needed
+      pattern: 'El campo debe tener 19 dígitos numéricos'
     }
   };
 
   form = signal(
     new FormGroup({
-      iccid: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{19}$')]), // TODO: Update pattern as needed
+      iccid: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{19}$')]),
       puk: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{8}$')]),
     })
   );
