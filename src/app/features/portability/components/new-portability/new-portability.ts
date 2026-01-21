@@ -49,7 +49,7 @@ export class NewPortabilityComponent {
     this.nextStep();
 
     // Make GET request to lookup donorNumber
-    const url = `${environment.gatewayUrl}/mnp/lookup/${data.donorNumber}`;
+    const url = `${environment.gatewayUrl}/api/mnp/lookup/${data.donorNumber}`;
     console.log('Making GET request to:', url);
 
     this.http.get(url).subscribe({
