@@ -9,7 +9,7 @@ import { DatePickerComponent } from "../../../../shared/components/form-fields/d
 export interface DocumentValidationData {
   documentType: string;
   documentID: string;
-  documentIssueDate: Date;
+  documentIssueDate: string;
 }
 
 @Component({
@@ -35,7 +35,7 @@ export class DocumentValidation {
     new FormGroup({
       documentType: new FormControl('', Validators.required),
       documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
-      documentIssueDate: new FormControl<Date | null>(null, Validators.required),
+      documentIssueDate: new FormControl<string | null>(null, Validators.required),
     })
   );
 

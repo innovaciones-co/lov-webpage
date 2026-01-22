@@ -38,15 +38,17 @@ export class ActivateSimService {
         );
     }
 
-    validateDocument(documentID: string, documentType: string, documentIssueDate: Date): Observable<any> {
+    validateDocument(documentID: string, documentType: string, documentIssueDate: string): Observable<any> {
         console.debug('Validating document');
         this.loading.set(true);
 
         const url = `${this.gatewayUrl}/api/personal-data/get`;
 
-        // Convertir a Date si es necesario y extraer el año
-        const date = documentIssueDate instanceof Date ? documentIssueDate : new Date(documentIssueDate);
-        const issueYear = date.getFullYear().toString();
+        // documentIssueDate: YYYY-MM-DDTHH:mm:ss.sssZ
+        const issueYear = documentIssueDate.substring(0, 4);
+
+        console.log('Fecha capturada (ISO):', documentIssueDate);
+        console.log('Año extraído:', issueYear);
 
         const body = {
             providerId: "6",
