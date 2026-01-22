@@ -23,6 +23,7 @@ export class DocumentValidation {
   private router = inject(Router);
 
   hideButton = input(false);
+  isLoading = signal(false);
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -73,11 +74,12 @@ export class DocumentValidation {
   onSubmit(): void {
     if (this.form().valid) {
       const formData = this.form().value as DocumentValidationData;
+      this.isLoading.set(true);
 
       this.activateSimService.validateDocument(formData.documentID, formData.documentType, formData.documentIssueDate).subscribe({
         next: (response) => {
           console.log('Documento validado exitosamente:', response);
-          this.activateSimService.setLoading(false);
+          this.isLoading.set(false);
 
           if (response?.success && response?.data) {
             this.activateSimService.setDocumentValidationData(response.data);
@@ -87,7 +89,7 @@ export class DocumentValidation {
         },
         error: (error) => {
           console.error('Error al validar documento:', error);
-          this.activateSimService.setLoading(false);
+          this.isLoading.set(false);
         }
       });
     }

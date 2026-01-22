@@ -48,5 +48,12 @@
             <error-card [message]="validationError()"></error-card>
         </div>
     </div>
-    <button class="btn" type="submit" [disabled]="form().invalid">Activar SIM</button>
+    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+        @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Procesando...
+        } @else {
+        Activar SIM
+        }
+    </button>
 </form>

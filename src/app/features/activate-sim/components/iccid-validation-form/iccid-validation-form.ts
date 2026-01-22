@@ -21,6 +21,7 @@ export class IccidValidationForm {
   private activateSimService = inject(ActivateSimService);
 
   hideButton = input(false);
+  isLoading = signal(false);
   formSubmit = output<IccidValidationFormData>();
 
   validationError = signal<string>('');
@@ -70,6 +71,7 @@ export class IccidValidationForm {
   onSubmit(): void {
     if (this.form().valid) {
       const formData = this.form().value as IccidValidationFormData;
+      this.isLoading.set(true);
 
       // Limpiar error previo
       this.validationError.set('');
@@ -77,7 +79,7 @@ export class IccidValidationForm {
       this.activateSimService.validateIccid(formData.iccid, formData.puk).subscribe({
         next: (response) => {
           console.log('Validación exitosa:', response);
-          this.activateSimService.setLoading(false);
+          this.isLoading.set(false);
 
           this.activateSimService.setIccidValidationData(response);
 
@@ -85,7 +87,7 @@ export class IccidValidationForm {
         },
         error: (error) => {
           console.error('Error en la validación:', error);
-          this.activateSimService.setLoading(false);
+          this.isLoading.set(false);
 
           // Mostrar mensaje de error al usuario
           const errorMessage = error?.error?.message ||
@@ -96,3 +98,4 @@ export class IccidValidationForm {
     }
   }
 }
+

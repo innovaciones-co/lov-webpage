@@ -36,6 +36,7 @@ export class PersonalInfoForm {
   private activateSimService = inject(ActivateSimService);
   private router = inject(Router);
   documentValidationData = input<DocumentValidationData | null>(null);
+  isLoading = signal(false);
 
   validationError = signal<string>('');
 
@@ -124,6 +125,7 @@ export class PersonalInfoForm {
   onSubmit(): void {
     if (this.form().valid) {
       const formData = this.form().value as PersonalInfoFormData;
+      this.isLoading.set(true);
 
       // Limpiar error previo
       this.validationError.set('');
@@ -133,13 +135,13 @@ export class PersonalInfoForm {
       this.activateSimService.activateSim(formData, documentData).subscribe({
         next: (response) => {
           console.log('Activación exitosa:', response);
-          this.activateSimService.setLoading(false);
+          this.isLoading.set(false);
           this.formSubmit.emit(formData);
           this.router.navigate(['/activar-sim/exitoso']);
         },
         error: (error) => {
           console.error('Error en la activación:', error);
-          this.activateSimService.setLoading(false);
+          this.isLoading.set(false);
 
           this.validationError.set('Ocurrió un error durante la activación. Por favor, inténtelo de nuevo más tarde o contacte al equipo de soporte.');
         }

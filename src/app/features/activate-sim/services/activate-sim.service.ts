@@ -162,10 +162,6 @@ export class ActivateSimService {
         this.iccidValidationData.set(data);
     }
 
-    setLoading(loading: boolean) {
-        this.loading.set(loading);
-    }
-
     resetState() {
         this.loading.set(false);
         this.success.set(false);
