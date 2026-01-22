@@ -2,6 +2,7 @@ import { Component, effect, inject, input, output, signal } from '@angular/core'
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivateSimService } from '../../services/activate-sim.service';
+import { ErrorCard } from '../../../../shared/components/error-card/error-card';
 
 export interface IccidValidationFormData {
   iccid: string;
@@ -11,7 +12,7 @@ export interface IccidValidationFormData {
 @Component({
   selector: 'app-iccid-validation-form',
   standalone: true,
-  imports: [ReactiveFormsModule, InputTextComponent],
+  imports: [ReactiveFormsModule, InputTextComponent, ErrorCard],
   templateUrl: './iccid-validation-form.html',
   styleUrl: './iccid-validation-form.scss'
 })

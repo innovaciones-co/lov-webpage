@@ -12,12 +12,7 @@
             </div>
         </div>
 
-        @if (validationError()) {
-        <div class="error-message">
-            <span class="material-symbols-outlined">error</span>
-            <p>{{ validationError() }}</p>
-        </div>
-        }
+        <error-card [message]="validationError()"></error-card>
 
     </div>
     @if (!hideButton()) {
