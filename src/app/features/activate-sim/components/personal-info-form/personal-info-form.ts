@@ -5,6 +5,7 @@ import { SelectComponent } from '../../../../shared/components/form-fields/selec
 import { Router } from '@angular/router';
 import { ActivateSimService } from '../../services/activate-sim.service';
 import { DatePickerComponent } from "../../../../shared/components/form-fields/date-picker/date-picker";
+import { COLOMBIA_STATES } from '../../../../core/constants/colombia-states';
 
 export interface PersonalInfoFormData {
   name: string;
@@ -12,6 +13,7 @@ export interface PersonalInfoFormData {
   email: string;
   phoneNumber: string;
   country: string;
+  state: string;
   city: string;
   address: string;
   addressOptional: string;
@@ -47,6 +49,7 @@ export class PersonalInfoForm {
       email: new FormControl('', [Validators.required, Validators.email]),
       phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
       country: new FormControl('', Validators.required),
+      state: new FormControl('', Validators.required),
       city: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
       addressOptional: new FormControl(''),
@@ -56,6 +59,8 @@ export class PersonalInfoForm {
   country = signal([
     { label: 'Colombia', value: 'colombia' },
   ]);
+
+  state = signal(COLOMBIA_STATES);
 
   formSubmit = output<PersonalInfoFormData>();
 
@@ -77,7 +82,8 @@ export class PersonalInfoForm {
           this.form().get('phoneNumber')?.setValue(validationData.contactPhone);
         }
         if (validationData.addressCity) {
-          this.form().get('city')?.setValue(validationData.addressCity);
+          const city = validationData.addressCity.split('(')[0].trim();
+          this.form().get('city')?.setValue(city);
         }
         if (validationData.addressLine1) {
           this.form().get('address')?.setValue(validationData.addressLine1);

@@ -98,10 +98,10 @@ export class ActivateSimService {
         }
 
         // Validation full address PUT request
-        const firstUrl = `${this.gatewayUrl}/customers/${customerId}/address`;
+        const firstUrl = `${this.gatewayUrl}/api/customers/${customerId}/address`;
         const firstBody = {
             country: personalData.country,
-            state: '', // TODO: Obtener el departamento
+            state: personalData.state,
             city: personalData.city,
             line1: personalData.address
         };
@@ -111,7 +111,7 @@ export class ActivateSimService {
                 console.log('Primer PUT exitoso:', firstResponse);
 
                 // Validation customer PUT request
-                const secondUrl = `${this.gatewayUrl}/customers/${customerId}/residential`;
+                const secondUrl = `${this.gatewayUrl}/api/customers/${customerId}/residential`;
                 const secondBody = {
                     consentToShareData: true, // TODO: Agregar checkbox en el formulario
                     email: personalData.email,
@@ -125,7 +125,7 @@ export class ActivateSimService {
                 console.log('Segundo PUT exitoso:', secondResponse);
 
                 // Activate SIM PUT request
-                const thirdUrl = `${this.gatewayUrl}/customers/${customerId}/subscriptions/${subscription}/sim/activate`;
+                const thirdUrl = `${this.gatewayUrl}/api/customers/${customerId}/subscriptions/${subscription}/sim/activate`;
                 const thirdBody = {
                     transparentData: {
                         documentId: documentData?.documentId || documentData?.documentID,

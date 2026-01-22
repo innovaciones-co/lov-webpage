@@ -3,7 +3,7 @@
         <h3 class="form-subtitle">Información personal</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Nombre'" [placeholder]="'Arturo'" [control]="form().controls.name"
+                <input-text-field [label]="'Nombres'" [placeholder]="'Arturo'" [control]="form().controls.name"
                     [error]="getFieldErrorMessage('name')"></input-text-field>
 
                 <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'"
@@ -21,13 +21,18 @@
                 <select-field [label]="'País'" [placeholder]="''" [options]="country()"
                     [control]="form().controls.country" [error]="getFieldErrorMessage('country')"></select-field>
 
-                <input-text-field [label]="'Ciudad'" [placeholder]="''" [control]="form().controls.city"
-                    [error]="getFieldErrorMessage('city')"></input-text-field>
+                <select-field [label]="'Departamento'" [placeholder]="''" [options]="state()"
+                    [control]="form().controls.state" [error]="getFieldErrorMessage('state')"></select-field>
+
             </div>
             <div class="form-row">
+                <input-text-field [label]="'Ciudad'" [placeholder]="''" [control]="form().controls.city"
+                    [error]="getFieldErrorMessage('city')"></input-text-field>
+
                 <input-text-field [label]="'Dirección'" [placeholder]="'Cra 00 #00-00'"
                     [control]="form().controls.address" [error]="getFieldErrorMessage('address')"></input-text-field>
-
+            </div>
+            <div class="form-row">
                 <input-text-field [label]="'Información complementaria'"
                     [placeholder]="'Conjunto, casa, torre, apartamento, etc.'"
                     [control]="form().controls.addressOptional"
