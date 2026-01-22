@@ -26,7 +26,12 @@ export class DatePickerComponent {
 
   onBlur() {
     if (this.control().valid) {
-      this.valueChange.emit(this.control().value);
+      const dateString = this.control().value;
+      if (dateString) {
+        // ISO string, no Date object
+        const isoString = `${dateString}T00:00:00.000Z`;
+        this.valueChange.emit(isoString);
+      }
     }
   }
 }

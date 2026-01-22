@@ -11,6 +11,8 @@ import { PlansIntro } from './features/plans/components/plans-intro/plans-intro'
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 import { Portability } from './features/portability/portability';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
+import { DeviceLock } from './features/device-lock/device-lock';
+import { SuccessfulActivation } from './features/activate-sim/components/successful-activation/successful-activation';
 
 export const routes: Routes = [
     {
@@ -20,6 +22,10 @@ export const routes: Routes = [
     {
         path: 'activar-sim',
         component: ActivateSim
+    },
+    {
+        path: 'activar-sim/exitoso',
+        component: SuccessfulActivation
     },
     {
         path: 'legales',
@@ -60,6 +66,10 @@ export const routes: Routes = [
         path: 'pagos',
         component: Payments,
         canActivate: [authGuard]
+    },
+    {
+        path: 'bloqueo-equipo',
+        component: DeviceLock,
     },
     {
         path: '**',

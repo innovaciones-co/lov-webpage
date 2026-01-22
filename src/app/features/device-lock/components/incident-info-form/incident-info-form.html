@@ -1,0 +1,30 @@
+<form [formGroup]="form()" (ngSubmit)="onSubmit()">
+    <div class="card">
+        <h3 class="form-subtitle">Información del incidente</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'Número LOV implicado'" [placeholder]="'0000000000'"
+                    [control]="form().controls.lovNumber"
+                    [error]="getFieldErrorMessage('lovNumber')"></input-text-field>
+
+                <date-picker-field [label]="'Fecha del incidente'"
+                    [placeholder]="'Ingresa la fecha en la que ocurrió el incidente.'"
+                    [control]="form().controls.incidentDate"
+                    [error]="getFieldErrorMessage('incidentDate')"></date-picker-field>
+            </div>
+            <div class="form-row">
+                <select-field [label]="'Tipo de bloqueo'" [placeholder]="''" [options]="blockType()"
+                    [control]="form().controls.blockType" [error]="getFieldErrorMessage('blockType')"></select-field>
+
+                <select-field [label]="'Víctima menor de edad'" [placeholder]="''" [options]="yesNoOptions()"
+                    [control]="form().controls.isMinor" [error]="getFieldErrorMessage('isMinor')"></select-field>
+            </div>
+            <div class="form-row">
+                <select-field [label]="'Se aplicó violencia'" [placeholder]="''" [options]="yesNoOptions()"
+                    [control]="form().controls.violenceApplied"
+                    [error]="getFieldErrorMessage('violenceApplied')"></select-field>
+            </div>
+        </div>
+    </div>
+    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+</form>

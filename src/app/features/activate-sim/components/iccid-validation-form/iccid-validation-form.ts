@@ -1,6 +1,8 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivateSimService } from '../../services/activate-sim.service';
+import { ErrorCard } from '../../../../shared/components/error-card/error-card';
 
 export interface IccidValidationFormData {
   iccid: string;
@@ -10,14 +12,18 @@ export interface IccidValidationFormData {
 @Component({
   selector: 'app-iccid-validation-form',
   standalone: true,
-  imports: [ReactiveFormsModule, InputTextComponent],
+  imports: [ReactiveFormsModule, InputTextComponent, ErrorCard],
   templateUrl: './iccid-validation-form.html',
   styleUrl: './iccid-validation-form.scss'
 })
 export class IccidValidationForm {
 
+  private activateSimService = inject(ActivateSimService);
+
   hideButton = input(false);
   formSubmit = output<IccidValidationFormData>();
+
+  validationError = signal<string>('');
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
@@ -25,13 +31,13 @@ export class IccidValidationForm {
       pattern: 'El número debe tener 10 dígitos numéricos' // TODO: Update message as needed
     },
     iccidDigits: {
-      pattern: 'El campo debe tener 8 dígitos numéricos' // TODO: Update message as needed
+      pattern: 'El campo debe tener 19 dígitos numéricos'
     }
   };
 
   form = signal(
     new FormGroup({
-      iccid: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]), // TODO: Update pattern as needed
+      iccid: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{19}$')]),
       puk: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{8}$')]),
     })
   );
@@ -63,8 +69,30 @@ export class IccidValidationForm {
 
   onSubmit(): void {
     if (this.form().valid) {
-      this.formSubmit.emit(this.form().value as IccidValidationFormData);
+      const formData = this.form().value as IccidValidationFormData;
+
+      // Limpiar error previo
+      this.validationError.set('');
+
+      this.activateSimService.validateIccid(formData.iccid, formData.puk).subscribe({
+        next: (response) => {
+          console.log('Validación exitosa:', response);
+          this.activateSimService.setLoading(false);
+
+          this.activateSimService.setIccidValidationData(response);
+
+          this.formSubmit.emit(formData);
+        },
+        error: (error) => {
+          console.error('Error en la validación:', error);
+          this.activateSimService.setLoading(false);
+
+          // Mostrar mensaje de error al usuario
+          const errorMessage = error?.error?.message ||
+            'Los datos ingresados no son válidos. Por favor verifica el código de barras y el código PUK de tu SIM.';
+          this.validationError.set(errorMessage);
+        }
+      });
     }
-    // console.log('Form submitted:', this.form().value);
   }
 }

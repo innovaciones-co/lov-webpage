@@ -27,7 +27,7 @@ export class PortabilityService {
     this.donorValidationError.set(null);
 
     try {
-      const url = `${environment.gatewayUrl}/mnp/lookup/${donorNumber}`;
+      const url = `${environment.gatewayUrl}/api/mnp/lookup/${donorNumber}`;
       const result = await firstValueFrom(this.http.get(url));
 
       console.debug('Donor number validation result:', result);

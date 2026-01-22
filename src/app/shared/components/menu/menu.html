@@ -28,10 +28,25 @@
                         </a>
                     </div>
                 </li>
-
-                <li class="nav-item">
-                    <a routerLink="/portabilidad" class="nav-link" routerLinkActive="active"
-                        (click)="closeMobileMenu()">Portabilidad</a>
+                <li class="nav-item dropdown" (click)="toggleDropdown($event)">
+                    <a class="nav-link"
+                        [class.active]="isDropdownActive(['portabilidad', 'activar-sim', 'bloqueo-equipo'])">
+                        Tramites
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" routerLink="/portabilidad" routerLinkActive="active"
+                            (click)="closeMobileMenu()">
+                            Portabilidad
+                        </a>
+                        <a class="dropdown-item" routerLink="/activar-sim" routerLinkActive="active"
+                            (click)="closeMobileMenu()">
+                            Activar SIM
+                        </a>
+                        <a class="dropdown-item" routerLink="/bloqueo-equipo" routerLinkActive="active"
+                            (click)="closeMobileMenu()">
+                            Bloqueo de equipo
+                        </a>
+                    </div>
                 </li>
                 <li class="nav-item dropdown" (click)="toggleDropdown($event)">
                     <a class="nav-link" [class.active]="isDropdownActive(['preguntas-frecuentes', 'legales'])">

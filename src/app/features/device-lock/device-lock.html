@@ -1,0 +1,25 @@
+<div class="container">
+    <h1>Formulario de pérdida o robo de dispositivo</h1>
+    <p>En caso de pérdida o robo, puedes solicitar el bloqueo de tu línea LOV de forma rápida y segura a través de un
+        formulario en línea. Solo necesitarás ingresar algunos datos para validar tu identidad y el número de línea
+        asociado. Una vez verificada la información, se realizará el bloqueo remoto del último dispositivo en el que
+        estuvo activa la SIM, ayudando a proteger tu información personal.</p>
+
+    <div class="stepper-container">
+        <!-- Step Content -->
+        <div class="step-content-container">
+            @switch (currentStepIndex()) {
+            @case (0) {
+            <div class="form-wrapper">
+                <app-incident-info-form (formSubmit)="onIncidentInfoFormSubmit($event)"></app-incident-info-form>
+            </div>
+            }
+            @case (1) {
+            <div class="form-wrapper">
+                <app-personal-info-form (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
+            </div>
+            }
+            }
+        </div>
+    </div>
+</div>
