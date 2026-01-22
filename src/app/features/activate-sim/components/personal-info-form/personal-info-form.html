@@ -39,13 +39,13 @@
                     [error]="getFieldErrorMessage('addressOptional')"></input-text-field>
             </div>
             <div class="form-row">
-
                 <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
                     Acepto los <a href="/docs/condiciones_servicio_prepago_lov.pdf" target="_blank"
                         class="link-button">términos y
                         condiciones</a>.
                 </checkbox-field>
             </div>
+            <error-card [message]="validationError()"></error-card>
         </div>
     </div>
     <button class="btn" type="submit" [disabled]="form().invalid">Activar SIM</button>

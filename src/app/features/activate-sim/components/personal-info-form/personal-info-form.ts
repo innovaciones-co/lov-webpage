@@ -8,6 +8,7 @@ import { DatePickerComponent } from "../../../../shared/components/form-fields/d
 import { COLOMBIA_STATES } from '../../../../core/constants/colombia-states';
 import { CheckboxComponent } from "../../../../shared/components/form-fields/checkbox/checkbox";
 import { DocumentValidationData } from '../document-validation/document-validation';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface PersonalInfoFormData {
   name: string;
@@ -27,8 +28,7 @@ export interface PersonalInfoFormData {
   imports: [ReactiveFormsModule,
     InputTextComponent,
     SelectComponent,
-    CheckboxComponent,
-  ],
+    CheckboxComponent, ErrorCard],
   templateUrl: './personal-info-form.html',
   styleUrl: './personal-info-form.scss'
 })
@@ -36,6 +36,8 @@ export class PersonalInfoForm {
   private activateSimService = inject(ActivateSimService);
   private router = inject(Router);
   documentValidationData = input<DocumentValidationData | null>(null);
+
+  validationError = signal<string>('');
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -122,6 +124,10 @@ export class PersonalInfoForm {
   onSubmit(): void {
     if (this.form().valid) {
       const formData = this.form().value as PersonalInfoFormData;
+
+      // Limpiar error previo
+      this.validationError.set('');
+
       const documentData = this.documentValidationData();
 
       this.activateSimService.activateSim(formData, documentData).subscribe({
@@ -134,6 +140,8 @@ export class PersonalInfoForm {
         error: (error) => {
           console.error('Error en la activación:', error);
           this.activateSimService.setLoading(false);
+
+          this.validationError.set('Ocurrió un error durante la activación. Por favor, inténtelo de nuevo más tarde o contacte al equipo de soporte.');
         }
       });
     }
