@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { SuccessfulProcessComponent } from '../../../../shared/components/successful-process/successful-process';
 
 @Component({
-  selector: 'app-successful-portability',
+  selector: 'app-successful-activation',
   imports: [SuccessfulProcessComponent],
-  templateUrl: './successful-portability.html',
-  styleUrl: './successful-portability.scss'
+  templateUrl: './successful-activation.html',
+  styleUrl: './successful-activation.scss'
 })
-export class SuccessfulPortability {
+export class SuccessfulActivation {
   icon = '/email.png';
-  title = '¡Tu portabilidad a LOV está en proceso!';
+  title = '¡Tu SIM ha sido activada exitosamente!';
 }

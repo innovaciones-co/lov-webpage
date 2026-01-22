@@ -12,6 +12,7 @@ import { SuccessfulPortability } from './features/portability/components/success
 import { Portability } from './features/portability/portability';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
 import { DeviceLock } from './features/device-lock/device-lock';
+import { SuccessfulActivation } from './features/activate-sim/components/successful-activation/successful-activation';
 
 export const routes: Routes = [
     {
@@ -21,6 +22,10 @@ export const routes: Routes = [
     {
         path: 'activar-sim',
         component: ActivateSim
+    },
+    {
+        path: 'activar-sim/exitoso',
+        component: SuccessfulActivation
     },
     {
         path: 'legales',

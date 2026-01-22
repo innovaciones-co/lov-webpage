@@ -111,14 +111,13 @@ export class PersonalInfoForm {
     if (this.form().valid) {
       const formData = this.form().value as PersonalInfoFormData;
       const documentData = this.activateSimService.getDocumentValidationData()();
-      
+
       this.activateSimService.activateSim(formData, documentData).subscribe({
         next: (response) => {
           console.log('Activación exitosa:', response);
           this.activateSimService.setLoading(false);
           this.formSubmit.emit(formData);
-          // TODO: Navegar a página de éxito
-          // this.router.navigate(['/activate-sim/successful']);
+          this.router.navigate(['/activar-sim/exitoso']);
         },
         error: (error) => {
           console.error('Error en la activación:', error);
