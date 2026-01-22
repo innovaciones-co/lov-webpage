@@ -1,4 +1,4 @@
-import { Component, effect, inject, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { ActivateSimService } from '../../services/activate-sim.service';
 import { DatePickerComponent } from "../../../../shared/components/form-fields/date-picker/date-picker";
 import { COLOMBIA_STATES } from '../../../../core/constants/colombia-states';
+import { CheckboxComponent } from "../../../../shared/components/form-fields/checkbox/checkbox";
+import { DocumentValidationData } from '../document-validation/document-validation';
 
 export interface PersonalInfoFormData {
   name: string;
@@ -17,13 +19,15 @@ export interface PersonalInfoFormData {
   city: string;
   address: string;
   addressOptional: string;
+  terms: boolean;
 }
 
 @Component({
   selector: 'app-personal-info-form',
   imports: [ReactiveFormsModule,
     InputTextComponent,
-    SelectComponent
+    SelectComponent,
+    CheckboxComponent,
   ],
   templateUrl: './personal-info-form.html',
   styleUrl: './personal-info-form.scss'
@@ -31,6 +35,7 @@ export interface PersonalInfoFormData {
 export class PersonalInfoForm {
   private activateSimService = inject(ActivateSimService);
   private router = inject(Router);
+  documentValidationData = input<DocumentValidationData | null>(null);
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -53,6 +58,7 @@ export class PersonalInfoForm {
       city: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
       addressOptional: new FormControl(''),
+      terms: new FormControl(false, Validators.requiredTrue),
     })
   );
 
@@ -116,7 +122,7 @@ export class PersonalInfoForm {
   onSubmit(): void {
     if (this.form().valid) {
       const formData = this.form().value as PersonalInfoFormData;
-      const documentData = this.activateSimService.getDocumentValidationData()();
+      const documentData = this.documentValidationData();
 
       this.activateSimService.activateSim(formData, documentData).subscribe({
         next: (response) => {

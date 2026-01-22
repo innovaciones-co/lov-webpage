@@ -38,9 +38,14 @@
                     [control]="form().controls.addressOptional"
                     [error]="getFieldErrorMessage('addressOptional')"></input-text-field>
             </div>
-            <!-- 
-    <checkbox-field [label]="'Acepto los términos y condiciones'" [control]="form().controls.terms"
-        [error]="'Debes aceptar los términos'"></checkbox-field> -->
+            <div class="form-row">
+
+                <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
+                    Acepto los <a href="/docs/condiciones_servicio_prepago_lov.pdf" target="_blank"
+                        class="link-button">términos y
+                        condiciones</a>.
+                </checkbox-field>
+            </div>
         </div>
     </div>
     <button class="btn" type="submit" [disabled]="form().invalid">Activar SIM</button>

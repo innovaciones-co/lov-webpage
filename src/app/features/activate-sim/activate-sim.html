@@ -16,7 +16,7 @@
             }
             @if (showPersonalInfoForm()) {
             <div class="form-wrapper">
-                <app-personal-info-form (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
+                <app-personal-info-form [documentValidationData]="documentValidationData()" (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
             </div>
             }
         </div>

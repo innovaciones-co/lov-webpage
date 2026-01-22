@@ -1,6 +1,6 @@
 <label [attr.for]="id()">
   <input type="checkbox" [id]="id()" [formControl]="control()" (blur)="onBlur()" />
-  <span>{{ label() }}</span>
+  <span><ng-content></ng-content>{{ label() }}</span>
 </label>
 @if (control().invalid && control().touched) {
 <div class="error">{{ error() }}</div>
