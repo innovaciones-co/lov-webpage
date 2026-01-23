@@ -91,7 +91,9 @@ export class PortabilityService {
     this.isValidatingDonorNumber.set(true);
     this.donorValidationError.set(null);
 
-    const url = `${this.gatewayUrl}/api/mnp/portin/status/57${lovNumber}`;
+    const transformedMsisdn = this.msisdnPipe.transform(lovNumber);
+
+    const url = `${this.gatewayUrl}/api/mnp/portin/status/${transformedMsisdn}`;
 
     return this.http.get(url);
   }
