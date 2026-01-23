@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 import { MsisdnPipe } from '../../../core/pipes/msisdn.pipe';
@@ -12,6 +12,11 @@ import { LookupResponse, SubscriptionResponse } from '../models/portability.mode
 export class PortabilityService {
   http = inject(HttpClient);
   msisdnPipe = inject(MsisdnPipe);
+  private readonly gatewayUrl;
+
+  constructor() {
+    this.gatewayUrl = environment.gatewayUrl;
+  }
 
   // Signals for state management
   isValidatingDonorNumber = signal<boolean>(false);
@@ -79,6 +84,16 @@ export class PortabilityService {
       console.error('Error looking up subscription by MSISDN:', error);
       return null;
     }
+  }
+
+  validatePortabilityStatus(lovNumber: string): Observable<any> {
+    console.debug('Validating portability status for LOV number:', lovNumber);
+    this.isValidatingDonorNumber.set(true);
+    this.donorValidationError.set(null);
+
+    const url = `${this.gatewayUrl}/api/mnp/portin/status/57${lovNumber}`;
+
+    return this.http.get(url);
   }
 
   // Reset methods

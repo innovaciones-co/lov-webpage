@@ -7,7 +7,15 @@
                     [control]="form().controls.lovNumber"
                     [error]="getFieldErrorMessage('lovNumber')"></input-text-field>
             </div>
+            <error-card [message]="validationError()"></error-card>
         </div>
-        <button class="btn" type="submit" [disabled]="form().invalid">Consultar</button>
+        <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+            @if (isLoading()) {
+            <span class="loading-spinner"></span>
+            Validando...
+            } @else {
+            Consultar
+            }
+        </button>
     </form>
 </div>
