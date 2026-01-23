@@ -1,10 +1,12 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { combineLatest, debounceTime, filter } from 'rxjs';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
 import { Modal } from '../../../../shared/components/modal/modal';
 import { PortabilityService } from '../../services/portability.service';
+import { PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface PortinInformationData {
   donorNumber: string;
@@ -19,7 +21,8 @@ export interface PortinInformationData {
     ReactiveFormsModule,
     InputTextComponent,
     SelectComponent,
-    Modal
+    Modal,
+    ErrorCard
   ],
   templateUrl: './portin-information-form.component.html',
   styleUrl: './portin-information-form.component.scss'
@@ -27,9 +30,12 @@ export interface PortinInformationData {
 export class PortinInformationFormComponent {
   private portabilityService = inject(PortabilityService);
 
+  portabilityData = input.required<PortabilityInformationData>();
   formSubmit = output<PortinInformationData>();
 
   showModal = signal(false);
+  isLoading = signal(false);
+  validationError = signal<string>('');
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
@@ -158,9 +164,27 @@ export class PortinInformationFormComponent {
     }
   }
 
-  onContinueModal(): void {
-    this.formSubmit.emit(this.form().value as PortinInformationData);
-    this.showModal.set(false);
+  async onContinueModal(): Promise<void> {
+    this.validationError.set('');
+    this.isLoading.set(true);
+
+    try {
+      const formData = this.form().value as PortinInformationData;
+      const lovNumber = this.portabilityData().lovNumber;
+      await this.portabilityService.nipRequest(formData, lovNumber);
+
+      this.formSubmit.emit(formData);
+      this.showModal.set(false);
+    } catch (error: any) {
+      console.error('Error submitting portin request:', error);
+      const errorMessage = error?.error?.message ||
+        'Error al procesar la solicitud de portabilidad. Por favor, inténtelo de nuevo más tarde o contacte al equipo de soporte.';
+      this.validationError.set(errorMessage);
+
+      this.showModal.set(false);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   onCancelModal(): void {

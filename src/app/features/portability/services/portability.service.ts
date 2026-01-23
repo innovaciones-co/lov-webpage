@@ -98,6 +98,21 @@ export class PortabilityService {
     return this.http.get(url);
   }
 
+  async nipRequest(data: { donorNumber: string; donorOperator: string; donorPlan: string }, lovNumber: string): Promise<any> {
+    try {
+      console.debug('Submitting NIP request with data:', data, 'and LOV number:', lovNumber);
+      const transformedLovNumber = this.msisdnPipe.transform(lovNumber);
+      const transformedDonorNumber = this.msisdnPipe.transform(data.donorNumber);
+      const url = `${this.gatewayUrl}/mnp/nip?msisdn=${transformedLovNumber}&newMsisdn=${transformedDonorNumber}`;
+
+      const response = await firstValueFrom(this.http.get<ApiResponse<any>>(url));
+      return response.payload;
+    } catch (error: any) {
+      console.error('Error submitting portin request:', error);
+      throw error;
+    }
+  }
+
   // Reset methods
   resetDonorValidation(): void {
     this.donorValidationResult.set(null);

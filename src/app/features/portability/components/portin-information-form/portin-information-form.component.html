@@ -22,6 +22,7 @@
                     [error]="getFieldErrorMessage('donorPlan')"></select-field>
             </div>
         </div>
+        <error-card [message]="validationError()"></error-card>
     </div>
 
     <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
