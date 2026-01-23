@@ -5,6 +5,7 @@ import { PortabilityService } from '../../services/portability.service';
 import { CustomerInformationData, CustomerInformationFormComponent } from '../customer-information-form/customer-information-form';
 import { PortabilityInformation, PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
 import { PortinInformationData, PortinInformationFormComponent } from '../portin-information-form/portin-information-form.component';
+import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 
 @Component({
   selector: 'app-new-portability',
@@ -16,6 +17,9 @@ export class NewPortabilityComponent {
 
   private http = inject(HttpClient);
   private portabilityService = inject(PortabilityService);
+
+  msisdnPipe = inject(MsisdnPipe);
+
 
   portabilityData = signal<PortabilityInformationData | null>(null);
   portinData = signal<PortinInformationData | null>(null);
@@ -49,7 +53,9 @@ export class NewPortabilityComponent {
     this.nextStep();
 
     // Make GET request to lookup donorNumber
-    const url = `${environment.gatewayUrl}/api/mnp/lookup/${data.donorNumber}`;
+    const transformedDonorNumber = this.msisdnPipe.transform(data.donorNumber);
+
+    const url = `${environment.gatewayUrl}/api/mnp/lookup/${transformedDonorNumber}`;
     console.log('Making GET request to:', url);
 
     this.http.get(url).subscribe({
