@@ -21,6 +21,7 @@ export class PortabilityInformation {
 
   formSubmit = output<PortabilityInformationData>();
   simInvalidModalOpen = signal(false);
+  isLoading = signal(false);
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
@@ -56,9 +57,11 @@ export class PortabilityInformation {
 
   async onSubmit(): Promise<void> {
     if (this.form().valid) {
+      this.isLoading.set(true);
       const lovNumber = this.form().value.lovNumber ?? '';
       const iccidDigits = this.form().value.iccidDigits ?? '';
       const isValid = await this.portabilityService.validateSimCard(lovNumber, iccidDigits);
+      this.isLoading.set(false);
 
       if (!isValid) {
         this.simInvalidModalOpen.set(true);

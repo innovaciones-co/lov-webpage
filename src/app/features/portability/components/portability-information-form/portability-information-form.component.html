@@ -13,7 +13,14 @@
             </div>
         </div>
     </div>
-    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+        @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Validando...
+        } @else {
+        Continuar
+        }
+    </button>
 </form>
 
 <app-modal [isOpen]="simInvalidModalOpen()" [size]="'md'" [closable]="false" (closed)="onCancelModal()">

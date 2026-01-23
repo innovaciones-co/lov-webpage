@@ -3,11 +3,11 @@
         <h3 class="form-subtitle">Información de Portabilidad</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Número a portar'" [placeholder]="'3105987456'"
+                <input-text-field [label]="'Número a portar'" [placeholder]="'0000000000'"
                     [control]="form().controls.donorNumber"
                     [error]="getFieldErrorMessage('donorNumber')"></input-text-field>
 
-                <input-text-field [label]="'Confirmar número a portar'" [placeholder]="'3105987456'"
+                <input-text-field [label]="'Confirmar número a portar'" [placeholder]="'0000000000'"
                     [control]="form().controls.donorNumberConfirm"
                     [error]="getFieldErrorMessage('donorNumberConfirm')"></input-text-field>
             </div>
