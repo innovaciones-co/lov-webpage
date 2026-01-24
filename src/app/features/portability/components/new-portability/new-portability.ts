@@ -4,7 +4,7 @@ import { environment } from '../../../../../environments/environment';
 import { PortabilityService } from '../../services/portability.service';
 import { CustomerInformationData, CustomerInformationFormComponent } from '../customer-information-form/customer-information-form';
 import { PortabilityInformation, PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
-import { PortinInformationData, DonorInformationFormComponent } from '../donor-information-form/donor-information-form.component';
+import { DonorInformationData, DonorInformationFormComponent } from '../donor-information-form/donor-information-form.component';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 
 @Component({
@@ -22,7 +22,7 @@ export class NewPortabilityComponent {
 
 
   portabilityData = signal<PortabilityInformationData | null>(null);
-  portinData = signal<PortinInformationData | null>(null);
+  donorData = signal<DonorInformationData | null>(null);
   customerData = signal<CustomerInformationData | null>(null);
 
   currentStepIndex = signal(0);
@@ -47,9 +47,9 @@ export class NewPortabilityComponent {
     this.nextStep();
   }
 
-  onPortinInformationSubmit(data: PortinInformationData): void {
-    this.portinData.set(data);
-    console.log('Portin Information Data:', data);
+  onDonorInformationSubmit(data: DonorInformationData): void {
+    this.donorData.set(data);
+    console.log('Donor Information Data:', data);
     this.nextStep();
 
     // Make GET request to lookup donorNumber
@@ -76,7 +76,7 @@ export class NewPortabilityComponent {
     console.log('Customer Information Data:', data);
     console.log('All Form Data:', {
       portability: this.portabilityData(),
-      portin: this.portinData(),
+      donor: this.donorData(),
       customer: this.customerData()
     });
     // Here you can submit all the data to your backend

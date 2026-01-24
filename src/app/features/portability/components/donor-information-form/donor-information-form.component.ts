@@ -8,7 +8,7 @@ import { PortabilityService } from '../../services/portability.service';
 import { PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
 import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
-export interface PortinInformationData {
+export interface DonorInformationData {
   donorNumber: string;
   donorOperator: string;
   donorPlan: string;
@@ -31,7 +31,7 @@ export class DonorInformationFormComponent {
   private portabilityService = inject(PortabilityService);
 
   portabilityData = input.required<PortabilityInformationData>();
-  formSubmit = output<PortinInformationData>();
+  formSubmit = output<DonorInformationData>();
 
   showModal = signal(false);
   isLoading = signal(false);
@@ -169,14 +169,14 @@ export class DonorInformationFormComponent {
     this.isLoading.set(true);
 
     try {
-      const formData = this.form().value as PortinInformationData;
+      const formData = this.form().value as DonorInformationData;
       const lovNumber = this.portabilityData().lovNumber;
       await this.portabilityService.nipRequest(formData, lovNumber);
 
       this.formSubmit.emit(formData);
       this.showModal.set(false);
     } catch (error: any) {
-      console.error('Error submitting portin request:', error);
+      console.error('Error submitting donor request:', error);
       const errorMessage = error?.error?.message ||
         'Error al procesar la solicitud de portabilidad. Por favor, inténtelo de nuevo más tarde o contacte al equipo de soporte.';
       this.validationError.set(errorMessage);
