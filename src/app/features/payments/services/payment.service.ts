@@ -6,7 +6,7 @@ import { catchError, map } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { BillingInfo } from "../models/billing-info.model";
 import { CreateOrderRequest, OrderErrorResponse, OrderItem, PaymentInitiationResponse } from "../models/order.model";
-import { Product, ProductType } from "../models/product.model";
+import { Product } from "../models/product.model";
 
 @Injectable({
     providedIn: 'root'
@@ -154,7 +154,7 @@ export class PaymentService {
             quantity: 1,
             price: product.totalPrice,
             productId: product.id,
-            tax: this.calculateTax(product.basePrice),
+            tax: product.totalTax,
             taxReturnBase: 0,
             type: product.getProductType()
         };
@@ -179,15 +179,6 @@ export class PaymentService {
             billingCity: billingInfo.city,
             billingAddress: billingInfo.address,
         };
-    }
-
-    /**
-     * Calculates tax for a given price (currently 19% IVA for Colombia)
-     * @param price The base price
-     * @returns The tax amount
-     */
-    private calculateTax(price: number): number {
-        return price * 0.19; // 19% IVA
     }
 
     /**

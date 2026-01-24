@@ -17,6 +17,7 @@ export class ProductFactoryService {
             plan.description || '',
             plan.price,
             plan.totalPrice,
+            plan.totalTax,
             plan,
             plan.productType,
             plan.image,
@@ -39,8 +40,9 @@ export class ProductFactoryService {
             id,
             `Recarga $${amount.toLocaleString()}`,
             `Recarga de saldo por $${amount.toLocaleString()} COP`,
+            productPrice / 1.19, // base price before tax
             productPrice,
-            productPrice,
+            productPrice * 0.19,
             amount,
             imageUrl
         );

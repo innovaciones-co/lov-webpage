@@ -8,6 +8,7 @@ export abstract class Product {
         public description: string,
         public basePrice: number,
         public totalPrice: number,
+        public totalTax: number,
         public productType: ProductType,
         public imageUrl?: string
     ) { }
@@ -45,11 +46,12 @@ export class PlanProduct extends Product {
         description: string,
         basePrice: number,
         totalPrice: number,
+        totalTax: number,
         public plan: Plan,
         productType: ProductType,
         imageUrl?: string
     ) {
-        super(id, name, description, basePrice, totalPrice, productType, imageUrl);
+        super(id, name, description, basePrice, totalPrice, totalTax, productType, imageUrl);
     }
 
     getDisplayName(): string {
@@ -94,10 +96,11 @@ export class RechargeProduct extends Product {
         basePrice: number,
         public amount: number,
         totalPrice: number = basePrice,
+        totalTax: number = 0.15 * basePrice,
         imageUrl?: string,
         productType = ProductType.TOPUP
     ) {
-        super(id, name, description, basePrice, totalPrice, productType, imageUrl);
+        super(id, name, description, basePrice, totalPrice, totalTax, productType, imageUrl);
     }
 
     getDisplayName(): string {

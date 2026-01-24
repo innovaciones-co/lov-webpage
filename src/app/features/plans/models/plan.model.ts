@@ -4,9 +4,10 @@ export interface Plan {
     id: number;
     name: string;
     image: string;
-    description: null;
+    description: string | null;
     price: number;
     totalPrice: number;
+    totalTax: number;
     tariffId: number;
     validity: number;
     promoImage: string | null;
