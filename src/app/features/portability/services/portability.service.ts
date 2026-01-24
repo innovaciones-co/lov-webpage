@@ -103,7 +103,7 @@ export class PortabilityService {
       console.debug('Submitting NIP request with data:', data, 'and LOV number:', lovNumber);
       const transformedLovNumber = this.msisdnPipe.transform(lovNumber);
       const transformedDonorNumber = this.msisdnPipe.transform(data.donorNumber);
-      const url = `${this.gatewayUrl}/mnp/nip?msisdn=${transformedLovNumber}&newMsisdn=${transformedDonorNumber}`;
+      const url = `${this.gatewayUrl}/api/mnp/nip?msisdn=${transformedLovNumber}&newMsisdn=${transformedDonorNumber}`;
 
       const response = await firstValueFrom(this.http.get<ApiResponse<any>>(url));
       return response.payload;

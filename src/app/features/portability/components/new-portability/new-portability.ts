@@ -4,14 +4,14 @@ import { environment } from '../../../../../environments/environment';
 import { PortabilityService } from '../../services/portability.service';
 import { CustomerInformationData, CustomerInformationFormComponent } from '../customer-information-form/customer-information-form';
 import { PortabilityInformation, PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
-import { PortinInformationData, PortinInformationFormComponent } from '../portin-information-form/portin-information-form.component';
+import { PortinInformationData, DonorInformationFormComponent } from '../donor-information-form/donor-information-form.component';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 
 @Component({
   selector: 'app-new-portability',
   templateUrl: './new-portability.html',
   styleUrl: './new-portability.scss',
-  imports: [PortabilityInformation, PortinInformationFormComponent, CustomerInformationFormComponent]
+  imports: [PortabilityInformation, DonorInformationFormComponent, CustomerInformationFormComponent]
 })
 export class NewPortabilityComponent {
 

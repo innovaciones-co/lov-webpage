@@ -15,7 +15,7 @@ export interface PortinInformationData {
 }
 
 @Component({
-  selector: 'app-portin-information-form',
+  selector: 'app-donor-information-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -24,10 +24,10 @@ export interface PortinInformationData {
     Modal,
     ErrorCard
   ],
-  templateUrl: './portin-information-form.component.html',
-  styleUrl: './portin-information-form.component.scss'
+  templateUrl: './donor-information-form.component.html',
+  styleUrl: './donor-information-form.component.scss'
 })
-export class PortinInformationFormComponent {
+export class DonorInformationFormComponent {
   private portabilityService = inject(PortabilityService);
 
   portabilityData = input.required<PortabilityInformationData>();
