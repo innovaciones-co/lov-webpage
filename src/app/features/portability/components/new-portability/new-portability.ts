@@ -1,11 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
 import { PortabilityService } from '../../services/portability.service';
 import { CustomerInformationData, CustomerInformationFormComponent } from '../customer-information-form/customer-information-form';
 import { PortabilityInformation, PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
 import { DonorInformationData, DonorInformationFormComponent } from '../donor-information-form/donor-information-form.component';
-import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 
 @Component({
   selector: 'app-new-portability',
@@ -15,11 +12,7 @@ import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 })
 export class NewPortabilityComponent {
 
-  private http = inject(HttpClient);
   private portabilityService = inject(PortabilityService);
-
-  msisdnPipe = inject(MsisdnPipe);
-
 
   portabilityData = signal<PortabilityInformationData | null>(null);
   donorData = signal<DonorInformationData | null>(null);
@@ -40,8 +33,6 @@ export class NewPortabilityComponent {
   }
 
   async onPortabilityInformationSubmit(data: PortabilityInformationData): Promise<void> {
-
-
     this.portabilityData.set(data);
     console.log('Portability Information Data:', data);
     this.nextStep();
@@ -51,24 +42,6 @@ export class NewPortabilityComponent {
     this.donorData.set(data);
     console.log('Donor Information Data:', data);
     this.nextStep();
-
-    // Make GET request to lookup donorNumber
-    const transformedDonorNumber = this.msisdnPipe.transform(data.donorNumber);
-
-    const url = `${environment.gatewayUrl}/api/mnp/lookup/${transformedDonorNumber}`;
-    console.log('Making GET request to:', url);
-
-    this.http.get(url).subscribe({
-      next: (response) => {
-        console.log('MNP Lookup response:', response);
-        this.nextStep();
-      },
-      error: (error) => {
-        console.error('MNP Lookup error:', error);
-        // For now, no proceeding to next step
-        // this.nextStep();
-      }
-    });
   }
 
   onCustomerInformationSubmit(data: CustomerInformationData): void {
