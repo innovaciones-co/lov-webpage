@@ -108,10 +108,10 @@
 
             <div class="otp-info">
                 <p class="otp-sent-to">
-                    Código enviado a +57 {{ msisdnControl?.value }}
+                    Código enviado a {{ msisdnControl?.value | msisdn }}
                 </p>
 
-                @if (countdown > 0) {
+                @if (countdown() > 0) {
                 <p class="countdown">
                     Podrás solicitar un nuevo código en {{ getCountdownDisplay() }}
                 </p>

@@ -1,0 +1,86 @@
+<div class="purchase-status-container">
+  <div class="status-card" [ngClass]="statusConfig().class">
+    <!-- Status Header -->
+    <div class="status-header">
+      <div class="status-icon">
+        <span class="material-symbols-outlined">{{ statusConfig().icon }}</span>
+      </div>
+      <div class="status-info">
+        <h2 class="status-title">{{ statusConfig().title }}</h2>
+        <p class="status-description">{{ statusConfig().description }}</p>
+      </div>
+    </div>
+
+    <!-- Purchase Details -->
+    @if (statusConfig().showDetails) {
+    <div class="purchase-details">
+      <div class="detail-section">
+        <h3>Detalles de la transacción</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Monto:</span>
+            <span class="detail-value">{{ formattedAmount() }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Método de pago:</span>
+            <span class="detail-value">{{ purchaseStatus().paymentMethod }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Tipo:</span>
+            <span class="detail-value">{{ purchaseStatus().paymentMethodType }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Código de referencia:</span>
+            <span class="detail-value">{{ purchaseStatus().referenceCode }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">ID de transacción:</span>
+            <span class="detail-value">{{ purchaseStatus().transactionId }}</span>
+          </div>
+          @if (purchaseStatus().authorizationCode) {
+          <div class="detail-item">
+            <span class="detail-label">Código de autorización:</span>
+            <span class="detail-value">{{ purchaseStatus().authorizationCode }}</span>
+          </div>
+          }
+          <div class="detail-item">
+            <span class="detail-label">Fecha:</span>
+            <span class="detail-value">{{ formattedDate() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Information -->
+      <div class="detail-section">
+        <h3>Producto adquirido</h3>
+        <div class="product-info">
+          <p class="product-description">{{ purchaseStatus().orderDescription }}</p>
+          @if (purchaseStatus().msisdn) {
+          <p class="product-detail">
+            <span class="material-symbols-outlined">phone</span>
+            {{ purchaseStatus().msisdn }}
+          </p>
+          }
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="detail-section">
+        <h3>Información de contacto</h3>
+        <div class="contact-info">
+          <p class="contact-detail">
+            <span class="material-symbols-outlined">mail</span>
+            {{ purchaseStatus().buyerEmail }}
+          </p>
+          @if (purchaseStatus().documentNumber) {
+          <p class="contact-detail">
+            <span class="material-symbols-outlined">badge</span>
+            Documento: {{ purchaseStatus().documentNumber }}
+          </p>
+          }
+        </div>
+      </div>
+    </div>
+    }   
+  </div>
+</div>

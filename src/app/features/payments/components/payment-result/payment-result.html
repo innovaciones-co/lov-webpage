@@ -1,0 +1,32 @@
+<div class="payment-result-container">
+  @if (isLoading()) {
+  <div class="loading-state">
+    <div class="loading-spinner">
+      <span class="material-symbols-outlined rotating">refresh</span>
+    </div>
+    <p>Procesando respuesta del pago...</p>
+  </div>
+  } @else if (error()) {
+  <div class="error-state">
+    <div class="error-icon">
+      <span class="material-symbols-outlined">error</span>
+    </div>
+    <h2>Error al procesar el pago</h2>
+    <p>{{ error() }}</p>
+    <button type="button" class="btn btn-primary" (click)="onGoHome()">
+      <span class="material-symbols-outlined">home</span>
+      Volver al inicio
+    </button>
+  </div>
+  } @else if (purchaseStatus(); as status) {
+  <app-purchase-status 
+    [purchaseStatus]="status"
+    (goToDashboard)="onGoToDashboard()"
+    (downloadReceipt)="onDownloadReceipt($event)"
+    (retryPayment)="onRetryPayment($event)"
+    (contactSupport)="onContactSupport($event)"
+    (checkStatus)="onCheckStatus($event)"
+    (goHome)="onGoHome()">
+  </app-purchase-status>
+  }
+</div>

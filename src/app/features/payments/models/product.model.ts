@@ -6,7 +6,8 @@ export abstract class Product {
         public id: string,
         public name: string,
         public description: string,
-        public price: number,
+        public basePrice: number,
+        public totalPrice: number,
         public productType: ProductType,
         public imageUrl?: string
     ) { }
@@ -42,12 +43,13 @@ export class PlanProduct extends Product {
         id: string,
         name: string,
         description: string,
-        price: number,
+        basePrice: number,
+        totalPrice: number,
         public plan: Plan,
         productType: ProductType,
         imageUrl?: string
     ) {
-        super(id, name, description, price, productType, imageUrl);
+        super(id, name, description, basePrice, totalPrice, productType, imageUrl);
     }
 
     getDisplayName(): string {
@@ -60,7 +62,7 @@ export class PlanProduct extends Product {
     }
 
     getDisplayPrice(): string {
-        return `$${this.price.toLocaleString()} COP`;
+        return `$${this.totalPrice.toLocaleString()} COP`;
     }
 
     getSummaryView(): ProductSummaryView {
@@ -89,12 +91,13 @@ export class RechargeProduct extends Product {
         id: string,
         name: string,
         description: string,
-        price: number,
+        basePrice: number,
         public amount: number,
+        totalPrice: number = basePrice,
         imageUrl?: string,
         productType = ProductType.TOPUP
     ) {
-        super(id, name, description, price, productType, imageUrl);
+        super(id, name, description, basePrice, totalPrice, productType, imageUrl);
     }
 
     getDisplayName(): string {
@@ -106,7 +109,7 @@ export class RechargeProduct extends Product {
     }
 
     getDisplayPrice(): string {
-        return `$${this.price.toLocaleString()} COP`;
+        return `$${this.totalPrice.toLocaleString()} COP`;
     }
 
     getSummaryView(): ProductSummaryView {

@@ -1,18 +1,19 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
 import { ActivateSim } from './features/activate-sim/activate-sim';
+import { SuccessfulActivation } from './features/activate-sim/components/successful-activation/successful-activation';
 import { Login } from './features/authentication/components/login/login';
 import { Dashboard } from './features/dashboard/dashboard';
+import { DeviceLock } from './features/device-lock/device-lock';
 import { Faq } from './features/faq/components/faq';
 import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
+import { PaymentResultComponent } from './features/payments/components/payment-result/payment-result';
 import { Payments } from './features/payments/components/payments/payments';
 import { PlansIntro } from './features/plans/components/plans-intro/plans-intro';
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 import { Portability } from './features/portability/portability';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
-import { DeviceLock } from './features/device-lock/device-lock';
-import { SuccessfulActivation } from './features/activate-sim/components/successful-activation/successful-activation';
 
 export const routes: Routes = [
     {
@@ -70,6 +71,10 @@ export const routes: Routes = [
     {
         path: 'bloqueo-equipo',
         component: DeviceLock,
+    },
+    {
+        path: 'pagos/resultado',
+        component: PaymentResultComponent
     },
     {
         path: '**',

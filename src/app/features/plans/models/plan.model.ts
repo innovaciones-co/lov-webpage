@@ -1,4 +1,4 @@
-import { Product, ProductType } from "../../payments/models/product.model";
+import { ProductType } from "../../payments/models/product.model";
 
 export interface Plan {
     id: number;
@@ -6,6 +6,7 @@ export interface Plan {
     image: string;
     description: null;
     price: number;
+    totalPrice: number;
     tariffId: number;
     validity: number;
     promoImage: string | null;
@@ -24,7 +25,7 @@ export interface Feature {
     id: number;
     name: string;
     description: string | null;
-    icon: string |null;
+    icon: string | null;
     type: Type;
     quantity: number;
     measure: Measure;

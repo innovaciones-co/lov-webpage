@@ -7,10 +7,11 @@ import { OtpInputComponent } from "../../../../shared/components/form-fields/otp
 import { AuthState } from '../../models/auth.models';
 import { AuthError } from '../../models/error.models';
 import { AuthService } from '../../services/auth.service';
+import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, OtpInputComponent],
+  imports: [CommonModule, ReactiveFormsModule, OtpInputComponent, MsisdnPipe],
   templateUrl: './login.html',
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -38,7 +39,7 @@ export class Login implements OnInit, OnDestroy {
 
   currentState = AuthState.INITIAL;
   error: AuthError | null = null;
-  countdown = 0;
+  countdown = signal<number>(0);
   isLoading = false;
   returnUrl = '/';
   currentOtpValue = signal<string>('');
@@ -139,7 +140,7 @@ export class Login implements OnInit, OnDestroy {
     this.authService.otpCountdown$
       .pipe(takeUntil(this.destroy$))
       .subscribe(countdown => {
-        this.countdown = countdown;
+        this.countdown.set(countdown);
       });
   }
 
@@ -194,13 +195,13 @@ export class Login implements OnInit, OnDestroy {
   }
 
   getCountdownDisplay(): string {
-    const minutes = Math.floor(this.countdown / 60);
-    const seconds = this.countdown % 60;
+    const minutes = Math.floor(this.countdown() / 60);
+    const seconds = this.countdown() % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
   canResendOtp(): boolean {
-    return this.countdown === 0 && this.currentState === AuthState.OTP_SENT;
+    return this.countdown() === 0 && this.currentState === AuthState.OTP_SENT;
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {

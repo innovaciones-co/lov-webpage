@@ -152,9 +152,9 @@ export class PaymentService {
         const orderItem: OrderItem = {
             name: product.name,
             quantity: 1,
-            price: product.price,
+            price: product.totalPrice,
             productId: product.id,
-            tax: this.calculateTax(product.price),
+            tax: this.calculateTax(product.basePrice),
             taxReturnBase: 0,
             type: product.getProductType()
         };
@@ -162,7 +162,7 @@ export class PaymentService {
         const e164msisdn = msisdn.startsWith('+') ? msisdn : `+${msisdn}`;
 
         return {
-            description: `Order for ${product.name}`,
+            description: product.name,
             referenceCode: referenceCode || this.generateReferenceCode(),
             currency: 'COP',
             buyerEmail: billingInfo.email,

@@ -1,6 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from "@angular/router";
+import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
+import { SubscriptionService } from '../../../../core/services/subscription.service';
+import { isLovMsisdnValidator } from '../../../../core/validators/isLovMsisdnValidator';
+import { multipleOf1000Validator } from '../../../../core/validators/multipleOf1000Validator';
 import { InputNumberComponent } from "../../../../shared/components/form-fields/input-number/input-number";
 import { InputTextComponent } from "../../../../shared/components/form-fields/input-text/input-text";
 import { Product } from '../../../payments/models/product.model';
@@ -15,16 +19,25 @@ import { ProductFactoryService } from '../../../payments/services/product-factor
 })
 export class RechargesIntro {
 
-  paymentsService: PaymentService = inject(PaymentService);
-  productFactoryService: ProductFactoryService = inject(ProductFactoryService);
-  router = inject(Router);
+  private paymentsService: PaymentService = inject(PaymentService);
+  private productFactoryService: ProductFactoryService = inject(ProductFactoryService);
+  private router = inject(Router);
+  private subscriptionService = inject(SubscriptionService);
+  private msisdnPipe = inject(MsisdnPipe);
 
 
   form = signal(
     new FormGroup({
       msisdn: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
-      msisdnConfirmation: new FormControl('', [Validators.required]),
-      rechargeValue: new FormControl('', [Validators.required, Validators.min(3000), Validators.pattern('^[0-9]+$')]),
+      msisdnConfirmation: new FormControl('', {
+        asyncValidators: [isLovMsisdnValidator(this.subscriptionService, this.msisdnPipe)]
+      }),
+      rechargeValue: new FormControl('', [
+        Validators.required,
+        Validators.min(3000),
+        Validators.pattern('^[0-9]+$'),
+        multipleOf1000Validator()
+      ])
     }, { validators: this.msisdnMatchValidator })
   );
 
@@ -33,11 +46,13 @@ export class RechargesIntro {
       pattern: 'El número debe tener 10 dígitos numéricos'
     },
     msisdnConfirmation: {
-      mismatch: 'Los números no coinciden'
+      mismatch: 'Los números no coinciden',
+      isLovMsisdn: 'El número no está asociado a una suscripción LOV'
     },
     rechargeValue: {
       min: 'El valor mínimo de recarga es $3.000',
-      pattern: 'El valor debe ser un número válido'
+      pattern: 'El valor debe ser un número válido',
+      multipleOf1000: 'El valor debe ser un múltiplo de $1.000'
     }
   };
 

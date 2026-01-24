@@ -16,6 +16,7 @@ export class ProductFactoryService {
             plan.name,
             plan.description || '',
             plan.price,
+            plan.totalPrice,
             plan,
             plan.productType,
             plan.image,
@@ -38,6 +39,7 @@ export class ProductFactoryService {
             id,
             `Recarga $${amount.toLocaleString()}`,
             `Recarga de saldo por $${amount.toLocaleString()} COP`,
+            productPrice,
             productPrice,
             amount,
             imageUrl

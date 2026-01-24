@@ -1,19 +1,19 @@
 <li class="card" [class.hover-enabled]="enableHoverEffect()">
-    <div class="card-body">
-        <h3 class="card-title">{{plan.name}}</h3>
-        <p class="card-price">{{plan.price | currency}}</p>
-        <hr class="divider" />
+  <div class="card-body">
+    <h3 class="card-title">{{plan.name}}</h3>
+    <p class="card-price">{{plan.totalPrice | currency}}</p>
+    <hr class="divider" />
 
-        <ul class="card-features">
-            @for (feature of plan.features; track $index) {
-            <li>
-                <span class="material-symbols-outlined">{{feature.icon}}</span>
-                {{feature.name}} {{feature.description}}
-            </li>
-            }
-        </ul>
+    <ul class="card-features">
+      @for (feature of plan.features; track $index) {
+      <li>
+        <span class="material-symbols-outlined">{{feature.icon}}</span>
+        {{feature.name}} {{feature.description}}
+      </li>
+      }
+    </ul>
 
-        <!-- <ul class="card-features">
+    <!-- <ul class="card-features">
           <li>
             <span class="material-symbols-outlined">chat</span>
             WhatsApp ilimitado
@@ -31,9 +31,9 @@
             Vigencia de 15 días
           </li>
         </ul> -->
-    </div>
-    <a class="card-button" [routerLink]="'/pagos'" (click)="addPlanToCart()">
-        Obtener plan
-        <span class="material-symbols-outlined"> arrow_forward </span>
-    </a>
+  </div>
+  <a class="card-button" [routerLink]="'/pagos'" (click)="addPlanToCart()">
+    Obtener plan
+    <span class="material-symbols-outlined"> arrow_forward </span>
+  </a>
 </li>
