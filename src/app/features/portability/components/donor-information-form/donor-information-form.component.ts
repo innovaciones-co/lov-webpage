@@ -177,8 +177,14 @@ export class DonorInformationFormComponent {
       this.showModal.set(false);
     } catch (error: any) {
       console.error('Error submitting donor request:', error);
-      const errorMessage = error?.error?.message ||
-        'Error al procesar la solicitud de portabilidad. Por favor, inténtelo de nuevo más tarde o contacte al equipo de soporte.';
+
+      let errorMessage = 'Error al procesar la solicitud de portabilidad. Por favor, inténtelo de nuevo más tarde o contacte al equipo de soporte.';
+      if (error?.status === 429) {
+        errorMessage = 'Parece que ya hemos enviado varios códigos de verificación recientemente a tu número de teléfono. Por favor, contacte al equipo de soporte para más información.';
+      } else if (error?.error?.message) {
+        errorMessage = error.error.message;
+      }
+
       this.validationError.set(errorMessage);
 
       this.showModal.set(false);
