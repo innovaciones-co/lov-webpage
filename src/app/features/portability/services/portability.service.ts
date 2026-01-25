@@ -46,7 +46,7 @@ export class PortabilityService {
     }
   }
 
-  async validateSimCard(msisdn: string, iccid: string): Promise<boolean> {
+  async validateSimCard(msisdn: string, iccid: string): Promise<{ isValid: boolean; subscription?: any }> {
     this.isValidatingSim.set(true);
     this.simValidationError.set(null);
     this.simValidationResult.set(null);
@@ -63,11 +63,15 @@ export class PortabilityService {
       ) || false;
 
       this.simValidationResult.set(isValid);
-      return isValid;
+
+      return {
+        isValid,
+        subscription: isValid ? response?.payload?.subscriptions?.[0] : undefined
+      };
     } catch (error: any) {
       this.simValidationError.set(error.message || 'Error validating SIM card');
       this.simValidationResult.set(false);
-      return false;
+      return { isValid: false };
     } finally {
       this.isValidatingSim.set(false);
     }
@@ -109,6 +113,46 @@ export class PortabilityService {
       return response.payload;
     } catch (error: any) {
       console.error('Error submitting portin request:', error);
+      throw error;
+    }
+  }
+
+  async submitPortability(
+    customerData: any,
+    donorData: any,
+    portabilityData: any
+  ): Promise<any> {
+    try {
+      console.debug('Submitting portability request...');
+      const subscriptionId = portabilityData.subscription?.id;
+      console.debug('Using donor Ddata:', donorData);
+
+      const payload = {
+        authCode: customerData.nip,
+        donorOperator: donorData.donorOperatorCode,
+        newMsisdn: donorData.donorNumber,
+        recipientOperator: '00018',
+        requestedFutureDate: customerData.portinDate,
+        subscriberType: 'NATURAL',
+        transparentData: {
+          subscriberIdentityType: customerData.documentType,
+          subscriberServiceType: donorData.donorPlan,
+          subscriberIdentityIssue: customerData.documentIssueDate,
+          subscriberName: customerData.fullName,
+          subscriberAddress: customerData.address,
+          nip: customerData.nip,
+          subscriberIdentity: customerData.documentID
+        }
+      };
+
+      console.debug('Portability request payload:', payload);
+
+      const url = `${this.gatewayUrl}/api/mnp/portin/subscriptions/${subscriptionId}`;
+
+      const response = await firstValueFrom(this.http.put<ApiResponse<any>>(url, payload));
+      return response.payload;
+    } catch (error: any) {
+      console.error('Error submitting portability request:', error);
       throw error;
     }
   }

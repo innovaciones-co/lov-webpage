@@ -8,7 +8,8 @@
 
                 <date-picker-field [label]="'Fecha de portabilidad'"
                     [placeholder]="'Ingresa la fecha en la que deseas que se active la portabilidad.'"
-                    [control]="form().controls.portinDate" [error]="getFieldErrorMessage('portinDate')"></date-picker-field>
+                    [control]="form().controls.portinDate"
+                    [error]="getFieldErrorMessage('portinDate')"></date-picker-field>
             </div>
         </div>
     </div>
@@ -16,49 +17,41 @@
         <h3 class="form-subtitle">Información personal</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Nombre'" [placeholder]="'Arturo'" [control]="form().controls.name"
-                    [error]="getFieldErrorMessage('name')"></input-text-field>
+                <input-text-field [label]="'Nombre completo'" [placeholder]="''" [control]="form().controls.fullName"
+                    [error]="getFieldErrorMessage('fullName')"></input-text-field>
 
-                <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'"
-                    [control]="form().controls.lastName" [error]="getFieldErrorMessage('lastName')"></input-text-field>
+                <input-text-field [label]="'Documento'" [placeholder]="'000000000'"
+                    [control]="form().controls.documentID"
+                    [error]="getFieldErrorMessage('documentID')"></input-text-field>
             </div>
             <div class="form-row">
                 <select-field [label]="'Tipo de documento'" [placeholder]="''" [options]="documentType()"
-                    [control]="form().controls.documentType" [error]="getFieldErrorMessage('documentType')"></select-field>
+                    [control]="form().controls.documentType"
+                    [error]="getFieldErrorMessage('documentType')"></select-field>
 
-                <input-text-field [label]="'Documento'" [placeholder]="'000000000'"
-                    [control]="form().controls.documentID" [error]="getFieldErrorMessage('documentID')"></input-text-field>
-            </div>
-        </div>
-        <h3 class="form-subtitle">Información de contacto</h3>
-        <div class="form-grid">
-            <div class="form-row">
-                <input-text-field [label]="'Correo electrónico'" [placeholder]="'andres@myemail.com'"
-                    [control]="form().controls.email" [error]="getFieldErrorMessage('email')"></input-text-field>
-
-                <input-text-field [label]="'Teléfono'" [placeholder]="'0000000000'"
-                    [control]="form().controls.phoneNumber" [error]="getFieldErrorMessage('phoneNumber')"></input-text-field>
-            </div>
-            <div class="form-row">
-                <select-field [label]="'País'" [placeholder]="''" [options]="country()"
-                    [control]="form().controls.country" [error]="getFieldErrorMessage('country')"></select-field>
-
-                <input-text-field [label]="'Ciudad'" [placeholder]="''" [control]="form().controls.city"
-                    [error]="getFieldErrorMessage('city')"></input-text-field>
+                <date-picker-field [label]="'Fecha de expedición'"
+                    [placeholder]="'Ingresa la fecha de expedición de tu documento de identidad.'"
+                    [control]="form().controls.documentIssueDate"
+                    [error]="getFieldErrorMessage('documentIssueDate')"></date-picker-field>
             </div>
             <div class="form-row">
                 <input-text-field [label]="'Dirección'" [placeholder]="'Cra 00 #00-00'"
                     [control]="form().controls.address" [error]="getFieldErrorMessage('address')"></input-text-field>
-
-                <input-text-field [label]="'Información complementaria'"
-                    [placeholder]="'Conjunto, casa, torre, apartamento, etc.'"
-                    [control]="form().controls.addressOptional"
-                    [error]="getFieldErrorMessage('addressOptional')"></input-text-field>
             </div>
-            <!-- 
-    <checkbox-field [label]="'Acepto los términos y condiciones'" [control]="form().controls.terms"
-        [error]="'Debes aceptar los términos'"></checkbox-field> -->
         </div>
+        <!-- 
+    <checkbox-field [label]="'Acepto los términos y condiciones'" [control]="form().controls.terms"
+        [error]="'Debes aceptar los términos'"></checkbox-field>
+        <error-card [message]="validationError()"></error-card>
+        </div> -->
+        <error-card [message]="submitError()"></error-card>
     </div>
-    <button class="btn" type="submit" [disabled]="form().invalid">Solicitar portabilidad</button>
+    <button class="btn" type="submit" [disabled]="form().invalid || isLoading()">
+        @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Enviando...
+        } @else {
+        Solicitar portabilidad
+        }
+    </button>
 </form>

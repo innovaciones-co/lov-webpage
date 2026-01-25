@@ -19,6 +19,8 @@
         @case (2) {
         <div class="form-wrapper">
             <app-customer-information-form
+                [donorData]="donorData()!"
+                [portabilityData]="portabilityData()!"
                 (formSubmit)="onCustomerInformationSubmit($event)"></app-customer-information-form>
         </div>
         }

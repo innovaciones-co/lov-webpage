@@ -7,6 +7,7 @@ import { PortabilityService } from '../../services/portability.service';
 export interface PortabilityInformationData {
   lovNumber: string;
   iccidDigits: string;
+  subscription?: any;
 }
 
 @Component({
@@ -60,15 +61,20 @@ export class PortabilityInformation {
       this.isLoading.set(true);
       const lovNumber = this.form().value.lovNumber ?? '';
       const iccidDigits = this.form().value.iccidDigits ?? '';
-      const isValid = await this.portabilityService.validateSimCard(lovNumber, iccidDigits);
+      const validation = await this.portabilityService.validateSimCard(lovNumber, iccidDigits);
       this.isLoading.set(false);
 
-      if (!isValid) {
+      if (!validation.isValid) {
         this.simInvalidModalOpen.set(true);
         return;
       }
 
-      this.formSubmit.emit(this.form().value as PortabilityInformationData);
+      const formData: PortabilityInformationData = {
+        ...this.form().value as PortabilityInformationData,
+        subscription: validation.subscription
+      };
+
+      this.formSubmit.emit(formData);
     }
     console.log('Form submitted:', this.form().value);
   }
