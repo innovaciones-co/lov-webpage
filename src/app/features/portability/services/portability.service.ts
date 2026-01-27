@@ -124,8 +124,7 @@ export class PortabilityService {
   ): Promise<any> {
     try {
       console.debug('Submitting portability request...');
-      const subscriptionId = portabilityData.subscription?.id;
-      console.debug('Using donor Ddata:', donorData);
+      const subscriptionId = portabilityData.payload?.subscriptions?.[0]?.id;
 
       const payload = {
         authCode: customerData.nip,
