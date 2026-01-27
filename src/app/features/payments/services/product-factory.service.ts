@@ -33,17 +33,15 @@ export class ProductFactoryService {
         price?: number,
         imageUrl?: string
     ): RechargeProduct {
-        // If no price is provided, use the amount as price (1:1 ratio)
         const productPrice = price ?? amount;
 
         return new RechargeProduct(
             id,
-            `Recarga $${amount.toLocaleString()}`,
-            `Recarga de saldo por $${amount.toLocaleString()} COP`,
+            `Recarga de saldo`,
+            `Recarga de saldo por $${amount.toLocaleString()} COP para el número ${id}`,
             productPrice / 1.19, // base price before tax
             productPrice,
             productPrice * 0.19,
-            amount,
             imageUrl
         );
     }

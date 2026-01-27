@@ -94,7 +94,6 @@ export class RechargeProduct extends Product {
         name: string,
         description: string,
         basePrice: number,
-        public amount: number,
         totalPrice: number = basePrice,
         totalTax: number = 0.15 * basePrice,
         imageUrl?: string,
@@ -104,11 +103,11 @@ export class RechargeProduct extends Product {
     }
 
     getDisplayName(): string {
-        return `Recarga $${this.amount.toLocaleString()}`;
+        return this.name ?? `Recarga $${this.totalPrice.toLocaleString()}`;
     }
 
     getDisplayDescription(): string {
-        return `Recarga de saldo por $${this.amount.toLocaleString()} COP`;
+        return this.description ?? `Recarga de saldo por $${this.totalPrice.toLocaleString()} COP`;
     }
 
     getDisplayPrice(): string {
@@ -118,10 +117,11 @@ export class RechargeProduct extends Product {
     getSummaryView(): ProductSummaryView {
         return {
             title: this.getDisplayName(),
-            subtitle: 'Recarga de saldo',
+            subtitle: this.getDisplayDescription(),
             price: this.getDisplayPrice(),
             details: [
-                `Saldo a recargar: $${this.amount.toLocaleString()} COP`,
+                `Saldo a recargar: $${this.totalPrice.toLocaleString()} COP`,
+                `Número a recargar: ${this.id}`,
                 'Disponible inmediatamente después del pago'
             ],
             imageUrl: this.imageUrl,
