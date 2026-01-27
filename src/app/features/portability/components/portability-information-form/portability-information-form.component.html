@@ -3,11 +3,11 @@
         <h3 class="form-subtitle">Ingresa tú número LOV</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'0000000000'"
+                <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'300123467'"
                     [control]="form().controls.lovNumber" [error]="getFieldErrorMessage('lovNumber')"
                     [autocomplete]="'tel'"></input-text-field>
 
-                <input-text-field [label]="'Últimos 5 números del código de barras de tu SIM'" [placeholder]="'00000'"
+                <input-text-field [label]="'Últimos 5 números del código de barras de tu SIM'" [placeholder]="'12345'"
                     [control]="form().controls.iccidDigits" [error]="getFieldErrorMessage('iccidDigits')"
                     [autocomplete]="'on'"></input-text-field>
             </div>
@@ -26,16 +26,16 @@
 <app-modal [isOpen]="simInvalidModalOpen()" [size]="'md'" [closable]="false" (closed)="onCancelModal()">
 
     <div class="modal-content-info">
-        <p class="info-content-title">Parece que hay un problema con tu información</p>
+        <p class="info-content-title">Parece que hay un inconveniente con tu información</p>
         <div class="info-section">
-            <p>Los datos de tu número no han podido ser verificados correctamente.</p>
+            <p>No hemos podido verificar correctamente los datos asociados a tu número.</p>
             <p>Por favor, asegúrate de que:</p>
             <ul>
-                <li>El número LOV ingresado es correcto.</li>
-                <li>Los últimos 5 dígitos del código de barras coinciden con los de tu SIM LOV.</li>
+                <li>El número LOV ingresado sea correcto.</li>
+                <li>Los últimos 5 dígitos del código de barras coincidan con los de tu SIM LOV.</li>
             </ul>
-            <p>Si el problema persiste, te recomendamos contactar a nuestro servicio al cliente para asistencia
-                adicional.</p>
+            <p>Si el inconveniente persiste, te recomendamos comunicarte con nuestro equipo de soporte para recibir
+                asistencia adicional.</p>
         </div>
     </div>
     <div class="modal-actions">

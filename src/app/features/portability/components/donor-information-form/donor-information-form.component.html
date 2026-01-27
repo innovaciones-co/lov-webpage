@@ -3,11 +3,11 @@
         <h3 class="form-subtitle">Información de Portabilidad</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Número a portar'" [placeholder]="'0000000000'"
+                <input-text-field [label]="'Número a portar'" [placeholder]="'3001234567'"
                     [control]="form().controls.donorNumber"
                     [error]="getFieldErrorMessage('donorNumber')"></input-text-field>
 
-                <input-text-field [label]="'Confirmar número a portar'" [placeholder]="'0000000000'"
+                <input-text-field [label]="'Confirmar número a portar'" [placeholder]="'3001234567'"
                     [control]="form().controls.donorNumberConfirm"
                     [error]="getFieldErrorMessage('donorNumberConfirm')"></input-text-field>
             </div>
@@ -31,14 +31,15 @@
 <app-modal [isOpen]="showModal()" [size]="'md'" [closable]="false" (closed)="onCancelModal()">
 
     <div class="modal-content-info">
-        <p class="info-content-title">Antes de continuar, asegúrate de esto</p>
+        <p class="info-content-title">Antes de continuar, ten en cuenta lo siguiente</p>
         <div class="info-section">
-            <p>Para que podamos completar tu portabilidad sin inconvenientes, verifica que:</p>
+            <p>Para que podamos completar tu proceso de portabilidad de manera correcta y sin inconvenientes, verifica
+                que:</p>
             <ul>
-                <li>La SIM del operador actual (Claro, Movistar, Virgin, etc.) esté activa.</li>
-                <li>La tengas insertada en un teléfono encendido al momento de hacer el cambio.</li>
+                <li>La SIM de tu operador actual (Claro, Movistar, Virgin, entre otros) se encuentre activa.</li>
+                <li>La SIM esté insertada en un teléfono encendido al momento de realizar el cambio.</li>
             </ul>
-            <p>Esto nos ayudará a validar tu número correctamente y evitar retrasos en el proceso.</p>
+            <p>Esto nos permitirá validar tu número correctamente y evitar posibles retrasos en el proceso.</p>
         </div>
     </div>
     <div class="modal-actions">
