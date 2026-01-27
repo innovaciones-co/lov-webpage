@@ -38,12 +38,13 @@
                 <input-text-field [label]="'Dirección'" [placeholder]="'Cra 00 #00-00'"
                     [control]="form().controls.address" [error]="getFieldErrorMessage('address')"></input-text-field>
             </div>
+            <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
+                He leído y acepto los <a href="/docs/condiciones_servicio_prepago_lov.pdf" target="_blank"
+                    class="link-button">Términos y Condiciones</a>, así como la <a
+                    href="/docs/politicas_de_tratamiento_de_datos_personales_new.pdf" target="_blank"
+                    class="link-button">Política de Tratamiento de Datos Personales</a>.
+            </checkbox-field>
         </div>
-        <!-- 
-    <checkbox-field [label]="'Acepto los términos y condiciones'" [control]="form().controls.terms"
-        [error]="'Debes aceptar los términos'"></checkbox-field>
-        <error-card [message]="validationError()"></error-card>
-        </div> -->
         <error-card [message]="submitError()"></error-card>
     </div>
     <button class="btn" type="submit" [disabled]="form().invalid || isLoading()">

@@ -25,6 +25,7 @@ export interface CustomerInformationData {
     InputTextComponent,
     SelectComponent,
     DatePickerComponent,
+    CheckboxComponent,
     ErrorCard
   ],
   templateUrl: './customer-information-form.html',
@@ -101,6 +102,7 @@ export class CustomerInformationFormComponent {
       documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
       documentIssueDate: new FormControl('', [Validators.required, this.pastDateValidator()]),
       address: new FormControl('', Validators.required),
+      terms: new FormControl(false, Validators.requiredTrue),
     })
   );
 
