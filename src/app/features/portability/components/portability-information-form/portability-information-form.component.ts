@@ -7,7 +7,7 @@ import { PortabilityService } from '../../services/portability.service';
 export interface PortabilityInformationData {
   lovNumber: string;
   iccidDigits: string;
-  subscription?: any;
+  payload?: any;
 }
 
 @Component({
@@ -71,7 +71,7 @@ export class PortabilityInformation {
 
       const formData: PortabilityInformationData = {
         ...this.form().value as PortabilityInformationData,
-        subscription: validation.subscription
+        payload: validation.payload
       };
 
       this.formSubmit.emit(formData);

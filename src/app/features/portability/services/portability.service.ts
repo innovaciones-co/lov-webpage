@@ -46,7 +46,7 @@ export class PortabilityService {
     }
   }
 
-  async validateSimCard(msisdn: string, iccid: string): Promise<{ isValid: boolean; subscription?: any }> {
+  async validateSimCard(msisdn: string, iccid: string): Promise<{ isValid: boolean; payload?: any }> {
     this.isValidatingSim.set(true);
     this.simValidationError.set(null);
     this.simValidationResult.set(null);
@@ -66,7 +66,7 @@ export class PortabilityService {
 
       return {
         isValid,
-        subscription: isValid ? response?.payload?.subscriptions?.[0] : undefined
+        payload: isValid ? response?.payload : undefined
       };
     } catch (error: any) {
       this.simValidationError.set(error.message || 'Error validating SIM card');

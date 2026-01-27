@@ -1,4 +1,4 @@
-import { Component, signal, output, inject, input } from '@angular/core';
+import { Component, signal, output, inject, input, effect } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PortabilityService } from '../../services/portability.service';
@@ -110,6 +110,34 @@ export class CustomerInformationFormComponent {
   ]);
 
   formSubmit = output<CustomerInformationData>();
+
+  constructor() {
+    // Auto-fill form fields from portability data if available
+    effect(() => {
+      const portabilityData = this.portabilityData();
+
+      if (portabilityData?.payload) {
+        const { document, address, givenName, familyName } = portabilityData.payload;
+
+        if (document?.id) {
+          this.form().get('documentID')?.setValue(document.id);
+        }
+
+        if (document?.type) {
+          this.form().get('documentType')?.setValue(document.type);
+        }
+
+        if (address?.line1) {
+          this.form().get('address')?.setValue(address.line1);
+        }
+
+        if (givenName && familyName) {
+          const fullName = `${givenName} ${familyName}`;
+          this.form().get('fullName')?.setValue(fullName);
+        }
+      }
+    });
+  }
 
   // Get error message for a specific field
   getFieldErrorMessage(fieldName: string): string {
