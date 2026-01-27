@@ -108,8 +108,8 @@ export class DonorInformationFormComponent {
   }
 
   planOptions = signal([
-    { label: 'Pospago', value: 'pospay' },
-    { label: 'Prepago', value: 'pospaid' },
+    { label: 'Pospago', value: 'POSPAID' },
+    { label: 'Prepago', value: 'PREPAID' },
   ]);
 
   private async lookupDonorOperator(donorNumber: string): Promise<void> {
