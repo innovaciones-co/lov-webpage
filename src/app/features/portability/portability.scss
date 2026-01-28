@@ -1,1 +1,17 @@
+@use '../../../styles/mixins' as *;
 
+.container {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+@include mobile {
+    .container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    .form-container {
+        text-align: center;
+    }
+}
