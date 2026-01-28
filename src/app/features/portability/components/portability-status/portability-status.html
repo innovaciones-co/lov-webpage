@@ -1,13 +1,23 @@
 <div class="portability-status-container">
-    <form [formGroup]="form()" (ngSubmit)="onSubmit()">
-        <div class="card">
-            <h3 class="form-subtitle">Ingresa tú número LOV</h3>
-            <div class="form-grid">
-                <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'0000000000'"
-                    [control]="form().controls.lovNumber"
-                    [error]="getFieldErrorMessage('lovNumber')"></input-text-field>
+    <div class="form-wrapper">
+        <form [formGroup]="form()" (ngSubmit)="onSubmit()">
+            <div class="card">
+                <h3 class="form-subtitle">Ingresa tú número LOV</h3>
+                <div class="form-grid">
+                    <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'3001234567'"
+                        [control]="form().controls.lovNumber"
+                        [error]="getFieldErrorMessage('lovNumber')"></input-text-field>
+                </div>
+                <error-card [message]="validationError()"></error-card>
             </div>
-        </div>
-        <button class="btn" type="submit" [disabled]="form().invalid">Consultar</button>
-    </form>
+            <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+                @if (isLoading()) {
+                <span class="loading-spinner"></span>
+                Validando...
+                } @else {
+                Consultar
+                }
+            </button>
+        </form>
+    </div>
 </div>

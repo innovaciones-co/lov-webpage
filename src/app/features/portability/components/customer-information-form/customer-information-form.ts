@@ -1,24 +1,21 @@
-import { Component, signal, output, inject } from '@angular/core';
+import { Component, signal, output, inject, input, effect } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PortabilityService } from '../../services/portability.service';
 import { CheckboxComponent } from '../../../../shared/components/form-fields/checkbox/checkbox';
 import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface CustomerInformationData {
   nip: string;
   portinDate: string;
-  name: string;
-  lastName: string;
+  fullName: string;
   documentType: string;
   documentID: string;
-  email: string;
-  phoneNumber: string;
-  country: string;
-  city: string;
+  documentIssueDate: string;
   address: string;
-  addressOptional: string;
 }
 
 @Component({
@@ -27,14 +24,23 @@ export interface CustomerInformationData {
     ReactiveFormsModule,
     InputTextComponent,
     SelectComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    CheckboxComponent,
+    ErrorCard
   ],
   templateUrl: './customer-information-form.html',
   styleUrl: './customer-information-form.scss'
 })
 export class CustomerInformationFormComponent {
   private router = inject(Router);
-  
+  private portabilityService = inject(PortabilityService);
+
+  donorData = input.required<any>();
+  portabilityData = input.required<any>();
+
+  isLoading = signal(false);
+  submitError = signal<string>('');
+
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
     nip: {
@@ -43,11 +49,8 @@ export class CustomerInformationFormComponent {
     portinDate: {
       futureDate: 'La fecha debe ser posterior a hoy'
     },
-    email: {
-      email: 'Ingrese un email válido'
-    },
-    phoneNumber: {
-      pattern: 'El teléfono debe tener 10 dígitos numéricos'
+    documentIssueDate: {
+      pastDate: 'La fecha debe ser anterior a hoy'
     },
     documentID: {
       pattern: 'El documento debe tener el formato correcto'
@@ -72,20 +75,34 @@ export class CustomerInformationFormComponent {
     };
   }
 
+  // Past date validator
+  private pastDateValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value) return null;
+
+      // The date-picker component now handles the date format correctly
+      const dateValue = control.value;
+      const [year, month, day] = dateValue.split('-').map(Number);
+
+      // Create dates in local timezone
+      const selectedDate = new Date(year, month - 1, day);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      return selectedDate < today ? null : { pastDate: true };
+    };
+  }
+
   form = signal(
     new FormGroup({
       nip: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{5}$')]),
       portinDate: new FormControl('', [Validators.required, this.futureDateValidator()]),
-      name: new FormControl('', Validators.required),
-      lastName: new FormControl('', Validators.required),
+      fullName: new FormControl('', Validators.required),
       documentType: new FormControl('', Validators.required),
       documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
-      country: new FormControl('', Validators.required),
-      city: new FormControl('', Validators.required),
+      documentIssueDate: new FormControl('', [Validators.required, this.pastDateValidator()]),
       address: new FormControl('', Validators.required),
-      addressOptional: new FormControl(''),
+      terms: new FormControl(false, Validators.requiredTrue),
     })
   );
 
@@ -94,11 +111,35 @@ export class CustomerInformationFormComponent {
     { label: 'Cédula de extranjeria', value: 'foreignID' },
   ]);
 
-  country = signal([
-    { label: 'Colombia', value: 'colombia' },
-  ]);
-
   formSubmit = output<CustomerInformationData>();
+
+  constructor() {
+    // Auto-fill form fields from portability data if available
+    effect(() => {
+      const portabilityData = this.portabilityData();
+
+      if (portabilityData?.payload) {
+        const { document, address, givenName, familyName } = portabilityData.payload;
+
+        if (document?.id) {
+          this.form().get('documentID')?.setValue(document.id);
+        }
+
+        if (document?.type) {
+          this.form().get('documentType')?.setValue(document.type);
+        }
+
+        if (address?.line1) {
+          this.form().get('address')?.setValue(address.line1);
+        }
+
+        if (givenName && familyName) {
+          const fullName = `${givenName} ${familyName}`;
+          this.form().get('fullName')?.setValue(fullName);
+        }
+      }
+    });
+  }
 
   // Get error message for a specific field
   getFieldErrorMessage(fieldName: string): string {
@@ -114,10 +155,28 @@ export class CustomerInformationFormComponent {
     return this.errorMessages[fieldName]?.[firstError] || 'Error de validación';
   }
 
-  onSubmit(): void {
-    if (this.form().valid) {
+  async onSubmit(): Promise<void> {
+    if (!this.form().valid) return;
+
+    this.isLoading.set(true);
+    this.submitError.set('');
+
+    try {
+      await this.portabilityService.submitPortability(
+        this.form().value as CustomerInformationData,
+        this.donorData(),
+        this.portabilityData()
+      );
+
       this.formSubmit.emit(this.form().value as CustomerInformationData);
-      this.router.navigate(['/portability/successful']);
+      await this.router.navigate(['/portability/successful']);
+    } catch (error: any) {
+      const errorMessage = error?.error?.message ||
+        'Error al procesar la solicitud de portabilidad. Por favor, inténtelo de nuevo más tarde o contacte con soporte para más información.';
+      this.submitError.set(errorMessage);
+      console.error('Error submitting portability request:', error);
+    } finally {
+      this.isLoading.set(false);
     }
   }
 

@@ -3,7 +3,6 @@
 }
 
 .step-content-container {
-    min-height: 400px;
     position: relative;
 }
 
@@ -20,14 +19,5 @@
     to {
         opacity: 1;
         transform: translateX(0);
-    }
-}
-
-// Responsive design
-@media (max-width: 768px) {
-
-    .step-content-container {
-        padding: 1.5rem;
-        min-height: 300px;
     }
 }

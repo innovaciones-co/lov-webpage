@@ -7,6 +7,7 @@ import { PortabilityService } from '../../services/portability.service';
 export interface PortabilityInformationData {
   lovNumber: string;
   iccidDigits: string;
+  payload?: any;
 }
 
 @Component({
@@ -21,6 +22,7 @@ export class PortabilityInformation {
 
   formSubmit = output<PortabilityInformationData>();
   simInvalidModalOpen = signal(false);
+  isLoading = signal(false);
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
@@ -56,16 +58,23 @@ export class PortabilityInformation {
 
   async onSubmit(): Promise<void> {
     if (this.form().valid) {
+      this.isLoading.set(true);
       const lovNumber = this.form().value.lovNumber ?? '';
       const iccidDigits = this.form().value.iccidDigits ?? '';
-      const isValid = await this.portabilityService.validateSimCard(lovNumber, iccidDigits);
+      const validation = await this.portabilityService.validateSimCard(lovNumber, iccidDigits);
+      this.isLoading.set(false);
 
-      if (!isValid) {
+      if (!validation.isValid) {
         this.simInvalidModalOpen.set(true);
         return;
       }
 
-      this.formSubmit.emit(this.form().value as PortabilityInformationData);
+      const formData: PortabilityInformationData = {
+        ...this.form().value as PortabilityInformationData,
+        payload: validation.payload
+      };
+
+      this.formSubmit.emit(formData);
     }
     console.log('Form submitted:', this.form().value);
   }

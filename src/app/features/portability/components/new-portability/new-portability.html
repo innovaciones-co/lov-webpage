@@ -10,12 +10,17 @@
         }
         @case (1) {
         <div class="form-wrapper">
-            <app-portin-information-form (formSubmit)="onPortinInformationSubmit($event)"></app-portin-information-form>
+            @if (portabilityData()) {
+            <app-donor-information-form [portabilityData]="portabilityData()!"
+                (formSubmit)="onDonorInformationSubmit($event)"></app-donor-information-form>
+            }
         </div>
         }
         @case (2) {
         <div class="form-wrapper">
             <app-customer-information-form
+                [donorData]="donorData()!"
+                [portabilityData]="portabilityData()!"
                 (formSubmit)="onCustomerInformationSubmit($event)"></app-customer-information-form>
         </div>
         }
