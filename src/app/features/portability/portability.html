@@ -3,6 +3,6 @@
   <p>Para iniciar el proceso de portabilidad debes tener una SIM LOV activa. Sí aún . no la has activado ingresa aquí.
   </p>
   <div class="form-container">
-    <app-navigation-tabs [tabs]="tabs" [initialActiveTabId]="activeTabId()"></app-navigation-tabs>
+    <app-navigation-tabs [tabs]="tabs()" [initialActiveTabId]="activeTabId()" (activeTabChanged)="onTabSelected($event)"></app-navigation-tabs>
   </div>
 </div>
