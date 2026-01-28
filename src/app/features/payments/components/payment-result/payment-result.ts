@@ -1,7 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrderResponse } from '../../models/order.model';
+import { catchError, finalize, of } from 'rxjs';
 import { OrderStatusService } from '../../services/order-status.service';
 
 @Component({
@@ -11,61 +12,46 @@ import { OrderStatusService } from '../../services/order-status.service';
     styleUrl: './payment-result.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaymentResultComponent implements OnInit {
+export class PaymentResultComponent {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     private orderStatusService = inject(OrderStatusService);
 
-    order = signal<OrderResponse | null>(null);
+    private referenceCode = signal<string | null>(
+        this.route.snapshot.queryParams['referenceCode'] ?? null
+    );
+
     isLoading = signal(true);
     error = signal<string | null>(null);
 
-    ngOnInit(): void {
-        this.processPaymentResponse();
-    }
+    /** ✅ Order driven by observable → signal */
+    order = toSignal(
+        this.referenceCode()
+            ? this.orderStatusService.checkOrderStatus(this.referenceCode()!)
+                .pipe(
+                    catchError(err => {
+                        console.error(err);
+                        this.error.set('Error verificando el estado del pedido.');
+                        return of(null);
+                    }),
+                    finalize(() => this.isLoading.set(false))
+                )
+            : of(null),
+        { initialValue: null }
+    );
 
-    private processPaymentResponse(): void {
-        try {
-            const queryParams = this.route.snapshot.queryParams;
-            const referenceCode = queryParams['referenceCode'];
-
-            if (!referenceCode) {
-                this.error.set('No se encontró el código de referencia en la respuesta del pago.');
-                this.isLoading.set(false);
-                return;
-            }
-
-            // Check order status immediately
-            this.checkOrderStatus(referenceCode);
-        } catch (error) {
-            console.error('Error processing payment response:', error);
-            this.error.set('Error procesando la respuesta del pago. Por favor contacta soporte.');
-            this.isLoading.set(false);
-        }
-    }
-
-    private checkOrderStatus(referenceCode: string): void {
-        this.orderStatusService.checkOrderStatus(referenceCode).subscribe({
-            next: (order: OrderResponse) => {
-                this.order.set(order);
-                this.isLoading.set(false);
-                this.error.set(null);
-            },
-            error: (error) => {
-                console.error('Error checking order status:', error);
-                this.error.set('Error verificando el estado del pedido.');
-                this.isLoading.set(false);
-            }
-        });
-    }
-
+    // 🔁 Refresh manually
     onCheckStatus(): void {
-        const queryParams = this.route.snapshot.queryParams;
-        const referenceCode = queryParams['referenceCode'];
-        if (referenceCode) {
-            this.isLoading.set(true);
-            this.checkOrderStatus(referenceCode);
-        }
+        const ref = this.referenceCode();
+        if (!ref) return;
+
+        this.isLoading.set(true);
+        this.error.set(null);
+
+        this.order = toSignal(
+            this.orderStatusService.checkOrderStatus(ref),
+            { initialValue: null }
+        );
     }
 
     // Helper methods for template

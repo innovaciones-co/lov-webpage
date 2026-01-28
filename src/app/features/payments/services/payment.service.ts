@@ -146,7 +146,11 @@ export class PaymentService {
                 'accept': 'application/json'
             }
         }).pipe(
-            catchError(this.handleOrderError)
+            catchError(this.handleOrderError),
+            map(order => {
+                 console.log('Order fetched by reference code:', order);
+                 return order;
+            })
         );
     }
 

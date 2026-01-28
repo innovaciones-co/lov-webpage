@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { catchError, Observable, Subject } from 'rxjs';
+import { catchError, Observable, Subject, throwError } from 'rxjs';
 import { OrderResponse, OrderStatus } from '../models/order.model';
 import { PaymentService } from './payment.service';
 
@@ -26,8 +26,10 @@ export class OrderStatusService implements OnDestroy {
     checkOrderStatus(referenceCode: string): Observable<OrderResponse> {
         return this.paymentService.getOrderByReferenceCode(referenceCode).pipe(
             catchError(error => {
-                console.error('Failed to fetch order status:', error);
-                throw error;
+                console.error('Error en petición individual:', error);
+                // Si una petición falla, podrías decidir si seguir o frenar. 
+                // Aquí lanzamos el error para detener el polling:
+                return throwError(() => error);
             })
         );
     }
