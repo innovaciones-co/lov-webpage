@@ -1,32 +1,223 @@
 <div class="payment-result-container">
-  @if (isLoading()) {
-  <div class="loading-state">
-    <div class="loading-spinner">
-      <span class="material-symbols-outlined rotating">refresh</span>
-    </div>
-    <p>Procesando respuesta del pago...</p>
-  </div>
-  } @else if (error()) {
+  @if (error()) {
   <div class="error-state">
     <div class="error-icon">
       <span class="material-symbols-outlined">error</span>
     </div>
     <h2>Error al procesar el pago</h2>
     <p>{{ error() }}</p>
-    <button type="button" class="btn btn-primary" (click)="onGoHome()">
-      <span class="material-symbols-outlined">home</span>
-      Volver al inicio
-    </button>
+    <div class="error-actions">
+      <button type="button" class="btn btn-secondary" (click)="onCheckStatus()">
+        <span class="material-symbols-outlined">refresh</span>
+        Reintentar
+      </button>
+      <button type="button" class="btn btn-primary" (click)="onGoHome()">
+        <span class="material-symbols-outlined">home</span>
+        Volver al inicio
+      </button>
+    </div>
   </div>
-  } @else if (purchaseStatus(); as status) {
-  <app-purchase-status 
-    [purchaseStatus]="status"
-    (goToDashboard)="onGoToDashboard()"
-    (downloadReceipt)="onDownloadReceipt($event)"
-    (retryPayment)="onRetryPayment($event)"
-    (contactSupport)="onContactSupport($event)"
-    (checkStatus)="onCheckStatus($event)"
-    (goHome)="onGoHome()">
-  </app-purchase-status>
+  } @else if (isLoading()) {
+  <div class="order-result-state">
+    <!-- Loading skeleton when still loading -->
+    <div class="order-skeleton">
+      <!-- Order Status Header Skeleton -->
+      <div class="order-status-header skeleton">
+        <div class="status-icon skeleton-circle"></div>
+        <div class="status-content">
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line skeleton-subtitle"></div>
+        </div>
+      </div>
+
+      <!-- Order Details Skeleton -->
+      <div class="order-details skeleton">
+        <div class="skeleton-line skeleton-heading"></div>
+        <div class="details-grid">
+          <div class="skeleton-line skeleton-label"></div>
+          <div class="skeleton-line skeleton-value"></div>
+          <div class="skeleton-line skeleton-label"></div>
+          <div class="skeleton-line skeleton-value"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div class="order-result-state">
+    @if (order(); as orderData) {
+
+    <!-- Order Status Header -->
+    <div class="order-status-header">
+      <div class="status-icon" [class]="getStatusColorClass(orderData.status)">
+        @if (isSuccessStatus(orderData.status)) {
+        <span class="material-symbols-outlined">check_circle</span>
+        } @else if (isFailureStatus(orderData.status)) {
+        <span class="material-symbols-outlined">cancel</span>
+        } @else if (isProcessingStatus(orderData.status)) {
+        <span class="material-symbols-outlined rotating">sync</span>
+        } @else {
+        <span class="material-symbols-outlined">info</span>
+        }
+      </div>
+      <div class="status-content">
+        <h1>{{ getStatusDisplayText(orderData.status) }}</h1>
+        <p class="status-description">
+          @if (isSuccessStatus(orderData.status)) {
+          Tu pago se ha procesado exitosamente
+          } @else if (isFailureStatus(orderData.status)) {
+          Tu pago ha sido cancelado
+          } @else if (isProcessingStatus(orderData.status)) {
+          Tu pago está siendo procesado
+          } @else if (orderData.status === 'REFUNDED') {
+          Tu pago ha sido reembolsado
+          } @else {
+          Estado del pago actualizado
+          }
+        </p>
+      </div>
+    </div>
+
+    <!-- Order Details -->
+    <div class="order-details">
+      <h3>Detalles del pedido</h3>
+      <div class="detail-row">
+        <span class="label">Código de referencia:</span>
+        <span class="value">{{ orderData.referenceCode }}</span>
+      </div>
+      @if (orderData.transactionId) {
+      <div class="detail-row">
+        <span class="label">ID de transacción:</span>
+        <span class="value">{{ orderData.transactionId }}</span>
+      </div>
+      }
+      <div class="detail-row">
+        <span class="label">Descripción:</span>
+        <span class="value">{{ orderData.description }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Monto:</span>
+        <span class="value">{{ orderData.amount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+      </div>
+      @if (orderData.tax > 0) {
+      <div class="detail-row">
+        <span class="label">Impuestos:</span>
+        <span class="value">{{ orderData.tax | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+      </div>
+      }
+    </div>
+
+    <!-- Customer Information -->
+    <div class="customer-info">
+      <h3>Información del cliente</h3>
+      <div class="detail-row">
+        <span class="label">Nombre completo:</span>
+        <span class="value">{{ orderData.buyerFullName }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Email:</span>
+        <span class="value">{{ orderData.buyerEmail }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Teléfono:</span>
+        <span class="value">{{ orderData.buyerPhone }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">MSISDN:</span>
+        <span class="value">{{ orderData.msisdn }}</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="order-actions">
+      @if (isSuccessStatus(orderData.status)) {
+      <button type="button" class="btn btn-primary" (click)="onGoToDashboard()">
+        <span class="material-symbols-outlined">dashboard</span>
+        Ir al Dashboard
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onDownloadReceipt()">
+        <span class="material-symbols-outlined">download</span>
+        Descargar comprobante
+      </button>
+      } @else if (isFailureStatus(orderData.status)) {
+      <button type="button" class="btn btn-primary" (click)="onRetryPayment()">
+        <span class="material-symbols-outlined">refresh</span>
+        Reintentar pago
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onContactSupport()">
+        <span class="material-symbols-outlined">support_agent</span>
+        Contactar soporte
+      </button>
+      } @else if (isProcessingStatus(orderData.status)) {
+      <button type="button" class="btn btn-secondary" (click)="onCheckStatus()">
+        <span class="material-symbols-outlined">refresh</span>
+        Verificar estado
+      </button>
+      <button type="button" class="btn btn-outline" (click)="onContactSupport()">
+        <span class="material-symbols-outlined">support_agent</span>
+        Contactar soporte
+      </button>
+      } @else {
+      <button type="button" class="btn btn-primary" (click)="onGoToDashboard()">
+        <span class="material-symbols-outlined">dashboard</span>
+        Ir al Dashboard
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="onContactSupport()">
+        <span class="material-symbols-outlined">support_agent</span>
+        Contactar soporte
+      </button>
+      }
+
+      <button type="button" class="btn btn-outline" (click)="onGoHome()">
+        <span class="material-symbols-outlined">home</span>
+        Volver al inicio
+      </button>
+    </div>
+
+    <!-- Processing Notice -->
+    @if (isProcessingStatus(orderData.status)) {
+    <div class="processing-notice">
+      <p>
+        <span class="material-symbols-outlined">info</span>
+        Estamos verificando automáticamente el estado de tu pago.
+        Por favor espera mientras se completa el proceso.
+      </p>
+    </div>
+    }
+    } @else {
+    <!-- Loading skeleton when no order data yet -->
+    <div class="order-skeleton">
+      <!-- Order Status Header Skeleton -->
+      <div class="order-status-header skeleton">
+        <div class="status-icon skeleton-circle"></div>
+        <div class="status-content">
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line skeleton-subtitle"></div>
+        </div>
+      </div>
+
+      <!-- Order Details Skeleton -->
+      <div class="order-details skeleton">
+        <div class="skeleton-line skeleton-heading"></div>
+        <div class="detail-row">
+          <div class="skeleton-line skeleton-label"></div>
+          <div class="skeleton-line skeleton-value"></div>
+        </div>
+        <div class="detail-row">
+          <div class="skeleton-line skeleton-label"></div>
+          <div class="skeleton-line skeleton-value"></div>
+        </div>
+        <div class="detail-row">
+          <div class="skeleton-line skeleton-label"></div>
+          <div class="skeleton-line skeleton-value"></div>
+        </div>
+      </div>
+
+      <div class="loading-indicator">
+        <span class="material-symbols-outlined rotating">refresh</span>
+        <span>Cargando información del pedido...</span>
+      </div>
+    </div>
+    }
+  </div>
   }
 </div>

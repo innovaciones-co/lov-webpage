@@ -1,12 +1,12 @@
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PurchaseStatus } from '../../models/payment-response.model';
-import { PaymentResponseService } from '../../services/payment-response.service';
-import { PurchaseStatusComponent } from '../purchase-status/purchase-status';
+import { OrderResponse } from '../../models/order.model';
+import { OrderStatusService } from '../../services/order-status.service';
 
 @Component({
     selector: 'app-payment-result',
-    imports: [PurchaseStatusComponent],
+    imports: [CurrencyPipe],
     templateUrl: './payment-result.html',
     styleUrl: './payment-result.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -14,9 +14,9 @@ import { PurchaseStatusComponent } from '../purchase-status/purchase-status';
 export class PaymentResultComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
-    private paymentResponseService = inject(PaymentResponseService);
+    private orderStatusService = inject(OrderStatusService);
 
-    purchaseStatus = signal<PurchaseStatus | null>(null);
+    order = signal<OrderResponse | null>(null);
     isLoading = signal(true);
     error = signal<string | null>(null);
 
@@ -26,60 +26,100 @@ export class PaymentResultComponent implements OnInit {
 
     private processPaymentResponse(): void {
         try {
-            // Obtener todos los parámetros de la query string
             const queryParams = this.route.snapshot.queryParams;
+            const referenceCode = queryParams['referenceCode'];
 
-            // Convertir a URLSearchParams para usar el servicio
-            const urlParams = new URLSearchParams();
-            Object.keys(queryParams).forEach(key => {
-                if (queryParams[key] !== null && queryParams[key] !== undefined) {
-                    urlParams.append(key, queryParams[key]);
-                }
-            });
+            if (!referenceCode) {
+                this.error.set('No se encontró el código de referencia en la respuesta del pago.');
+                this.isLoading.set(false);
+                return;
+            }
 
-            const payuResponse = this.paymentResponseService.parseUrlParams(urlParams);
-            const purchaseStatus = this.paymentResponseService.convertTosPurchaseStatus(payuResponse);
-
-            this.purchaseStatus.set(purchaseStatus);
-            this.error.set(null);
+            // Check order status immediately
+            this.checkOrderStatus(referenceCode);
         } catch (error) {
-            console.error('Error procesando respuesta de pago:', error);
+            console.error('Error processing payment response:', error);
             this.error.set('Error procesando la respuesta del pago. Por favor contacta soporte.');
-        } finally {
             this.isLoading.set(false);
         }
+    }
+
+    private checkOrderStatus(referenceCode: string): void {
+        this.orderStatusService.checkOrderStatus(referenceCode).subscribe({
+            next: (order: OrderResponse) => {
+                this.order.set(order);
+                this.isLoading.set(false);
+                this.error.set(null);
+            },
+            error: (error) => {
+                console.error('Error checking order status:', error);
+                this.error.set('Error verificando el estado del pedido.');
+                this.isLoading.set(false);
+            }
+        });
+    }
+
+    onCheckStatus(): void {
+        const queryParams = this.route.snapshot.queryParams;
+        const referenceCode = queryParams['referenceCode'];
+        if (referenceCode) {
+            this.isLoading.set(true);
+            this.checkOrderStatus(referenceCode);
+        }
+    }
+
+    // Helper methods for template
+    getStatusDisplayText(status: string): string {
+        return this.orderStatusService.getStatusDisplayText(status as any);
+    }
+
+    getStatusColorClass(status: string): string {
+        return this.orderStatusService.getStatusColorClass(status as any);
+    }
+
+    isSuccessStatus(status: string): boolean {
+        return this.orderStatusService.isSuccessStatus(status as any);
+    }
+
+    isFailureStatus(status: string): boolean {
+        return this.orderStatusService.isFailureStatus(status as any);
+    }
+
+    isProcessingStatus(status: string): boolean {
+        return this.orderStatusService.isProcessingStatus(status as any);
     }
 
     onGoToDashboard(): void {
         this.router.navigate(['/dashboard']);
     }
 
-    onDownloadReceipt(transactionId: string): void {
-        // TODO: Implementar descarga de comprobante
-        console.log('Descargar comprobante para transacción:', transactionId);
+    onDownloadReceipt(): void {
+        const order = this.order();
+        if (order?.transactionId) {
+            // TODO: Implement receipt download
+            console.log('Download receipt for transaction:', order.transactionId);
+        }
     }
 
-    onRetryPayment(referenceCode: string): void {
-        // TODO: Implementar reintento de pago
-        console.log('Reintentar pago para referencia:', referenceCode);
-        this.router.navigate(['/pagos']);
+    onRetryPayment(): void {
+        const order = this.order();
+        if (order?.referenceCode) {
+            console.log('Retry payment for reference:', order.referenceCode);
+            this.router.navigate(['/pagos']);
+        }
     }
 
-    onContactSupport(purchaseStatus: PurchaseStatus): void {
-        // TODO: Implementar contacto con soporte
-        console.log('Contactar soporte para:', purchaseStatus);
-        this.router.navigate(['/soporte'], {
-            queryParams: {
-                transactionId: purchaseStatus.transactionId,
-                referenceCode: purchaseStatus.referenceCode
-            }
-        });
-    }
-
-    onCheckStatus(transactionId: string): void {
-        // TODO: Implementar verificación de estado
-        console.log('Verificar estado de transacción:', transactionId);
-        this.processPaymentResponse(); // Re-procesar para actualizar
+    onContactSupport(): void {
+        const order = this.order();
+        if (order) {
+            console.log('Contact support for order:', order);
+            this.router.navigate(['/soporte'], {
+                queryParams: {
+                    transactionId: order.transactionId,
+                    referenceCode: order.referenceCode
+                }
+            });
+        }
     }
 
     onGoHome(): void {

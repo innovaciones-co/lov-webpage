@@ -73,3 +73,29 @@ export interface PaymentFields {
     extra1: string;
     extra2: string;
 }
+
+export type OrderStatus = 'CREATED' | 'CANCELLED' | 'COMPLETED' | 'PAYMENT' | 'PROCESSED' | 'REFUNDED';
+
+export interface OrderResponse {
+    id: string;
+    description: string;
+    referenceCode: string;
+    amount: number;
+    transactionId: string;
+    status: OrderStatus;
+    tax: number;
+    taxReturnBase: number;
+    currency: string;
+    signature: string;
+    details: OrderDetails;
+    subscriberId: number;
+    msisdn: string;
+    buyerPhone: string;
+    buyerFullName: string;
+    buyerEmail: string;
+    buyerDocumentType: string;
+    buyerDocument: string;
+    billingCountry: string;
+    billingCity: string;
+    billingAddress: string;
+}

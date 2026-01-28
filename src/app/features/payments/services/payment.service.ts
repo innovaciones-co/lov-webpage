@@ -5,7 +5,7 @@ import { Observable, throwError } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { BillingInfo } from "../models/billing-info.model";
-import { CreateOrderRequest, OrderErrorResponse, OrderItem, PaymentInitiationResponse } from "../models/order.model";
+import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderResponse, PaymentInitiationResponse } from "../models/order.model";
 import { Product } from "../models/product.model";
 
 @Injectable({
@@ -125,6 +125,23 @@ export class PaymentService {
         const url = `${environment.apiUrl}/orders/${orderId}/pay`;
 
         return this.httpClient.put<PaymentInitiationResponse>(url, {}, {
+            headers: {
+                'accept': 'application/json'
+            }
+        }).pipe(
+            catchError(this.handleOrderError)
+        );
+    }
+
+    /**
+     * Fetches an order by its reference code
+     * @param referenceCode The reference code to look up
+     * @returns Observable with the order response
+     */
+    getOrderByReferenceCode(referenceCode: string): Observable<OrderResponse> {
+        const url = `${environment.apiUrl}/orders/byReferenceCode/${referenceCode}`;
+
+        return this.httpClient.get<OrderResponse>(url, {
             headers: {
                 'accept': 'application/json'
             }
