@@ -19,6 +19,16 @@ export class PlanItem {
   private paymentService = inject(PaymentService);
   private productFactoryService = inject(ProductFactoryService);
 
+  getMaterialSymbol(measure: string): string {
+    const symbolMap: Record<string, string> = {
+      'GB': 'mail',
+      'MB': 'mail',
+      'MINUTE': 'call',
+      'SMS': 'chat',
+    };
+    return symbolMap[measure] || 'check_circle';
+  }
+
   addPlanToCart() {
     console.log('Adding plan to cart:', this.plan);
     this.paymentService.selectProduct(this.planToProduct());
