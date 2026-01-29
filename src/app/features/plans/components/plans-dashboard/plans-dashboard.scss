@@ -1,3 +1,5 @@
+@use '../../../../../styles/mixins' as *;
+
 .plans-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -15,16 +17,16 @@
         justify-content: center;
     }
 
-    @media (min-width: 1024px) {
+    @include large {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    @media (min-width: 1440px) {
+    @include desktop {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-@media (max-width: 768px) {
+@include mobile {
     .plans-grid {
         grid-template-columns: 1fr;
         padding: 0.5rem 0;

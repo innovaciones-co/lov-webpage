@@ -1,1 +1,11 @@
 @use '../../../../../styles/mixins' as *;
+
+::ng-deep .navigations-tabs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include tablet {
+        display: block;
+    }
+}
