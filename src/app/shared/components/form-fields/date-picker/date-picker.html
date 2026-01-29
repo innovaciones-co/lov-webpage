@@ -1,5 +1,5 @@
 <label [attr.for]="id()">{{ label() }}</label>
-<input [id]="id()" type="date" [formControl]="control()" [attr.aria-label]="label()" (blur)="onBlur()"
+<input #dateInput [id]="id()" type="date" [formControl]="control()" [attr.aria-label]="label()" (blur)="onBlur()" (click)="onContainerClick()"
   [class.invalid]="control().invalid && control().touched" />
 @if (control().invalid && control().touched) {
 <div class="error">{{ error() }}</div>

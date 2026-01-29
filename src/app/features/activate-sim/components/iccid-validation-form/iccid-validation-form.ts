@@ -21,6 +21,7 @@ export class IccidValidationForm {
   private activateSimService = inject(ActivateSimService);
 
   hideButton = input(false);
+  isLoading = signal(false);
   formSubmit = output<IccidValidationFormData>();
 
   validationError = signal<string>('');
@@ -70,22 +71,27 @@ export class IccidValidationForm {
   onSubmit(): void {
     if (this.form().valid) {
       const formData = this.form().value as IccidValidationFormData;
+      this.isLoading.set(true);
 
       // Limpiar error previo
       this.validationError.set('');
 
       this.activateSimService.validateIccid(formData.iccid, formData.puk).subscribe({
         next: (response) => {
-          console.log('Validación exitosa:', response);
-          this.activateSimService.setLoading(false);
-
-          this.activateSimService.setIccidValidationData(response);
-
-          this.formSubmit.emit(formData);
+          if (response?.payload?.subscriptions?.[0]?.state === 'INSTALLED') {
+            console.log('Validación exitosa:', response);
+            this.isLoading.set(false);
+            this.activateSimService.setIccidValidationData(response);
+            this.formSubmit.emit(formData);
+          } else {
+            console.error('SIM status no es INSTALLED:', response);
+            this.isLoading.set(false);
+            this.validationError.set('Parece que esta SIM ya ha sido activada. Por favor verifica el código de barras y el código PUK de tu SIM. Si tienes dudas, contáctanos.');
+          }
         },
         error: (error) => {
           console.error('Error en la validación:', error);
-          this.activateSimService.setLoading(false);
+          this.isLoading.set(false);
 
           // Mostrar mensaje de error al usuario
           const errorMessage = error?.error?.message ||
@@ -96,3 +102,4 @@ export class IccidValidationForm {
     }
   }
 }
+

@@ -3,7 +3,7 @@
         <h3 class="form-subtitle">Documento de identidad</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Documento'" [placeholder]="'000000000'"
+                <input-text-field [label]="'Documento'" [placeholder]="'1234567890'"
                     [control]="form().controls.documentID"
                     [error]="getFieldErrorMessage('documentID')"></input-text-field>
 
@@ -20,6 +20,13 @@
         </div>
     </div>
     @if (!hideButton()) {
-    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+        @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Validando...
+        } @else {
+        Continuar
+        }
+    </button>
     }
 </form>

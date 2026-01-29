@@ -21,6 +21,7 @@ export class NavigationTabsComponent implements OnInit {
   initialActiveTabId = input<string | null>(null);
   activeTabId = signal<string | null>(null);
   tabClosed = output<string>();
+  activeTabChanged = output<string>();
 
   isActive(tab: Tab): boolean {
     return tab.id === this.activeTabId();
@@ -28,6 +29,7 @@ export class NavigationTabsComponent implements OnInit {
 
   selectTab(tabId: string): void {
     this.activeTabId.set(tabId);
+    this.activeTabChanged.emit(tabId);
   }
 
   closeTab(tab: Tab, event: MouseEvent): void {

@@ -70,7 +70,7 @@ export class ActivateSimService {
         this.loading.set(true);
         this.success.set(false);
 
-        const url = `${this.gatewayUrl}/api/personal-info`; // TODO: Reemplazar con la URL correcta
+        const url = `${this.gatewayUrl}/api/personal-info`;
 
         return this.http.post(url, data).subscribe({
             next: () => {
@@ -113,7 +113,7 @@ export class ActivateSimService {
                 // Validation customer PUT request
                 const secondUrl = `${this.gatewayUrl}/api/customers/${customerId}/residential`;
                 const secondBody = {
-                    consentToShareData: true, // TODO: Agregar checkbox en el formulario
+                    consentToShareData: personalData.terms,
                     email: personalData.email,
                     familyName: personalData.lastName,
                     givenName: personalData.name
@@ -160,10 +160,6 @@ export class ActivateSimService {
 
     setIccidValidationData(data: any) {
         this.iccidValidationData.set(data);
-    }
-
-    setLoading(loading: boolean) {
-        this.loading.set(loading);
     }
 
     resetState() {

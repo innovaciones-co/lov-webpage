@@ -3,8 +3,9 @@ import {
   ChangeDetectionStrategy,
   input,
   output,
-  EventEmitter,
   signal,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,12 +18,19 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class DatePickerComponent {
+  @ViewChild('dateInput') dateInput!: ElementRef<HTMLInputElement>;
+
   id = signal<string>('date-' + Math.random().toString(36).substring(2));
   label = input<string>('');
   error = input<string>('');
   placeholder = input<string>('');
   control = input<FormControl>(new FormControl(''));
   valueChange = output<string>();
+
+  onContainerClick() {
+    this.dateInput.nativeElement.focus();
+    this.dateInput.nativeElement.showPicker();
+  }
 
   onBlur() {
     if (this.control().valid) {

@@ -1,35 +1,41 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { combineLatest, debounceTime, filter } from 'rxjs';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
 import { Modal } from '../../../../shared/components/modal/modal';
 import { PortabilityService } from '../../services/portability.service';
+import { PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
-export interface PortinInformationData {
+export interface DonorInformationData {
   donorNumber: string;
   donorOperator: string;
   donorPlan: string;
 }
 
 @Component({
-  selector: 'app-portin-information-form',
+  selector: 'app-donor-information-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     InputTextComponent,
     SelectComponent,
-    Modal
+    Modal,
+    ErrorCard
   ],
-  templateUrl: './portin-information-form.component.html',
-  styleUrl: './portin-information-form.component.scss'
+  templateUrl: './donor-information-form.component.html',
+  styleUrl: './donor-information-form.component.scss'
 })
-export class PortinInformationFormComponent {
+export class DonorInformationFormComponent {
   private portabilityService = inject(PortabilityService);
 
-  formSubmit = output<PortinInformationData>();
+  portabilityData = input.required<PortabilityInformationData>();
+  formSubmit = output<DonorInformationData>();
 
   showModal = signal(false);
+  isLoading = signal(false);
+  validationError = signal<string>('');
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
@@ -102,8 +108,8 @@ export class PortinInformationFormComponent {
   }
 
   planOptions = signal([
-    { label: 'Pospago', value: 'pospay' },
-    { label: 'Prepago', value: 'pospaid' },
+    { label: 'Pospago', value: 'POSPAID' },
+    { label: 'Prepago', value: 'PREPAID' },
   ]);
 
   private async lookupDonorOperator(donorNumber: string): Promise<void> {
@@ -158,9 +164,33 @@ export class PortinInformationFormComponent {
     }
   }
 
-  onContinueModal(): void {
-    this.formSubmit.emit(this.form().value as PortinInformationData);
-    this.showModal.set(false);
+  async onContinueModal(): Promise<void> {
+    this.validationError.set('');
+    this.isLoading.set(true);
+
+    try {
+      const formData = this.form().value as DonorInformationData;
+      const lovNumber = this.portabilityData().lovNumber;
+      // await this.portabilityService.nipRequest(formData, lovNumber); // TODO: Uncomment when tests are done
+
+      this.formSubmit.emit(formData);
+      this.showModal.set(false);
+    } catch (error: any) {
+      console.error('Error submitting donor request:', error);
+
+      let errorMessage = 'Error al procesar la solicitud de portabilidad. Por favor, inténtelo de nuevo más tarde o contacte al equipo de soporte.';
+      if (error?.status === 429) {
+        errorMessage = 'Parece que ya hemos enviado varios códigos de verificación recientemente a tu número de teléfono. Por favor, contacte al equipo de soporte para más información.';
+      } else if (error?.error?.message) {
+        errorMessage = error.error.message;
+      }
+
+      this.validationError.set(errorMessage);
+
+      this.showModal.set(false);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   onCancelModal(): void {

@@ -1,6 +1,8 @@
-import { Component, signal, output } from '@angular/core';
+import { Component, signal, output, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
+import { ErrorCard } from '../../../../shared/components/error-card/error-card';
+import { PortabilityService } from '../../services/portability.service';
 
 export interface PortabilityStatusComponentData {
   lovNumber: string;
@@ -9,13 +11,16 @@ export interface PortabilityStatusComponentData {
 @Component({
   selector: 'app-portability-status',
   standalone: true,
-  imports: [ReactiveFormsModule, InputTextComponent],
+  imports: [ReactiveFormsModule, InputTextComponent, ErrorCard],
   templateUrl: './portability-status.html',
   styleUrl: './portability-status.scss'
 })
 export class PortabilityStatusComponent {
+  portabilityService = inject(PortabilityService);
 
   formSubmit = output<PortabilityStatusComponentData>();
+  isLoading = signal(false);
+  validationError = signal<string>('');
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
@@ -47,9 +52,24 @@ export class PortabilityStatusComponent {
 
   onSubmit(): void {
     if (this.form().valid) {
-      this.formSubmit.emit(this.form().value as PortabilityStatusComponentData);
+      const { lovNumber } = this.form().value as PortabilityStatusComponentData;
+      this.isLoading.set(true);
+      this.validationError.set('');
+
+      this.portabilityService.validatePortabilityStatus(lovNumber).subscribe({
+        next: (response: any) => {
+          console.debug('Portability status response:', response.payload);
+          this.isLoading.set(false);
+          this.formSubmit.emit(this.form().value as PortabilityStatusComponentData); // TODO: Adjust per response
+        },
+        error: (error) => {
+          console.error('Error validating portability status:', error);
+          this.isLoading.set(false);
+          const errorMessage = error?.error?.message || 'Error validando el estado de portabilidad. Por favor verifica el número LOV.';
+          this.validationError.set(errorMessage);
+        }
+      });
     }
-    console.log('Form submitted:', this.form().value);
   }
 
 }

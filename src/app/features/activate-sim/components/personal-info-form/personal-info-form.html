@@ -3,17 +3,17 @@
         <h3 class="form-subtitle">Información personal</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Nombres'" [placeholder]="'Arturo'" [control]="form().controls.name"
+                <input-text-field [label]="'Nombres'" [placeholder]="''" [control]="form().controls.name"
                     [error]="getFieldErrorMessage('name')"></input-text-field>
 
-                <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'"
-                    [control]="form().controls.lastName" [error]="getFieldErrorMessage('lastName')"></input-text-field>
+                <input-text-field [label]="'Apellidos'" [placeholder]="''" [control]="form().controls.lastName"
+                    [error]="getFieldErrorMessage('lastName')"></input-text-field>
             </div>
             <div class="form-row">
-                <input-text-field [label]="'Correo electrónico'" [placeholder]="'andres@myemail.com'"
+                <input-text-field [label]="'Correo electrónico'" [placeholder]="'nombre@ejemplo.com'"
                     [control]="form().controls.email" [error]="getFieldErrorMessage('email')"></input-text-field>
 
-                <input-text-field [label]="'Teléfono'" [placeholder]="'0000000000'"
+                <input-text-field [label]="'Teléfono'" [placeholder]="'3001234567'"
                     [control]="form().controls.phoneNumber"
                     [error]="getFieldErrorMessage('phoneNumber')"></input-text-field>
             </div>
@@ -38,15 +38,21 @@
                     [control]="form().controls.addressOptional"
                     [error]="getFieldErrorMessage('addressOptional')"></input-text-field>
             </div>
-            <div class="form-row">
-
-                <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
-                    Acepto los <a href="/docs/condiciones_servicio_prepago_lov.pdf" target="_blank"
-                        class="link-button">términos y
-                        condiciones</a>.
-                </checkbox-field>
-            </div>
+            <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
+                He leído y acepto los <a href="/docs/condiciones_servicio_prepago_lov.pdf" target="_blank"
+                    class="link-button">Términos y Condiciones</a>, así como la <a
+                    href="/docs/politicas_de_tratamiento_de_datos_personales_new.pdf" target="_blank"
+                    class="link-button">Política de Tratamiento de Datos Personales</a>.
+            </checkbox-field>
+            <error-card [message]="validationError()"></error-card>
         </div>
     </div>
-    <button class="btn" type="submit" [disabled]="form().invalid">Activar SIM</button>
+    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+        @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Procesando...
+        } @else {
+        Activar SIM
+        }
+    </button>
 </form>
