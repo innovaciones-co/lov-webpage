@@ -8,4 +8,12 @@
     @include tablet {
         display: block;
     }
+
+    .tab-dropdown-container {
+        width: 80%;
+
+        @include tablet {
+            width: auto;
+        }
+    }
 }

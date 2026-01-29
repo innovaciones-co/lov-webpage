@@ -1,4 +1,25 @@
-<div class="navigations-tabs-container">
+<div class="navigations-tabs-container" (document:click)="closeDropdown()" (document:keydown)="onKeyDown($event)">
+    @if (isMobile()) {
+    <div class="tab-dropdown-container" (click)="$event.stopPropagation()">
+        <button class="tab-dropdown-toggle" (click)="toggleDropdown()" [attr.aria-expanded]="isDropdownOpen()">
+            <span class="toggle-label">
+                {{ getActiveTabTitle() }}
+            </span>
+            <svg class="toggle-icon" [class.open]="isDropdownOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </button>
+        @if (isDropdownOpen()) {
+        <div class="tab-dropdown-menu">
+            @for (tab of tabs(); track tab.id) {
+            <button class="tab-dropdown-item" [class.active]="isActive(tab)" (click)="selectTab(tab.id)">
+                {{ tab.title }}
+            </button>
+            }
+        </div>
+        }
+    </div>
+    } @else {
     <div class="tab-header" role="tablist">
         @for (tab of tabs(); track tab.id) {
         <button role="tab" class="tablink" [class.active]="isActive(tab)" (click)="selectTab(tab.id)">
@@ -6,6 +27,7 @@
         </button>
         }
     </div>
+    }
 
     <div class="tab-content">
         @for (tab of tabs(); track tab.id) {
