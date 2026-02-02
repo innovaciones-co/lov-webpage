@@ -9,9 +9,12 @@
         </div>
 
         <div class="user-info">
-            @if (user) {
-            <span>Bienvenido, {{ user.firstName | capitalize }} {{ user.lastName | capitalize }}</span>
+            @if (loading()) {
+            <app-loading></app-loading>
             }
+            @else {@if (user) {
+            <span>Bienvenido, {{ user.firstName | capitalize }} {{ user.lastName | capitalize }}</span>
+            }}
         </div>
     </main>
 </div>
