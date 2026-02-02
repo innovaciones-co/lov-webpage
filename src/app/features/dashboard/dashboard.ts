@@ -6,10 +6,11 @@ import { SubscriptionFacadeService } from '../../core/services/subscription-faca
 import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
+import { MsisdnPipe } from "../../core/pipes/msisdn.pipe";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CapitalizePipe, Loading],
+  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
@@ -19,6 +20,7 @@ export class Dashboard implements OnInit {
   user: User | null = null;
   activeSubscriptions = signal<CustomerSubscription[]>([]);
   loading = signal(true);
+  billingInfo: any = null;
 
   ngOnInit() {
     this.authService.user$.subscribe(user => {
@@ -27,6 +29,23 @@ export class Dashboard implements OnInit {
 
       const storedMsisdn = this.authService.getStoredMsisdn();
       if (storedMsisdn) {
+        this.subscriptionFacade.getCustomerInfo(storedMsisdn).subscribe(customerInfo => {
+          if (customerInfo) {
+            this.billingInfo = {
+              firstName: customerInfo.givenName,
+              lastName: customerInfo.familyName,
+              documentType: customerInfo.document.type,
+              documentNumber: customerInfo.document.id,
+              email: customerInfo.email,
+              phone: storedMsisdn,
+              country: customerInfo.address.country,
+              city: customerInfo.address.city,
+              address: customerInfo.address.line1,
+              additionalInfo: customerInfo.additionalInformationPlaceHolder.additionalInformationString || ''
+            };
+          }
+        });
+
         this.subscriptionFacade.getActiveSubscriptions(storedMsisdn).subscribe(activeSubscriptions => {
           if (activeSubscriptions) {
             this.activeSubscriptions.set(activeSubscriptions);
