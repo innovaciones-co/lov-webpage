@@ -17,4 +17,35 @@
             }}
         </div>
     </main>
+
+    <aside class="card">
+        <div class="card-title">
+            <h2>Suscripciones</h2>
+        </div>
+
+        <div class="subscriptions-list">
+            @if (loading()) {
+            <app-loading></app-loading>
+            }
+            @else {
+            @if (activeSubscriptions().length > 0) {
+            <ul>
+                @for (subscription of activeSubscriptions(); track subscription.msisdn) {
+                <li class="subscription-item">
+                    <span class="subscription-name">Plan: {{ subscription.tariff.tariffName }}</span>
+                    <span class="subscription-msisdn">Número de teléfono: {{ subscription.msisdn }}</span>
+                    <span class="subscription-status">Estado: {{ subscription.state | capitalize }}</span>
+                    <span class="subscription-activation">Activado: {{ subscription.activationDate | date:'shortDate'
+                        }}</span>
+                    <span class="subscription-payment">Tipo de Pago: {{ subscription.paymentType | lowercase }}</span>
+                </li>
+                }
+            </ul>
+            }
+            @else {
+            <p>No tienes suscripciones activas.</p>
+            }}
+
+        </div>
+    </aside>
 </div>

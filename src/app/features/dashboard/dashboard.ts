@@ -17,7 +17,7 @@ export class Dashboard implements OnInit {
   private authService = inject(AuthService);
   private subscriptionFacade = inject(SubscriptionFacadeService);
   user: User | null = null;
-  activeSubscriptions: CustomerSubscription[] = [];
+  activeSubscriptions = signal<CustomerSubscription[]>([]);
   loading = signal(true);
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class Dashboard implements OnInit {
       if (storedMsisdn) {
         this.subscriptionFacade.getActiveSubscriptions(storedMsisdn).subscribe(activeSubscriptions => {
           if (activeSubscriptions) {
-            this.activeSubscriptions = activeSubscriptions;
+            this.activeSubscriptions.set(activeSubscriptions);
           }
         });
       }
