@@ -1,0 +1,39 @@
+<form [formGroup]="form()" (ngSubmit)="onSubmit()">
+    <div class="card">
+        <h3 class="form-subtitle">Información de contacto</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'Nombre completo'" [placeholder]="''" [control]="form().controls.fullName"
+                    [error]="getFieldErrorMessage('fullName')">
+                </input-text-field>
+                <input-text-field [label]="'Telefono'" [placeholder]="''" [control]="form().controls.phone"
+                    [error]="getFieldErrorMessage('phone')">
+                </input-text-field>
+            </div>
+            <div class="form-row">
+                <input-text-field [label]="'Correo'" [placeholder]="''" [control]="form().controls.email"
+                    [error]="getFieldErrorMessage('email')">
+                </input-text-field>
+                <select-field [label]="'Tipo de solicitud'" [placeholder]="''" [options]="requestType()"
+                    [control]="form().controls.requestType" [error]="getFieldErrorMessage('requestType')">
+                </select-field>
+            </div>
+        </div>
+        <h3 class="form-subtitle">Información de la solicitud</h3>
+        <div class="form-grid">
+            <input-text-field [label]="'Asunto'" [placeholder]="''" [control]="form().controls.subject"
+                [error]="getFieldErrorMessage('subject')">
+            </input-text-field>
+            <input-text-field [label]="'Mensaje'" [placeholder]="''" [control]="form().controls.message"
+                [error]="getFieldErrorMessage('message')">
+            </input-text-field>
+            <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
+                He leído y acepto los <a href="/docs/condiciones_servicio_prepago_lov.pdf" target="_blank"
+                    class="link-button">Términos y Condiciones</a>, así como la <a
+                    href="/docs/politicas_de_tratamiento_de_datos_personales_new.pdf" target="_blank"
+                    class="link-button">Política de Tratamiento de Datos Personales</a>.
+            </checkbox-field>
+        </div>
+    </div>
+    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+</form>

@@ -11,6 +11,7 @@ import { Legals } from './features/legals/legals';
 import { PaymentResultComponent } from './features/payments/components/payment-result/payment-result';
 import { Payments } from './features/payments/components/payments/payments';
 import { PlansIntro } from './features/plans/components/plans-intro/plans-intro';
+import { Pqr } from './features/pqr/pqr';
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 import { Portability } from './features/portability/portability';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
@@ -75,6 +76,10 @@ export const routes: Routes = [
     {
         path: 'pagos/resultado',
         component: PaymentResultComponent
+    },
+    {
+        path: 'pqr',
+        component: Pqr
     },
     {
         path: '**',
