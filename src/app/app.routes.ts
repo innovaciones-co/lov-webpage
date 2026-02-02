@@ -10,7 +10,7 @@ import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
 import { PaymentResultComponent } from './features/payments/components/payment-result/payment-result';
 import { Payments } from './features/payments/components/payments/payments';
-import { PlansIntro } from './features/plans/components/plans-intro/plans-intro';
+import { Plans } from './features/plans/components/plans/plans';
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 import { Portability } from './features/portability/portability';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
@@ -56,7 +56,7 @@ export const routes: Routes = [
     },
     {
         path: 'planes',
-        component: PlansIntro,
+        component: Plans,
         canActivate: [authGuard]
     },
     {

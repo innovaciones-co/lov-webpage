@@ -179,7 +179,7 @@ select {
 // Container
 .container {
     width: 100%;
-    padding: 0 1rem;
+    padding: 2rem 1rem;
     margin: 0 auto;
 
     @include tablet {
@@ -188,7 +188,7 @@ select {
     }
 
     @include large {
-        padding: 0 2rem;
+        padding: 2rem 2rem;
         max-width: 960px;
     }
 

@@ -2,6 +2,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, ElementRef, HostListener, inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
+import { User } from '../../../features/authentication/models/auth.models';
+import { AuthService } from '../../../features/authentication/services/auth.service';
 
 @Component({
   selector: 'app-menu',
@@ -16,7 +18,8 @@ export class Menu implements OnInit {
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   currentRoute = '';
-
+  private authService = inject(AuthService);
+  user: User | null = null;
   @ViewChild('navMenu', { static: true }) navMenuRef!: ElementRef<HTMLUListElement>;
 
   private get isBrowser(): boolean {
@@ -26,6 +29,10 @@ export class Menu implements OnInit {
   ngOnInit() {
     this.setupHoverEffects();
     this.setupRouteListener();
+
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
   }
 
   private setupHoverEffects() {
@@ -116,5 +123,9 @@ export class Menu implements OnInit {
       // Toggle 'active' class on current element
       dropdownMenu.classList.toggle('active');
     }
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

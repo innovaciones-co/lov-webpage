@@ -1,0 +1,17 @@
+<div id="dashboard" class="container">
+    <main class="card">
+        <div class="card-title">
+            <h1>Mi Cuenta</h1>
+
+            @if (user) {
+            <button class="btn logout-btn" (click)="logout()">Cerrar sesión</button>
+            }
+        </div>
+
+        <div class="user-info">
+            @if (user) {
+            <span>Bienvenido, {{ user.firstName | capitalize }} {{ user.lastName | capitalize }}</span>
+            }
+        </div>
+    </main>
+</div>

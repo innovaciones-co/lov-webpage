@@ -63,11 +63,22 @@
                         </a>
                     </div>
                 </li>
+
                 <li class="nav-item">
+                    @if (user) {
+                    <a routerLink="/dashboard" class="nav-link" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Mi Cuenta</a>
+                    }
+                    @else {
                     <a routerLink="/ingreso" class="nav-link" routerLinkActive="active"
-                        (click)="closeMobileMenu()">Iniciar Sesión</a>
+                        (click)="closeMobileMenu()">Iniciar
+                        Sesión</a>
+                    }
                 </li>
+
             </ul>
+
+
 
             <div class="menu-toggle" [class.active]="isActive" (click)="onClick()">
                 <span class="bar"></span>

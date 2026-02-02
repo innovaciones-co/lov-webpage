@@ -1,0 +1,27 @@
+@use '../../../styles/variables' as *;
+
+.card-title {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+
+    h1 {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.logout-btn {
+    &:hover {
+        background: $color-secondary-light;
+    }
+
+    &:active {
+        background: $color-secondary-light;
+    }
+
+    background: $color-secondary;
+    color: white;
+    font-size: 0.6em;
+}
