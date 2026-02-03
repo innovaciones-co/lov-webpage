@@ -49,23 +49,26 @@
         </div>
     </aside>
 
+    @if (billingInfo) {
     <div id="billing-info" class="card">
-        <h2 class="form-subtitle">Información de Facturación</h2>
+        <h3 class="form-subtitle">Datos de Facturación</h3>
 
-        @if (billingInfo) {
+        <p><strong>Nombre:</strong> {{ billingInfo.firstName | capitalize }} {{ billingInfo.lastName | capitalize }}
+        </p>
+        <p><strong>Tipo de Documento:</strong> {{ billingInfo.documentType }}</p>
+        <p><strong>Número de Documento:</strong> {{ billingInfo.documentNumber }}</p>
+        <p><strong>Correo Electrónico:</strong> {{ billingInfo.email }}</p>
 
-        <div class="billing-info">
-            <p><strong>Nombre:</strong> {{ billingInfo.firstName | capitalize }} {{ billingInfo.lastName | capitalize }}
-            </p>
-            <p><strong>Tipo de Documento:</strong> {{ billingInfo.documentType }}</p>
-            <p><strong>Número de Documento:</strong> {{ billingInfo.documentNumber }}</p>
-            <p><strong>Correo Electrónico:</strong> {{ billingInfo.email }}</p>
-            <p><strong>Teléfono:</strong> {{ billingInfo.phone | msisdn }}</p>
-            <p><strong>País:</strong> {{ billingInfo.country | capitalize}}</p>
-            <p><strong>Ciudad:</strong> {{ billingInfo.city | capitalize }}</p>
-            <p><strong>Dirección:</strong> {{ billingInfo.address }}</p>
-            <p><strong>Información Adicional:</strong> {{ billingInfo.additionalInfo }}</p>
-        </div>
-        }
+
+        <div class="divider"></div>
+        <h3 class="form-subtitle">Información de contacto</h3>
+
+        <p><strong>Teléfono:</strong> {{ billingInfo.phone | msisdn }}</p>
+        <p><strong>País:</strong> {{ billingInfo.country | capitalize}}</p>
+        <p><strong>Ciudad:</strong> {{ billingInfo.city | capitalize }}</p>
+        <p><strong>Dirección:</strong> {{ billingInfo.address }}</p>
+        <p><strong>Información Adicional:</strong> {{ billingInfo.additionalInfo }}</p>
     </div>
+    }
+
 </div>

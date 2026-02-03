@@ -74,3 +74,24 @@
         }
     }
 }
+
+#billing-info {
+
+    h3 {
+        margin-top: 5px;
+        margin-bottom: 25px;
+    }
+
+    p {
+        margin: 10px 0;
+
+        span {
+            font-weight: bold;
+        }
+    }
+}
+
+.divider {
+    margin: 15px 0;
+    height: 1px;
+}
