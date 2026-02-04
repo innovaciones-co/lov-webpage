@@ -1,10 +1,11 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { PlanItem } from "../plan-item/plan-item";
 import { PlansService } from '../../services/plan.service';
+import { Loading } from "../../../../shared/components/loading/loading";
 
 @Component({
   selector: 'app-plans-dashboard',
-  imports: [PlanItem],
+  imports: [PlanItem, Loading],
   templateUrl: './plans-dashboard.html',
   styleUrl: './plans-dashboard.scss'
 })

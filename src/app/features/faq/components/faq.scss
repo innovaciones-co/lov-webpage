@@ -1,49 +1,10 @@
 @use '../../../../styles/variables' as *;
 @use '../../../../styles/mixins' as *;
 
-.faq-container {
-    min-height: 100vh;
-    background: $background;
-    padding: 1rem;
-
-    @include tablet {
-        padding: 2rem 1.5rem;
-    }
-}
 
 .faq-content {
     max-width: 1200px;
     margin: 0 auto;
-}
-
-.faq-header {
-    text-align: center;
-    margin-bottom: 2rem;
-
-    @include tablet {
-        margin-bottom: 3rem;
-    }
-
-    h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        color: $color-primary;
-        margin-bottom: 0.5rem;
-
-        @include tablet {
-            font-size: 2.5rem;
-        }
-    }
-
-    .faq-subtitle {
-        font-size: 1rem;
-        color: $gray-700;
-        margin: 0;
-
-        @include tablet {
-            font-size: 1.1rem;
-        }
-    }
 }
 
 .category-filter {

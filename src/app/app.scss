@@ -1,7 +1,15 @@
 @use '../styles/mixins' as *;
 
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .main {
     padding-top: 62px;
+    flex: 1;
+
 
     @include tablet {
         padding-top: 72px;
