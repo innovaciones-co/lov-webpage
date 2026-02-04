@@ -67,4 +67,14 @@ export class SubscriptionFacadeService {
             catchError(() => of(null))
         );
     }
+
+    /**
+     * Get accounts for a given subscription and customer ID
+     */
+    getAccountsForSubscription(customerId: string, subscriptionId: string): Observable<any[]> {
+        return this.subscriptionService.getAccounts(customerId, subscriptionId).pipe(
+            map(response => response?.payload || []),
+            catchError(() => of([]))
+        );
+    }
 }

@@ -43,6 +43,23 @@ export class SubscriptionService {
     }
 
     /**
+     * Retrieves accounts for a given subscription and customer ID
+     * @param customerId - The customer ID
+     * @param subscriptionId - The subscription ID
+     * @returns Observable of the accounts response
+     */
+    getAccounts(customerId: string, subscriptionId: string): Observable<ApiResponse<any>> {
+        return this.http.get<ApiResponse<any>>(
+            `${this.baseUrl}/api/customers/${customerId}/subscriptions/${subscriptionId}/accounts`,
+            {
+                headers: { 'accept': 'application/json' }
+            }
+        ).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    /**
      * Handles HTTP errors
      * @param error - The HTTP error
      * @returns Observable error

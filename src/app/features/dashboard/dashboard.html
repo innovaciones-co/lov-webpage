@@ -71,4 +71,27 @@
     </div>
     }
 
+    <div id="account-balances" class="card">
+        <div class="card-title">
+            <h2>Balances de Cuentas</h2>
+        </div>
+
+        <div class="account-list">
+            @if (accounts().length > 0) {
+            <ul>
+                @for (account of accounts(); track account.id) {
+                <li class="account-item">
+                    <p class="account-name">{{ account.name }}</p>
+                    <p class="account-balance">Saldo: {{ account.balance | currency }}</p>
+                    <p class="account-expiry">Vence: {{ account.expiryDate | date:'shortDate' }}</p>
+                </li>
+                }
+            </ul>
+            }
+            @else {
+            <p>No hay cuentas disponibles para esta suscripción.</p>
+            }
+        </div>
+    </div>
+
 </div>

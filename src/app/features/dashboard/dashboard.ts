@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CustomerSubscription } from '../../core/models/customer.model';
 import { CapitalizePipe } from "../../core/pipes/capitalize.pipe";
+import { MsisdnPipe } from "../../core/pipes/msisdn.pipe";
 import { SubscriptionFacadeService } from '../../core/services/subscription-facade.service';
 import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
-import { MsisdnPipe } from "../../core/pipes/msisdn.pipe";
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +21,7 @@ export class Dashboard implements OnInit {
   activeSubscriptions = signal<CustomerSubscription[]>([]);
   loading = signal(true);
   billingInfo: any = null;
+  accounts = signal<any[]>([]);
 
   ngOnInit() {
     this.authService.user$.subscribe(user => {
@@ -31,6 +32,8 @@ export class Dashboard implements OnInit {
       if (storedMsisdn) {
         this.subscriptionFacade.getCustomerInfo(storedMsisdn).subscribe(customerInfo => {
           if (customerInfo) {
+
+            this.fetchAccounts(customerInfo.id.toString(), '16112018597');
             this.billingInfo = {
               firstName: customerInfo.givenName,
               lastName: customerInfo.familyName,
@@ -57,5 +60,11 @@ export class Dashboard implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  fetchAccounts(customerId: string, subscriptionId: string) {
+    this.subscriptionFacade.getAccountsForSubscription(customerId, subscriptionId).subscribe(accounts => {
+      this.accounts.set(accounts);
+    });
   }
 }

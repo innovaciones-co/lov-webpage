@@ -3,10 +3,11 @@
         <h3 class="form-subtitle">Ingresa tú número LOV</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Código de barrras de tu SIM'" [placeholder]="'1234567890123456789'"
+                <input-text-field [label]="'Código de barrras de tu SIM'" [placeholder]="'8957777200231XXXXXX'"
                     [control]="form().controls.iccid" [error]="getFieldErrorMessage('iccid')"></input-text-field>
 
-                <input-text-field [label]="'Código PUK'" [placeholder]="'00000000'" [control]="form().controls.puk"
+                <input-text-field [label]="'Código PUK (Ubícalo en la parte posterior de tu tarjeta SIM)'"
+                    [placeholder]="'00000000'" [control]="form().controls.puk"
                     [error]="getFieldErrorMessage('puk')"></input-text-field>
             </div>
         </div>
