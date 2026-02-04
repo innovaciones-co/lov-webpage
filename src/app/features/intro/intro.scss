@@ -12,4 +12,13 @@
     margin: 0 auto;
     min-height: 50vh;
     justify-content: center;
+
+    .description {
+        font-size: 1.4rem;
+        font-weight: 300;
+
+        strong {
+            font-weight: 600;
+        }
+    }
 }
