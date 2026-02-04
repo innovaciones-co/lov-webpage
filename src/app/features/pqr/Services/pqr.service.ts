@@ -41,15 +41,14 @@ export class PqrService {
       };
 
       const url = `${this.gatewayUrl}/pqrs`;
-      const response = await firstValueFrom(this.http.post<ApiResponse<any>>(url, payload));
+      const response = await firstValueFrom(this.http.post<any>(url, payload));
 
-      this.submissionResult.set(response.payload);
+      this.submissionResult.set(response);
       console.debug('PQR submission result:', response);
 
-      return response.payload;
+      return response;
     } catch (error: any) {
       this.submissionError.set(error.message || 'Error submitting PQR');
-      this.submissionResult.set(null);
       console.error('Error submitting PQR:', error);
       throw error;
     } finally {

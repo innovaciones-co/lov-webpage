@@ -3,22 +3,7 @@
     <p>Escucharte es muy importante para nosotros, por eso, si tienes una petición, queja, reclamo o recurso, completa
         el formulario para que nuestro equipo de Servicio al Cliente LOV pueda gestionar tu solicitud.</p>
 
-    <div class="stepper-container">
-        <!-- Step Content -->
-        <div class="step-content-container">
-            @switch (currentStepIndex()) {
-            @case (0) {
-            <div class="form-wrapper">
-                <app-pqr-form (formSubmit)="onPqrFormSubmit($event)"></app-pqr-form>
-            </div>
-            }
-            @case (1) {
-            <div class="form-wrapper">
-
-                <app-pqr-confirmation></app-pqr-confirmation>
-            </div>
-            }
-            }
-        </div>
+    <div class="form-wrapper">
+        <app-pqr-form (formSubmit)="onPqrFormSubmit($event)"></app-pqr-form>
     </div>
 </div>

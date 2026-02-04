@@ -12,6 +12,7 @@ import { PaymentResultComponent } from './features/payments/components/payment-r
 import { Payments } from './features/payments/components/payments/payments';
 import { PlansIntro } from './features/plans/components/plans-intro/plans-intro';
 import { Pqr } from './features/pqr/pqr';
+import { PqrConfirmation } from './features/pqr/componets/pqr-confirmation/pqr-confirmation';
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 import { Portability } from './features/portability/portability';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
@@ -80,6 +81,10 @@ export const routes: Routes = [
     {
         path: 'pqr',
         component: Pqr
+    },
+    {
+        path: 'pqr/confirmacion',
+        component: PqrConfirmation
     },
     {
         path: '**',
