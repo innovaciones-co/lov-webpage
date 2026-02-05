@@ -1,0 +1,41 @@
+@use '../../../../styles/variables' as *;
+
+.nav-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nav-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+}
+
+.nav-button:active {
+    transform: scale(0.96);
+}
+
+.arrow {
+    width: 14px;
+    height: 14px;
+    margin-right: 7px;
+    border-left: 1px solid $color-extra-1;
+    border-bottom: 1px solid $color-extra-1;
+    transform: rotate(225deg);
+}
+
+.arrow--back {
+    margin-left: 7px;
+    margin-right: 0;
+    transform: rotate(45deg);
+}

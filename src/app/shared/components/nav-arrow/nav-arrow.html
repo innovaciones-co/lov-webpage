@@ -1,0 +1,3 @@
+<button class="nav-button" [attr.aria-label]="direction() === 'next' ? 'Siguiente' : 'Volver'" (click)="onClick.emit()">
+    <span class="arrow" [class.arrow--back]="direction() === 'back'"></span>
+</button>
