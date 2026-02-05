@@ -22,14 +22,17 @@
     min-height: 50vh;
 
     .cards-list {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
       gap: 40px;
+      align-items: stretch;
+
+      @include tablet {
+        grid-template-columns: repeat(2, 1fr);
+      }
 
       @include large {
-        flex-direction: row;
-        align-items: center;
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   }
