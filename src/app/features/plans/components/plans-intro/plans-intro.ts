@@ -1,12 +1,12 @@
 import { Component, inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { PlansService } from '../../services/plan.service';
-import { CurrencyPipe } from "../../../../core/pipes/currency.pipe";
 import { PlanItem } from "../plan-item/plan-item";
+import { NavArrow } from "../../../../shared/components/nav-arrow/nav-arrow";
 
 @Component({
   selector: 'app-plans-intro',
-  imports: [PlanItem],
+  imports: [PlanItem, NavArrow],
   templateUrl: './plans-intro.html',
   styleUrl: './plans-intro.scss'
 })
@@ -78,7 +78,7 @@ export class PlansIntro implements OnInit, OnDestroy {
   }
 
   onPageChange(page: number) {
-    this.plansService.getPlans(page);
+    this.plansService.getPlans(page, null, this.currentPageSize);
   }
 
   onPageSizeChange(pageSize: number) {
@@ -88,5 +88,20 @@ export class PlansIntro implements OnInit, OnDestroy {
   onReset() {
     this.resetPagination();
     this.plansService.getPlans();
+  }
+
+  goNext() {
+    const currentPage = this.pagination().currentPage;
+    const totalPages = this.pagination().totalPages;
+    if (currentPage < totalPages - 1) {
+      this.onPageChange(currentPage + 1);
+    }
+  }
+
+  goBack() {
+    const currentPage = this.pagination().currentPage;
+    if (currentPage > 0) {
+      this.onPageChange(currentPage - 1);
+    }
   }
 }

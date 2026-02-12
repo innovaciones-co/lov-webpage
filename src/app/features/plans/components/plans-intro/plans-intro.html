@@ -5,11 +5,13 @@
   }
   @else {
   <div class="container">
+    <app-nav-arrow direction="back" (onClick)="goBack()"></app-nav-arrow>
     <ul class="cards-list">
       @for (plan of plans(); track $index) {
       <app-plan-item [plan]="plan" [enableHoverEffect]="true"></app-plan-item>
       }
     </ul>
+    <app-nav-arrow direction="next" (onClick)="goNext()"></app-nav-arrow>
   </div>
   }
 </div>
