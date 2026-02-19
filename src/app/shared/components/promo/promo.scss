@@ -39,9 +39,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding-left: 2rem;
-        padding-top: 3rem;
-        padding-right: 2rem;
+        padding: 3rem 2rem;
 
         @include tablet {
             padding: 1rem 10% 2rem 5%;
@@ -56,9 +54,20 @@
             }
         }
 
-        h2 {
+        .title {
+            font-size: 2rem;
+            font-weight: 600;
             margin-top: 0;
-            color: $color-primary
+            color: $color-primary;
+
+            @include large {
+                font-size: 2.5rem;
+                font-weight: bold;
+            }
+        }
+
+        .description {
+            font-size: 1.25rem;
         }
     }
 }
