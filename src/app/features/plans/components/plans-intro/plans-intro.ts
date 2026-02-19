@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 import { PlansService } from '../../services/plan.service';
 import { PlanItem } from "../plan-item/plan-item";
 import { NavArrow } from "../../../../shared/components/nav-arrow/nav-arrow";
@@ -12,6 +13,7 @@ import { NavArrow } from "../../../../shared/components/nav-arrow/nav-arrow";
 })
 export class PlansIntro implements OnInit, OnDestroy {
   plansService = inject(PlansService);
+  private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private currentPageSize: number = 0;
 
@@ -103,5 +105,9 @@ export class PlansIntro implements OnInit, OnDestroy {
     if (currentPage > 0) {
       this.onPageChange(currentPage - 1);
     }
+  }
+
+  navigateToPlans() {
+    this.router.navigate(['/planes']);
   }
 }

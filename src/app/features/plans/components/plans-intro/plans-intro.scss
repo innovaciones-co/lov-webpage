@@ -3,36 +3,65 @@
 
 
 .parent-container {
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: #fafafa;
+  padding: 7rem 0;
 
   .title {
     text-align: center;
     font-size: 2.5rem;
+    margin-bottom: 4rem;
   }
 
-  .container {
+  .loading-spinner {
+    min-height: 250px;
+  }
+
+  .carrusel-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4rem 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    min-height: 50vh;
 
-    .cards-list {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: 40px;
-      align-items: stretch;
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+      max-width: 1200px;
+      margin: 0;
 
-      @include tablet {
-        grid-template-columns: repeat(2, 1fr);
+      .cards-list {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 40px;
+        align-items: stretch;
+
+        @include tablet {
+          grid-template-columns: repeat(2, 1fr);
+
+        }
+
+        @include large {
+          grid-template-columns: repeat(3, 1fr);
+          margin-bottom: 60px;
+        }
       }
+    }
 
-      @include large {
-        grid-template-columns: repeat(3, 1fr);
-      }
+  }
+
+  .btn {
+    background: color-lighten($color-extra-1, 90);
+    margin-top: 3rem;
+
+    @include large {
+      margin-top: 1rem;
+    }
+
+    &:hover {
+      background: color-lighten($color-extra-1, 85);
     }
   }
 }
