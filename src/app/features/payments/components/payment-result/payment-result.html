@@ -48,27 +48,27 @@
 
     <!-- Order Status Header -->
     <div class="order-status-header">
-      <div class="status-icon" [class]="getStatusColorClass(orderData.status)">
-        @if (isSuccessStatus(orderData.status)) {
+      <div class="status-icon" [class]="getStatusColorClass(orderData.paymentStatus)">
+        @if (isSuccessStatus(orderData.paymentStatus)) {
         <span class="material-symbols-outlined">check_circle</span>
-        } @else if (isFailureStatus(orderData.status)) {
+        } @else if (isFailureStatus(orderData.paymentStatus)) {
         <span class="material-symbols-outlined">cancel</span>
-        } @else if (isProcessingStatus(orderData.status)) {
+        } @else if (isProcessingStatus(orderData.paymentStatus)) {
         <span class="material-symbols-outlined rotating">sync</span>
         } @else {
         <span class="material-symbols-outlined">info</span>
         }
       </div>
       <div class="status-content">
-        <h1>{{ getStatusDisplayText(orderData.status) }}</h1>
+        <h1>{{ getStatusDisplayText(orderData.paymentStatus) }}</h1>
         <p class="status-description">
-          @if (isSuccessStatus(orderData.status)) {
+          @if (isSuccessStatus(orderData.paymentStatus)) {
           Tu pago se ha procesado exitosamente
-          } @else if (isFailureStatus(orderData.status)) {
+          } @else if (isFailureStatus(orderData.paymentStatus)) {
           Tu pago ha sido cancelado
-          } @else if (isProcessingStatus(orderData.status)) {
+          } @else if (isProcessingStatus(orderData.paymentStatus)) {
           Tu pago está siendo procesado
-          } @else if (orderData.status === 'REFUNDED') {
+          } @else if (orderData.paymentStatus === 'REFUNDED') {
           Tu pago ha sido reembolsado
           } @else {
           Estado del pago actualizado
@@ -129,7 +129,7 @@
 
     <!-- Actions -->
     <div class="order-actions">
-      @if (isSuccessStatus(orderData.status)) {
+      @if (isSuccessStatus(orderData.paymentStatus)) {
       <button type="button" class="btn btn-primary" (click)="onGoToDashboard()">
         <span class="material-symbols-outlined">dashboard</span>
         Ir al Dashboard
@@ -138,7 +138,7 @@
         <span class="material-symbols-outlined">download</span>
         Descargar comprobante
       </button>
-      } @else if (isFailureStatus(orderData.status)) {
+      } @else if (isFailureStatus(orderData.paymentStatus)) {
       <button type="button" class="btn btn-primary" (click)="onRetryPayment()">
         <span class="material-symbols-outlined">refresh</span>
         Reintentar pago
@@ -147,7 +147,7 @@
         <span class="material-symbols-outlined">support_agent</span>
         Contactar soporte
       </button>
-      } @else if (isProcessingStatus(orderData.status)) {
+      } @else if (isProcessingStatus(orderData.paymentStatus)) {
       <button type="button" class="btn btn-secondary" (click)="onCheckStatus()">
         <span class="material-symbols-outlined">refresh</span>
         Verificar estado
@@ -161,7 +161,7 @@
     </div>
 
     <!-- Processing Notice -->
-    @if (isProcessingStatus(orderData.status)) {
+    @if (isProcessingStatus(orderData.paymentStatus)) {
     <div class="processing-notice">
       <p>
         <span class="material-symbols-outlined">info</span>

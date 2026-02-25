@@ -2,7 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
-import { OrderResponse } from '../../models/order.model';
+import { OrderResponse, PaymentStatus } from '../../models/order.model';
 import { OrderStatusService } from '../../services/order-status.service';
 
 @Component({
@@ -56,24 +56,44 @@ export class PaymentResultComponent {
     }
 
     // Helper methods for template
-    getStatusDisplayText(status: string): string {
-        return this.orderStatusService.getStatusDisplayText(status as any);
+    getStatusDisplayText(status: PaymentStatus): string {
+        const statusTexts: Record<PaymentStatus, string> = {
+            'INITIATED': 'Iniciado',
+            'PENDING': 'Pendiente',
+            'APPROVED': 'Aprobado',
+            'DECLINED': 'Rechazado',
+            'ERROR': 'Error',
+            'EXPIRED': 'Expirado',
+            'CANCELLED': 'Cancelado',
+            'REFUNDED': 'Reembolsado'
+        };
+        return statusTexts[status] ?? status;
     }
 
-    getStatusColorClass(status: string): string {
-        return this.orderStatusService.getStatusColorClass(status as any);
+    getStatusColorClass(status: PaymentStatus): string {
+        const statusColors: Record<PaymentStatus, string> = {
+            'INITIATED': 'status-pending',
+            'PENDING': 'status-processing',
+            'APPROVED': 'status-success',
+            'DECLINED': 'status-error',
+            'ERROR': 'status-error',
+            'EXPIRED': 'status-error',
+            'CANCELLED': 'status-error',
+            'REFUNDED': 'status-warning'
+        };
+        return statusColors[status] ?? 'status-default';
     }
 
-    isSuccessStatus(status: string): boolean {
-        return this.orderStatusService.isSuccessStatus(status as any);
+    isSuccessStatus(status: PaymentStatus): boolean {
+        return status === 'APPROVED';
     }
 
-    isFailureStatus(status: string): boolean {
-        return this.orderStatusService.isFailureStatus(status as any);
+    isFailureStatus(status: PaymentStatus): boolean {
+        return status === 'DECLINED' || status === 'ERROR' || status === 'EXPIRED' || status === 'CANCELLED';
     }
 
-    isProcessingStatus(status: string): boolean {
-        return this.orderStatusService.isProcessingStatus(status as any);
+    isProcessingStatus(status: PaymentStatus): boolean {
+        return status === 'INITIATED' || status === 'PENDING';
     }
 
     onGoToDashboard(): void {
