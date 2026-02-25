@@ -112,6 +112,13 @@ select {
     transition: all 0.15s ease;
     cursor: pointer;
 
+    display: flex;
+    align-items: center;
+
+    span {
+        margin-right: 5px;
+    }
+
     &:hover {
         background: color-darken($color-extra-1)
     }

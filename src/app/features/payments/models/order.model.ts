@@ -76,6 +76,8 @@ export interface PaymentFields {
 
 export type OrderStatus = 'CREATED' | 'CANCELLED' | 'COMPLETED' | 'PAYMENT' | 'PROCESSED' | 'REFUNDED';
 
+export type PaymentStatus = 'INITIATED' | 'PENDING' | 'APPROVED' | 'DECLINED' | 'ERROR' | 'EXPIRED' | 'CANCELLED' | 'REFUNDED'
+
 export interface OrderResponse {
     id: string;
     description: string;
@@ -83,6 +85,7 @@ export interface OrderResponse {
     amount: number;
     transactionId: string;
     status: OrderStatus;
+    paymentStatus: PaymentStatus;
     tax: number;
     taxReturnBase: number;
     currency: string;

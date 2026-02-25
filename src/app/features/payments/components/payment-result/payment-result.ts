@@ -1,8 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
+import { OrderResponse } from '../../models/order.model';
 import { OrderStatusService } from '../../services/order-status.service';
 
 @Component({
@@ -23,35 +23,36 @@ export class PaymentResultComponent {
 
     isLoading = signal(true);
     error = signal<string | null>(null);
+    order: WritableSignal<OrderResponse | null> = signal(null);
 
-    /** ✅ Order driven by observable → signal */
-    order = toSignal(
-        this.referenceCode()
-            ? this.orderStatusService.checkOrderStatus(this.referenceCode()!)
-                .pipe(
-                    catchError(err => {
-                        console.error(err);
-                        this.error.set('Error verificando el estado del pedido.');
-                        return of(null);
-                    }),
-                    finalize(() => this.isLoading.set(false))
-                )
-            : of(null),
-        { initialValue: null }
-    );
+    ngOnInit(): void {
+        const ref = this.referenceCode();
+        if (ref) {
+            this.fetchOrder(ref);
+        } else {
+            this.isLoading.set(false);
+        }
+    }
 
     // 🔁 Refresh manually
     onCheckStatus(): void {
         const ref = this.referenceCode();
         if (!ref) return;
 
-        this.isLoading.set(true);
         this.error.set(null);
+        this.fetchOrder(ref);
+    }
 
-        this.order = toSignal(
-            this.orderStatusService.checkOrderStatus(ref),
-            { initialValue: null }
-        );
+    private fetchOrder(referenceCode: string): void {
+        this.isLoading.set(true);
+        this.orderStatusService.checkOrderStatus(referenceCode).pipe(
+            catchError(err => {
+                console.error(err);
+                this.error.set('Error verificando el estado del pedido.');
+                return of(null);
+            }),
+            finalize(() => this.isLoading.set(false))
+        ).subscribe(order => this.order.set(order));
     }
 
     // Helper methods for template
