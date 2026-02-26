@@ -4,7 +4,7 @@
     <div class="error-icon">
       <span class="material-symbols-outlined">error</span>
     </div>
-    <h2>Error al procesar el pago</h2>
+    <h2>Error al verificar el pago</h2>
     <p>{{ error() }}</p>
     <div class="error-actions">
       <button type="button" class="btn btn-secondary" (click)="onCheckStatus()">
@@ -17,36 +17,10 @@
       </button>
     </div>
   </div>
-  } @else if (isLoading()) {
-  <div class="order-result-state">
-    <!-- Loading skeleton when still loading -->
-    <div class="order-skeleton">
-      <!-- Order Status Header Skeleton -->
-      <div class="order-status-header skeleton">
-        <div class="status-icon skeleton-circle"></div>
-        <div class="status-content">
-          <div class="skeleton-line skeleton-title"></div>
-          <div class="skeleton-line skeleton-subtitle"></div>
-        </div>
-      </div>
-
-      <!-- Order Details Skeleton -->
-      <div class="order-details skeleton">
-        <div class="skeleton-line skeleton-heading"></div>
-        <div class="details-grid">
-          <div class="skeleton-line skeleton-label"></div>
-          <div class="skeleton-line skeleton-value"></div>
-          <div class="skeleton-line skeleton-label"></div>
-          <div class="skeleton-line skeleton-value"></div>
-        </div>
-      </div>
-    </div>
-  </div>
   } @else {
   <div class="order-result-state">
-    @if (order(); as orderData) {
+    @if (order$ | async; as orderData) {
 
-    <!-- Order Status Header -->
     <div class="order-status-header">
       <div class="status-icon" [class]="getStatusColorClass(orderData.paymentStatus)">
         @if (isSuccessStatus(orderData.paymentStatus)) {
@@ -77,7 +51,6 @@
       </div>
     </div>
 
-    <!-- Order Details -->
     <div class="order-details">
       <h3>Detalles del pedido</h3>
       <div class="detail-row">
@@ -106,7 +79,6 @@
       }
     </div>
 
-    <!-- Customer Information -->
     <div class="customer-info">
       <h3>Información del cliente</h3>
       <div class="detail-row">
@@ -127,7 +99,6 @@
       </div>
     </div>
 
-    <!-- Actions -->
     <div class="order-actions">
       @if (isSuccessStatus(orderData.paymentStatus)) {
       <button type="button" class="btn btn-primary" (click)="onGoToDashboard()">
@@ -160,7 +131,6 @@
       </button>
     </div>
 
-    <!-- Processing Notice -->
     @if (isProcessingStatus(orderData.paymentStatus)) {
     <div class="processing-notice">
       <p>
@@ -171,39 +141,7 @@
     </div>
     }
     } @else {
-    <!-- Loading skeleton when no order data yet -->
-    <div class="order-skeleton">
-      <!-- Order Status Header Skeleton -->
-      <div class="order-status-header skeleton">
-        <div class="status-icon skeleton-circle"></div>
-        <div class="status-content">
-          <div class="skeleton-line skeleton-title"></div>
-          <div class="skeleton-line skeleton-subtitle"></div>
-        </div>
-      </div>
-
-      <!-- Order Details Skeleton -->
-      <div class="order-details skeleton">
-        <div class="skeleton-line skeleton-heading"></div>
-        <div class="detail-row">
-          <div class="skeleton-line skeleton-label"></div>
-          <div class="skeleton-line skeleton-value"></div>
-        </div>
-        <div class="detail-row">
-          <div class="skeleton-line skeleton-label"></div>
-          <div class="skeleton-line skeleton-value"></div>
-        </div>
-        <div class="detail-row">
-          <div class="skeleton-line skeleton-label"></div>
-          <div class="skeleton-line skeleton-value"></div>
-        </div>
-      </div>
-
-      <div class="loading-indicator">
-        <span class="material-symbols-outlined rotating">refresh</span>
-        <span>Cargando información del pedido...</span>
-      </div>
-    </div>
+    <app-loading></app-loading>
     }
   </div>
   }

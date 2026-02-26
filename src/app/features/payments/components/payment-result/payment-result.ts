@@ -1,13 +1,14 @@
-import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, finalize, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { OrderResponse, PaymentStatus } from '../../models/order.model';
-import { OrderStatusService } from '../../services/order-status.service';
+import { PaymentService } from '../../services/payment.service';
+import { Loading } from "../../../../shared/components/loading/loading";
 
 @Component({
     selector: 'app-payment-result',
-    imports: [CurrencyPipe],
+    imports: [CurrencyPipe, AsyncPipe, Loading],
     templateUrl: './payment-result.html',
     styleUrl: './payment-result.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -15,44 +16,35 @@ import { OrderStatusService } from '../../services/order-status.service';
 export class PaymentResultComponent {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
-    private orderStatusService = inject(OrderStatusService);
+    private paymentService = inject(PaymentService);
 
-    private referenceCode = signal<string | null>(
-        this.route.snapshot.queryParams['referenceCode'] ?? null
-    );
+    private readonly referenceCode = this.route.snapshot.queryParams['referenceCode'] as string | null ?? null;
+    private readonly BASE_DELAY = 1000;
+    private readonly MAX_POLL_ATTEMPTS = 8;
+    private readonly refresh$ = new BehaviorSubject<void>(undefined);
+    private readonly destroy$ = new Subject<void>();
 
-    isLoading = signal(true);
     error = signal<string | null>(null);
-    order: WritableSignal<OrderResponse | null> = signal(null);
+    private _latestOrder: OrderResponse | null = null;
 
-    ngOnInit(): void {
-        const ref = this.referenceCode();
-        if (ref) {
-            this.fetchOrder(ref);
-        } else {
-            this.isLoading.set(false);
+    order$: Observable<OrderResponse>;
+
+    constructor() {
+
+        if (!this.referenceCode) {
+            this.error.set('Código de referencia no proporcionado.');
+            this.order$ = of(); // Observable vacío
+            return;
         }
+
+        this.order$ = this.paymentService.pullOrderByReferenceCode(this.referenceCode!);
     }
+
 
     // 🔁 Refresh manually
     onCheckStatus(): void {
-        const ref = this.referenceCode();
-        if (!ref) return;
-
         this.error.set(null);
-        this.fetchOrder(ref);
-    }
-
-    private fetchOrder(referenceCode: string): void {
-        this.isLoading.set(true);
-        this.orderStatusService.checkOrderStatus(referenceCode).pipe(
-            catchError(err => {
-                console.error(err);
-                this.error.set('Error verificando el estado del pedido.');
-                return of(null);
-            }),
-            finalize(() => this.isLoading.set(false))
-        ).subscribe(order => this.order.set(order));
+        this.refresh$.next();
     }
 
     // Helper methods for template
@@ -101,7 +93,7 @@ export class PaymentResultComponent {
     }
 
     onDownloadReceipt(): void {
-        const order = this.order();
+        const order = this._latestOrder;
         if (order?.transactionId) {
             // TODO: Implement receipt download
             console.log('Download receipt for transaction:', order.transactionId);
@@ -109,7 +101,7 @@ export class PaymentResultComponent {
     }
 
     onRetryPayment(): void {
-        const order = this.order();
+        const order = this._latestOrder;
         if (order?.referenceCode) {
             console.log('Retry payment for reference:', order.referenceCode);
             this.router.navigate(['/pagos']);
@@ -117,7 +109,7 @@ export class PaymentResultComponent {
     }
 
     onContactSupport(): void {
-        const order = this.order();
+        const order = this._latestOrder;
         if (order) {
             console.log('Contact support for order:', order);
             this.router.navigate(['/soporte'], {

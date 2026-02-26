@@ -1,22 +1,24 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { computed, inject, Injectable, Signal, signal } from "@angular/core";
+import { computed, inject, Injectable, OnDestroy, Signal, signal } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Observable, throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { Observable, Subject, throwError, timer } from "rxjs";
+import { catchError, map, retry, share, switchMap, takeUntil, takeWhile } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { BillingInfo } from "../models/billing-info.model";
-import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderResponse, PaymentInitiationResponse } from "../models/order.model";
+import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderResponse, PaymentInitiationResponse, PaymentStatus } from "../models/order.model";
 import { Product } from "../models/product.model";
 
 @Injectable({
     providedIn: 'root'
 })
-export class PaymentService {
+export class PaymentService implements OnDestroy {
     billingInfo = signal<BillingInfo | undefined>(undefined);
     billingForm = signal<FormGroup | undefined>(undefined);
     selectedProduct = signal<Product | undefined>(undefined);
     private _formValid = signal<boolean>(false);
     private httpClient = inject(HttpClient);
+    private stopPolling = new Subject();
+
 
     canCheckout: Signal<boolean> = computed(() => {
         return this._formValid() && this.selectedProduct() !== undefined;
@@ -141,6 +143,7 @@ export class PaymentService {
     getOrderByReferenceCode(referenceCode: string): Observable<OrderResponse> {
         const url = `${environment.apiUrl}/orders/byReferenceCode/${referenceCode}`;
 
+
         return this.httpClient.get<OrderResponse>(url, {
             headers: {
                 'accept': 'application/json'
@@ -148,9 +151,31 @@ export class PaymentService {
         }).pipe(
             catchError(this.handleOrderError),
             map(order => {
-                 console.log('Order fetched by reference code:', order);
-                 return order;
+                console.log('Order fetched by reference code:', order);
+                return order;
             })
+        );
+    }
+
+    pullOrderByReferenceCode(referenceCode: string): Observable<OrderResponse> {
+        const url = `${environment.apiUrl}/orders/byReferenceCode/${referenceCode}`;
+
+        return timer(1, 1000).pipe(
+            switchMap(() => this.httpClient.get<OrderResponse>(url, {
+                headers: {
+                    'accept': 'application/json'
+                }
+            }).pipe(
+                catchError(this.handleOrderError),
+                map(order => {
+                    console.log('Order pulled by reference code:', order);
+                    return order;
+                })
+            )),
+            takeWhile(order => this.isProcessingStatus(order.paymentStatus), true),
+            retry(),
+            share(),
+            takeUntil(this.stopPolling),
         );
     }
 
@@ -240,5 +265,13 @@ export class PaymentService {
 
         console.error('Order creation failed:', error);
         return throwError(() => new Error(errorMessage));
+    }
+
+    isProcessingStatus(status: PaymentStatus): boolean {
+        return status === 'INITIATED' || status === 'PENDING';
+    }
+
+    ngOnDestroy() {
+        this.stopPolling.complete();
     }
 }
