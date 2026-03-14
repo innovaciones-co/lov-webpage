@@ -68,7 +68,9 @@ jobs:
           docker push sdtorresl/lov-webpage:latest
 
   azure:
-    needs: release
+    needs: 
+        - release
+        - docker
     runs-on: ubuntu-latest
 
     steps:
