@@ -91,29 +91,12 @@
       </div>
       <div class="detail-row">
         <span class="label">Teléfono:</span>
-        <span class="value">{{ orderData.buyerPhone }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">MSISDN:</span>
-        <span class="value">{{ orderData.msisdn }}</span>
+        <span class="value">+{{ orderData.buyerPhone | msisdn }}</span>
       </div>
     </div>
 
     <div class="order-actions">
-      @if (isSuccessStatus(orderData.paymentStatus)) {
-      <button type="button" class="btn btn-primary" (click)="onGoToDashboard()">
-        <span class="material-symbols-outlined">dashboard</span>
-        Ir al Dashboard
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="onDownloadReceipt()">
-        <span class="material-symbols-outlined">download</span>
-        Descargar comprobante
-      </button>
-      } @else if (isFailureStatus(orderData.paymentStatus)) {
-      <button type="button" class="btn btn-primary" (click)="onRetryPayment()">
-        <span class="material-symbols-outlined">refresh</span>
-        Reintentar pago
-      </button>
+      @if (isFailureStatus(orderData.paymentStatus)) {
       <button type="button" class="btn btn-secondary" (click)="onContactSupport()">
         <span class="material-symbols-outlined">support_agent</span>
         Contactar soporte
@@ -125,7 +108,7 @@
       </button>
       }
 
-      <button type="button" class="btn btn-outline" (click)="onGoHome()">
+      <button type="button" class="btn" (click)="onGoHome()">
         <span class="material-symbols-outlined">home</span>
         Volver al inicio
       </button>

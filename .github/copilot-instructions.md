@@ -45,3 +45,8 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+
+## Version Control
+
+- Write clear and concise commit messages
+- Generate commit messages in Conventional Commits format. Limit the subject line to 50 characters, and wrap the body at 72 characters. The body should explain WHY the change was needed

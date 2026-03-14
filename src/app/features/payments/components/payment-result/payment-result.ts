@@ -5,10 +5,11 @@ import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { OrderResponse, PaymentStatus } from '../../models/order.model';
 import { PaymentService } from '../../services/payment.service';
 import { Loading } from "../../../../shared/components/loading/loading";
+import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
 
 @Component({
     selector: 'app-payment-result',
-    imports: [CurrencyPipe, AsyncPipe, Loading],
+    imports: [CurrencyPipe, AsyncPipe, Loading, MsisdnPipe],
     templateUrl: './payment-result.html',
     styleUrl: './payment-result.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,0 +1,8 @@
+services:
+  lov-webpage:
+    image: sdtorresl/lov-webpage:0.0.1
+    ports:
+      - "4200:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
