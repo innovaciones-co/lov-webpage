@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.0.0...v1.1.0) (2026-03-14)
+
+
+### Features
+
+* add Azure deployment step to release workflow ([2826409](https://github.com/innovaciones-co/lov-webpage/commit/2826409e94eb85dbda6953cdff1e7f311a5b3930))
+
 # 1.0.0 (2026-03-14)
 
 
