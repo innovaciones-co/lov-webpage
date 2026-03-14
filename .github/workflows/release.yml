@@ -39,6 +39,7 @@ jobs:
         id: version
         run: |
           VERSION=$(git describe --tags --abbrev=0 | sed 's/v//')
+          echo $VERSION
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
   docker:
