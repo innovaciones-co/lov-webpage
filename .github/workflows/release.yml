@@ -66,3 +66,20 @@ jobs:
         run: |
           docker push sdtorresl/lov-webpage:${{ needs.release.outputs.new_version }}
           docker push sdtorresl/lov-webpage:latest
+
+  azure:
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy container app
+        run: |
+          az containerapp update \
+            --name lov-webpage \
+            --resource-group RG-LOV_DEV \
+            --image sdtorresl/lov-webpage:${{ needs.release.outputs.new_version }}
