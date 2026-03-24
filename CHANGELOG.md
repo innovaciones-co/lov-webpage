@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.1.0...v1.2.0) (2026-03-24)
+
+
+### Features
+
+* add GetSim component for SIM card acquisition ([d201050](https://github.com/innovaciones-co/lov-webpage/commit/d201050dd5734daf09767576cd7c98db456323df))
+
 # [1.1.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.0.0...v1.1.0) (2026-03-14)
 
 
