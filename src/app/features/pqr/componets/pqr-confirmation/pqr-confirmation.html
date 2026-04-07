@@ -1,1 +1,13 @@
-<p>pqr-confirmation works!</p>
+<successful-process [icon]="icon" [title]="title">
+    <div class="info-details">
+        <p class="success-description">Hemos recibido tu solicitud con éxito.</p>
+        @if (requestNumber()) {
+        <p class="timing-info"><strong>Número de solicitud: {{ requestNumber() }}</strong></p>
+        }
+        <p class="timing-info">Nuestro equipo de Servicio al Cliente LOV revisará tu solicitud y se pondrá en contacto
+            contigo en los próximos días a través del correo o teléfono que proporcionaste.</p>
+    </div>
+    <div>
+        <a href="/" class="link-button">Volver al inicio</a>
+    </div>
+</successful-process>
