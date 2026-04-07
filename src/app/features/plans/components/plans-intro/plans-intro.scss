@@ -1,22 +1,75 @@
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
 
-.container {
-  padding: 4rem 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  min-height: 50vh;
-  justify-content: center;
 
-  .cards-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
+.parent-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fafafa;
+  padding: 4rem 0;
+
+  @include large {
+    padding: 7rem 1rem;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 4rem;
 
     @include large {
-      flex-direction: row;
+      font-size: 2.5rem;
+    }
+  }
+
+  .loading-spinner {
+    min-height: 250px;
+  }
+
+  .carrusel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .container {
+      display: flex;
       align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+      max-width: 1200px;
+      margin: 0;
+
+      .cards-list {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 40px;
+        align-items: stretch;
+
+        @include tablet {
+          grid-template-columns: repeat(2, 1fr);
+
+        }
+
+        @include large {
+          grid-template-columns: repeat(3, 1fr);
+          margin-bottom: 60px;
+        }
+      }
+    }
+
+  }
+
+  .btn {
+    background: color-lighten($color-extra-1, 90);
+    margin-top: 3rem;
+
+    @include large {
+      margin-top: 1rem;
+    }
+
+    &:hover {
+      background: color-lighten($color-extra-1, 85);
     }
   }
 }

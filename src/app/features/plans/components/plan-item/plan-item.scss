@@ -17,6 +17,10 @@
             position: relative;
             display: block;
 
+            .card-body {
+                height: 100%;
+            }
+
             &:hover {
                 background-color: $color-extra-1;
 
