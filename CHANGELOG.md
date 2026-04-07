@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.3.0...v1.4.0) (2026-04-07)
+
+
+### Features
+
+* **pqr:** add PQR confirmation component ([4969db2](https://github.com/innovaciones-co/lov-webpage/commit/4969db2b564e88324cde30f715806eab5c347245))
+
 # [1.3.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.2.0...v1.3.0) (2026-04-07)
 
 
