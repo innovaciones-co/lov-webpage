@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.0...v1.5.1) (2026-04-07)
+
+
+### Bug Fixes
+
+* update API and gateway URLs in environment configuration ([16d5e13](https://github.com/innovaciones-co/lov-webpage/commit/16d5e13b08d81817093a3387e9c3b6e89803aad4))
+
 # [1.5.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.4.0...v1.5.0) (2026-04-07)
 
 
