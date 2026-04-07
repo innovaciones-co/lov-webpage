@@ -1,3 +1,36 @@
+# [1.4.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.3.0...v1.4.0) (2026-04-07)
+
+
+### Features
+
+* **pqr:** add PQR confirmation component ([4969db2](https://github.com/innovaciones-co/lov-webpage/commit/4969db2b564e88324cde30f715806eab5c347245))
+
+# [1.3.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.2.0...v1.3.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* **plans-intro:** adjust alignment of items ([131dd10](https://github.com/innovaciones-co/lov-webpage/commit/131dd10e74823f52acd24f8c2182ff6a868d83ba))
+
+
+### Features
+
+* **intro-portability:** enhance layout ([40979e1](https://github.com/innovaciones-co/lov-webpage/commit/40979e130a55beafd0dad7df07c3a3a5f2503f6d))
+* **intro:** update padding ([29ae459](https://github.com/innovaciones-co/lov-webpage/commit/29ae4596f596c4a79c1bad3c37c634b0934eede6))
+* **nav-arrow:** add navigation arrow component ([44e8387](https://github.com/innovaciones-co/lov-webpage/commit/44e838792507b27552c8bb6a0f7aa5247bafc607))
+* **plans-intro:** add navigation functionality ([df037b5](https://github.com/innovaciones-co/lov-webpage/commit/df037b5bb6616b5f11db0e159a5fe523a4366917))
+* **plans-intro:** enhance plans navigation and layout ([285c0d1](https://github.com/innovaciones-co/lov-webpage/commit/285c0d15f3bba3b44532b4de98c14680ade8bae2))
+* **promo:** enhance styling for title and description ([99cd6c7](https://github.com/innovaciones-co/lov-webpage/commit/99cd6c773346f4e0810709e9210cff8b7195253f))
+* **styling:** adjust padding and font sizes ([4f807cd](https://github.com/innovaciones-co/lov-webpage/commit/4f807cd66f0c0a7c79aad65f2d6eb9510e2f0a38))
+* **whatsapp-fab:** add WhatsApp floating action button ([3bc8d2c](https://github.com/innovaciones-co/lov-webpage/commit/3bc8d2cf2b92d278770f822c142a70841498a210))
+
+# [1.2.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.1.0...v1.2.0) (2026-03-24)
+
+
+### Features
+
+* add GetSim component for SIM card acquisition ([d201050](https://github.com/innovaciones-co/lov-webpage/commit/d201050dd5734daf09767576cd7c98db456323df))
+
 # [1.1.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.0.0...v1.1.0) (2026-03-14)
 
 

@@ -1,12 +1,23 @@
-@if (loading()) {
-<span class="loading-spinner"></span>
-}
-@else {
-<div class="container">
-  <ul class="cards-list">
-    @for (plan of plans(); track $index) {
-    <app-plan-item [plan]="plan" [enableHoverEffect]="true"></app-plan-item>
-    }
-  </ul>
+<div class="parent-container">
+  <h2 class="title">Elige tu plan ahora</h2>
+  @if (loading()) {
+  <span class="loading-spinner"></span>
+  }
+  @else {
+  <div class="carrusel-container">
+    <app-nav-arrow direction="back" (onClick)="goBack()"></app-nav-arrow>
+    <div class="container">
+      <ul class="cards-list">
+        @for (plan of plans(); track $index) {
+        <app-plan-item [plan]="plan" [enableHoverEffect]="true"></app-plan-item>
+        }
+      </ul>
+    </div>
+    <app-nav-arrow direction="next" (onClick)="goNext()"></app-nav-arrow>
+  </div>
+  }
+
+  <button class="btn btn-secondary" (click)="navigateToPlans()">
+    Ver todos los planes
+  </button>
 </div>
-}

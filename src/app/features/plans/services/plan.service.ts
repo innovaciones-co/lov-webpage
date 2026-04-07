@@ -33,9 +33,17 @@ export class PlansService {
         return this.http.get<Paginator<Plan>>(url).subscribe({
             next: (data: Paginator<Plan>) => {
                 this.plans.set(data.content);
+                const paginationState = {
+                    currentPage: data.page.number,
+                    totalPages: data.page.totalPages,
+                    pageSize: data.page.size,
+                    hasMorePages: data.page.number < data.page.totalPages - 1
+                };
+                this.paginationSubject.set(paginationState);
                 this.loading.set(false);
             },
-            error: () => {
+            error: (err) => {
+                console.error('Error loading plans:', err);
                 this.loading.set(false);
             }
         });
