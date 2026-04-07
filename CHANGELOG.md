@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.4.0...v1.5.0) (2026-04-07)
+
+
+### Features
+
+* enhance fade-in animations for SIM card component ([4b24f71](https://github.com/innovaciones-co/lov-webpage/commit/4b24f7143e15a718370e7dd26197f0643d9229bb))
+
 # [1.4.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.3.0...v1.4.0) (2026-04-07)
 
 
