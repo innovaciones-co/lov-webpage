@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.3...v1.5.4) (2026-04-09)
+
+
+### Bug Fixes
+
+* enable nipRequest call in onSubmit method ([80ee35e](https://github.com/innovaciones-co/lov-webpage/commit/80ee35e218ad975a5356c712d19e17bbe1a56e32))
+
 ## [1.5.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.2...v1.5.3) (2026-04-09)
 
 
