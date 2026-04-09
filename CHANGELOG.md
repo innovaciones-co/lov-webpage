@@ -1,3 +1,38 @@
+## [1.5.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.2...v1.5.3) (2026-04-09)
+
+
+### Bug Fixes
+
+* update favicon.ico file ([1cd702a](https://github.com/innovaciones-co/lov-webpage/commit/1cd702a1ee9a9cf7195b3389ef8b2a1c374b89b7))
+
+## [1.5.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.1...v1.5.2) (2026-04-09)
+
+
+### Bug Fixes
+
+* correct spelling in input label and set default ICCID value in form control ([fcaa44a](https://github.com/innovaciones-co/lov-webpage/commit/fcaa44afe7ae3b1fcc49bc55904af7325efa187a))
+
+## [1.5.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.0...v1.5.1) (2026-04-07)
+
+
+### Bug Fixes
+
+* update API and gateway URLs in environment configuration ([16d5e13](https://github.com/innovaciones-co/lov-webpage/commit/16d5e13b08d81817093a3387e9c3b6e89803aad4))
+
+# [1.5.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.4.0...v1.5.0) (2026-04-07)
+
+
+### Features
+
+* enhance fade-in animations for SIM card component ([4b24f71](https://github.com/innovaciones-co/lov-webpage/commit/4b24f7143e15a718370e7dd26197f0643d9229bb))
+
+# [1.4.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.3.0...v1.4.0) (2026-04-07)
+
+
+### Features
+
+* **pqr:** add PQR confirmation component ([4969db2](https://github.com/innovaciones-co/lov-webpage/commit/4969db2b564e88324cde30f715806eab5c347245))
+
 # [1.3.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.2.0...v1.3.0) (2026-04-07)
 
 
