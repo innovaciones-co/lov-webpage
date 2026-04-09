@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.2...v1.5.3) (2026-04-09)
+
+
+### Bug Fixes
+
+* update favicon.ico file ([1cd702a](https://github.com/innovaciones-co/lov-webpage/commit/1cd702a1ee9a9cf7195b3389ef8b2a1c374b89b7))
+
 ## [1.5.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.1...v1.5.2) (2026-04-09)
 
 
