@@ -1,8 +1,8 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
-import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivateSimService } from '../../services/activate-sim.service';
 import { ErrorCard } from '../../../../shared/components/error-card/error-card';
+import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
+import { ActivateSimService } from '../../services/activate-sim.service';
 
 export interface IccidValidationFormData {
   iccid: string;
@@ -38,7 +38,7 @@ export class IccidValidationForm {
 
   form = signal(
     new FormGroup({
-      iccid: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{19}$')]),
+      iccid: new FormControl('8957777200231', [Validators.required, Validators.pattern('^[0-9]{19}$')]),
       puk: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{8}$')]),
     })
   );
