@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.4...v1.6.0) (2026-04-10)
+
+
+### Bug Fixes
+
+* correct donor number transformation and update date format in payload ([6f86fce](https://github.com/innovaciones-co/lov-webpage/commit/6f86fce9dd659d5aa4219846f48abfdc3514a834))
+
+
+### Features
+
+* enhance portability status component with detailed state handling and error management ([f106a65](https://github.com/innovaciones-co/lov-webpage/commit/f106a65c338a7b8994d947cf313d97433cba6c58))
+
 ## [1.5.4](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.3...v1.5.4) (2026-04-09)
 
 
