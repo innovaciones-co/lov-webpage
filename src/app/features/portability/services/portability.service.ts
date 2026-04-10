@@ -129,14 +129,14 @@ export class PortabilityService {
       const payload = {
         authCode: customerData.nip,
         donorOperator: donorData.donorOperatorCode,
-        newMsisdn: donorData.donorNumber,
+        newMsisdn: this.msisdnPipe.transform(donorData.donorNumber),
         recipientOperator: '00018',
-        requestedFutureDate: customerData.portinDate,
+        requestedFutureDate: customerData.portinDate + 'T08:00:00.000Z',
         subscriberType: 'NATURAL',
         transparentData: {
           subscriberIdentityType: customerData.documentType,
           subscriberServiceType: donorData.donorPlan,
-          subscriberIdentityIssue: customerData.documentIssueDate,
+          subscriberIdentityIssue: customerData.documentIssueDate.replace(/-/g, '/'),
           subscriberName: customerData.fullName,
           subscriberAddress: customerData.address,
           nip: customerData.nip,

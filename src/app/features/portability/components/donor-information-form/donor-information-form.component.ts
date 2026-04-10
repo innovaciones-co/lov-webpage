@@ -1,12 +1,12 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { combineLatest, debounceTime, filter } from 'rxjs';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
 import { Modal } from '../../../../shared/components/modal/modal';
 import { PortabilityService } from '../../services/portability.service';
 import { PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
-import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface DonorInformationData {
   donorNumber: string;
@@ -108,7 +108,7 @@ export class DonorInformationFormComponent {
   }
 
   planOptions = signal([
-    { label: 'Pospago', value: 'POSPAID' },
+    { label: 'Pospago', value: 'POSTPAID' },
     { label: 'Prepago', value: 'PREPAID' },
   ]);
 
@@ -171,7 +171,7 @@ export class DonorInformationFormComponent {
     try {
       const formData = this.form().value as DonorInformationData;
       const lovNumber = this.portabilityData().lovNumber;
-      await this.portabilityService.nipRequest(formData, lovNumber);
+      //await this.portabilityService.nipRequest(formData, lovNumber);
 
       this.formSubmit.emit(formData);
       this.showModal.set(false);
