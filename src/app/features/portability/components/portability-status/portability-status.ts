@@ -1,8 +1,12 @@
-import { Component, signal, output, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, inject, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
+import { ApiResponse } from '../../../../core/models/api-response.model';
 import { ErrorCard } from '../../../../shared/components/error-card/error-card';
+import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
+import { PortabilityStatusPayload } from '../../models/portability.models';
 import { PortabilityService } from '../../services/portability.service';
+import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
 
 export interface PortabilityStatusComponentData {
   lovNumber: string;
@@ -11,7 +15,7 @@ export interface PortabilityStatusComponentData {
 @Component({
   selector: 'app-portability-status',
   standalone: true,
-  imports: [ReactiveFormsModule, InputTextComponent, ErrorCard],
+  imports: [ReactiveFormsModule, InputTextComponent, ErrorCard, DatePipe, MsisdnPipe],
   templateUrl: './portability-status.html',
   styleUrl: './portability-status.scss'
 })
@@ -21,8 +25,9 @@ export class PortabilityStatusComponent {
   formSubmit = output<PortabilityStatusComponentData>();
   isLoading = signal(false);
   validationError = signal<string>('');
+  portabilityStatus = signal<PortabilityStatusPayload | null>(null);
+  hasSearched = signal(false);
 
-  // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
     lovNumber: {
       pattern: 'El número debe tener 10 dígitos numéricos'
@@ -35,17 +40,14 @@ export class PortabilityStatusComponent {
     })
   );
 
-  // Get error message for a specific field
   getFieldErrorMessage(fieldName: string): string {
     const control = this.form().get(fieldName);
     if (!control?.errors || !control.touched) return '';
 
     const firstError = Object.keys(control.errors)[0];
 
-    // Validators.required automatically shows 'Este campo es obligatorio'
     if (firstError === 'required') return 'Este campo es obligatorio';
 
-    // Field-specific messages
     const fieldErrors = this.errorMessages[fieldName];
     return fieldErrors?.[firstError] || 'Error de validación';
   }
@@ -55,16 +57,21 @@ export class PortabilityStatusComponent {
       const { lovNumber } = this.form().value as PortabilityStatusComponentData;
       this.isLoading.set(true);
       this.validationError.set('');
+      this.portabilityStatus.set(null);
+      this.hasSearched.set(false);
 
       this.portabilityService.validatePortabilityStatus(lovNumber).subscribe({
-        next: (response: any) => {
+        next: (response: ApiResponse<PortabilityStatusPayload>) => {
           console.debug('Portability status response:', response.payload);
           this.isLoading.set(false);
-          this.formSubmit.emit(this.form().value as PortabilityStatusComponentData); // TODO: Adjust per response
+          this.hasSearched.set(true);
+          this.portabilityStatus.set(response.payload ?? null);
+          this.formSubmit.emit(this.form().value as PortabilityStatusComponentData);
         },
-        error: (error) => {
+        error: (error: { error?: { message?: string } }) => {
           console.error('Error validating portability status:', error);
           this.isLoading.set(false);
+          this.hasSearched.set(true);
           const errorMessage = error?.error?.message || 'Error validando el estado de portabilidad. Por favor verifica el número LOV.';
           this.validationError.set(errorMessage);
         }

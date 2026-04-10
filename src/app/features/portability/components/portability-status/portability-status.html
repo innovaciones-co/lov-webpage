@@ -21,3 +21,42 @@
         </form>
     </div>
 </div>
+
+@if (validationError()) {
+<!-- <app-error-card [message]="validationError()" /> -->
+}
+
+@if (hasSearched() && !isLoading() && !validationError()) {
+@let status = portabilityStatus();
+
+@if (!status) {
+<div class="status-card status-card--empty">
+    <p>No hay ninguna portabilidad en proceso para este número.</p>
+</div>
+} @else {
+<div class="card">
+    @switch (status.state) {
+    @case ('NipSent') {
+    <div class="status-card__state status-card__state--nip-sent">
+        <h3 class="status-title">NIP Enviado</h3>
+        <p>Se ha enviado un código NIP al número donante <strong>{{ status.msisdn }}</strong>.</p>
+        <p>Contador de NIP: <strong>{{ status.nipCounter }}</strong></p>
+    </div>
+    }
+    @case ('PortInRequested') {
+    <div class="status-card__state status-card__state--portin-requested">
+        <h3 class="status-title">Portabilidad Solicitada</h3>
+        <p>Número donante: <strong>{{ status.msisdn | msisdn }}</strong></p>
+        <p>Fecha de portación: <strong>{{ status.portingDate | date:'dd/MM/yyyy HH:mm' }}</strong></p>
+    </div>
+    }
+    @default {
+    <div class="status-card__state status-card__state--default">
+        <h3>Estado: {{ status.state }}</h3>
+        <p>No hay una portabilidad en proceso para este número.</p>
+    </div>
+    }
+    }
+</div>
+}
+}

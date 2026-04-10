@@ -42,3 +42,24 @@ export interface LookupResponse {
     operatorName: string;
     routingCode: string;
 }
+
+export interface PortabilityStatusPayload {
+    donor: string;
+    donorName: string;
+    msisdn: string;
+    newMsisdn: string;
+    nipCounter: number;
+    portingDate: string;
+    portingRequestId: string;
+    processId: number;
+    recipientCode: string;
+    state: PortabilityState;
+    type: string;
+}
+
+export type PortabilityState =
+    | 'NipSent'
+    | 'PortInRequested'
+    | 'PortInCompleted'
+    | 'PortInCancelled'
+    | string;

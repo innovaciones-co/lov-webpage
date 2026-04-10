@@ -11,6 +11,10 @@
     animation: fadeSlideIn 0.4s ease-out;
 }
 
+.status-title {
+    margin-bottom: 1.5rem;
+}
+
 @keyframes fadeSlideIn {
     from {
         opacity: 0;
