@@ -1,5 +1,5 @@
-import { DatePipe } from '@angular/common';
-import { Component, inject, output, signal } from '@angular/core';
+import { DatePipe, CommonModule } from '@angular/common';
+import { Component, computed, inject, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { ErrorCard } from '../../../../shared/components/error-card/error-card';
@@ -12,10 +12,16 @@ export interface PortabilityStatusComponentData {
   lovNumber: string;
 }
 
+export interface StatusDisplay {
+  status: string;
+  message: string;
+  cssClass: string;
+}
+
 @Component({
   selector: 'app-portability-status',
   standalone: true,
-  imports: [ReactiveFormsModule, InputTextComponent, ErrorCard, DatePipe, MsisdnPipe],
+  imports: [CommonModule, ReactiveFormsModule, InputTextComponent, ErrorCard],
   templateUrl: './portability-status.html',
   styleUrl: './portability-status.scss'
 })
@@ -51,6 +57,20 @@ export class PortabilityStatusComponent {
     const fieldErrors = this.errorMessages[fieldName];
     return fieldErrors?.[firstError] || 'Error de validación';
   }
+
+  statusDisplay = computed<StatusDisplay | null>(() => {
+    const status = this.portabilityStatus();
+    if (!status) return null;
+
+    // TODO: Agregar lógica para determinar el StatusDisplay basado en status.state
+    // Esto se ejecutará después de obtener la respuesta del onSubmit
+
+    return {
+      status: '',
+      message: '',
+      cssClass: ''
+    };
+  });
 
   onSubmit(): void {
     if (this.form().valid) {
