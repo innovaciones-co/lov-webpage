@@ -68,7 +68,18 @@ export class PortabilityStatusComponent {
     // Si existe state, mostrar ese estado
     if (status.state) {
       const stateMessage = getPortabilityStateMessage(status.state) || 'DESCONOCIDO';
-      const errorMessage = status.errorMessage ? getPortabilityErrorMessage(status.errorMessage) : '';
+      let errorMessage = '';
+      
+      if (status.errorMessage) {
+        try {
+          const parsedError = JSON.parse(status.errorMessage);
+          const errorCode = Array.isArray(parsedError) ? parsedError[0] : parsedError;
+          errorMessage = getPortabilityErrorMessage(errorCode) || '';
+        } catch (e) {
+          // Si no es JSON válido, usar el string tal cual
+          errorMessage = getPortabilityErrorMessage(status.errorMessage) || '';
+        }
+      }
 
       return {
         status: stateMessage,
