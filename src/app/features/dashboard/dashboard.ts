@@ -14,10 +14,11 @@ import { CheckboxComponent } from "../../shared/components/form-fields/checkbox/
 import { SwitchComponent } from "../../shared/components/form-fields/switch/switch";
 import { RadioComponent } from "../../shared/components/form-fields/radio/radio";
 import { ErrorCard } from "../../shared/components/error-card/error-card";
+import { min } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, ReactiveFormsModule, CapitalizePipe, Loading, MsisdnPipe, InputTextComponent, SelectComponent, CheckboxComponent, SwitchComponent, RadioComponent, ErrorCard],
+  imports: [CommonModule, ReactiveFormsModule, CapitalizePipe, Loading, MsisdnPipe, InputTextComponent, SelectComponent, CheckboxComponent, SwitchComponent, ErrorCard],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
@@ -35,7 +36,9 @@ export class Dashboard implements OnInit {
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
     amount: {
-      pattern: 'El monto debe tener el formato correcto'
+      pattern: 'El monto debe ser entre $3.000 y $150.000',
+      min: 'El monto mínimo es $3.000',
+      max: 'El monto máximo es $150.000'
     },
     paymentMethod: {
       pattern: 'El método de pago es obligatorio'
@@ -44,7 +47,9 @@ export class Dashboard implements OnInit {
       pattern: 'La frecuencia de la recarga es obligatoria'
     },
     dayOfMonth: {
-      pattern: 'El día del mes debe ser un número entre 1 y 31'
+      pattern: 'El día del mes debe ser un número entre 1 y 31',
+      min: 'El día del mes debe ser mayor o igual a 1',
+      max: 'El día del mes debe ser menor o igual a 31'
     }
   };
 
@@ -63,15 +68,26 @@ export class Dashboard implements OnInit {
   form = signal(
     new FormGroup({
       autoRecharge: new FormControl(false),
-      amount: new FormControl('', Validators.required),
+      amount: new FormControl('', [Validators.required, Validators.max(150000), Validators.min(3000), Validators.pattern('^[0-9]{4,6}$')]),
       paymentMethod: new FormControl('', Validators.required),
       frequency: new FormControl('', Validators.required),
-      dayOfMonth: new FormControl('', [Validators.min(1), Validators.max(31)]),
+      dayOfMonth: new FormControl('', [Validators.min(1), Validators.max(31), Validators.pattern('^[0-9]{1,2}$')]),
       terms: new FormControl(false, Validators.requiredTrue),
     })
   );
 
   ngOnInit() {
+    // Subscribe to frequency changes to make dayOfMonth conditionally required
+    this.form().get('frequency')?.valueChanges.subscribe(frequency => {
+      const dayOfMonthControl = this.form().get('dayOfMonth');
+      if (frequency === 'MONTHLY') {
+        dayOfMonthControl?.setValidators([Validators.required, Validators.min(1), Validators.max(31), Validators.pattern('^[0-9]{1,2}$')]);
+      } else {
+        dayOfMonthControl?.setValidators([Validators.min(1), Validators.max(31), Validators.pattern('^[0-9]{1,2}$')]);
+      }
+      dayOfMonthControl?.updateValueAndValidity();
+    });
+
     this.authService.user$.subscribe(user => {
       this.user = user;
       this.loading.set(false);
