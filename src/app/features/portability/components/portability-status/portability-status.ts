@@ -4,6 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ApiResponse } from '../../../../core/models/api-response.model';
 import { ErrorCard } from '../../../../shared/components/error-card/error-card';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
+import { getPortabilityErrorMessage } from '../../../../core/constants/portability-error-codes';
+import { getPortabilityStateMessage } from '../../../../core/constants/portability-status-codes';
 import { PortabilityStatusPayload } from '../../models/portability.models';
 import { PortabilityService } from '../../services/portability.service';
 import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
@@ -60,14 +62,35 @@ export class PortabilityStatusComponent {
 
   statusDisplay = computed<StatusDisplay | null>(() => {
     const status = this.portabilityStatus();
+
     if (!status) return null;
 
-    // TODO: Agregar lógica para determinar el StatusDisplay basado en status.state
-    // Esto se ejecutará después de obtener la respuesta del onSubmit
+    // Si existe state, mostrar ese estado
+    if (status.state) {
+      const stateMessage = getPortabilityStateMessage(status.state) || 'DESCONOCIDO';
+      const errorMessage = status.errorMessage ? getPortabilityErrorMessage(status.errorMessage) : '';
 
+      return {
+        status: stateMessage,
+        message: errorMessage || '',
+        cssClass: ''
+      };
+    }
+
+    // Si no existe state, mostrar estado NO INICIADO
+    if (!status.state) {
+      const lovNumber = this.form().get('lovNumber')?.value || '';
+      return {
+        status: 'NO INICIADO',
+        message: `No hay ninguna portabilidad en proceso para el número <em><b>${lovNumber}</b></em>.`,
+        cssClass: ''
+      };
+    }
+
+    // Fallback para estado desconocido
     return {
-      status: '',
-      message: '',
+      status: 'DESCONOCIDO',
+      message: 'No se pudo determinar el estado de la portabilidad.',
       cssClass: ''
     };
   });

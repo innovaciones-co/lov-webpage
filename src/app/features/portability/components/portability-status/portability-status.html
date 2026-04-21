@@ -12,31 +12,16 @@
             </div>
 
             @if (hasSearched() && !isLoading() && !validationError()) {
-            @let status = portabilityStatus();
-
-            @if (!status?.state) {
-            <div class="status-card status-card--empty">
-                <p>No hay ninguna portabilidad en proceso para este número.</p>
-            </div>
-            <div class="card">
-                <div class="status-card__state">
-                    <h3 class="form-subtitle">Estado de la portabilidad</h3>
-                    <p> Estado: En proceso</p>
-                    <p>La portabilidad se encuentra en proceso.</p>
-                </div>
-            </div>
-            } @else {
             @let display = statusDisplay();
             @if (display) {
             <div class="card">
                 <div class="status-card__state">
                     <!-- <div class="status-card__state" [ngClass]="display.cssClass"> -->
-                    <h3 class="status-title">Estado de la portabilidad</h3>
-                    <p> Estado: {{ display.status }}</p>
-                    <p>{{ display.message }}</p>
+                    <h3 class="status-title form-subtitle">Estado de la portabilidad</h3>
+                    <p> Estado: <em><b>{{ display.status }}</b></em></p>
+                    <p [innerHTML]="display.message"></p>
                 </div>
             </div>
-            }
             }
             }
 
