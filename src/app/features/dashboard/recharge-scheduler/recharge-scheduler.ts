@@ -7,12 +7,13 @@ import { CheckboxComponent } from "../../../shared/components/form-fields/checkb
 import { SwitchComponent } from "../../../shared/components/form-fields/switch/switch";
 import { ErrorCard } from "../../../shared/components/error-card/error-card";
 import { Loading } from "../../../shared/components/loading/loading";
+import { Modal } from "../../../shared/components/modal/modal";
 import { DashboardService } from '../services/dashboard.service';
 
 @Component({
   selector: 'app-recharge-scheduler',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextComponent, SelectComponent, CheckboxComponent, SwitchComponent, ErrorCard, Loading],
+  imports: [CommonModule, ReactiveFormsModule, InputTextComponent, SelectComponent, CheckboxComponent, SwitchComponent, ErrorCard, Loading, Modal],
   templateUrl: './recharge-scheduler.html',
   styleUrl: './recharge-scheduler.scss'
 })
@@ -24,6 +25,8 @@ export class RechargeScheduler {
   creditCards = signal<any[]>([]);
   loadingCreditCards = signal<boolean>(true);
   submitError = signal<string>('');
+  isSubmitting = signal<boolean>(false);
+  isModalOpen = signal(false);
 
   errorMessages: Record<string, Record<string, string>> = {
     amount: {
@@ -117,7 +120,32 @@ export class RechargeScheduler {
 
   onSubmit(): void {
     if (!this.form().valid) return;
-    // TODO: Implement form submission
+    
+    this.isSubmitting.set(true);
+    this.submitError.set('');
+
+    const formValue = this.form().value;
+    const rechargeData = {
+      amount: formValue.amount,
+      paymentMethodId: formValue.paymentMethod,
+      frequency: formValue.frequency,
+      dayOfMonth: formValue.dayOfMonth || null,
+      autoRecharge: formValue.autoRecharge
+    };
+
+    this.dashboardService.submitRecharge(rechargeData).subscribe({
+      next: (response) => {
+        console.debug('Recharge submitted successfully:', response);
+        this.isSubmitting.set(false);
+        this.form().reset();
+      },
+      error: (error) => {
+        console.error('Error submitting recharge:', error);
+        this.isSubmitting.set(false);
+        const errorMessage = error?.error?.message || 'Error al procesar la recarga. Por favor, intenta de nuevo más tarde.';
+        this.submitError.set(errorMessage);
+      }
+    });
   }
 
   onCancel(): void {
@@ -126,6 +154,15 @@ export class RechargeScheduler {
   }
 
   onEditClick(): void {
+    this.isModalOpen.set(true);
+  }
+
+  onContinueModal(): void {
     // TODO: Implement add card logic
+    this.isModalOpen.set(false);
+  }
+
+  onCancelModal(): void {
+    this.isModalOpen.set(false);
   }
 }

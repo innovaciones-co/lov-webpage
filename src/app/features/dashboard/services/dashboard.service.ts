@@ -18,12 +18,27 @@ export class DashboardService {
     }
 
     getCreditCards(customerId: string): Observable<any> {
-        console.debug('Fetching credit cards');
+        // console.debug('Fetching credit cards');
         this.loading.set(true);
 
         const url = `${this.gatewayUrl}/api/customers/${customerId}/onlinePaymentProfiles`;
 
         return this.http.get(url);
+    }
+
+    submitRecharge(rechargeData: any): Observable<any> {
+        console.debug('Submitting recharge request');
+        this.loading.set(true);
+
+        const url = `${this.gatewayUrl}/api/recharge`; // TODO: actualizar endpoint
+
+        /* const body = {
+            id: "6",
+            user: "232",
+            msisdn: "573005555555",
+        }; */
+
+        return this.http.post(url, rechargeData);
     }
 
     getLoadingSignal() {

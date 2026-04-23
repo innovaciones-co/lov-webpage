@@ -49,11 +49,28 @@
         </div>
 
         <div class="recharge-actions modal-actions">
-            <button class="btn" type="submit" [disabled]="form().invalid">
+            <button class="btn" type="submit" [disabled]="form().invalid || isSubmitting()">
+                @if (isSubmitting()) {
+                <span class="loading-spinner"></span>
+                Enviando...
+                } @else {
                 Confirmar
+                }
             </button>
             <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
         </div>
         }
     </form>
+
+    <app-modal [isOpen]="isModalOpen()" (closed)="onCancelModal()">
+        <div class="modal-content">
+            <h2>Añadir nueva tarjeta</h2>
+            <p>Ingresa los datos de tu tarjeta de crédito o débito.</p>
+            
+            <div class="modal-actions">
+                <button class="btn" (click)="onContinueModal()">Continuar</button>
+                <button type="button" class="btn btn-secondary" (click)="onCancelModal()">Cancelar</button>
+            </div>
+        </div>
+    </app-modal>
 </div>
