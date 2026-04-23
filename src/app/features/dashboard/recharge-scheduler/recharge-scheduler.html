@@ -1,0 +1,59 @@
+<div class="card">
+    <form [formGroup]="form()" (ngSubmit)="onSubmit()">
+        <h3 class="form-subtitle">Programar recarga</h3>
+
+        <div class="switch-container">
+            <switch-field [control]="form().controls.autoRecharge" [activeLabel]="'Recarga automática: Habilitada'"
+                [inactiveLabel]="'Recarga automática: Desactivada'"></switch-field>
+        </div>
+
+        @if (form().get('autoRecharge')?.value) {
+        <div class="recharge-form">
+            <div class="form-grid">
+
+                <p class="form-description">Diligencia el formulario para programar una recarga automática en tu cuenta.
+                    Ingresa los datos de facturación para asegurarte de que la recarga se procese correctamente.</p>
+
+                <div class="form-row">
+                    <div class="">
+                        @if (loadingCreditCards()) {
+                        <app-loading></app-loading>
+                        } @else {
+                        <select-field [label]="'Método de pago'" [placeholder]="''" [options]="paymentMethod()"
+                            [control]="form().controls.paymentMethod"
+                            [error]="getFieldErrorMessage('paymentMethod')"></select-field>
+                        <button (click)="onEditClick()" class="link-button">>> Añadir tarjeta</button>
+                        }
+                    </div>
+                    <input-text-field [label]="'Selecciona monto'" [placeholder]="'30000'"
+                        [control]="form().controls.amount" [error]="getFieldErrorMessage('amount')"></input-text-field>
+                </div>
+
+                <div class="form-row">
+                    <select-field [label]="'Frecuencia de la recarga'" [placeholder]="''" [options]="frequency()"
+                        [control]="form().controls.frequency"
+                        [error]="getFieldErrorMessage('frequency')"></select-field>
+                    @if (form().get('frequency')?.value === 'MONTHLY') {
+                    <input-text-field [label]="'Día del mes'" [placeholder]="''" [control]="form().controls.dayOfMonth"
+                        [error]="getFieldErrorMessage('dayOfMonth')"></input-text-field>
+                    }
+                </div>
+
+                <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
+                    He leído y acepto los <a href="/docs/condiciones_servicio_prepago_lov.pdf" target="_blank"
+                        class="link-button">Términos y Condiciones</a>.
+                </checkbox-field>
+            </div>
+
+            <error-card [message]="submitError()"></error-card>
+        </div>
+
+        <div class="recharge-actions modal-actions">
+            <button class="btn" type="submit" [disabled]="form().invalid">
+                Confirmar
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+        </div>
+        }
+    </form>
+</div>

@@ -1,0 +1,49 @@
+@use '../../../../styles/variables' as *;
+
+.card {
+  .switch-container {
+    margin: 2rem 0 1rem 0;
+  }
+
+  .form-description {
+    margin-top: 1rem;
+  }
+
+  .recharge-form,
+  .recharge-buttons {
+    animation: fadeInDown 0.3s ease-out;
+  }
+}
+
+button.link-button {
+  background: none;
+  border: none;
+  color: $color-extra-1;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+
+  &:hover {
+    color: color-lighten($color-extra-1);
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: color-lighten($color-extra-1);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
