@@ -21,7 +21,7 @@ export class DashboardService {
         console.debug('Fetching credit cards');
         this.loading.set(true);
 
-        const url = `${this.gatewayUrl}/api/customers/${customerId}/onlinePaymentMethods/creditCards`;
+        const url = `${this.gatewayUrl}/api/customers/${customerId}/onlinePaymentProfiles`;
 
         return this.http.get(url);
     }

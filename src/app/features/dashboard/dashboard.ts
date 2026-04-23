@@ -39,10 +39,10 @@ export class Dashboard implements OnInit {
 
   paymentMethod = computed(() => {
     return this.creditCards()
-      .filter(card => card.truncatedNumber)
+      .filter(card => card.paymentMethodDetails?.truncatedNumber)
       .map(card => ({
-        label: `${card.issuer} - ${card.truncatedNumber}`,
-        value: card.id
+        label: `${card.paymentMethodDetails.issuer} - ${card.paymentMethodDetails.truncatedNumber}`,
+        value: card.oppId
       }));
   });
 
