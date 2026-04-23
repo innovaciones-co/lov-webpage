@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CustomerSubscription } from '../../core/models/customer.model';
 import { CapitalizePipe } from "../../core/pipes/capitalize.pipe";
 import { MsisdnPipe } from "../../core/pipes/msisdn.pipe";
@@ -15,6 +15,7 @@ import { SwitchComponent } from "../../shared/components/form-fields/switch/swit
 import { RadioComponent } from "../../shared/components/form-fields/radio/radio";
 import { ErrorCard } from "../../shared/components/error-card/error-card";
 import { min } from 'rxjs';
+import { DashboardService } from './services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,6 +26,7 @@ import { min } from 'rxjs';
 export class Dashboard implements OnInit {
   private authService = inject(AuthService);
   private subscriptionFacade = inject(SubscriptionFacadeService);
+  private dashboardService = inject(DashboardService);
   user: User | null = null;
   activeSubscriptions = signal<CustomerSubscription[]>([]);
   loading = signal(true);
@@ -32,6 +34,17 @@ export class Dashboard implements OnInit {
   accounts = signal<any[]>([]);
 
   submitError = signal<string>('');
+  creditCards = signal<any[]>([]);
+  loadingCreditCards = signal<boolean>(true);
+
+  paymentMethod = computed(() => {
+    return this.creditCards()
+      .filter(card => card.truncatedNumber)
+      .map(card => ({
+        label: `${card.issuer} - ${card.truncatedNumber}`,
+        value: card.id
+      }));
+  });
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -53,12 +66,6 @@ export class Dashboard implements OnInit {
     }
   };
 
-  paymentMethod = signal([
-    { label: 'Tarjeta A', value: 'ID_A' },
-    { label: 'Tarjeta B', value: 'ID_B' },
-    { label: 'Tarjeta C', value: 'ID_C' },
-  ]);
-
   frequency = signal([
     { label: 'Semanal', value: 'WEEKLY' },
     { label: 'Quincenal', value: 'BIWEEKLY' },
@@ -77,17 +84,6 @@ export class Dashboard implements OnInit {
   );
 
   ngOnInit() {
-    // Subscribe to frequency changes to make dayOfMonth conditionally required
-    this.form().get('frequency')?.valueChanges.subscribe(frequency => {
-      const dayOfMonthControl = this.form().get('dayOfMonth');
-      if (frequency === 'MONTHLY') {
-        dayOfMonthControl?.setValidators([Validators.required, Validators.min(1), Validators.max(31), Validators.pattern('^[0-9]{1,2}$')]);
-      } else {
-        dayOfMonthControl?.setValidators([Validators.min(1), Validators.max(31), Validators.pattern('^[0-9]{1,2}$')]);
-      }
-      dayOfMonthControl?.updateValueAndValidity();
-    });
-
     this.authService.user$.subscribe(user => {
       this.user = user;
       this.loading.set(false);
@@ -119,6 +115,35 @@ export class Dashboard implements OnInit {
           }
         });
       }
+
+      // Fetch credit cards once user is authenticated
+      if (user?.id) {
+        console.debug('Fetching credit cards for user ID:', user.id);
+        this.dashboardService.getCreditCards(user.id.toString()).subscribe({
+          next: (response) => {
+            console.debug('Credit cards fetched:', response);
+            this.creditCards.set(response.payload || []);
+            this.dashboardService.setCreditCardsData(response);
+            this.loadingCreditCards.set(false);
+          },
+          error: (error) => {
+            console.error('Error fetching credit cards:', error);
+            this.loadingCreditCards.set(false);
+          }
+        });
+      }
+
+    });
+
+    // Subscribe to frequency changes to make dayOfMonth conditionally required
+    this.form().get('frequency')?.valueChanges.subscribe(frequency => {
+      const dayOfMonthControl = this.form().get('dayOfMonth');
+      if (frequency === 'MONTHLY') {
+        dayOfMonthControl?.setValidators([Validators.required, Validators.min(1), Validators.max(31), Validators.pattern('^[0-9]{1,2}$')]);
+      } else {
+        dayOfMonthControl?.setValidators([Validators.min(1), Validators.max(31), Validators.pattern('^[0-9]{1,2}$')]);
+      }
+      dayOfMonthControl?.updateValueAndValidity();
     });
   }
 

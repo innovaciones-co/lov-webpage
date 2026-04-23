@@ -76,7 +76,6 @@
             <h3 class="form-subtitle">Programar recarga</h3>
 
             <div class="switch-container">
-
                 <switch-field [control]="form().controls.autoRecharge" [activeLabel]="'Recarga automática: Habilitada'"
                     [inactiveLabel]="'Recarga automática: Desactivada'"></switch-field>
             </div>
@@ -85,7 +84,6 @@
             <div class="recharge-form">
                 <div class="form-grid">
 
-
                     <p class="form-description">Diligencia el formulario para programar una recarga automática en tu
                         cuenta. Ingresa los datos de
                         facturación
@@ -93,10 +91,14 @@
 
                     <div class="form-row">
                         <div class="">
+                            @if (loadingCreditCards()) {
+                            <app-loading></app-loading>
+                            } @else {
                             <select-field [label]="'Método de pago'" [placeholder]="''" [options]="paymentMethod()"
                                 [control]="form().controls.paymentMethod"
                                 [error]="getFieldErrorMessage('paymentMethod')"></select-field>
                             <button (click)="onEditClick()" class="link-button">>> Añadir tarjeta</button>
+                            }
                         </div>
                         <input-text-field [label]="'Selecciona monto'" [placeholder]="'30000'"
                             [control]="form().controls.amount"
