@@ -1,3 +1,21 @@
+# [1.8.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.7.0...v1.8.0) (2026-04-24)
+
+
+### Features
+
+* implement create payment method component with form handling and validation ([4b8062f](https://github.com/innovaciones-co/lov-webpage/commit/4b8062f23196ed31be96fe4345096a216d4afbc5))
+
+# [1.7.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.6.0...v1.7.0) (2026-04-21)
+
+
+### Features
+
+* add portability error codes ([f9fd70c](https://github.com/innovaciones-co/lov-webpage/commit/f9fd70cd6266376815491ee4c91a19c595db7a70))
+* add portability statuses ([b92b434](https://github.com/innovaciones-co/lov-webpage/commit/b92b434b31e6cff874d5ce5e82b14d1487a44437))
+* enhance portability status component with improved state handling ([41b9d6b](https://github.com/innovaciones-co/lov-webpage/commit/41b9d6b59709274c61404ef91247bad4e364d088))
+* enhance portability status display ([56a3fbd](https://github.com/innovaciones-co/lov-webpage/commit/56a3fbdb2bc8669ea771afc0318547f599ebcbcc))
+* improve error message handling in portability status component ([6853493](https://github.com/innovaciones-co/lov-webpage/commit/68534935f0e38122719e0e73999a9602f0edd2ed))
+
 # [1.6.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.5.4...v1.6.0) (2026-04-10)
 
 

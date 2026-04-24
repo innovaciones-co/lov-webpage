@@ -8,10 +8,11 @@ import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
 import { RechargeScheduler } from './recharge-scheduler/recharge-scheduler';
+import { CreatePaymentMethod } from "../payment-methods/create-payment-method/create-payment-method";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler],
+  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler, CreatePaymentMethod],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })

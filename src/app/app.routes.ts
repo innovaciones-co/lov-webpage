@@ -10,13 +10,12 @@ import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
 import { PaymentResultComponent } from './features/payments/components/payment-result/payment-result';
 import { Payments } from './features/payments/components/payments/payments';
-import { PlansIntro } from './features/plans/components/plans-intro/plans-intro';
-import { Pqr } from './features/pqr/pqr';
-import { PqrConfirmation } from './features/pqr/componets/pqr-confirmation/pqr-confirmation';
+import { Plans } from './features/plans/components/plans/plans';
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 import { Portability } from './features/portability/portability';
+import { PqrConfirmation } from './features/pqr/componets/pqr-confirmation/pqr-confirmation';
+import { Pqr } from './features/pqr/pqr';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
-import { Plans } from './features/plans/components/plans/plans';
 
 export const routes: Routes = [
     {
@@ -81,7 +80,8 @@ export const routes: Routes = [
     },
     {
         path: 'pqr',
-        component: Pqr
+        component: Pqr,
+        canActivate: [authGuard]
     },
     {
         path: 'pqr/confirmacion',

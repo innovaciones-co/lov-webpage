@@ -1,0 +1,38 @@
+:host {
+    display: block;
+}
+
+form {
+    display: grid;
+    gap: 1rem;
+}
+
+.brand-chip {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(38, 70, 83, 0.08);
+    color: #264653;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.token-feedback {
+    padding: 1rem;
+    border: 1px solid rgba(42, 157, 143, 0.24);
+    border-radius: 0.75rem;
+    background: rgba(42, 157, 143, 0.08);
+}
+
+.token-feedback h4 {
+    margin: 0 0 0.35rem;
+    color: #1f6f68;
+}
+
+.token-feedback p {
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: #264653;
+}
