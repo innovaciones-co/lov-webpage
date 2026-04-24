@@ -7,11 +7,11 @@ import { SubscriptionFacadeService } from '../../core/services/subscription-faca
 import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
-import { CreatePaymentMethod } from "../payment-methods/create-payment-method/create-payment-method";
+import { RechargeScheduler } from './recharge-scheduler/recharge-scheduler';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, CreatePaymentMethod],
+  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
@@ -23,6 +23,8 @@ export class Dashboard implements OnInit {
   loading = signal(true);
   billingInfo: any = null;
   accounts = signal<any[]>([]);
+
+  submitError = signal<string>('');
 
   ngOnInit() {
     this.authService.user$.subscribe(user => {
@@ -56,6 +58,7 @@ export class Dashboard implements OnInit {
           }
         });
       }
+
     });
   }
 

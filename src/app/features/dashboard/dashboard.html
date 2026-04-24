@@ -71,7 +71,8 @@
     </div>
     }
 
-    <app-create-payment-method></app-create-payment-method>
+    <app-recharge-scheduler
+        [subscription]="activeSubscriptions().length > 0 ? activeSubscriptions()[0] : undefined"></app-recharge-scheduler>
 
     <div id="account-balances" class="card">
         <div class="card-title">

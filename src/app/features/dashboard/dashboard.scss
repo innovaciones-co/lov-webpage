@@ -95,3 +95,15 @@
     margin: 15px 0;
     height: 1px;
 }
+
+@keyframes fadeOutUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
