@@ -32,6 +32,7 @@ export class RechargeScheduler {
   isModalOpen = signal(false);
   savedRecharge = signal<any>(null);
   loadingSavedRecharge = signal<boolean>(false);
+  refreshRechargeData = signal(0);
 
   errorMessages: Record<string, Record<string, string>> = {
     amount: {
@@ -116,6 +117,7 @@ export class RechargeScheduler {
 
     // Effect to fetch saved recharge
     effect(() => {
+      this.refreshRechargeData(); // Dependency para disparar el effect
       const subscriptionId = this.subscriptionId();
       if (subscriptionId) {
         console.debug('Fetching saved recharge for subscription ID:', subscriptionId);
@@ -184,6 +186,8 @@ export class RechargeScheduler {
         console.debug('Recharge submitted successfully:', response);
         this.isSubmitting.set(false);
         this.form().reset();
+        // Recargar solo la información guardada de recarga
+        this.refreshRechargeData.update(val => val + 1);
       },
       error: (error) => {
         console.error('Error submitting recharge:', error);
