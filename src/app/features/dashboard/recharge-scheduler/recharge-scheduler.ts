@@ -10,11 +10,12 @@ import { Loading } from "../../../shared/components/loading/loading";
 import { Modal } from "../../../shared/components/modal/modal";
 import { CustomerSubscription } from '../../../core/models/customer.model';
 import { DashboardService } from '../services/dashboard.service';
+import { CreatePaymentMethod } from "../../payment-methods/create-payment-method/create-payment-method";
 
 @Component({
   selector: 'app-recharge-scheduler',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextComponent, SelectComponent, CheckboxComponent, SwitchComponent, ErrorCard, Loading, Modal],
+  imports: [CommonModule, ReactiveFormsModule, InputTextComponent, SelectComponent, CheckboxComponent, SwitchComponent, ErrorCard, Loading, Modal, CreatePaymentMethod],
   templateUrl: './recharge-scheduler.html',
   styleUrl: './recharge-scheduler.scss'
 })
