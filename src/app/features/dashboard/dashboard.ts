@@ -7,10 +7,11 @@ import { SubscriptionFacadeService } from '../../core/services/subscription-faca
 import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
+import { CreatePaymentMethod } from "../payment-methods/create-payment-method/create-payment-method";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe],
+  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, CreatePaymentMethod],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
