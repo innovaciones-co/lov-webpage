@@ -3,7 +3,7 @@
         <h3 class="form-subtitle">Programar recarga</h3>
 
         <div class="switch-container">
-            <switch-field [control]="form().controls.autoRecharge" [activeLabel]="'Recarga automática: Habilitada'"
+            <switch-field #switchField [control]="form().controls.autoRecharge" [activeLabel]="'Recarga automática: Habilitada'"
                 [inactiveLabel]="'Recarga automática: Desactivada'"></switch-field>
         </div>
 
@@ -59,6 +59,8 @@
             </button>
             <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
         </div>
+        } @else {
+        <p class="form-description">Activa la recarga automática para programar recargas periódicas en tu cuenta. Podrás configurar el monto, la frecuencia y el método de pago para asegurarte de que nunca te quedes sin saldo.</p>
         }
     </form>
 

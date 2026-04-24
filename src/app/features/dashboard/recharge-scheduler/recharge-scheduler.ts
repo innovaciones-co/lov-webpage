@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from "../../../shared/components/form-fields/input-text/input-text";
 import { SelectComponent } from "../../../shared/components/form-fields/select/select";
@@ -20,6 +20,7 @@ import { DashboardService } from '../services/dashboard.service';
 })
 export class RechargeScheduler {
   private dashboardService = inject(DashboardService);
+  private elementRef = inject(ElementRef);
 
   userId = input<number>();
   activeSubscriptions = input<CustomerSubscription[]>([]);
@@ -179,7 +180,11 @@ export class RechargeScheduler {
   }
 
   onCancel(): void {
-    this.form().reset();
+    // Buscar y hacer click en el botón del switch
+    const switchButton = this.elementRef.nativeElement.querySelector('.switch-toggle');
+    if (switchButton) {
+      switchButton.click();
+    }
     this.submitError.set('');
   }
 
