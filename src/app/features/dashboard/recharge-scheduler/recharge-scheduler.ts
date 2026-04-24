@@ -124,8 +124,12 @@ export class RechargeScheduler {
         this.loadingSavedRecharge.set(true);
         this.dashboardService.getSavedRecharge(subscriptionId.toString()).subscribe({
           next: (response) => {
-            console.debug('Saved recharge fetched:', response);
-            this.savedRecharge.set(response.payload || response);
+            const payloadData = response.payload || response;
+            console.log('Saved recharge data to set:', payloadData);
+            this.savedRecharge.set(payloadData);
+            // Set switch state based on whether autoTopup exists
+            const hasAutoTopup = !!payloadData?.autoTopup;
+            this.form().get('autoRecharge')?.setValue(hasAutoTopup, { emitEvent: false });
             this.dashboardService.setRechargeData(response);
             this.loadingSavedRecharge.set(false);
           },

@@ -2,12 +2,32 @@
     <form [formGroup]="form()" (ngSubmit)="onSubmit()">
         <h3 class="form-subtitle">Programar recarga</h3>
 
+        @if (loadingSavedRecharge()) {
+        <app-loading></app-loading>
+        } @else {
         <div class="switch-container">
-            <switch-field #switchField [control]="form().controls.autoRecharge" [activeLabel]="'Recarga automática: Habilitada'"
+            <switch-field #switchField [control]="form().controls.autoRecharge"
+                [activeLabel]="'Recarga automática: Habilitada'"
                 [inactiveLabel]="'Recarga automática: Desactivada'"></switch-field>
         </div>
+        }
 
-        @if (form().get('autoRecharge')?.value) {
+        @if (loadingSavedRecharge()) {
+        <app-loading></app-loading>
+        } @else if (form().get('autoRecharge')?.value) {
+        <!-- Mostrar información de recarga guardada -->
+        <div class="recharge-info">
+            <p class="form-description">Tu recarga automática está configurada:</p>
+            <div class="info-details">
+                @if (savedRecharge()?.autoTopup?.schedule?.dayOfMonth) {
+                <p><strong>Día del mes:</strong> {{ savedRecharge().autoTopup.schedule.dayOfMonth }}</p>
+                }
+                <p><strong>Frecuencia:</strong> {{ savedRecharge()?.autoTopup?.schedule?.frequency }}</p>
+                <p><strong>Monto:</strong> {{ savedRecharge()?.autoTopup?.topupAmount | currency }}</p>
+            </div>
+        </div>
+        } @else {
+        <!-- Mostrar formulario cuando switch está activo pero sin datos guardados -->
         <div class="recharge-form">
             <div class="form-grid">
 
@@ -59,8 +79,6 @@
             </button>
             <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
         </div>
-        } @else {
-        <p class="form-description">Activa la recarga automática para programar recargas periódicas en tu cuenta. Podrás configurar el monto, la frecuencia y el método de pago para asegurarte de que nunca te quedes sin saldo.</p>
         }
     </form>
 
