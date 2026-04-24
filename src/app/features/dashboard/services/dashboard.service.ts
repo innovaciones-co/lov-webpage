@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 export class DashboardService {
     private http = inject(HttpClient);
     private readonly gatewayUrl;
+    private readonly apiUrl;
 
     private loading = signal<boolean>(false);
     private creditCardsData = signal<any>(null);
@@ -16,28 +17,24 @@ export class DashboardService {
 
     constructor() {
         this.gatewayUrl = environment.gatewayUrl;
+        this.apiUrl = environment.apiUrl;
     }
 
-    getCreditCards(customerId: string): Observable<any> {
-        // console.debug('Fetching credit cards');
+    getCreditCards(): Observable<any> {
+        console.debug('Fetching credit cards');
         this.loading.set(true);
 
-        const url = `${this.gatewayUrl}/api/customers/${customerId}/onlinePaymentProfiles`;
+        const url = `${this.apiUrl}/paymentMethods`;
 
         return this.http.get(url);
     }
 
-    submitRecharge(rechargeData: any): Observable<any> {
+    submitRecharge(subscriptionId: string, rechargeData: any): Observable<any> {
         console.debug('Submitting recharge request');
+        console.log('Recharge data:', rechargeData);
         this.loading.set(true);
 
-        const url = `${this.gatewayUrl}/api/recharge`; // TODO: actualizar endpoint
-
-        /* const body = {
-            id: "6",
-            user: "232",
-            msisdn: "573005555555",
-        }; */
+        const url = `${this.apiUrl}/paymentMethods/schedule/${subscriptionId}`; // TODO: actualizar endpoint
 
         return this.http.post(url, rechargeData);
     }

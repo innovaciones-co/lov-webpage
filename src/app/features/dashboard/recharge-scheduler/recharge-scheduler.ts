@@ -23,8 +23,7 @@ export class RechargeScheduler {
   private dashboardService = inject(DashboardService);
   private elementRef = inject(ElementRef);
 
-  userId = input<number>();
-  activeSubscriptions = input<CustomerSubscription[]>([]);
+  subscription = input<CustomerSubscription | undefined>();
 
   creditCards = signal<any[]>([]);
   loadingCreditCards = signal<boolean>(true);
@@ -55,10 +54,10 @@ export class RechargeScheduler {
 
   paymentMethod = computed(() => {
     return this.creditCards()
-      .filter(card => card.paymentMethodDetails?.truncatedNumber)
+      .filter(card => card.truncatedNumber)
       .map(card => ({
-        label: `${card.paymentMethodDetails.issuer} - ${card.paymentMethodDetails.truncatedNumber}`,
-        value: card.oppId
+        label: `${card.issuer} - ${card.truncatedNumber}`,
+        value: card.id
       }));
   });
 
@@ -68,9 +67,9 @@ export class RechargeScheduler {
     { label: 'Mensual', value: 'MONTHLY' },
   ]);
 
-  firstSubscriptionId = computed(() => { // TODO: esto es un parche temporal, idealmente se deberían usar los IDs de todas las suscripciones; pero por ahora se asume que es la primera suscripción activa del cliente.
-    const subscriptions = this.activeSubscriptions();
-    return subscriptions.length > 0 ? subscriptions[0].id : null;
+  subscriptionId = computed(() => {
+    const sub = this.subscription();
+    return sub?.id ?? null;
   });
 
   form = signal(
@@ -86,23 +85,21 @@ export class RechargeScheduler {
 
   constructor() {
     effect(() => {
-      const userId = this.userId();
-      if (userId) {
-        // console.debug('Fetching credit cards for user ID:', userId);
-        this.loadingCreditCards.set(true);
-        this.dashboardService.getCreditCards(userId.toString()).subscribe({
-          next: (response) => {
-            // console.debug('Credit cards fetched:', response);
-            this.creditCards.set(response.payload || []);
-            this.dashboardService.setCreditCardsData(response);
-            this.loadingCreditCards.set(false);
-          },
-          error: (error) => {
-            console.error('Error fetching credit cards:', error);
-            this.loadingCreditCards.set(false);
-          }
-        });
-      }
+      console.debug('Fetching credit cards');
+      this.loadingCreditCards.set(true);
+      this.dashboardService.getCreditCards().subscribe({
+        next: (response) => {
+          // console.debug('Credit cards fetched:', response);
+          const cards = Array.isArray(response) ? response : (response.payload || []);
+          this.creditCards.set(cards);
+          this.dashboardService.setCreditCardsData(response);
+          this.loadingCreditCards.set(false);
+        },
+        error: (error) => {
+          console.error('Error fetching credit cards:', error);
+          this.loadingCreditCards.set(false);
+        }
+      });
     });
 
     effect(() => {
@@ -119,7 +116,7 @@ export class RechargeScheduler {
 
     // Effect to fetch saved recharge
     effect(() => {
-      const subscriptionId = this.firstSubscriptionId();
+      const subscriptionId = this.subscriptionId();
       if (subscriptionId) {
         console.debug('Fetching saved recharge for subscription ID:', subscriptionId);
         this.loadingSavedRecharge.set(true);
@@ -161,15 +158,28 @@ export class RechargeScheduler {
     this.submitError.set('');
 
     const formValue = this.form().value;
-    const rechargeData = {
-      amount: formValue.amount,
+
+    const rechargeData: any = {
       paymentMethodId: formValue.paymentMethod,
-      frequency: formValue.frequency,
-      dayOfMonth: formValue.dayOfMonth || null,
-      autoRecharge: formValue.autoRecharge
+      amount: formValue.amount
     };
 
-    this.dashboardService.submitRecharge(rechargeData).subscribe({
+    // Mapear frequency según el valor seleccionado
+    switch (formValue.frequency) {
+      case 'MONTHLY':
+        rechargeData.dayOfMonth = formValue.dayOfMonth;
+        break;
+      case 'BIWEEKLY':
+        rechargeData.frequency = 15;
+        break;
+      case 'WEEKLY':
+        rechargeData.frequency = 8;
+        break;
+      default:
+        rechargeData.frequency = '';
+    }
+
+    this.dashboardService.submitRecharge(this.subscriptionId()?.toString() || '', rechargeData).subscribe({
       next: (response) => {
         console.debug('Recharge submitted successfully:', response);
         this.isSubmitting.set(false);

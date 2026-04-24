@@ -23,7 +23,7 @@
                 <p><strong>Día del mes:</strong> {{ savedRecharge().autoTopup.schedule.dayOfMonth }}</p>
                 }
                 <p><strong>Frecuencia:</strong> {{ savedRecharge()?.autoTopup?.schedule?.frequency }}</p>
-                <p><strong>Monto:</strong> {{ savedRecharge()?.autoTopup?.topupAmount | currency }}</p>
+                <p><strong>Monto:</strong> {{ (savedRecharge()?.autoTopup?.topupAmount / 100) | currency }}</p>
             </div>
         </div>
         } @else {
@@ -82,17 +82,19 @@
         }
     </form>
 
-    <app-modal [isOpen]="isModalOpen()" (closed)="onCancelModal()">
+    <app-modal [size]="'lg'" [isOpen]="isModalOpen()" (closed)="onCancelModal()">
         <div class="modal-content">
-            <h2>Añadir nueva tarjeta</h2>
-            <p>Ingresa los datos de tu tarjeta de crédito o débito.</p>
-            <app-create-payment-method></app-create-payment-method>
-
-
-            <div class="modal-actions">
-                <button class="btn" (click)="onContinueModal()">Continuar</button>
-                <button type="button" class="btn btn-secondary" (click)="onCancelModal()">Cancelar</button>
+            <div class="modal-content-info">
+                <p class="info-content-title">Añadir nueva tarjeta</p>
+                <div class="info-section">
+                    <p>Ingresa los datos de tu tarjeta.</p>
+                    <app-create-payment-method></app-create-payment-method>
+                </div>
             </div>
+            <!-- <div class="modal-actions">
+                <button class="btn" (click)="onContinueModal()">Agregar</button>
+                <button type="button" class="btn btn-secondary" (click)="onCancelModal()">Cancelar</button>
+            </div> -->
         </div>
     </app-modal>
 </div>
