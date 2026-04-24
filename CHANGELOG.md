@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.7.0...v1.8.0) (2026-04-24)
+
+
+### Features
+
+* implement create payment method component with form handling and validation ([4b8062f](https://github.com/innovaciones-co/lov-webpage/commit/4b8062f23196ed31be96fe4345096a216d4afbc5))
+
 # [1.7.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.6.0...v1.7.0) (2026-04-21)
 
 
