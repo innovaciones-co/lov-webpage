@@ -44,22 +44,26 @@ export interface LookupResponse {
 }
 
 export interface PortabilityStatusPayload {
-    donor: string;
-    donorName: string;
-    msisdn: string;
-    newMsisdn: string;
-    nipCounter: number;
-    portingDate: string;
-    portingRequestId: string;
-    processId: number;
-    recipientCode: string;
-    state: PortabilityState;
-    type: string;
+    donor?: string;
+    donorName?: string;
+    errorMessage?: string;
+    health?: string;
+    msisdn?: string;
+    newMsisdn?: string;
+    nipCounter?: number;
+    portingDate?: string;
+    portingRequestId?: string;
+    processId?: number;
+    recipientCode?: string;
+    state?: string;
+    type?: string;
 }
 
-export type PortabilityState =
-    | 'NipSent'
-    | 'PortInRequested'
-    | 'PortInCompleted'
-    | 'PortInCancelled'
-    | string;
+export interface PortabilityStatusResponse {
+    correlationId: string;
+    payload: PortabilityStatusPayload;
+    providerId: number;
+    responseCode: number;
+    responseDetail: string;
+    transactionId: string;
+}
