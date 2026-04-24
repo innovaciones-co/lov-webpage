@@ -12,6 +12,7 @@ export class DashboardService {
 
     private loading = signal<boolean>(false);
     private creditCardsData = signal<any>(null);
+    private rechargeData = signal<any>(null);
 
     constructor() {
         this.gatewayUrl = environment.gatewayUrl;
@@ -41,6 +42,15 @@ export class DashboardService {
         return this.http.post(url, rechargeData);
     }
 
+    getSavedRecharge(subscriptionId: string): Observable<any> {
+        console.debug('Fetching saved recharge information');
+        this.loading.set(true);
+
+        const url = `${this.gatewayUrl}/api/subscriptions/${subscriptionId}/autoTopup/scheduled/info`;
+
+        return this.http.get(url);
+    }
+
     getLoadingSignal() {
         return this.loading.asReadonly();
     }
@@ -53,8 +63,17 @@ export class DashboardService {
         this.creditCardsData.set(data);
     }
 
+    getRechargeData() {
+        return this.rechargeData.asReadonly();
+    }
+
+    setRechargeData(data: any) {
+        this.rechargeData.set(data);
+    }
+
     resetState() {
         this.loading.set(false);
         this.creditCardsData.set(null);
+        this.rechargeData.set(null);
     }
 }

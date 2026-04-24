@@ -8,6 +8,7 @@ import { SwitchComponent } from "../../../shared/components/form-fields/switch/s
 import { ErrorCard } from "../../../shared/components/error-card/error-card";
 import { Loading } from "../../../shared/components/loading/loading";
 import { Modal } from "../../../shared/components/modal/modal";
+import { CustomerSubscription } from '../../../core/models/customer.model';
 import { DashboardService } from '../services/dashboard.service';
 
 @Component({
@@ -21,12 +22,15 @@ export class RechargeScheduler {
   private dashboardService = inject(DashboardService);
 
   userId = input<number>();
+  activeSubscriptions = input<CustomerSubscription[]>([]);
 
   creditCards = signal<any[]>([]);
   loadingCreditCards = signal<boolean>(true);
   submitError = signal<string>('');
   isSubmitting = signal<boolean>(false);
   isModalOpen = signal(false);
+  savedRecharge = signal<any>(null);
+  loadingSavedRecharge = signal<boolean>(false);
 
   errorMessages: Record<string, Record<string, string>> = {
     amount: {
@@ -62,6 +66,11 @@ export class RechargeScheduler {
     { label: 'Mensual', value: 'MONTHLY' },
   ]);
 
+  firstSubscriptionId = computed(() => { // TODO: esto es un parche temporal, idealmente se deberían usar los IDs de todas las suscripciones; pero por ahora se asume que es la primera suscripción activa del cliente.
+    const subscriptions = this.activeSubscriptions();
+    return subscriptions.length > 0 ? subscriptions[0].id : null;
+  });
+
   form = signal(
     new FormGroup({
       autoRecharge: new FormControl(false),
@@ -77,11 +86,11 @@ export class RechargeScheduler {
     effect(() => {
       const userId = this.userId();
       if (userId) {
-        console.debug('Fetching credit cards for user ID:', userId);
+        // console.debug('Fetching credit cards for user ID:', userId);
         this.loadingCreditCards.set(true);
         this.dashboardService.getCreditCards(userId.toString()).subscribe({
           next: (response) => {
-            console.debug('Credit cards fetched:', response);
+            // console.debug('Credit cards fetched:', response);
             this.creditCards.set(response.payload || []);
             this.dashboardService.setCreditCardsData(response);
             this.loadingCreditCards.set(false);
@@ -105,6 +114,27 @@ export class RechargeScheduler {
         dayOfMonthControl?.updateValueAndValidity();
       });
     });
+
+    // Effect to fetch saved recharge
+    effect(() => {
+      const subscriptionId = this.firstSubscriptionId();
+      if (subscriptionId) {
+        console.debug('Fetching saved recharge for subscription ID:', subscriptionId);
+        this.loadingSavedRecharge.set(true);
+        this.dashboardService.getSavedRecharge(subscriptionId.toString()).subscribe({
+          next: (response) => {
+            console.debug('Saved recharge fetched:', response);
+            this.savedRecharge.set(response.payload || response);
+            this.dashboardService.setRechargeData(response);
+            this.loadingSavedRecharge.set(false);
+          },
+          error: (error) => {
+            console.error('Error fetching saved recharge:', error);
+            this.loadingSavedRecharge.set(false);
+          }
+        });
+      }
+    });
   }
 
   getFieldErrorMessage(fieldName: string): string {
@@ -120,7 +150,7 @@ export class RechargeScheduler {
 
   onSubmit(): void {
     if (!this.form().valid) return;
-    
+
     this.isSubmitting.set(true);
     this.submitError.set('');
 
