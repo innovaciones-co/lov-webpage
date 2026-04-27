@@ -7,8 +7,8 @@
         } @else {
         <div class="switch-container">
             <switch-field #switchField [control]="form().controls.autoRecharge"
-                [activeLabel]="'Recarga automática: Habilitada'"
-                [inactiveLabel]="'Recarga automática: Desactivada'"></switch-field>
+                [activeLabel]="'Recarga automática: Habilitada'" [inactiveLabel]="'Recarga automática: Desactivada'"
+                (valueChange)="onAutoRechargeChange($event)"></switch-field>
         </div>
         }
 
@@ -64,7 +64,6 @@
                         class="link-button">Términos y Condiciones</a>.
                 </checkbox-field>
             </div>
-
             <error-card [message]="submitError()"></error-card>
         </div>
 
@@ -95,6 +94,31 @@
                 <button class="btn" (click)="onContinueModal()">Agregar</button>
                 <button type="button" class="btn btn-secondary" (click)="onCancelModal()">Cancelar</button>
             </div> -->
+        </div>
+    </app-modal>
+
+    <app-modal [size]="'md'" [isOpen]="isDisableConfirmationModalOpen()" (closed)="onCancelDisable()">
+        <div class="modal-content">
+            <div class="modal-content-info">
+                <p class="info-content-title">Desactivar recarga automática</p>
+                <div class="info-section">
+                    <p>¿Estás seguro de que deseas desactivar la recarga automática? Ya no se realizarán recargas
+                        periódicas en tu cuenta.</p>
+                </div>
+                <error-card class="disable-error" [message]="disableError()"></error-card>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" (click)="onConfirmDisable()" [disabled]="isDisabling()">
+                    @if (isDisabling()) {
+                    <span class="loading-spinner"></span>
+                    Desactivando...
+                    } @else {
+                    Desactivar
+                    }
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="onCancelDisable()"
+                    [disabled]="isDisabling()">Cancelar</button>
+            </div>
         </div>
     </app-modal>
 </div>

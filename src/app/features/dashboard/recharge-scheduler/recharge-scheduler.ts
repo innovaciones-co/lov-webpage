@@ -29,7 +29,10 @@ export class RechargeScheduler {
   loadingCreditCards = signal<boolean>(true);
   submitError = signal<string>('');
   isSubmitting = signal<boolean>(false);
+  isDisabling = signal<boolean>(false);
+  disableError = signal<string>('');
   isModalOpen = signal(false);
+  isDisableConfirmationModalOpen = signal(false);
   savedRecharge = signal<any>(null);
   loadingSavedRecharge = signal<boolean>(false);
   refreshRechargeData = signal(0);
@@ -199,11 +202,6 @@ export class RechargeScheduler {
   }
 
   onCancel(): void {
-    // Buscar y hacer click en el botón del switch
-    const switchButton = this.elementRef.nativeElement.querySelector('.switch-toggle');
-    if (switchButton) {
-      switchButton.click();
-    }
     this.submitError.set('');
   }
 
@@ -218,5 +216,44 @@ export class RechargeScheduler {
 
   onCancelModal(): void {
     this.isModalOpen.set(false);
+  }
+
+  onAutoRechargeChange(newValue: boolean): void {
+    if (newValue) {
+      // Rechazar intento de activación manual
+      this.form().get('autoRecharge')?.setValue(false, { emitEvent: false });
+      return;
+    }
+
+    // Abrir modal de confirmación para desactivar
+    this.isDisableConfirmationModalOpen.set(true);
+    this.form().get('autoRecharge')?.setValue(true, { emitEvent: false });
+  }
+
+  onConfirmDisable(): void {
+    this.isDisabling.set(true);
+    this.disableError.set('');
+    this.dashboardService.deleteScheduledRecharge(this.subscriptionId()?.toString() || '').subscribe({
+      next: (response) => {
+        this.isDisableConfirmationModalOpen.set(false);
+        this.form().get('autoRecharge')?.setValue(false, { emitEvent: false });
+        this.isDisabling.set(false);
+        this.disableError.set('');
+        // Recargar la información de recarga
+        this.refreshRechargeData.update(val => val + 1);
+      },
+      error: (error) => {
+        console.error('Error deleting scheduled recharge:', error);
+        this.isDisabling.set(false);
+        const errorMessage = error?.error?.message || 'Error al desactivar la recarga automática. Por favor, intenta de nuevo más tarde.';
+        this.disableError.set(errorMessage);
+      }
+    });
+  }
+
+  onCancelDisable(): void {
+    this.isDisableConfirmationModalOpen.set(false);
+    this.form().get('autoRecharge')?.setValue(true, { emitEvent: false });
+    this.disableError.set('');
   }
 }
