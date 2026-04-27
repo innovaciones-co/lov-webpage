@@ -87,7 +87,7 @@
                 <p class="info-content-title">Añadir nueva tarjeta</p>
                 <div class="info-section">
                     <p>Ingresa los datos de tu tarjeta.</p>
-                    <app-create-payment-method></app-create-payment-method>
+                    <app-create-payment-method [customerId]="subscription()?.customerId!"></app-create-payment-method>
                 </div>
             </div>
             <!-- <div class="modal-actions">

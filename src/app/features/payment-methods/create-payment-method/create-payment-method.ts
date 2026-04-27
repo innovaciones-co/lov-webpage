@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  output,
+  input,
   signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -18,9 +18,8 @@ import { ErrorCard } from '../../../shared/components/error-card/error-card';
 import { InputTextComponent } from '../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../shared/components/form-fields/select/select';
 import {
-  CardTokenData,
+  PaymentCardData,
   PaymentService,
-  PaymentTokenResponse,
 } from '../services/payment-service';
 
 interface PaymentMethodFormData {
@@ -41,11 +40,10 @@ interface PaymentMethodFormData {
 })
 export class CreatePaymentMethod {
   private readonly paymentService = inject(PaymentService);
-  readonly tokenGenerated = output<string>();
 
+  readonly customerId = input.required<string>();
   readonly isLoading = signal(false);
   readonly submitError = signal('');
-  readonly generatedToken = signal('');
   readonly brand = signal('');
 
   readonly expirationMonths = signal(
@@ -82,6 +80,8 @@ export class CreatePaymentMethod {
     },
     payerId: {
       pattern: 'El identificador del pagador solo debe contener números.',
+      minlength: 'El identificador del pagador debe tener entre 4 y 20 dígitos.',
+      maxlength: 'El identificador del pagador debe tener entre 4 y 20 dígitos.',
     },
   };
 
@@ -114,7 +114,7 @@ export class CreatePaymentMethod {
       }),
       payerId: new FormControl('', {
         nonNullable: true,
-        validators: [Validators.required, Validators.pattern(/^[0-9]+$/)],
+        validators: [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.minLength(4), Validators.maxLength(20)],
       }),
     })
   );
@@ -166,70 +166,32 @@ export class CreatePaymentMethod {
       return;
     }
 
-    const cardData: CardTokenData = {
-      number: cardNumber.replace(/\s/g, ''),
-      exp_month: expirationMonth,
-      exp_year: expirationYear,
-      name_card: fullName.trim(),
-      payer_id: payerId.trim(),
-      cvv: cvv.trim(),
+    const cardData: PaymentCardData = {
+      payerId: this.customerId(),
+      name: fullName.trim(),
+      identificationNumber: payerId.trim(),
+      creditCardNumber: cardNumber.replace(/\s/g, ''),
+      creditCardSecurityCode: Number(cvv.trim()),
+      creditCardExpirationMonth: Number(expirationMonth),
+      creditCardExpirationYear: Number(expirationYear),
+      paymentMethod: this.brand(),
     };
 
     this.isLoading.set(true);
     this.submitError.set('');
-    this.generatedToken.set('');
 
-    this.paymentService
-      .createToken(cardData)
-      .pipe(finalize(() => this.isLoading.set(false)))
-      .subscribe({
-        next: (response: PaymentTokenResponse) => {
-          const token =
-            response.creditCardToken?.creditCardTokenId ??
-            response.creditCardToken?.token ??
-            response.id ??
-            response.token ??
-            '';
-
-          if (!token) {
-            this.submitError.set('No fue posible obtener el token de la tarjeta.');
-            return;
-          }
-
-          this.generatedToken.set(token);
-          this.tokenGenerated.emit(token);
-          this.form().controls.cvv.reset('');
-        },
-        error: (error: unknown) => {
-          this.submitError.set(this.getSubmitErrorMessage(error));
-        },
-      });
-  }
-
-  private getSubmitErrorMessage(error: unknown): string {
-    if (typeof error === 'string') {
-      return error;
-    }
-
-    if (error instanceof Error) {
-      return error.message;
-    }
-
-    if (typeof error === 'object' && error !== null) {
-      const errorData = error as {
-        description?: string;
-        error?: string;
-        message?: string;
-      };
-
-      return (
-        errorData.description ||
-        errorData.error ||
-        errorData.message ||
-        'No fue posible generar el token de pago.'
-      );
-    }
-
-    return 'No fue posible generar el token de pago.';
+    this.paymentService.createPaymentMethod(cardData).pipe(
+      finalize(() => this.isLoading.set(false))
+    ).subscribe({
+      next: (response) => {
+        console.debug('Payment method created successfully:', response);
+        this.form().reset();
+      },
+      error: (error) => {
+        console.error('Error creating payment method:', error);
+        const errorMessage = error?.error?.message || 'Error al crear el método de pago. Por favor, intenta de nuevo más tarde.';
+        this.submitError.set(errorMessage);
+      }
+    });
   }
 }
