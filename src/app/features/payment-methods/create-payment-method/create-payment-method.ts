@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   input,
+  output,
   signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -42,6 +43,7 @@ export class CreatePaymentMethod {
   private readonly paymentService = inject(PaymentService);
 
   readonly customerId = input.required<string>();
+  readonly paymentMethodCreated = output<void>();
   readonly isLoading = signal(false);
   readonly submitError = signal('');
   readonly brand = signal('');
@@ -79,9 +81,9 @@ export class CreatePaymentMethod {
       pattern: 'El código de seguridad debe tener 3 o 4 dígitos.',
     },
     payerId: {
-      pattern: 'El identificador del pagador solo debe contener números.',
-      minlength: 'El identificador del pagador debe tener entre 4 y 20 dígitos.',
-      maxlength: 'El identificador del pagador debe tener entre 4 y 20 dígitos.',
+      pattern: 'El documento solo debe contener números.',
+      minlength: 'El documento debe tener entre 4 y 20 dígitos.',
+      maxlength: 'El documento debe tener entre 4 y 20 dígitos.',
     },
   };
 
@@ -186,6 +188,7 @@ export class CreatePaymentMethod {
       next: (response) => {
         console.debug('Payment method created successfully:', response);
         this.form().reset();
+        this.paymentMethodCreated.emit();
       },
       error: (error) => {
         console.error('Error creating payment method:', error);

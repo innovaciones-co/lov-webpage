@@ -36,6 +36,7 @@ export class RechargeScheduler {
   savedRecharge = signal<any>(null);
   loadingSavedRecharge = signal<boolean>(false);
   refreshRechargeData = signal(0);
+  refreshCreditCards = signal(0);
 
   errorMessages: Record<string, Record<string, string>> = {
     amount: {
@@ -89,6 +90,7 @@ export class RechargeScheduler {
 
   constructor() {
     effect(() => {
+      this.refreshCreditCards(); // Dependency para recargar tarjetas
       console.debug('Fetching credit cards');
       this.loadingCreditCards.set(true);
       this.dashboardService.getCreditCards().subscribe({
@@ -216,6 +218,11 @@ export class RechargeScheduler {
 
   onCancelModal(): void {
     this.isModalOpen.set(false);
+  }
+
+  onPaymentMethodSuccess(): void {
+    this.isModalOpen.set(false);
+    this.refreshCreditCards.update(val => val + 1);
   }
 
   onAutoRechargeChange(newValue: boolean): void {
