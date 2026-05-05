@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.9.0...v1.10.0) (2026-05-05)
+
+
+### Features
+
+* update OTP error handling and state management in authentication flow ([f3e5a81](https://github.com/innovaciones-co/lov-webpage/commit/f3e5a812a743fcdae6e4f3c1d02cdb08bc30bfce))
+
 # [1.9.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.8.0...v1.9.0) (2026-04-24)
 
 
