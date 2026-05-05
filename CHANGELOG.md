@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.11.0...v1.12.0) (2026-05-05)
+
+
+### Features
+
+* enhance account management with SubscriptionAccount model and update dashboard display ([eecab7f](https://github.com/innovaciones-co/lov-webpage/commit/eecab7fd2b2ce317f6a33804cfc957e0bf0ab624))
+
 # [1.11.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.10.0...v1.11.0) (2026-05-05)
 
 
