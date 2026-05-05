@@ -3,11 +3,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestro
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
 import { OtpInputComponent } from "../../../../shared/components/form-fields/otp-input/otp-input";
 import { AuthState } from '../../models/auth.models';
 import { AuthError } from '../../models/error.models';
 import { AuthService } from '../../services/auth.service';
-import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
 
 @Component({
   selector: 'app-login',
@@ -134,6 +134,9 @@ export class Login implements OnInit, OnDestroy {
       .subscribe(error => {
         this.error = error;
         this.cdr.markForCheck(); // Trigger change detection
+        this.currentOtpValue.set(''); // Clear OTP value on error
+        this.isOtpComplete.set(false); // Reset OTP completion state on error
+        this.otpFormArray.reset(); // Clear OTP form on error
       });
 
     // Subscribe to OTP countdown

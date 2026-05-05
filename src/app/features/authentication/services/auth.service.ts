@@ -296,7 +296,7 @@ export class AuthService {
     private handleHttpError(error: HttpErrorResponse): Observable<never> {
         const processedError = this.errorHandler.handle(error);
         this.errorStateManager.setError(processedError);
-        this.authStateSubject.next(AuthState.ERROR);
+        this.authStateSubject.next(AuthState.ERROR_OTP);
         return throwError(() => processedError);
     }
 
