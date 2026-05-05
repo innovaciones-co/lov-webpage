@@ -20,31 +20,38 @@ import { RechargesIntro } from './features/recharges/components/recharges-intro/
 export const routes: Routes = [
     {
         path: '',
-        component: Home
+        component: Home,
+        canActivate: [guestGuard]
     },
     {
         path: 'activar-sim',
-        component: ActivateSim
+        component: ActivateSim,
+        canActivate: [guestGuard]
     },
     {
         path: 'activar-sim/exitoso',
-        component: SuccessfulActivation
+        component: SuccessfulActivation,
+        canActivate: [guestGuard]
     },
     {
         path: 'legales',
-        component: Legals
+        component: Legals,
+        canActivate: [guestGuard]
     },
     {
         path: 'preguntas-frecuentes',
-        component: Faq
+        component: Faq,
+        canActivate: [guestGuard]
     },
     {
         path: 'portabilidad',
-        component: Portability
+        component: Portability,
+        canActivate: [guestGuard]
     },
     {
         path: 'portabilidad/exitoso',
-        component: SuccessfulPortability
+        component: SuccessfulPortability,
+        canActivate: [guestGuard]
     },
     {
         path: 'ingreso',
@@ -64,6 +71,7 @@ export const routes: Routes = [
     {
         path: 'recargas',
         component: RechargesIntro,
+        canActivate: [guestGuard]
     },
     {
         path: 'pagos',
@@ -73,10 +81,12 @@ export const routes: Routes = [
     {
         path: 'bloqueo-equipo',
         component: DeviceLock,
+        canActivate: [guestGuard]
     },
     {
         path: 'pagos/resultado',
-        component: PaymentResultComponent
+        component: PaymentResultComponent,
+        canActivate: [guestGuard]
     },
     {
         path: 'pqr',
@@ -85,10 +95,12 @@ export const routes: Routes = [
     },
     {
         path: 'pqr/confirmacion',
-        component: PqrConfirmation
+        component: PqrConfirmation,
+        canActivate: [guestGuard]
     },
     {
         path: '**',
-        redirectTo: ''
+        redirectTo: '',
+        canActivate: [guestGuard]
     }
 ];
