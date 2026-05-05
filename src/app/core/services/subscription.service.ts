@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
+import { SubscriptionAccount } from '../models/account.model';
 import { ApiResponse } from '../models/api-response.model';
 import { CustomerSubscriptionResponse } from '../models/customer.model';
 
@@ -48,8 +49,8 @@ export class SubscriptionService {
      * @param subscriptionId - The subscription ID
      * @returns Observable of the accounts response
      */
-    getAccounts(customerId: string, subscriptionId: string): Observable<ApiResponse<any>> {
-        return this.http.get<ApiResponse<any>>(
+    getAccounts(customerId: string, subscriptionId: string): Observable<ApiResponse<SubscriptionAccount[]>> {
+        return this.http.get<ApiResponse<SubscriptionAccount[]>>(
             `${this.baseUrl}/api/customers/${customerId}/subscriptions/${subscriptionId}/accounts`,
             {
                 headers: { 'accept': 'application/json' }
