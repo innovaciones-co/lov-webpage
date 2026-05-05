@@ -1,5 +1,4 @@
 <div class="login-container">
-    <p>AuthState: {{ currentState }}</p>
     <figure class="image-container">
         @if (currentState == AuthState.REQUESTING_OTP || currentState == AuthState.VALIDATING_OTP || currentState ==
         AuthState.OTP_SENT || currentState == AuthState.ERROR_OTP) {

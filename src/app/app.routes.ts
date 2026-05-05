@@ -66,7 +66,7 @@ export const routes: Routes = [
     {
         path: 'planes',
         component: Plans,
-        canActivate: [authGuard]
+        canActivate: [guestGuard]
     },
     {
         path: 'recargas',
