@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.10.0...v1.11.0) (2026-05-05)
+
+
+### Features
+
+* add guestGuard to all routes for improved access control ([86c0750](https://github.com/innovaciones-co/lov-webpage/commit/86c0750a00550f3ba5fdbab8cb22d077cf3edf7c))
+
 # [1.10.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.9.0...v1.10.0) (2026-05-05)
 
 
