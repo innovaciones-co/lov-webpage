@@ -20,38 +20,31 @@ import { RechargesIntro } from './features/recharges/components/recharges-intro/
 export const routes: Routes = [
     {
         path: '',
-        component: Home,
-        canActivate: [guestGuard]
+        component: Home
     },
     {
         path: 'activar-sim',
-        component: ActivateSim,
-        canActivate: [guestGuard]
+        component: ActivateSim
     },
     {
         path: 'activar-sim/exitoso',
-        component: SuccessfulActivation,
-        canActivate: [guestGuard]
+        component: SuccessfulActivation
     },
     {
         path: 'legales',
-        component: Legals,
-        canActivate: [guestGuard]
+        component: Legals
     },
     {
         path: 'preguntas-frecuentes',
-        component: Faq,
-        canActivate: [guestGuard]
+        component: Faq
     },
     {
         path: 'portabilidad',
-        component: Portability,
-        canActivate: [guestGuard]
+        component: Portability
     },
     {
         path: 'portabilidad/exitoso',
-        component: SuccessfulPortability,
-        canActivate: [guestGuard]
+        component: SuccessfulPortability
     },
     {
         path: 'ingreso',
@@ -65,13 +58,11 @@ export const routes: Routes = [
     },
     {
         path: 'planes',
-        component: Plans,
-        canActivate: [guestGuard]
+        component: Plans
     },
     {
         path: 'recargas',
-        component: RechargesIntro,
-        canActivate: [guestGuard]
+        component: RechargesIntro
     },
     {
         path: 'pagos',
@@ -80,13 +71,11 @@ export const routes: Routes = [
     },
     {
         path: 'bloqueo-equipo',
-        component: DeviceLock,
-        canActivate: [guestGuard]
+        component: DeviceLock
     },
     {
         path: 'pagos/resultado',
-        component: PaymentResultComponent,
-        canActivate: [guestGuard]
+        component: PaymentResultComponent
     },
     {
         path: 'pqr',
@@ -95,12 +84,10 @@ export const routes: Routes = [
     },
     {
         path: 'pqr/confirmacion',
-        component: PqrConfirmation,
-        canActivate: [guestGuard]
+        component: PqrConfirmation
     },
     {
         path: '**',
-        redirectTo: '',
-        canActivate: [guestGuard]
+        redirectTo: ''
     }
 ];
