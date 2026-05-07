@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.12.0...v1.13.0) (2026-05-05)
+
+
+### Features
+
+* update route guard for 'planes' path to use guestGuard and remove debug information from login component ([22c6240](https://github.com/innovaciones-co/lov-webpage/commit/22c62401fbccdb80e5941d48cc61e0e77287cdae))
+
 # [1.12.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.11.0...v1.12.0) (2026-05-05)
 
 
