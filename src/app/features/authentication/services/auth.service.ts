@@ -120,7 +120,7 @@ export class AuthService {
         this.clearAuthData();
         this.authStateSubject.next(AuthState.INITIAL);
         this.userSubject.next(null);
-        this.router.navigate(['/login']);
+        this.router.navigate(['/ingreso']);
     }
 
     /**

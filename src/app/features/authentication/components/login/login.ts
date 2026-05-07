@@ -41,7 +41,7 @@ export class Login implements OnInit, OnDestroy {
   error: AuthError | null = null;
   countdown = signal<number>(0);
   isLoading = false;
-  returnUrl = '/';
+  returnUrl = '/dashboard';
   currentOtpValue = signal<string>('');
   isOtpComplete = signal<boolean>(false);
 
@@ -51,7 +51,7 @@ export class Login implements OnInit, OnDestroy {
   ngOnInit() {
     this.initializeForms();
     this.setupSubscriptions();
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
   }
 
   ngOnDestroy() {
@@ -122,7 +122,7 @@ export class Login implements OnInit, OnDestroy {
 
         // Navigate after successful authentication
         if (state === AuthState.AUTHENTICATED) {
-          this.router.navigate([this.returnUrl]);
+          this.router.navigateByUrl(this.returnUrl);
         }
 
         this.cdr.markForCheck(); // Trigger change detection
