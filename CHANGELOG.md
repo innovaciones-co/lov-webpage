@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.13.1...v1.13.2) (2026-05-15)
+
+
+### Bug Fixes
+
+* update mismatch error message for donor number confirmation ([1c2865e](https://github.com/innovaciones-co/lov-webpage/commit/1c2865e370d8972106a7244785770024dffb7d90))
+
 ## [1.13.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.13.0...v1.13.1) (2026-05-15)
 
 
