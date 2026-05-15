@@ -45,7 +45,7 @@ export class DonorInformationFormComponent {
     },
     donorNumberConfirm: {
       pattern: 'El número debe tener 10 dígitos numéricos',
-      mismatch: 'El número de la SIM Lov no coincide'
+      mismatch: 'El número del número a portar no coincide'
     }
   };
 
