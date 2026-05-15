@@ -13,7 +13,7 @@ export class DeviceLock {
 
   incidentInfoFormData = signal<IncidentInfoFormData | null>(null);
   personalInfoFormData = signal<PersonalInfoFormData | null>(null);
-  subscriberData = signal<any>(null);
+  imeiList = signal<{ label: string; value: string }[]>([]);
 
   currentStepIndex = signal(0);
 
@@ -29,14 +29,15 @@ export class DeviceLock {
     }
   }
 
-  onIncidentInfoFormSubmit(data: IncidentInfoFormData, subscriber: any = null): void {
+  onIncidentInfoFormSubmit(data: IncidentInfoFormData): void {
     this.incidentInfoFormData.set(data);
-    if (subscriber) {
-      this.subscriberData.set(subscriber);
-    }
     console.log('Incident Info Data:', data);
-    console.log('Subscriber Data:', subscriber);
     this.nextStep();
+  }
+
+  onImeiListEmit(imeiList: { label: string; value: string }[]): void {
+    this.imeiList.set(imeiList);
+    console.log('IMEI List:', imeiList);
   }
 
   onPersonalInfoFormSubmit(data: PersonalInfoFormData): void {

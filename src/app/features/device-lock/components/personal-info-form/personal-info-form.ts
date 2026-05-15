@@ -7,10 +7,6 @@ import { DeviceLockService } from '../../services/device-lock.service';
 import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface PersonalInfoFormData {
-  name: string;
-  lastName: string;
-  documentType: string;
-  documentID: string;
   email: string;
   phoneNumber: string;
   city: string;
@@ -27,20 +23,12 @@ export interface PersonalInfoFormData {
   templateUrl: './personal-info-form.html',
   styleUrl: './personal-info-form.scss'
 })
-export class PersonalInfoForm implements OnInit {
+export class PersonalInfoForm {
   private router = inject(Router);
   private deviceLockService = inject(DeviceLockService);
 
-  subscriberData = input<any>(null);
-
-  imeiList = signal<{ label: string; value: string }[]>([]);
+  imeiList = input<{ label: string; value: string }[]>([]);
   validationError = signal<string>('');
-
-  ngOnInit(): void {
-    this.form().get('documentID')?.valueChanges.subscribe(() => {
-      this.onDocumentIDChange();
-    });
-  }
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -49,18 +37,11 @@ export class PersonalInfoForm implements OnInit {
     },
     phoneNumber: {
       pattern: 'El teléfono debe tener 10 dígitos numéricos'
-    },
-    documentID: {
-      pattern: 'El documento debe tener el formato correcto'
     }
   };
 
   form = signal(
     new FormGroup({
-      name: new FormControl('', Validators.required),
-      lastName: new FormControl('', Validators.required),
-      documentType: new FormControl('', Validators.required),
-      documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
       email: new FormControl('', [Validators.required, Validators.email]),
       phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
       city: new FormControl('', Validators.required),
@@ -69,12 +50,6 @@ export class PersonalInfoForm implements OnInit {
       imei: new FormControl('', Validators.required),
     })
   );
-
-  documentType = signal([
-    { label: 'Cédula', value: 'ID' },
-    { label: 'Cédula de extranjeria', value: 'foreignID' },
-  ]);
-
 
   formSubmit = output<PersonalInfoFormData>();
 
@@ -95,36 +70,6 @@ export class PersonalInfoForm implements OnInit {
   onSubmit(): void {
     if (this.form().valid) {
       this.formSubmit.emit(this.form().value as PersonalInfoFormData);
-    }
-  }
-
-  private async onDocumentIDChange(): Promise<void> {
-    const documentIdFromForm = this.form().get('documentID')?.value;
-    if (!documentIdFromForm) {
-      this.imeiList.set([]);
-      return;
-    }
-
-    const subscriptionId = this.subscriberData()?.subscriptions?.[0]?.id;
-    const documentId = this.subscriberData()?.document?.id;
-
-    // Limpiar error previo
-    this.validationError.set('');
-
-    if (!subscriptionId || !documentId || documentIdFromForm !== documentId) {
-      this.imeiList.set([]);
-      return;
-    }
-
-    try {
-      const imeiList = await this.deviceLockService.getImeiList(subscriptionId);
-      this.imeiList.set(imeiList);
-
-      if (imeiList.length === 0) {
-        this.validationError.set('Lo sentimos, no se encontraron dispositivos asociados a tu número LOV. Por favor, contacta al equipo de soporte para más información.');
-      }
-    } catch {
-      this.imeiList.set([]);
     }
   }
 }

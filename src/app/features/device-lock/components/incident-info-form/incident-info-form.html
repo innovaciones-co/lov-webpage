@@ -25,6 +25,25 @@
                     [error]="getFieldErrorMessage('violenceApplied')"></select-field>
             </div>
         </div>
+        <h3 class="form-subtitle">Información personal</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'Nombre'" [placeholder]="'Arturo'" [control]="form().controls.name"
+                    [error]="getFieldErrorMessage('name')"></input-text-field>
+
+                <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'"
+                    [control]="form().controls.lastName" [error]="getFieldErrorMessage('lastName')"></input-text-field>
+            </div>
+            <div class="form-row">
+                <select-field [label]="'Tipo de documento'" [placeholder]="''" [options]="documentType()"
+                    [control]="form().controls.documentType"
+                    [error]="getFieldErrorMessage('documentType')"></select-field>
+
+                <input-text-field [label]="'Documento'" [placeholder]="'123456789'"
+                    [control]="form().controls.documentID"
+                    [error]="getFieldErrorMessage('documentID')"></input-text-field>
+            </div>
+        </div>
         <error-card [message]="validationError()"></error-card>
     </div>
     <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
