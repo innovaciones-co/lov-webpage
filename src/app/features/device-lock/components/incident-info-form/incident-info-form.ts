@@ -4,6 +4,8 @@ import { InputTextComponent } from '../../../../shared/components/form-fields/in
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
 import { Router } from '@angular/router';
+import { DeviceLockService } from '../../services/device-lock.service';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface IncidentInfoFormData {
   lovNumber: string;
@@ -18,13 +20,16 @@ export interface IncidentInfoFormData {
   imports: [ReactiveFormsModule,
     InputTextComponent,
     SelectComponent,
-    DatePickerComponent
-  ],
+    DatePickerComponent, ErrorCard],
   templateUrl: './incident-info-form.html',
   styleUrl: './incident-info-form.scss'
 })
 export class IncidentInfoForm {
   private router = inject(Router);
+  private deviceLockService = inject(DeviceLockService);
+
+  isLoading = signal(false);
+  validationError = signal<string>('');
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -74,6 +79,7 @@ export class IncidentInfoForm {
   ]);
 
   formSubmit = output<IncidentInfoFormData>();
+  subscriberSubmit = output<any>();
 
   // Get error message for a specific field
   getFieldErrorMessage(fieldName: string): string {
@@ -91,7 +97,23 @@ export class IncidentInfoForm {
 
   onSubmit(): void {
     if (this.form().valid) {
-      this.formSubmit.emit(this.form().value as IncidentInfoFormData);
+      const lovNumber = this.form().get('lovNumber')?.value as string;
+      this.isLoading.set(true);
+
+      // Limpiar error previo
+      this.validationError.set('');
+
+      this.deviceLockService.getSubscriber(lovNumber)
+        .then((subscriber) => {
+          console.debug('Subscriber fetched:', subscriber);
+          this.subscriberSubmit.emit(subscriber);
+          this.formSubmit.emit(this.form().value as IncidentInfoFormData);
+        })
+        .catch((error) => {
+          console.error('Error fetching subscriber:', error);
+          this.isLoading.set(false);
+          this.validationError.set('Error al obtener la información del suscriptor. Verifica el número LOV e intenta nuevamente.');
+        });
     }
   }
 }

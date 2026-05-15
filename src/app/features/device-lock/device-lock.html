@@ -11,12 +11,12 @@
             @switch (currentStepIndex()) {
             @case (0) {
             <div class="form-wrapper">
-                <app-incident-info-form (formSubmit)="onIncidentInfoFormSubmit($event)"></app-incident-info-form>
+                <app-incident-info-form (formSubmit)="onIncidentInfoFormSubmit($event, subscriberData())" (subscriberSubmit)="subscriberData.set($event)"></app-incident-info-form>
             </div>
             }
             @case (1) {
             <div class="form-wrapper">
-                <app-personal-info-form (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
+                <app-personal-info-form [subscriberData]="subscriberData()" (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
             </div>
             }
             }

@@ -3,7 +3,7 @@
         <h3 class="form-subtitle">Información del incidente</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Número LOV implicado'" [placeholder]="'0000000000'"
+                <input-text-field [label]="'Número LOV implicado'" [placeholder]="'3001234567'"
                     [control]="form().controls.lovNumber"
                     [error]="getFieldErrorMessage('lovNumber')"></input-text-field>
 
@@ -25,6 +25,14 @@
                     [error]="getFieldErrorMessage('violenceApplied')"></select-field>
             </div>
         </div>
+        <error-card [message]="validationError()"></error-card>
     </div>
-    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+        @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Validando...
+        } @else {
+        Continuar
+        }
+    </button>
 </form>

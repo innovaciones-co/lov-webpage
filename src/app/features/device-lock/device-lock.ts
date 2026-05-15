@@ -13,6 +13,7 @@ export class DeviceLock {
 
   incidentInfoFormData = signal<IncidentInfoFormData | null>(null);
   personalInfoFormData = signal<PersonalInfoFormData | null>(null);
+  subscriberData = signal<any>(null);
 
   currentStepIndex = signal(0);
 
@@ -28,9 +29,13 @@ export class DeviceLock {
     }
   }
 
-  onIncidentInfoFormSubmit(data: IncidentInfoFormData): void {
+  onIncidentInfoFormSubmit(data: IncidentInfoFormData, subscriber: any = null): void {
     this.incidentInfoFormData.set(data);
+    if (subscriber) {
+      this.subscriberData.set(subscriber);
+    }
     console.log('Incident Info Data:', data);
+    console.log('Subscriber Data:', subscriber);
     this.nextStep();
   }
 
