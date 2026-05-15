@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.13.0...v1.13.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* uncomment nipRequest call in onSubmit method for form submission ([b621426](https://github.com/innovaciones-co/lov-webpage/commit/b62142652f7858759839a865bc15649a72e321cc))
+
 # [1.13.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.12.0...v1.13.0) (2026-05-05)
 
 
