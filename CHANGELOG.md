@@ -1,3 +1,11 @@
+# [1.15.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.14.0...v1.15.0) (2026-05-15)
+
+
+### Features
+
+* enhance lovk device forms with subscriber data handling and validation ([20b7c80](https://github.com/innovaciones-co/lov-webpage/commit/20b7c80c528ab19b287be7060478850d8d58ead7))
+* update device lock flow ([9b8d321](https://github.com/innovaciones-co/lov-webpage/commit/9b8d321d1f6a986ec262803700e66d29f52e28ff))
+
 # [1.14.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.13.2...v1.14.0) (2026-05-15)
 
 
