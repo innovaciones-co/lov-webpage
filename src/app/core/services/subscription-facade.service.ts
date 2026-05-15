@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
 
+import { SubscriptionAccount } from '../models/account.model';
 import { ApiResponse } from '../models/api-response.model';
 import { CustomerSubscription, CustomerSubscriptionResponse } from '../models/customer.model';
 import { SubscriptionService } from './subscription.service';
@@ -71,7 +72,7 @@ export class SubscriptionFacadeService {
     /**
      * Get accounts for a given subscription and customer ID
      */
-    getAccountsForSubscription(customerId: string, subscriptionId: string): Observable<any[]> {
+    getAccountsForSubscription(customerId: string, subscriptionId: string): Observable<SubscriptionAccount[]> {
         return this.subscriptionService.getAccounts(customerId, subscriptionId).pipe(
             map(response => response?.payload || []),
             catchError(() => of([]))

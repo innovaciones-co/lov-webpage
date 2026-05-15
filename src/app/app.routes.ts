@@ -58,12 +58,11 @@ export const routes: Routes = [
     },
     {
         path: 'planes',
-        component: Plans,
-        canActivate: [authGuard]
+        component: Plans
     },
     {
         path: 'recargas',
-        component: RechargesIntro,
+        component: RechargesIntro
     },
     {
         path: 'pagos',
@@ -72,7 +71,7 @@ export const routes: Routes = [
     },
     {
         path: 'bloqueo-equipo',
-        component: DeviceLock,
+        component: DeviceLock
     },
     {
         path: 'pagos/resultado',

@@ -120,7 +120,7 @@ export class AuthService {
         this.clearAuthData();
         this.authStateSubject.next(AuthState.INITIAL);
         this.userSubject.next(null);
-        this.router.navigate(['/login']);
+        this.router.navigate(['/ingreso']);
     }
 
     /**
@@ -296,7 +296,7 @@ export class AuthService {
     private handleHttpError(error: HttpErrorResponse): Observable<never> {
         const processedError = this.errorHandler.handle(error);
         this.errorStateManager.setError(processedError);
-        this.authStateSubject.next(AuthState.ERROR);
+        this.authStateSubject.next(AuthState.ERROR_OTP);
         return throwError(() => processedError);
     }
 

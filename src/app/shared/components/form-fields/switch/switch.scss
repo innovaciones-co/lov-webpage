@@ -1,0 +1,51 @@
+.switch-container {
+    display: flex;
+    align-items: center;
+}
+
+.switch-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.switch-toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+
+    &:focus {
+        outline: 2px solid #007bff;
+        outline-offset: 2px;
+    }
+
+    &.active {
+        background-color: #007bff;
+
+        .switch-slider {
+            transform: translateX(18px);
+        }
+    }
+}
+
+.switch-slider {
+    width: 18px;
+    height: 18px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    display: block;
+}
+
+.switch-text {
+    user-select: none;
+}

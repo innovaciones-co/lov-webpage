@@ -1,3 +1,57 @@
+## [1.13.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.13.0...v1.13.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* uncomment nipRequest call in onSubmit method for form submission ([b621426](https://github.com/innovaciones-co/lov-webpage/commit/b62142652f7858759839a865bc15649a72e321cc))
+
+# [1.13.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.12.0...v1.13.0) (2026-05-05)
+
+
+### Features
+
+* update route guard for 'planes' path to use guestGuard and remove debug information from login component ([22c6240](https://github.com/innovaciones-co/lov-webpage/commit/22c62401fbccdb80e5941d48cc61e0e77287cdae))
+
+# [1.12.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.11.0...v1.12.0) (2026-05-05)
+
+
+### Features
+
+* enhance account management with SubscriptionAccount model and update dashboard display ([eecab7f](https://github.com/innovaciones-co/lov-webpage/commit/eecab7fd2b2ce317f6a33804cfc957e0bf0ab624))
+
+# [1.11.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.10.0...v1.11.0) (2026-05-05)
+
+
+### Features
+
+* add guestGuard to all routes for improved access control ([86c0750](https://github.com/innovaciones-co/lov-webpage/commit/86c0750a00550f3ba5fdbab8cb22d077cf3edf7c))
+
+# [1.10.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.9.0...v1.10.0) (2026-05-05)
+
+
+### Features
+
+* update OTP error handling and state management in authentication flow ([f3e5a81](https://github.com/innovaciones-co/lov-webpage/commit/f3e5a812a743fcdae6e4f3c1d02cdb08bc30bfce))
+
+# [1.9.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.8.0...v1.9.0) (2026-04-24)
+
+
+### Features
+
+* add active subscriptions input to recharge scheduler and implement saved recharge fetching ([12ae218](https://github.com/innovaciones-co/lov-webpage/commit/12ae2184b0346e721195e1d14b4fc0791a5be944))
+* add refresh mechanism for saved recharge data in RechargeScheduler ([eab5bb6](https://github.com/innovaciones-co/lov-webpage/commit/eab5bb6e1e88b40d666d45841402db95e4001a3d))
+* add switch component with toggle functionality ([d0dcf21](https://github.com/innovaciones-co/lov-webpage/commit/d0dcf215f4008f5e839b1afa2f4fece1a2c0fda6))
+* enhance recharge scheduler with submission handling and modal for adding credit cards ([5a57991](https://github.com/innovaciones-co/lov-webpage/commit/5a579911486779dd4efcf8a774c39eb8d0d376d5))
+* enhance saved recharge handling and update auto-recharge switch state ([cac7be3](https://github.com/innovaciones-co/lov-webpage/commit/cac7be3cdc8cb4db19148f1d4d158089d8db0646))
+* implement auto-recharge option ([a5b23b7](https://github.com/innovaciones-co/lov-webpage/commit/a5b23b7796f824b0aff37f91753fcc4e0668914f))
+* implement credit card fetching service ([1fa9072](https://github.com/innovaciones-co/lov-webpage/commit/1fa9072600f078e7227b83904234ab0b0b49feb5))
+* implement recharge scheduler component ([71ccf3f](https://github.com/innovaciones-co/lov-webpage/commit/71ccf3f9fb29489fe11a56d68ae7dbfcec29b67e))
+* integrate CreatePaymentMethod component into recharge scheduler ([d555b0c](https://github.com/innovaciones-co/lov-webpage/commit/d555b0c53c818471117a9bd309baf1aa836d12aa))
+* recharge scheduling with validation and enhancements ([dc95f6a](https://github.com/innovaciones-co/lov-webpage/commit/dc95f6a3e198c6daa3a094906349add67f322aea))
+* toggle auto-recharge switch on cancel ([92bdf8b](https://github.com/innovaciones-co/lov-webpage/commit/92bdf8be28c0c7c39e3a057f2685870da8c47a30))
+* update payment method ([5b7ed7d](https://github.com/innovaciones-co/lov-webpage/commit/5b7ed7d60babd40dc7a112cdd55b4796c76663d1))
+* update recharge scheduler to handle subscription and adjust credit card fetching logic ([27445ea](https://github.com/innovaciones-co/lov-webpage/commit/27445eabd7792e41afdd4a26d185299898f5cf2d))
+
 # [1.8.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.7.0...v1.8.0) (2026-04-24)
 
 

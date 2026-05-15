@@ -171,7 +171,7 @@ export class DonorInformationFormComponent {
     try {
       const formData = this.form().value as DonorInformationData;
       const lovNumber = this.portabilityData().lovNumber;
-      //await this.portabilityService.nipRequest(formData, lovNumber);
+      await this.portabilityService.nipRequest(formData, lovNumber);
 
       this.formSubmit.emit(formData);
       this.showModal.set(false);

@@ -71,7 +71,8 @@
     </div>
     }
 
-    <app-create-payment-method></app-create-payment-method>
+    <app-recharge-scheduler
+        [subscription]="activeSubscriptions().length > 0 ? activeSubscriptions()[0] : undefined"></app-recharge-scheduler>
 
     <div id="account-balances" class="card">
         <div class="card-title">
@@ -79,13 +80,37 @@
         </div>
 
         <div class="account-list">
-            @if (accounts().length > 0) {
+            @if (accountViews().length > 0) {
             <ul>
-                @for (account of accounts(); track account.id) {
+                @for (accountView of accountViews(); track accountView.account.accountId) {
                 <li class="account-item">
-                    <p class="account-name">{{ account.name }}</p>
-                    <p class="account-balance">Saldo: {{ account.balance | currency }}</p>
-                    <p class="account-expiry">Vence: {{ account.expiryDate | date:'shortDate' }}</p>
+
+                    @if (accountView.layout === 'unlimited') {
+                    <p class="account-value account-unlimited"><strong>{{ accountView.account.name }}:</strong> {{
+                        accountView.valueLabel
+                        }}</p>
+                    }
+
+                    @if (accountView.layout === 'currency') {
+                    <p class="account-value"><strong>Saldo:</strong> {{ accountView.valueLabel }}</p>
+                    }
+
+                    @if (accountView.layout === 'data') {
+                    <p class="account-value">Uso: {{ accountView.valueLabel }}</p>
+                    <div class="usage-bar" role="progressbar" [attr.aria-valuenow]="accountView.usagePercent"
+                        aria-valuemin="0" aria-valuemax="100" aria-label="Uso de datos">
+                        <div class="usage-bar-fill" [style.width.%]="accountView.usagePercent"></div>
+                    </div>
+                    <p class="account-detail">Disponible: {{ accountView.balanceInGb }} de {{ accountView.totalInGb }}
+                    </p>
+                    <p class="account-expiry">Vence: {{ accountView.account.expiryDate | date:'shortDate' }}</p>
+
+                    }
+
+                    @if (accountView.layout === 'generic') {
+                    <p class="account-value"><strong>Saldo:</strong> {{ accountView.valueLabel }}</p>
+                    }
+
                 </li>
                 }
             </ul>

@@ -23,7 +23,7 @@ export const guestGuard: CanActivateFn = (route, state) => {
         return true;
     }
 
-    // Redirect authenticated users to dashboard
-    router.navigate(['/dashboard']);
+    const returnUrl = route.queryParams['returnUrl'];
+    router.navigateByUrl(returnUrl ?? '/dashboard');
     return false;
 };
