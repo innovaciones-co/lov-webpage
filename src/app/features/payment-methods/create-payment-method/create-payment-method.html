@@ -1,5 +1,5 @@
 <form [formGroup]="form()" (ngSubmit)="onSubmit()">
-    <div class="card">
+    <div>
         <h3 class="form-subtitle">Información del titular</h3>
         <div class="form-grid">
             <div class="form-row">
@@ -7,13 +7,13 @@
                     [autocomplete]="'cc-name'" [control]="form().controls.fullName"
                     [error]="getFieldErrorMessage('fullName')"></input-text-field>
 
-                <input-text-field [label]="'Identificador del pagador'" [placeholder]="'Documento o ID del cliente'"
+                <input-text-field [label]="'Documento de identidad'" [placeholder]="'Documento o ID del cliente'"
                     [control]="form().controls.payerId" [error]="getFieldErrorMessage('payerId')"></input-text-field>
             </div>
         </div>
     </div>
 
-    <div class="card">
+    <div>
         <h3 class="form-subtitle">Datos de la tarjeta</h3>
         <div class="form-grid">
             <div class="form-row">
@@ -41,19 +41,13 @@
 
             <error-card [message]="submitError()"></error-card>
 
-            @if (generatedToken()) {
-            <div class="token-feedback">
-                <h4>Token generado</h4>
-                <p>{{ generatedToken() }}</p>
-            </div>
-            }
         </div>
     </div>
 
     <button class="btn" type="submit" [disabled]="form().invalid || isLoading()">
         @if (isLoading()) {
         <span class="loading-spinner"></span>
-        Generando token...
+        Agregando...
         } @else {
         Agregar método de pago
         }

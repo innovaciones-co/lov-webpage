@@ -1,7 +1,8 @@
 <div class="switch-container">
     <label [for]="id()" class="switch-label">
         <button type="button" [id]="id()" class="switch-toggle" [class.active]="control().value"
-            (click)="toggleSwitch()" role="switch" [attr.aria-checked]="control().value">
+            (click)="toggleSwitch()" role="switch" [attr.aria-checked]="control().value"
+            [disabled]="control().disabled">
             <span class="switch-slider"></span>
         </button>
         <span class="switch-text">{{ displayLabel() }}</span>

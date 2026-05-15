@@ -48,6 +48,15 @@ export class DashboardService {
         return this.http.get(url);
     }
 
+    deleteScheduledRecharge(subscriptionId: string): Observable<any> {
+        console.debug('Deleting scheduled recharge');
+        this.loading.set(true);
+
+        const url = `${this.gatewayUrl}/api/subscriptions/${subscriptionId}/autoTopup`;
+
+        return this.http.delete(url);
+    }
+
     getLoadingSignal() {
         return this.loading.asReadonly();
     }
