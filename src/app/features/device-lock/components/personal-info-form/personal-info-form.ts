@@ -1,32 +1,34 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, output, signal, OnInit, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 import { Router } from '@angular/router';
+import { DeviceLockService } from '../../services/device-lock.service';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface PersonalInfoFormData {
-  name: string;
-  lastName: string;
-  documentType: string;
-  documentID: string;
   email: string;
   phoneNumber: string;
   city: string;
   address: string;
   addressOptional: string;
+  imei: string;
 }
 
 @Component({
   selector: 'app-personal-info-form',
   imports: [ReactiveFormsModule,
     InputTextComponent,
-    SelectComponent
-  ],
+    SelectComponent, ErrorCard],
   templateUrl: './personal-info-form.html',
   styleUrl: './personal-info-form.scss'
 })
 export class PersonalInfoForm {
   private router = inject(Router);
+  private deviceLockService = inject(DeviceLockService);
+
+  imeiList = input<{ label: string; value: string }[]>([]);
+  validationError = signal<string>('');
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -35,30 +37,19 @@ export class PersonalInfoForm {
     },
     phoneNumber: {
       pattern: 'El teléfono debe tener 10 dígitos numéricos'
-    },
-    documentID: {
-      pattern: 'El documento debe tener el formato correcto'
     }
   };
 
   form = signal(
     new FormGroup({
-      name: new FormControl('', Validators.required),
-      lastName: new FormControl('', Validators.required),
-      documentType: new FormControl('', Validators.required),
-      documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
       email: new FormControl('', [Validators.required, Validators.email]),
       phoneNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
       city: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
       addressOptional: new FormControl(''),
+      imei: new FormControl('', Validators.required),
     })
   );
-
-  documentType = signal([
-    { label: 'Cédula', value: 'ID' },
-    { label: 'Cédula de extranjeria', value: 'foreignID' },
-  ]);
 
   formSubmit = output<PersonalInfoFormData>();
 
