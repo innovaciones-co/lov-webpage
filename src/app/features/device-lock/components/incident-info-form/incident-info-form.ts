@@ -17,6 +17,8 @@ export interface IncidentInfoFormData {
   blockType: string;
   isMinor: string;
   violenceApplied: string;
+  weaponType?: string;
+  subscriptionId?: string;
 }
 
 @Component({
@@ -65,6 +67,21 @@ export class IncidentInfoForm {
     };
   }
 
+  // Conditional validator: weaponType is required if violenceApplied is 'yes'
+  private conditionalWeaponTypeValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const formGroup = control as FormGroup;
+      const violenceApplied = formGroup.get('violenceApplied')?.value;
+      const weaponType = formGroup.get('weaponType')?.value;
+
+      if (violenceApplied === 'yes' && !weaponType) {
+        return { weaponTypeRequired: true };
+      }
+
+      return null;
+    };
+  }
+
   form = signal(
     new FormGroup({
       name: new FormControl('', Validators.required),
@@ -76,22 +93,41 @@ export class IncidentInfoForm {
       blockType: new FormControl('', Validators.required),
       isMinor: new FormControl('', Validators.required),
       violenceApplied: new FormControl('', Validators.required),
-    })
+      weaponType: new FormControl(''),
+    }, { validators: this.conditionalWeaponTypeValidator() })
   );
 
+  constructor() {
+    // Re-validate and clear weaponType when violenceApplied changes
+    this.form().get('violenceApplied')?.valueChanges.subscribe((value) => {
+      if (value !== 'yes') {
+        this.form().get('weaponType')?.reset(null, { emitEvent: false });
+      }
+      this.form().updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
   blockType = signal([
-    { label: 'Hurto', value: 'theft' },
-    { label: 'Extravío', value: 'loss' },
+    { label: 'Hurto', value: 'THEFT_DEVICE' },
+    { label: 'Extravío', value: 'LOST_DEVICE' },
   ]);
 
   documentType = signal([
-    { label: 'Cédula', value: 'ID' },
-    { label: 'Cédula de extranjeria', value: 'foreignID' },
+    { label: 'Cédula', value: '1' },
+    { label: 'NIT', value: '2' },
+    { label: 'Cédula de extranjeria', value: '3' },
+    { label: 'Pasaporte', value: '4' },
   ]);
 
   yesNoOptions = signal([
     { label: 'Sí', value: 'yes' },
     { label: 'No', value: 'no' },
+  ]);
+
+  weaponType = signal([
+    { label: 'Arma de fuego', value: 'FIREARM' },
+    { label: 'Arma blanca', value: 'BLADE' },
+    { label: 'Otro', value: 'OTHER' },
   ]);
 
   formSubmit = output<IncidentInfoFormData>();
@@ -132,7 +168,8 @@ export class IncidentInfoForm {
             try {
               const imeiList = await this.deviceLockService.getImeiList(subscriptionId);
               this.imeiListEmit.emit(imeiList);
-              this.formSubmit.emit(this.form().value as IncidentInfoFormData);
+              const formData = { ...this.form().value as IncidentInfoFormData, subscriptionId };
+              this.formSubmit.emit(formData);
 
 
               if (imeiList.length === 0) {

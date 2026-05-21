@@ -43,12 +43,12 @@ export class DeviceLockService {
         }
     }
 
-    async lockDevice(deviceData: any): Promise<any> {
+    async lockDevice(subscriptionId: string, deviceData: any): Promise<any> {
         try {
             console.debug('Submitting device lock request with data:', deviceData);
-            const url = `${this.gatewayUrl}/api/device/lock`;
+            const url = `${this.gatewayUrl}/api/subscriptions/${subscriptionId}/handset/block`;
 
-            const response = await firstValueFrom(this.http.post<ApiResponse<any>>(url, deviceData));
+            const response = await firstValueFrom(this.http.put<ApiResponse<any>>(url, deviceData));
             return response.payload;
         } catch (error: any) {
             console.error('Error locking device:', error);

@@ -23,6 +23,10 @@
                 <select-field [label]="'Se aplicó violencia'" [placeholder]="''" [options]="yesNoOptions()"
                     [control]="form().controls.violenceApplied"
                     [error]="getFieldErrorMessage('violenceApplied')"></select-field>
+                @if (form().controls.violenceApplied.value === 'yes') {
+                <select-field [label]="'Tipo de arma'" [placeholder]="''" [options]="weaponType()"
+                    [control]="form().controls.weaponType" [error]="getFieldErrorMessage('weaponType')"></select-field>
+                }
             </div>
         </div>
         <h3 class="form-subtitle">Información personal</h3>

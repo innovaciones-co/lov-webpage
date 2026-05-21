@@ -31,8 +31,19 @@
                     [control]="form().controls.addressOptional"
                     [error]="getFieldErrorMessage('addressOptional')"></input-text-field>
             </div>
+            <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
+                He leído y acepto la <a href="/docs/politicas_de_tratamiento_de_datos_personales_new.pdf"
+                    target="_blank" class="link-button">Política de Tratamiento de Datos Personales</a>.
+            </checkbox-field>
         </div>
         <error-card [message]="validationError()"></error-card>
     </div>
-    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+        @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Procesando...
+        } @else {
+        Continuar
+        }
+    </button>
 </form>
