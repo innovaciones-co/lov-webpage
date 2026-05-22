@@ -10,6 +10,7 @@ import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
 import { CurrentPlan } from './current-plan/current-plan';
 import { RechargeScheduler } from './components/recharge-scheduler/recharge-scheduler';
+import { DataUsage } from "./components/data-usage/data-usage";
 
 export interface AccountViewModel {
   name: string;
@@ -20,7 +21,7 @@ export interface AccountViewModel {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler, CurrentPlan],
+  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler, CurrentPlan, DataUsage],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
