@@ -1,3 +1,16 @@
+# [1.17.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.16.0...v1.17.0) (2026-05-22)
+
+
+### Features
+
+* add data usage component ([fcf2eb4](https://github.com/innovaciones-co/lov-webpage/commit/fcf2eb4c181d23d9809109d78660d856fa526dea))
+* enhance data usage component ([f907368](https://github.com/innovaciones-co/lov-webpage/commit/f90736812c54e90e75962d4985a4999f8490539e))
+* implement current plan component ([2e93d76](https://github.com/innovaciones-co/lov-webpage/commit/2e93d7603c081ac67aea4831d21fbf2751d518d9))
+* improve login layout and responsiveness with updated styles ([eee510b](https://github.com/innovaciones-co/lov-webpage/commit/eee510b4fdf0c74024576e315f75793b7cc070d4))
+* refactor recharge scheduler component and add data usage component ([685fa3b](https://github.com/innovaciones-co/lov-webpage/commit/685fa3b807ecfcb7672522445638ee2a5dca8b37))
+* update subscription service methods and improve dashboard functionality ([8e58962](https://github.com/innovaciones-co/lov-webpage/commit/8e58962a74383799151cc1ccdfff5e59459b8540))
+* update subscription styles ([57953da](https://github.com/innovaciones-co/lov-webpage/commit/57953daa9248f894b965a315ad7112e2a299878d))
+
 # [1.16.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.15.0...v1.16.0) (2026-05-22)
 
 
