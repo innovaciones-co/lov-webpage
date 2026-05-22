@@ -8,7 +8,7 @@ import { SubscriptionFacadeService } from '../../core/services/subscription-faca
 import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
-import { RechargeScheduler } from './recharge-scheduler/recharge-scheduler';
+import { RechargeScheduler } from './components/recharge-scheduler/recharge-scheduler';
 
 type AccountLayout = 'currency' | 'data' | 'unlimited' | 'generic';
 

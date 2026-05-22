@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, input, signal, ElementRef } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, input, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputTextComponent } from "../../../shared/components/form-fields/input-text/input-text";
-import { SelectComponent } from "../../../shared/components/form-fields/select/select";
-import { CheckboxComponent } from "../../../shared/components/form-fields/checkbox/checkbox";
-import { SwitchComponent } from "../../../shared/components/form-fields/switch/switch";
-import { ErrorCard } from "../../../shared/components/error-card/error-card";
-import { Loading } from "../../../shared/components/loading/loading";
-import { Modal } from "../../../shared/components/modal/modal";
-import { CustomerSubscription } from '../../../core/models/customer.model';
-import { DashboardService } from '../services/dashboard.service';
-import { CreatePaymentMethod } from "../../payment-methods/create-payment-method/create-payment-method";
+import { CustomerSubscription } from '../../../../core/models/customer.model';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
+import { CheckboxComponent } from "../../../../shared/components/form-fields/checkbox/checkbox";
+import { InputTextComponent } from "../../../../shared/components/form-fields/input-text/input-text";
+import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
+import { SwitchComponent } from "../../../../shared/components/form-fields/switch/switch";
+import { Loading } from "../../../../shared/components/loading/loading";
+import { Modal } from "../../../../shared/components/modal/modal";
+import { CreatePaymentMethod } from "../../../payment-methods/create-payment-method/create-payment-method";
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-recharge-scheduler',
