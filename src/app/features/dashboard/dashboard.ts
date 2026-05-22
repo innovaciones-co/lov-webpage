@@ -10,6 +10,7 @@ import { SubscriptionFacadeService } from '../../core/services/subscription-faca
 import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
+import { DataUsage } from "./components/data-usage/data-usage";
 import { RechargeScheduler } from './components/recharge-scheduler/recharge-scheduler';
 import { CurrentPlan } from './current-plan/current-plan';
 
@@ -35,7 +36,7 @@ interface BillingInfo {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler, CurrentPlan],
+  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler, CurrentPlan, DataUsage],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })

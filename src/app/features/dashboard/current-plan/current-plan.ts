@@ -23,7 +23,7 @@ export class CurrentPlan {
   });
 
   displayItems = computed(() => {
-    console.log('accountViews:', (this.accountViews()));
+    //console.log('accountViews:', (this.accountViews()));
     return this.accountViews()
       .filter(account => account.name !== 'Pesos')
       .map(view => {
