@@ -23,7 +23,7 @@ export class RechargeScheduler {
   private dashboardService = inject(DashboardService);
   private elementRef = inject(ElementRef);
 
-  subscription = input<CustomerSubscription | undefined>();
+  subscription = input<CustomerSubscription | null>();
 
   creditCards = signal<any[]>([]);
   loadingCreditCards = signal<boolean>(true);

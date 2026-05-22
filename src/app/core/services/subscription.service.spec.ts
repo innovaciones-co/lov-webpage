@@ -25,9 +25,19 @@ describe('SubscriptionService', () => {
         expect(service).toBeTruthy();
     });
 
-    describe('getSubscription', () => {
-        it('should retrieve subscription information', () => {
+    describe('getSubscriptionsByMsisdn', () => {
+        it('should lookup the customer id and then retrieve subscription information', () => {
             const mockMsisdn = '573330701090';
+            const mockCustomerId = 599113420;
+            const customerLookupResponse: ApiResponse<{ id: number }> = {
+                correlationId: 'rest-soa02-1767647482120-1',
+                payload: {
+                    id: mockCustomerId
+                },
+                providerId: 6,
+                responseCode: 0,
+                responseDetail: 'OK'
+            };
             const mockResponse: ApiResponse<CustomerSubscriptionResponse> = {
                 correlationId: 'rest-soa02-1767647482120-1',
                 payload: {
@@ -54,7 +64,7 @@ describe('SubscriptionService', () => {
                     emailVerified: false,
                     familyName: 'Torres',
                     givenName: 'Sergio',
-                    id: 599113420,
+                    id: mockCustomerId,
                     languageId: null,
                     lastModified: '2025-06-05T22:41:31.648+0000',
                     optedOutFromHouseholdDataShare: false,
@@ -89,23 +99,29 @@ describe('SubscriptionService', () => {
                 responseDetail: 'OK'
             };
 
-            service.getSubscription({ msisdn: mockMsisdn }).subscribe(response => {
+            service.getSubscriptionsByMsisdn(mockMsisdn).subscribe(response => {
                 expect(response).toEqual(mockResponse);
             });
 
-            const req = httpMock.expectOne(
+            const lookupReq = httpMock.expectOne(
                 req => req.url === 'http://localhost:8000/api/subscriptions' &&
                     req.params.get('msisdn') === mockMsisdn
             );
-            expect(req.request.method).toBe('GET');
-            req.flush(mockResponse);
+            expect(lookupReq.request.method).toBe('GET');
+            lookupReq.flush(customerLookupResponse);
+
+            const customerReq = httpMock.expectOne(
+                `http://localhost:8000/api/customers/${mockCustomerId}`
+            );
+            expect(customerReq.request.method).toBe('GET');
+            customerReq.flush(mockResponse);
         });
 
-        it('should handle errors', () => {
+        it('should handle customer lookup errors', () => {
             const mockMsisdn = '573330701090';
             const errorResponse = { status: 404, statusText: 'Not Found' };
 
-            service.getSubscription({ msisdn: mockMsisdn }).subscribe({
+            service.getSubscriptionsByMsisdn(mockMsisdn).subscribe({
                 next: () => fail('Should have failed'),
                 error: (error) => {
                     expect(error.status).toBe(404);
@@ -117,16 +133,29 @@ describe('SubscriptionService', () => {
             );
             req.flush('Not Found', errorResponse);
         });
-    });
 
-    describe('getSubscriptionByMsisdn', () => {
-        it('should call getSubscription with proper params', () => {
+        it('should expose customer id lookup directly', () => {
             const mockMsisdn = '573330701090';
-            spyOn(service, 'getSubscription').and.callThrough();
+            const mockCustomerId = 599113420;
 
-            service.getSubscriptionByMsisdn(mockMsisdn);
+            service.getCustomerId({ msisdn: mockMsisdn }).subscribe(customerId => {
+                expect(customerId).toEqual({ id: mockCustomerId });
+            });
 
-            expect(service.getSubscription).toHaveBeenCalledWith({ msisdn: mockMsisdn });
+            const req = httpMock.expectOne(
+                req => req.url === 'http://localhost:8000/api/subscriptions' &&
+                    req.params.get('msisdn') === mockMsisdn
+            );
+            expect(req.request.method).toBe('GET');
+            req.flush({
+                correlationId: 'rest-soa02-1767647482120-1',
+                payload: {
+                    id: mockCustomerId
+                },
+                providerId: 6,
+                responseCode: 0,
+                responseDetail: 'OK'
+            });
         });
     });
 });

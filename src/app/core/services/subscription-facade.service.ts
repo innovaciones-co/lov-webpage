@@ -16,7 +16,7 @@ export class SubscriptionFacadeService {
      * Get complete customer and subscription information by MSISDN
      */
     getCustomerWithSubscriptions(msisdn: string): Observable<ApiResponse<CustomerSubscriptionResponse> | null> {
-        return this.subscriptionService.getSubscriptionByMsisdn(msisdn).pipe(
+        return this.subscriptionService.getSubscriptionsByMsisdn(msisdn).pipe(
             catchError((error) => {
                 console.error('Failed to fetch customer subscriptions:', error);
                 return of(null);
@@ -28,7 +28,7 @@ export class SubscriptionFacadeService {
      * Get only active subscriptions for a customer by MSISDN
      */
     getActiveSubscriptions(msisdn: string): Observable<CustomerSubscription[]> {
-        return this.subscriptionService.getSubscriptionByMsisdn(msisdn).pipe(
+        return this.subscriptionService.getSubscriptionsByMsisdn(msisdn).pipe(
             map(response => response?.payload?.subscriptions?.filter(sub => sub.state === 'ACTIVE') || []),
             catchError(() => of([]))
         );
@@ -38,7 +38,7 @@ export class SubscriptionFacadeService {
      * Get customer basic information by MSISDN
      */
     getCustomerInfo(msisdn: string): Observable<Omit<CustomerSubscriptionResponse, 'subscriptions'> | null> {
-        return this.subscriptionService.getSubscriptionByMsisdn(msisdn).pipe(
+        return this.subscriptionService.getSubscriptionsByMsisdn(msisdn).pipe(
             map(response => {
                 if (!response?.payload) return null;
                 const { subscriptions, ...customerInfo } = response.payload;
@@ -61,7 +61,7 @@ export class SubscriptionFacadeService {
      * Get subscription by specific subscription ID
      */
     getSubscriptionById(msisdn: string, subscriptionId: number): Observable<CustomerSubscription | null> {
-        return this.subscriptionService.getSubscriptionByMsisdn(msisdn).pipe(
+        return this.subscriptionService.getSubscriptionsByMsisdn(msisdn).pipe(
             map(response =>
                 response?.payload?.subscriptions?.find(sub => sub.id === subscriptionId) || null
             ),

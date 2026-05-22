@@ -24,15 +24,16 @@
                     @if (activeSubscriptions().length > 0) {
                     <ul>
                         @for (subscription of activeSubscriptions(); track subscription.msisdn) {
-                        <li class="subscription-item">
+                        <li class="subscription-item" (click)="selectSubscription(subscription)"
+                            [class.selected]="subscription.id === currentSubscription()?.id">
                             <span class="subscription-name">Plan: {{ subscription.tariff.tariffName }}</span>
                             <span class="subscription-msisdn">Número de teléfono: {{ subscription.msisdn }}</span>
-                            <span class="subscription-status">Estado: {{ subscription.state | capitalize }}</span>
+                            <span class="subscription-status">Estado: {{ getStateLabel(subscription.state) }}</span>
                             <span class="subscription-activation">Activado: {{ subscription.activationDate |
                                 date:'shortDate'
                                 }}</span>
-                            <span class="subscription-payment">Tipo de Pago: {{ subscription.paymentType | lowercase
-                                }}</span>
+                            <span class="subscription-payment">Tipo de Pago: {{
+                                getSubscriptionType(subscription.paymentType) }}</span>
                         </li>
                         }
                     </ul>
@@ -67,8 +68,7 @@
             </div>
             }
 
-            <app-recharge-scheduler
-                [subscription]="activeSubscriptions().length > 0 ? activeSubscriptions()[0] : undefined"></app-recharge-scheduler>
+            <app-recharge-scheduler [subscription]="currentSubscription()"></app-recharge-scheduler>
         </div>
 
         <div class="right-column">
