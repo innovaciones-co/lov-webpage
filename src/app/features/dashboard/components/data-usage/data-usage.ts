@@ -49,7 +49,7 @@ export class DataUsage {
 
   totalData = computed(() => {
     const mb = this.dataAccount();
-    if (!mb) return 100;
+    if (!mb) return 0;
     if (mb.type === 'UNLIMITED') return 100;
     return this.convertToGB(mb.initialBalance, 'MB');
   });
@@ -57,6 +57,7 @@ export class DataUsage {
   progressPercentage = computed(() => {
     const used = this.usedData();
     const total = this.totalData();
+    if (total === 0) return 0;
     return (used / total) * 100;
   });
 }
