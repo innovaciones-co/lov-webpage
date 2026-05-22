@@ -9,21 +9,18 @@ import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
 import { RechargeScheduler } from './recharge-scheduler/recharge-scheduler';
+import { CurrentPlan } from './current-plan/current-plan';
 
-type AccountLayout = 'currency' | 'data' | 'unlimited' | 'generic';
-
-interface AccountViewModel {
-  account: SubscriptionAccount;
-  layout: AccountLayout;
-  valueLabel: string;
-  usagePercent?: number;
-  balanceInGb?: string;
-  totalInGb?: string;
+export interface AccountViewModel {
+  name: string;
+  balance: number;
+  initialBalance: number;
+  type: string;
 }
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler],
+  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler, CurrentPlan],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
@@ -36,7 +33,7 @@ export class Dashboard implements OnInit {
   billingInfo: any = null;
   accounts = signal<SubscriptionAccount[]>([]);
   accountViews = computed<AccountViewModel[]>(() =>
-    this.accounts().map((account) => this.toAccountViewModel(account))
+    this.groupAndNormalizeAccounts(this.accounts())
   );
 
   submitError = signal<string>('');
@@ -87,83 +84,39 @@ export class Dashboard implements OnInit {
     });
   }
 
-  private toAccountViewModel(account: SubscriptionAccount): AccountViewModel {
-    if (this.isUnlimitedAccount(account)) {
-      return {
-        account,
-        layout: 'unlimited',
-        valueLabel: 'Ilimitados'
-      };
-    }
+  private groupAndNormalizeAccounts(data: SubscriptionAccount[]): AccountViewModel[] {
+    const grouped = Object.values(
+      data.reduce((acc, item) => {
+        const key = item.name;
 
-    if (this.isDataAccount(account)) {
-      const usageRatio = this.getUsageRatio(account.balance, account.initialBalance);
-      return {
-        account,
-        layout: 'data',
-        valueLabel: `${Math.round(usageRatio * 100)}%`,
-        usagePercent: Math.round(usageRatio * 100),
-        balanceInGb: this.formatGb(account.balance),
-        totalInGb: this.formatGb(account.initialBalance)
-      };
-    }
+        if (!acc[key]) {
+          acc[key] = {
+            name: key,
+            balance: 0,
+            initialBalance: 0,
+            type: item.type as AccountViewModel['type'],
+            relation: item.unit?.relation || 1
+          };
+        }
 
-    if (this.isPesosAccount(account)) {
-      const normalizedBalance = account.unit.relation > 0 ? account.balance / account.unit.relation : account.balance;
-      return {
-        account,
-        layout: 'currency',
-        valueLabel: this.formatPesos(normalizedBalance)
-      };
-    }
+        acc[key].balance += item.balance || 0;
+        acc[key].initialBalance += item.initialBalance || 0;
 
-    const normalizedBalance = account.unit.relation > 0 ? account.balance / account.unit.relation : account.balance;
-    return {
-      account,
-      layout: 'generic',
-      valueLabel: `${this.formatNumber(normalizedBalance)} ${account.unit.name}`
-    };
-  }
+        // Si alguno es UNLIMITED, el grupo completo queda UNLIMITED
+        if (item.type === 'UNLIMITED') {
+          acc[key].type = 'UNLIMITED' as const;
+        }
 
-  private isUnlimitedAccount(account: SubscriptionAccount): boolean {
-    return account.type === 'UNLIMITED';
-  }
+        return acc;
+      }, {} as Record<string, any>)
+    );
 
-  private isDataAccount(account: SubscriptionAccount): boolean {
-    const unitName = account.unit.name.toLowerCase();
-    return unitName.includes('byte') && account.name.toUpperCase() === 'MB';
-  }
-
-  private isPesosAccount(account: SubscriptionAccount): boolean {
-    return account.name.toLowerCase().includes('pesos');
-  }
-
-  private getUsageRatio(balance: number, initialBalance: number): number {
-    if (initialBalance <= 0) {
-      return 0;
-    }
-
-    const ratio = balance / initialBalance;
-    return Math.min(Math.max(ratio, 0), 1);
-  }
-
-  private formatGb(rawValue: number): string {
-    const gb = rawValue / (1024 ** 3);
-    return `${this.formatNumber(gb)} GB`;
-  }
-
-  private formatPesos(value: number): string {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      maximumFractionDigits: 0
-    }).format(value);
-  }
-
-  private formatNumber(value: number): string {
-    return new Intl.NumberFormat('es-CO', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2
-    }).format(value);
+    // Normalizar por relation
+    return grouped.map(item => ({
+      name: item.name,
+      balance: item.relation > 0 ? item.balance / item.relation : item.balance,
+      initialBalance: item.relation > 0 ? item.initialBalance / item.relation : item.initialBalance,
+      type: item.type
+    }));
   }
 }
