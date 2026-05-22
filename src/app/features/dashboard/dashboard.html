@@ -14,10 +14,7 @@
             <app-data-usage [accountViews]="accountViews()"></app-data-usage>
 
             <aside class="card">
-                <div class="card-title">
-                    <h2>Suscripciones</h2>
-                </div>
-
+                <h3 class="form-subtitle">Suscripciones</h3>
                 <div class="subscriptions-list">
                     @if (loading()) {
                     <app-loading></app-loading>
@@ -27,7 +24,7 @@
                     <ul>
                         @for (subscription of activeSubscriptions(); track subscription.msisdn) {
                         <li class="subscription-item" (click)="selectSubscription(subscription)"
-                            [class.selected]="subscription.id === currentSubscription()?.id">
+                            [class.active]="subscription.id === currentSubscription()?.id">
                             <span class="subscription-name">Plan: {{ subscription.tariff.tariffName }}</span>
                             <span class="subscription-msisdn">Número de teléfono: {{ subscription.msisdn }}</span>
                             <span class="subscription-status">Estado: {{ getStateLabel(subscription.state) }}</span>
