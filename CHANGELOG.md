@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.15.0...v1.16.0) (2026-05-22)
+
+
+### Features
+
+* enhance incident and personal info forms with weapon type and terms acceptance ([a731feb](https://github.com/innovaciones-co/lov-webpage/commit/a731feb60d9b612579bf44fb8c3f5cb2ec9af126))
+
 # [1.15.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.14.0...v1.15.0) (2026-05-15)
 
 
