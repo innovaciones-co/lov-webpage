@@ -1,0 +1,23 @@
+<div id="account-balances" class="card">
+    <h3 class="card-title">Tu saldo actual</h3>
+    <div class="total-balance">
+        <div>Saldo en pesos</div>
+        <div>${{ pesoBalance() }}</div>
+    </div>
+    <div class="balance-list">
+        @if (displayItems().length > 0) {
+        <ul>
+            @for (item of displayItems(); track item.product) {
+            <li class="balance-item">
+                <span class="material-symbols-outlined">{{ item.icon }}</span>
+                <!-- <strong>{{ item.name }}:</strong> {{ item.balanceName }} -->
+                <p>{{ item.name }}: {{ item.balanceName }}</p>
+            </li>
+            }
+        </ul>
+        }
+        @else {
+        <p>No hay cuentas disponibles para esta suscripción.</p>
+        }
+    </div>
+</div>

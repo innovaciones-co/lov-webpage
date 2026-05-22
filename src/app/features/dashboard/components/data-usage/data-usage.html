@@ -1,0 +1,19 @@
+<div id="data-usage" class="card">
+    <h3 class="card-title">Consumo actual</h3>
+    <div class="data-balance">
+        @if (dataAccount()?.type === 'UNLIMITED') {
+        <p>Datos de navegación: <span>Ilimitado</span></p>
+        } @else {
+        <p>Datos de navegación: <span>{{ usedData() }} GB usadas</span> de {{ totalData() }} GB</p>
+        }
+    </div>
+    <div class="data-consumption">
+        <div class="data-consumption-bar">
+            <div class="progress" [style.width.%]="progressPercentage()"></div>
+        </div>
+        <div class="data-consumption-info">
+            <div>0 GB</div>
+            <div>{{ totalData() }} GB</div>
+        </div>
+    </div>
+</div>
