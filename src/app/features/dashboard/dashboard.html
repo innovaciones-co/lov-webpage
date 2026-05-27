@@ -11,7 +11,7 @@
 
     <div class="dashboard-content">
         <div class="left-column">
-            <app-data-usage [accountViews]="accountViews()"></app-data-usage>
+            <app-data-usage [accountViews]="accountViews()" [isAccountLoading]="isAccountLoading()"></app-data-usage>
 
             <aside class="card">
                 <h3 class="form-subtitle">Suscripciones</h3>
@@ -71,7 +71,8 @@
         </div>
 
         <div class="right-column">
-            <app-current-plan [accountViews]="accountViews()"></app-current-plan>
+            <app-current-plan [accountViews]="accountViews()"
+                [isAccountLoading]="isAccountLoading()"></app-current-plan>
         </div>
     </div>
 </div>

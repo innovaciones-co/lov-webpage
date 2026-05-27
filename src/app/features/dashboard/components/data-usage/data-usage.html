@@ -1,6 +1,10 @@
 <div id="data-usage" class="card">
     <h3 class="card-title">Consumo actual</h3>
+    @if (isAccountLoading()) {
+    <app-loading></app-loading>
+    } @else {
     <div class="data-balance">
+
         @if (dataAccount()?.type === 'UNLIMITED') {
         <p>Datos de navegación: <span>Ilimitado</span></p>
         } @else {
@@ -20,4 +24,5 @@
             }
         </div>
     </div>
+    }
 </div>

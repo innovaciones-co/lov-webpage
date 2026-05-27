@@ -53,6 +53,7 @@ export class Dashboard implements OnInit {
     this.groupAndNormalizeAccounts(this.accounts())
   );
   currentSubscription = signal<CustomerSubscription | null>(null);
+  isAccountLoading = signal(false);
 
   submitError = signal<string>('');
 
@@ -90,8 +91,10 @@ export class Dashboard implements OnInit {
   }
 
   fetchAccounts(customerId: string, subscriptionId: string) {
+    this.isAccountLoading.set(true);
     this.subscriptionFacade.getAccountsForSubscription(customerId, subscriptionId).subscribe(accounts => {
       this.accounts.set(accounts);
+      this.isAccountLoading.set(false);
     });
   }
 

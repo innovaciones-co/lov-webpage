@@ -1,5 +1,6 @@
 import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Loading } from '../../../shared/components/loading/loading';
 import { AccountViewModel } from '../dashboard';
 
 interface DisplayItem extends AccountViewModel {
@@ -10,12 +11,13 @@ interface DisplayItem extends AccountViewModel {
 
 @Component({
   selector: 'app-current-plan',
-  imports: [CommonModule],
+  imports: [CommonModule, Loading],
   templateUrl: './current-plan.html',
   styleUrl: './current-plan.scss'
 })
 export class CurrentPlan {
   accountViews = input.required<AccountViewModel[]>();
+  isAccountLoading = input(false);
 
   pesoBalance = computed(() => {
     const currencyAccount = this.accountViews().find(account => account.name === 'Pesos');

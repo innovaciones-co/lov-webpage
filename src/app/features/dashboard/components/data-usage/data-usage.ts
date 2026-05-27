@@ -1,4 +1,5 @@
 import { Component, computed, effect, input, signal } from '@angular/core';
+import { Loading } from '../../../../shared/components/loading/loading';
 
 export interface AccountViewModel {
   name: string;
@@ -9,12 +10,13 @@ export interface AccountViewModel {
 
 @Component({
   selector: 'app-data-usage',
-  imports: [],
+  imports: [Loading],
   templateUrl: './data-usage.html',
   styleUrl: './data-usage.scss'
 })
 export class DataUsage {
   accountViews = input.required<AccountViewModel[]>();
+  isAccountLoading = input(false);
 
   dataAccount = computed(() => {
     return this.accountViews().find(account => account.name === 'MB');
