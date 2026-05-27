@@ -13,7 +13,11 @@
         </div>
         <div class="data-consumption-info">
             <div>0 GB</div>
+            @if (dataAccount()?.type === 'UNLIMITED') {
+            <div>Ilimitado</div>
+            } @else {
             <div>{{ totalData() }} GB</div>
+            }
         </div>
     </div>
 </div>
