@@ -119,7 +119,6 @@
 .left-column {
     display: flex;
     flex-direction: column;
-    gap: 20px;
     order: 2;
 
     @include large {
