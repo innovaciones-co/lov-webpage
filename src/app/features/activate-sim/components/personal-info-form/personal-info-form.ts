@@ -131,13 +131,14 @@ export class PersonalInfoForm {
       this.validationError.set('');
 
       const documentData = this.documentValidationData();
+      const msisdn = this.activateSimService.getIccidValidationData()()?.payload?.subscriptions?.[0]?.msisdn;
 
       this.activateSimService.activateSim(formData, documentData).subscribe({
         next: (response) => {
           console.log('Activación exitosa:', response);
           this.isLoading.set(false);
           this.formSubmit.emit(formData);
-          this.router.navigate(['/activar-sim/exitoso']);
+          this.router.navigate(['/activar-sim/exitoso'], { state: { msisdn: msisdn } });
         },
         error: (error) => {
           console.error('Error en la activación:', error);
