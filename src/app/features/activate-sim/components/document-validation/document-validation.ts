@@ -1,5 +1,5 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 import { Router } from '@angular/router';
@@ -29,14 +29,34 @@ export class DocumentValidation {
   errorMessages: Record<string, Record<string, string>> = {
     documentID: {
       pattern: 'El documento debe tener el formato correcto'
+    },
+    documentIssueDate: {
+      pastDate: 'La fecha debe ser anterior o igual a hoy'
     }
   };
+
+  // Past date validator (date must be today or earlier)
+  private pastDateValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value) return null;
+
+      const dateValue = control.value;
+      const [year, month, day] = dateValue.split('-').map(Number);
+
+      // Create dates in local timezone
+      const selectedDate = new Date(year, month - 1, day);
+      const today = new Date();
+      today.setHours(23, 59, 59, 999);
+
+      return selectedDate <= today ? null : { pastDate: true };
+    };
+  }
 
   form = signal(
     new FormGroup({
       documentType: new FormControl('', Validators.required),
       documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
-      documentIssueDate: new FormControl<string | null>(null, Validators.required),
+      documentIssueDate: new FormControl<string | null>(null, [Validators.required, this.pastDateValidator()]),
     })
   );
 
