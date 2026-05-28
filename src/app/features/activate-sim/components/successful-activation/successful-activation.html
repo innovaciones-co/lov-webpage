@@ -1,8 +1,13 @@
 <successful-process [icon]="icon" [title]="title">
     <div class="info-details">
         <p class="success-description">Tu SIM LOV está activa y lista para usarse.</p>
-        @if (msisdn()) {
-        <p class="phone-number">Número de teléfono LOV: <em>{{ msisdn() }}</em></p>
+        @switch(msisdnState()) {
+        @case ('loading') {
+        <p class="phone-number"><em class="loading">Obteniendo número<span class="dots"></span></em></p>
+        }
+        @case ('success') {
+        <p class="phone-number">Número LOV: <em>{{ msisdn() }}</em></p>
+        }
         }
         <p class="activation-info">En breve recibirás un mensaje de confirmación. Conéctate, disfruta y vive la
             experiencia LOV con todo el amor que te mereces.

@@ -5,6 +5,7 @@ import { SelectComponent } from '../../../../shared/components/form-fields/selec
 import { Router } from '@angular/router';
 import { ActivateSimService } from '../../services/activate-sim.service';
 import { DatePickerComponent } from "../../../../shared/components/form-fields/date-picker/date-picker";
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface DocumentValidationData {
   documentType: string;
@@ -14,7 +15,7 @@ export interface DocumentValidationData {
 
 @Component({
   selector: 'app-document-validation',
-  imports: [ReactiveFormsModule, InputTextComponent, SelectComponent, DatePickerComponent],
+  imports: [ReactiveFormsModule, InputTextComponent, SelectComponent, DatePickerComponent, ErrorCard],
   templateUrl: './document-validation.html',
   styleUrl: './document-validation.scss'
 })
@@ -24,6 +25,7 @@ export class DocumentValidation {
 
   hideButton = input(false);
   isLoading = signal(false);
+  validationError = signal<string>('');
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -96,6 +98,9 @@ export class DocumentValidation {
       const formData = this.form().value as DocumentValidationData;
       this.isLoading.set(true);
 
+      // Limpiar error previo
+      this.validationError.set('');
+
       this.activateSimService.validateDocument(formData.documentID, formData.documentType, formData.documentIssueDate).subscribe({
         next: (response) => {
           console.log('Documento validado exitosamente:', response);
@@ -103,13 +108,21 @@ export class DocumentValidation {
 
           if (response?.success && response?.data) {
             this.activateSimService.setDocumentValidationData(response.data);
+            this.validationError.set('');
+            this.formSubmit.emit(formData);
+          } else {
+            const errorMessage = response?.error?.message ||
+              'Error en la validación del documento. Por favor verifica los datos e intenta de nuevo.';
+            this.validationError.set(errorMessage);
           }
-
-          this.formSubmit.emit(formData);
         },
         error: (error) => {
-          console.error('Error al validar documento:', error);
+          // console.error('Error al validar documento:', error);
           this.isLoading.set(false);
+
+          const errorMessage = error?.error?.message ||
+            'Los datos ingresados no son válidos. Por favor verifica el documento e intenta de nuevo.';
+          this.validationError.set(errorMessage);
         }
       });
     }

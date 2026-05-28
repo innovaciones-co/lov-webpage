@@ -18,6 +18,7 @@
                     [error]="getFieldErrorMessage('documentIssueDate')"></date-picker-field>
             </div>
         </div>
+        <error-card [message]="validationError()"></error-card>
     </div>
     @if (!hideButton()) {
     <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
