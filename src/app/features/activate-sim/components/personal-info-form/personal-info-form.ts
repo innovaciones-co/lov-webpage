@@ -36,6 +36,7 @@ export class PersonalInfoForm {
   private activateSimService = inject(ActivateSimService);
   private router = inject(Router);
   documentValidationData = input<DocumentValidationData | null>(null);
+  iccid = input<string>('');
   isLoading = signal(false);
 
   validationError = signal<string>('');
@@ -131,14 +132,14 @@ export class PersonalInfoForm {
       this.validationError.set('');
 
       const documentData = this.documentValidationData();
-      const msisdn = this.activateSimService.getIccidValidationData()()?.payload?.subscriptions?.[0]?.msisdn;
+      const iccidValue = this.iccid();
 
       this.activateSimService.activateSim(formData, documentData).subscribe({
         next: (response) => {
           console.log('Activación exitosa:', response);
           this.isLoading.set(false);
           this.formSubmit.emit(formData);
-          this.router.navigate(['/activar-sim/exitoso'], { state: { msisdn: msisdn } });
+          this.router.navigate(['/activar-sim/exitoso'], { state: { iccid: iccidValue } });
         },
         error: (error) => {
           console.error('Error en la activación:', error);
