@@ -1,3 +1,11 @@
+# [1.19.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.18.0...v1.19.0) (2026-05-28)
+
+
+### Features
+
+* add document validation process ([aea972f](https://github.com/innovaciones-co/lov-webpage/commit/aea972f8b3c664be3d2277583ccd135ba07717f1))
+* enhance successful activation flow with ICCID handling and loading state ([946e5f4](https://github.com/innovaciones-co/lov-webpage/commit/946e5f47885716cf373707ebc92ba6869c2d3683))
+
 # [1.18.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.17.0...v1.18.0) (2026-05-27)
 
 
