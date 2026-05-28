@@ -1,3 +1,14 @@
+# [1.18.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.17.0...v1.18.0) (2026-05-27)
+
+
+### Features
+
+* add past date validation for document issue date ([20e7586](https://github.com/innovaciones-co/lov-webpage/commit/20e75869d6f65eba45ca578331c98aaa15c34895))
+* implement loading state ([0fa34e6](https://github.com/innovaciones-co/lov-webpage/commit/0fa34e6c59ec2d30e52467a5c94f7bc17e443a50))
+* pass msisdn to successful activation page and display it conditionally ([2c7dccc](https://github.com/innovaciones-co/lov-webpage/commit/2c7dccc0f0718447f9658122b80b317afaecbf53))
+* remove gap ([52ac7f0](https://github.com/innovaciones-co/lov-webpage/commit/52ac7f08785d132bdfc0d1c55949dfad727701ae))
+* update data consumption display for unlimited data accounts ([75a0631](https://github.com/innovaciones-co/lov-webpage/commit/75a063154e8f909182852c6bef7022d391a085ec))
+
 # [1.17.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.16.0...v1.17.0) (2026-05-22)
 
 
