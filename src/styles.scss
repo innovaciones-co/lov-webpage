@@ -95,7 +95,7 @@ select {
     }
 
     &:disabled {
-        background: $gray-100;
+        background: $gray-50;
         color: $gray-400;
         cursor: not-allowed;
     }
