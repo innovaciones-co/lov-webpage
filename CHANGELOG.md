@@ -1,3 +1,11 @@
+# [1.20.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.19.1...v1.20.0) (2026-05-29)
+
+
+### Features
+
+* add no-border class to card titles ([6b8a73f](https://github.com/innovaciones-co/lov-webpage/commit/6b8a73f0ae4217bd7474469856b7970bd5f5be6a))
+* enhance billing information section with form controls and update styles ([e2555f1](https://github.com/innovaciones-co/lov-webpage/commit/e2555f1183915561a8cb6000ad89896a6ed2b4be))
+
 ## [1.19.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.19.0...v1.19.1) (2026-05-29)
 
 
