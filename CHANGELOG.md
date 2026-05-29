@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.20.0...v1.21.0) (2026-05-29)
+
+
+### Features
+
+* enhance activation messages and update plan descriptions for clarity ([7dfbf23](https://github.com/innovaciones-co/lov-webpage/commit/7dfbf23580e0806d9b937521b47877df2d9546ad))
+
 # [1.20.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.19.1...v1.20.0) (2026-05-29)
 
 
