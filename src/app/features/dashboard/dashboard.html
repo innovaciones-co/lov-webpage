@@ -14,7 +14,7 @@
             <app-data-usage [accountViews]="accountViews()" [isAccountLoading]="isAccountLoading()"></app-data-usage>
 
             <aside class="card">
-                <h3 class="card-title">Suscripciones</h3>
+                <h3 class="card-title no-border">Suscripciones</h3>
                 <div class="subscriptions-list">
                     @if (loading()) {
                     <app-loading></app-loading>
@@ -46,7 +46,7 @@
 
             @if (billingInfo) {
             <div id="billing-info" class="card">
-                <h3 class="card-title">Datos de Facturación</h3>
+                <h3 class="card-title no-border">Datos de Facturación</h3>
                 <div class="form-grid">
                     <div class="form-row">
                         <input-text-field [label]="'Nombre'" [control]="firstNameControl">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                <h3 class="card-title">Información de contacto</h3>
+                <h3 class="card-title no-border">Información de contacto</h3>
                 <div class="form-grid">
                     <div class="form-row">
                         <input-text-field [label]="'Correo Electrónico'" [control]="emailControl">
