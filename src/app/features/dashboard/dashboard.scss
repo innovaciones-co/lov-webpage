@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
-.card-title {
+main>.card-title {
 
     display: flex;
     justify-content: space-between;
@@ -12,6 +12,11 @@
         margin: 0;
         padding: 0;
     }
+}
+
+.card-title {
+    color: $color-extra-1;
+    font-size: 1.2rem;
 }
 
 .logout-btn {
