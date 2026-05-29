@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
-.card-title {
+main>.card-title {
 
     display: flex;
     justify-content: space-between;
@@ -11,6 +11,16 @@
     h1 {
         margin: 0;
         padding: 0;
+    }
+}
+
+.card-title {
+    color: $color-extra-1;
+    font-size: 1.2rem;
+
+    &.no-border {
+        border-bottom: none;
+        margin-bottom: 5px !important;
     }
 }
 
@@ -73,7 +83,15 @@
                     font-weight: 600;
                 }
             }
+
+            &.active {
+                background: $color-primary-light;
+                border-left: 4px solid $color-extra-1;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+                transform: translateY(-2px);
+            }
         }
+
     }
 }
 
@@ -111,7 +129,6 @@
 .left-column {
     display: flex;
     flex-direction: column;
-    gap: 20px;
     order: 2;
 
     @include large {

@@ -1,5 +1,8 @@
 <div id="account-balances" class="card">
     <h3 class="card-title">Tu saldo actual</h3>
+    @if (isAccountLoading()) {
+    <app-loading></app-loading>
+    } @else {
     <div class="total-balance">
         <div>Saldo en pesos</div>
         <div>${{ pesoBalance() }}</div>
@@ -20,4 +23,5 @@
         <p>No hay cuentas disponibles para esta suscripción.</p>
         }
     </div>
+    }
 </div>

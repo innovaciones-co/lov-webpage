@@ -11,13 +11,10 @@
 
     <div class="dashboard-content">
         <div class="left-column">
-            <app-data-usage [accountViews]="accountViews()"></app-data-usage>
+            <app-data-usage [accountViews]="accountViews()" [isAccountLoading]="isAccountLoading()"></app-data-usage>
 
             <aside class="card">
-                <div class="card-title">
-                    <h2>Suscripciones</h2>
-                </div>
-
+                <h3 class="card-title no-border">Suscripciones</h3>
                 <div class="subscriptions-list">
                     @if (loading()) {
                     <app-loading></app-loading>
@@ -27,7 +24,7 @@
                     <ul>
                         @for (subscription of activeSubscriptions(); track subscription.msisdn) {
                         <li class="subscription-item" (click)="selectSubscription(subscription)"
-                            [class.selected]="subscription.id === currentSubscription()?.id">
+                            [class.active]="subscription.id === currentSubscription()?.id">
                             <span class="subscription-name">Plan: {{ subscription.tariff.tariffName }}</span>
                             <span class="subscription-msisdn">Número de teléfono: {{ subscription.msisdn }}</span>
                             <span class="subscription-status">Estado: {{ getStateLabel(subscription.state) }}</span>
@@ -49,24 +46,51 @@
 
             @if (billingInfo) {
             <div id="billing-info" class="card">
-                <h3 class="form-subtitle">Datos de Facturación</h3>
+                <h3 class="card-title no-border">Datos de Facturación</h3>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <input-text-field [label]="'Nombre'" [control]="firstNameControl">
+                        </input-text-field>
 
-                <p><strong>Nombre:</strong> {{ billingInfo.firstName | capitalize }} {{ billingInfo.lastName |
-                    capitalize }}
-                </p>
-                <p><strong>Tipo de Documento:</strong> {{ billingInfo.documentType }}</p>
-                <p><strong>Número de Documento:</strong> {{ billingInfo.documentNumber }}</p>
-                <p><strong>Correo Electrónico:</strong> {{ billingInfo.email }}</p>
+                        <input-text-field [label]="'Apellido'" [control]="lastNameControl">
+                        </input-text-field>
+                    </div>
 
+                    <div class="form-row">
+                        <input-text-field [label]="'Tipo de Documento'" [control]="documentTypeControl">
+                        </input-text-field>
 
-                <div class="divider"></div>
-                <h3 class="form-subtitle">Información de contacto</h3>
+                        <input-text-field [label]="'Número de Documento'" [control]="documentNumberControl">
+                        </input-text-field>
+                    </div>
+                </div>
 
-                <p><strong>Teléfono:</strong> {{ billingInfo.phone | msisdn }}</p>
-                <p><strong>País:</strong> {{ billingInfo.country | capitalize}}</p>
-                <p><strong>Ciudad:</strong> {{ billingInfo.city | capitalize }}</p>
-                <p><strong>Dirección:</strong> {{ billingInfo.address }}</p>
-                <p><strong>Información Adicional:</strong> {{ billingInfo.additionalInfo }}</p>
+                <h3 class="card-title no-border">Información de contacto</h3>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <input-text-field [label]="'Correo Electrónico'" [control]="emailControl">
+                        </input-text-field>
+
+                        <input-text-field [label]="'Teléfono'" [control]="phoneControl">
+                        </input-text-field>
+                    </div>
+
+                    <div class="form-row">
+                        <input-text-field [label]="'País'" [control]="countryControl">
+                        </input-text-field>
+
+                        <input-text-field [label]="'Ciudad'" [control]="cityControl">
+                        </input-text-field>
+                    </div>
+
+                    <div class="form-row">
+                        <input-text-field [label]="'Dirección'" [control]="addressControl">
+                        </input-text-field>
+
+                        <input-text-field [label]="'Información Adicional'" [control]="additionalInfoControl">
+                        </input-text-field>
+                    </div>
+                </div>
             </div>
             }
 
@@ -74,7 +98,8 @@
         </div>
 
         <div class="right-column">
-            <app-current-plan [accountViews]="accountViews()"></app-current-plan>
+            <app-current-plan [accountViews]="accountViews()"
+                [isAccountLoading]="isAccountLoading()"></app-current-plan>
         </div>
     </div>
 </div>

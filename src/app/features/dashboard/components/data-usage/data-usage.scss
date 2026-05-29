@@ -4,6 +4,11 @@
 .card-title {
     color: $color-extra-1;
     font-size: 1.2rem;
+
+    &.no-border {
+        border-bottom: none;
+        margin-bottom: 5px !important;
+    }
 }
 
 .data-balance {

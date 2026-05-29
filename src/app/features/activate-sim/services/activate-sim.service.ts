@@ -32,10 +32,14 @@ export class ActivateSimService {
             switchMap((firstResponse) => {
                 console.log('Primera solicitud exitosa:', firstResponse);
                 // Segunda solicitud GET - solo se ejecuta si la primera fue exitosa
-                const secondUrl = `${this.gatewayUrl}/api/subscriptions?iccid=${iccid}`;
-                return this.http.get(secondUrl);
+                return this.getSubscriptionsByIccid(iccid);
             })
         );
+    }
+
+    getSubscriptionsByIccid(iccid: string): Observable<any> {
+        const url = `${this.gatewayUrl}/api/subscriptions?iccid=${iccid}`;
+        return this.http.get(url);
     }
 
     validateDocument(documentID: string, documentType: string, documentIssueDate: string): Observable<any> {

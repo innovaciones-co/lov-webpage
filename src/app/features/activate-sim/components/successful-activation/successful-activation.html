@@ -1,12 +1,20 @@
 <successful-process [icon]="icon" [title]="title">
     <div class="info-details">
-        <p class="success-description">¡Listo! Tu SIM LOV está activa y lista para usarse.</p>
+        <p class="success-description">Tu SIM LOV está activa y lista para usarse.</p>
+        @switch(msisdnState()) {
+        @case ('loading') {
+        <p class="phone-number"><em class="loading">Obteniendo número<span class="dots"></span></em></p>
+        }
+        @case ('success') {
+        <p class="phone-number">Número LOV: <em>{{ msisdn() }}</em></p>
+        }
+        }
         <p class="activation-info">En breve recibirás un mensaje de confirmación. En tus manos tienes ahora el poder de
             ayudar! Bienvenido a LOV Mobile, El amor nos conecta!
         </p>
     </div>
     <div>
-        <a href="/planes" class="link-button">Activa un plan</a> o <a href="/recargas" class="link-button">Recarga
-            saldo</a>.
+        <a href="/planes" class="link-button">Activa un plan</a>, <a href="/recargas" class="link-button">Recarga
+            saldo</a> o <a href="/portabilidad" class="link-button">Inicia una portabilidad</a>.
     </div>
 </successful-process>

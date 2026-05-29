@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl } from '@angular/forms';
 import { EMPTY, forkJoin, of, switchMap, tap } from 'rxjs';
 import { SubscriptionAccount } from '../../core/models/account.model';
 import { Customer, CustomerSubscription } from '../../core/models/customer.model';
-import { CapitalizePipe } from "../../core/pipes/capitalize.pipe";
-import { MsisdnPipe } from "../../core/pipes/msisdn.pipe";
 import { SubscriptionFacadeService } from '../../core/services/subscription-facade.service';
 import { Loading } from "../../shared/components/loading/loading";
+import { InputTextComponent } from '../../shared/components/form-fields/input-text/input-text';
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
 import { DataUsage } from "./components/data-usage/data-usage";
@@ -36,7 +36,7 @@ interface BillingInfo {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, CapitalizePipe, Loading, MsisdnPipe, RechargeScheduler, CurrentPlan, DataUsage],
+  imports: [CommonModule, Loading, RechargeScheduler, CurrentPlan, DataUsage, InputTextComponent],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
@@ -48,11 +48,25 @@ export class Dashboard implements OnInit {
   activeSubscriptions = signal<CustomerSubscription[]>([]);
   loading = signal(true);
   billingInfo: BillingInfo | null = null;
+
+  // Billing form controls
+  firstNameControl = new FormControl({ value: '', disabled: true });
+  lastNameControl = new FormControl({ value: '', disabled: true });
+  documentTypeControl = new FormControl({ value: '', disabled: true });
+  documentNumberControl = new FormControl({ value: '', disabled: true });
+  emailControl = new FormControl({ value: '', disabled: true });
+  phoneControl = new FormControl({ value: '', disabled: true });
+  countryControl = new FormControl({ value: '', disabled: true });
+  cityControl = new FormControl({ value: '', disabled: true });
+  addressControl = new FormControl({ value: '', disabled: true });
+  additionalInfoControl = new FormControl({ value: '', disabled: true });
+
   accounts = signal<SubscriptionAccount[]>([]);
   accountViews = computed<AccountViewModel[]>(() =>
     this.groupAndNormalizeAccounts(this.accounts())
   );
   currentSubscription = signal<CustomerSubscription | null>(null);
+  isAccountLoading = signal(false);
 
   submitError = signal<string>('');
 
@@ -90,8 +104,10 @@ export class Dashboard implements OnInit {
   }
 
   fetchAccounts(customerId: string, subscriptionId: string) {
+    this.isAccountLoading.set(true);
     this.subscriptionFacade.getAccountsForSubscription(customerId, subscriptionId).subscribe(accounts => {
       this.accounts.set(accounts);
+      this.isAccountLoading.set(false);
     });
   }
 
@@ -135,6 +151,28 @@ export class Dashboard implements OnInit {
       address: customerInfo.address.line1,
       additionalInfo: customerInfo.additionalInformationPlaceHolder.additionalInformationString || ''
     };
+
+    // Update form controls with billing info and apply transformations
+    this.firstNameControl.setValue(this.capitalize(this.billingInfo.firstName));
+    this.lastNameControl.setValue(this.capitalize(this.billingInfo.lastName));
+    this.documentTypeControl.setValue(this.billingInfo.documentType);
+    this.documentNumberControl.setValue(this.billingInfo.documentNumber);
+    this.emailControl.setValue(this.billingInfo.email);
+    this.phoneControl.setValue(this.formatMsisdn(this.billingInfo.phone));
+    this.countryControl.setValue(this.capitalize(this.billingInfo.country));
+    this.cityControl.setValue(this.capitalize(this.billingInfo.city));
+    this.addressControl.setValue(this.billingInfo.address);
+    this.additionalInfoControl.setValue(this.billingInfo.additionalInfo);
+  }
+
+  private capitalize(value: string): string {
+    if (!value) return '';
+    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+  }
+
+  private formatMsisdn(msisdn: string): string {
+    if (!msisdn || !msisdn.startsWith('57')) return msisdn;
+    return msisdn.substring(2);
   }
 
   private setInitialSubscription(customerId: string, subscriptions: CustomerSubscription[]): void {
