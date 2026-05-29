@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.19.0...v1.19.1) (2026-05-29)
+
+
+### Bug Fixes
+
+* update card titles for consistency in dashboard layout ([9d7187c](https://github.com/innovaciones-co/lov-webpage/commit/9d7187c6aea41a1d1812549705469a88e4e7bd69))
+
 # [1.19.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.18.0...v1.19.0) (2026-05-28)
 
 
