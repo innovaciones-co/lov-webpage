@@ -20,6 +20,7 @@ export interface Plan {
     smsQuantity: number;
     voiceQuantity: number;
     dataQuantity: number;
+    order: number;
 }
 
 export interface Feature {
