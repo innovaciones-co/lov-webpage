@@ -17,6 +17,18 @@ export class PlansDashboard implements OnInit {
     return this.plansService.getPlansSignal();
   }
 
+  get sortedPlans() {
+    const plans = this.plansService.getPlansSignal()();
+    if (!plans || plans.length === 0) return [];
+
+    const sorted = [...plans].sort((a, b) => {
+      if (a.order !== b.order) return a.order - b.order;
+      return a.id - b.id;
+    });
+
+    return sorted;
+  }
+
   get pagination() {
     return this.plansService.getPaginationSignal();
   }
