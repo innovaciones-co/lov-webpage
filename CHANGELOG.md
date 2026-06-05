@@ -1,3 +1,16 @@
+# [1.22.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.21.0...v1.22.0) (2026-06-05)
+
+
+### Bug Fixes
+
+* removing redundant slash ([9f8808a](https://github.com/innovaciones-co/lov-webpage/commit/9f8808ada83be924087790e3978c8d5475dd2891))
+
+
+### Features
+
+* add detailed pricing section for voice and data plans ([482ebb6](https://github.com/innovaciones-co/lov-webpage/commit/482ebb6f67fbc9e4f1fdef947dc758e1c432b63c))
+* sorting for plans ([6c0c3ed](https://github.com/innovaciones-co/lov-webpage/commit/6c0c3edd4c35e7532255790a7ee5222e13b5ef5a))
+
 # [1.21.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.20.0...v1.21.0) (2026-05-29)
 
 
