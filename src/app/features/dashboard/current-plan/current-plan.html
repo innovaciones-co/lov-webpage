@@ -10,7 +10,7 @@
     <div class="balance-list">
         @if (displayItems().length > 0) {
         <ul>
-            @for (item of displayItems(); track item.product) {
+            @for (item of displayItems(); track $index) {
             <li class="balance-item">
                 <span class="material-symbols-outlined">{{ item.icon }}</span>
                 <!-- <strong>{{ item.name }}:</strong> {{ item.balanceName }} -->
