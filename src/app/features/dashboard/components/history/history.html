@@ -1,0 +1,73 @@
+<div class="card">
+
+    <h3 class="card-title no-border">Historial de consumo</h3>
+
+    <div class="history-filters" role="group" aria-label="Filtros de historial">
+        <button class="history-filter-button" [class.active]="isDateRangeSelected(1)" (click)="setDateRange(1)">
+            Ultimo mes
+        </button>
+        <button class="history-filter-button" [class.active]="isDateRangeSelected(3)" (click)="setDateRange(3)">
+            3 meses
+        </button>
+        <button class="history-filter-button" [class.active]="isDateRangeSelected(6)" (click)="setDateRange(6)">
+            6 meses
+        </button>
+    </div>
+
+    @if(loading$()) {
+    <app-loading></app-loading>
+    } @else if (error$()) {
+    <p class="error-message">Ocurrió un error al cargar el historial de consumo. Por favor, intenta nuevamente más
+        tarde.</p>
+    <p> {{ error$() }}</p>
+    } @else if (history$()?.content?.length === 0) {
+    <p>No se encontraron eventos de consumo para esta suscripción.</p>
+    } @else {
+    <table class="history-table table-rounded table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Detalle</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of history$()?.content; track item.date) {
+            <tr>
+                <td>{{ item.date }}</td>
+                <td class="history-type-cell">
+                    <span class="history-type-icon material-symbols-outlined" aria-hidden="true">{{
+                        getTypeIcon(item.type) }}</span>
+                </td>
+                <td>{{ item.detail }}</td>
+                <td>{{ item.amount }} {{ item.measure }}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    @if ((history$()?.page?.totalPages ?? 0) > 1) {
+    <nav class="table-paginator" aria-label="Paginador de historial">
+        <button class="table-paginator__button" type="button" (click)="changePage(currentPage() - 1)"
+            [disabled]="!hasPreviousPage()">
+            Anterior
+        </button>
+
+        <div class="table-paginator__pages">
+            @for (page of getPageNumbers(); track page) {
+            <button class="table-paginator__button" type="button" [class.active]="page === currentPage()"
+                (click)="changePage(page)">
+                {{ page + 1 }}
+            </button>
+            }
+        </div>
+
+        <button class="table-paginator__button" type="button" (click)="changePage(currentPage() + 1)"
+            [disabled]="!hasNextPage()">
+            Siguiente
+        </button>
+    </nav>
+    }
+    }
+</div>
