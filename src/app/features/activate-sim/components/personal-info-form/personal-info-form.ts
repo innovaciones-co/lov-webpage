@@ -1,14 +1,13 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { COLOMBIA_STATES } from '../../../../core/constants/colombia-states';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
+import { CheckboxComponent } from "../../../../shared/components/form-fields/checkbox/checkbox";
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
-import { Router } from '@angular/router';
 import { ActivateSimService } from '../../services/activate-sim.service';
-import { DatePickerComponent } from "../../../../shared/components/form-fields/date-picker/date-picker";
-import { COLOMBIA_STATES } from '../../../../core/constants/colombia-states';
-import { CheckboxComponent } from "../../../../shared/components/form-fields/checkbox/checkbox";
 import { DocumentValidationData } from '../document-validation/document-validation';
-import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface PersonalInfoFormData {
   name: string;
@@ -81,25 +80,32 @@ export class PersonalInfoForm {
       if (validationData) {
         if (validationData.detailsGivenName) {
           this.form().get('name')?.setValue(validationData.detailsGivenName);
+          this.form().get('name')?.disable();
         }
         if (validationData.detailsFamilyName) {
           this.form().get('lastName')?.setValue(validationData.detailsFamilyName);
+          this.form().get('lastName')?.disable();
         }
         if (validationData.contactEmail) {
           this.form().get('email')?.setValue(validationData.contactEmail);
+          this.form().get('email')?.disable();
         }
         if (validationData.contactPhone) {
           this.form().get('phoneNumber')?.setValue(validationData.contactPhone);
+          this.form().get('phoneNumber')?.disable();
         }
         if (validationData.addressCity) {
           const city = validationData.addressCity.split('(')[0].trim();
           this.form().get('city')?.setValue(city);
+          this.form().get('city')?.disable();
         }
         if (validationData.addressLine1) {
           this.form().get('address')?.setValue(validationData.addressLine1);
+          this.form().get('address')?.disable();
         }
         if (validationData.addressCountry === 'Co') {
           this.form().get('country')?.setValue('colombia');
+          this.form().get('country')?.disable();
         }
 
         Object.keys(this.form().controls).forEach(key => {
