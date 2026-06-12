@@ -1,5 +1,5 @@
 <label [attr.for]="id()">{{ label() }}</label>
-<select [id]="id()" [formControl]="control()" [attr.aria-label]="label()" (blur)="onBlur()" [disabled]="disabled()"
+<select [id]="id()" [formControl]="control()" [attr.aria-label]="label()" (blur)="onBlur()"
   [class.invalid]="control().invalid && control().touched">
   @for (option of options(); track option.value) {
   <option [value]="option.value">{{ option.label }}</option>
