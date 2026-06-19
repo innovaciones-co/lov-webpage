@@ -1,9 +1,9 @@
 import { Component, inject, input, signal } from '@angular/core';
-import { Paginator } from '../../../../core/models/paginator.model';
-import { HistoryItem } from '../../models/history.model';
-import { Loading } from "../../../../shared/components/loading/loading";
-import { HistoryService } from '../../services/history.service';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { Paginator } from '../../../../core/models/paginator.model';
+import { Loading } from "../../../../shared/components/loading/loading";
+import { HistoryItem } from '../../models/history.model';
+import { HistoryService } from '../../services/history.service';
 
 type PresetHistoryRangeMonths = 1 | 3 | 6;
 type HistoryRangeOption = PresetHistoryRangeMonths | 'custom';
