@@ -58,7 +58,7 @@
         <tbody>
             @for (item of history$()?.content; track $index) {
             <tr>
-                <td>{{ item.date }}</td>
+                <td>{{ item.date | datetime }}</td>
                 <td class="history-type-cell">
                     <span class="history-type-icon material-symbols-outlined" aria-hidden="true">{{
                         getTypeIcon(item.type) }}</span>

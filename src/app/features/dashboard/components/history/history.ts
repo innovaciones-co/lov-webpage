@@ -1,6 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { Paginator } from '../../../../core/models/paginator.model';
+import { DatetimePipe } from "../../../../core/pipes/datetime.pipe";
 import { Loading } from "../../../../shared/components/loading/loading";
 import { HistoryItem } from '../../models/history.model';
 import { HistoryService } from '../../services/history.service';
@@ -10,7 +11,7 @@ type HistoryRangeOption = PresetHistoryRangeMonths | 'custom';
 
 @Component({
   selector: 'app-history',
-  imports: [Loading],
+  imports: [Loading, DatetimePipe],
   templateUrl: './history.html',
   styleUrl: './history.scss'
 })
@@ -95,7 +96,7 @@ export class History {
 
         const headers = ['Fecha', 'Tipo', 'Detalle', 'Cantidad', 'Unidad'];
         const dataRows = rows.map((item) => [
-          item.date,
+          new DatetimePipe().transform(item.date),
           item.type,
           item.detail,
           String(item.amount ?? ''),
