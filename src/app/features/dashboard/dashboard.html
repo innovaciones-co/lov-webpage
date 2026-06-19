@@ -44,6 +44,10 @@
                 </div>
             </aside>
 
+            @if (currentSubscription()?.id) {
+            <app-history [subscriberId]="currentSubscription()!.id"></app-history>
+            }
+
             @if (billingInfo) {
             <div id="billing-info" class="card">
                 <h3 class="card-title no-border">Datos de Facturación</h3>

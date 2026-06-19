@@ -78,7 +78,6 @@ export class Login implements OnInit, OnDestroy {
   onOtpComplete(otp: string) {
     this.currentOtpValue.set(otp);
     this.isOtpComplete.set(true);
-    console.log('OTP Complete:', otp);
   }
 
   onOtpChange(otp: string) {

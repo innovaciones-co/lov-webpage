@@ -13,6 +13,7 @@ import { AuthService } from '../authentication/services/auth.service';
 import { DataUsage } from "./components/data-usage/data-usage";
 import { RechargeScheduler } from './components/recharge-scheduler/recharge-scheduler';
 import { CurrentPlan } from './current-plan/current-plan';
+import { History } from "./components/history/history";
 
 export interface AccountViewModel {
   name: string;
@@ -36,7 +37,7 @@ interface BillingInfo {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Loading, RechargeScheduler, CurrentPlan, DataUsage, InputTextComponent],
+  imports: [CommonModule, Loading, RechargeScheduler, CurrentPlan, DataUsage, InputTextComponent, History],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })

@@ -3,7 +3,7 @@
         <p class="success-description">Tu SIM LOV está activa y lista para usarse.</p>
         @switch(msisdnState()) {
         @case ('loading') {
-        <p class="phone-number"><em class="loading">Obteniendo número<span class="dots"></span></em></p>
+        <p><em class="loading">Obteniendo número<span class="dots"></span></em></p>
         }
         @case ('success') {
         <p class="phone-number">Número LOV: <em>{{ msisdn() }}</em></p>

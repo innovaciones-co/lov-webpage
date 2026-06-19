@@ -103,7 +103,6 @@ export class DocumentValidation {
 
       this.activateSimService.validateDocument(formData.documentID, formData.documentType, formData.documentIssueDate).subscribe({
         next: (response) => {
-          console.log('Documento validado exitosamente:', response);
           this.isLoading.set(false);
 
           if (response?.success && response?.data) {
