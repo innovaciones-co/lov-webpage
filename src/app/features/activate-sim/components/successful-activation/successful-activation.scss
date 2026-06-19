@@ -1,5 +1,16 @@
 @use '../../../../../styles/variables' as *;
 
+.phone-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $color-primary;
+
+    em {
+        font-style: normal;
+        color: $color-secondary;
+    }
+}
+
 .link-button {
     text-decoration: none;
 }
