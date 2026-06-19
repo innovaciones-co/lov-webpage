@@ -14,6 +14,29 @@
         </button>
     </div>
 
+    <div class="history-custom-range">
+        <label class="history-custom-range__field">
+            <span>Desde</span>
+            <input type="date" [value]="customStartDate()" (change)="onCustomStartDateChange($any($event.target).value)"
+                max="9999-12-31" />
+        </label>
+
+        <label class="history-custom-range__field">
+            <span>Hasta</span>
+            <input type="date" [value]="customEndDate()" (change)="onCustomEndDateChange($any($event.target).value)"
+                max="9999-12-31" />
+        </label>
+
+        <button class="history-custom-range__apply" type="button" (click)="applyCustomDateRange()"
+            [class.active]="isDateRangeSelected('custom')">
+            Aplicar rango
+        </button>
+    </div>
+
+    @if (customDateError()) {
+    <p class="error-message">{{ customDateError() }}</p>
+    }
+
     @if(loading$()) {
     <app-loading></app-loading>
     } @else if (error$()) {
@@ -46,6 +69,13 @@
             }
         </tbody>
     </table>
+
+    <div class="history-actions">
+        <button class="history-download-button" type="button" (click)="downloadCurrentHistoryAsCsv()"
+            [disabled]="(history$()?.content?.length ?? 0) === 0 || exportingCsv()">
+            {{ exportingCsv() ? 'Generando CSV...' : 'Descargar CSV' }}
+        </button>
+    </div>
 
     @if ((history$()?.page?.totalPages ?? 0) > 1) {
     <nav class="table-paginator" aria-label="Paginador de historial">

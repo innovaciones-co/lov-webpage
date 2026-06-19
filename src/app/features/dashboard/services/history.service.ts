@@ -21,9 +21,18 @@ export class HistoryService {
     this.apiUrl = environment.apiUrl;
   }
 
-  getHistory(subscriberId: number, size = 100, page = 0, startDate?: Date, endDate?: Date): Observable<Paginator<HistoryItem>> {
-    this.loading.set(true);
-    this.error.set(null);
+  getHistory(
+    subscriberId: number,
+    size = 100,
+    page = 0,
+    startDate?: Date,
+    endDate?: Date,
+    updateState = true
+  ): Observable<Paginator<HistoryItem>> {
+    if (updateState) {
+      this.loading.set(true);
+      this.error.set(null);
+    }
 
     const normalizedSubscriberId = String(subscriberId);
     let params = new HttpParams()
@@ -42,12 +51,22 @@ export class HistoryService {
     const url = `${this.apiUrl}/history/${normalizedSubscriberId}`
 
     return this.http.get<Paginator<HistoryItem>>(url, { params }).pipe(
-      tap((response) => this.history.set(response)),
+      tap((response) => {
+        if (updateState) {
+          this.history.set(response);
+        }
+      }),
       catchError((error) => {
-        this.error.set(error.message ?? 'Unable to fetch subscriber history');
+        if (updateState) {
+          this.error.set(error.message ?? 'Unable to fetch subscriber history');
+        }
         return throwError(() => error);
       }),
-      finalize(() => this.loading.set(false))
+      finalize(() => {
+        if (updateState) {
+          this.loading.set(false);
+        }
+      })
     );
   }
 
