@@ -259,7 +259,6 @@ export class AuthService {
 
         this.countdownTimer = timer(0, 1000).subscribe(elapsed => {
             const remaining = seconds - elapsed;
-            console.log('OTP Countdown:', remaining);
 
             if (remaining <= 0) {
                 this.stopOtpCountdown();

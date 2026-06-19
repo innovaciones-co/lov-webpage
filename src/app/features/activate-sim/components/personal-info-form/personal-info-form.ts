@@ -142,7 +142,6 @@ export class PersonalInfoForm {
 
       this.activateSimService.activateSim(formData, documentData).subscribe({
         next: (response) => {
-          console.log('Activación exitosa:', response);
           this.isLoading.set(false);
           this.formSubmit.emit(formData);
           this.router.navigate(['/activar-sim/exitoso'], { state: { iccid: iccidValue } });
