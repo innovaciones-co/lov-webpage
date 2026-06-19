@@ -1,3 +1,17 @@
+# [1.23.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.22.0...v1.23.0) (2026-06-19)
+
+
+### Bug Fixes
+
+* correct text and formatting in portabilidad and successful activation components ([45cbb5f](https://github.com/innovaciones-co/lov-webpage/commit/45cbb5fd3f0ab0cab14a342adc56064b2b995f06))
+
+
+### Features
+
+* add DatetimePipe for date formatting and update history component to use it ([780b0a0](https://github.com/innovaciones-co/lov-webpage/commit/780b0a023bf5a88e1d6462c27298d201378c45a0))
+* add history component and service for subscriber consumption history ([e7f934c](https://github.com/innovaciones-co/lov-webpage/commit/e7f934c5520ae0fd25075ce6ef55b139defb52c5))
+* implement custom date range selection and CSV download functionality in history component ([12bf9b4](https://github.com/innovaciones-co/lov-webpage/commit/12bf9b4714049200c8f0980ac0c288dd8993e8e7))
+
 # [1.22.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.21.0...v1.22.0) (2026-06-05)
 
 
