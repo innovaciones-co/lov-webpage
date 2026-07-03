@@ -11,6 +11,13 @@
       <span [innerHTML]="sanitizeHtml(option.label)"></span>
       }
     </label>
+    @if (option.actionIcon) {
+    <button type="button" (click)="onAction(option.value)" [title]="option.actionLabel">
+      <span class="material-symbols-outlined">
+        {{ option.actionIcon }}
+      </span>
+    </button>
+    }
   </div>
   }
 </fieldset>

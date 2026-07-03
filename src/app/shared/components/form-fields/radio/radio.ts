@@ -25,12 +25,17 @@ export class RadioComponent {
   id = signal<string>('radio-' + Math.random().toString(36).substring(2));
   label = input<string>('');
   error = input<string>('');
-  options = input<{ label?: string; value: string; template?: TemplateRef<any> }[]>([]);
+  options = input<{ label?: string; value: string; template?: TemplateRef<any>; actionIcon?: string; actionLabel?: string }[]>([]);
   control = input<FormControl>(new FormControl(''));
   valueChange = output<string>();
+  action = output<string>();
 
   sanitizeHtml(html: string): SafeHtml {
     return this.sanitizer.sanitize(1, html) || ''; // SecurityContext.HTML = 1
+  }
+
+  onAction(value: string): void {
+    this.action.emit(value);
   }
 
   onBlur() {
