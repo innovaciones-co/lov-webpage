@@ -4,13 +4,16 @@
   <div class="radio-option">
     <input type="radio" [id]="id() + '-' + option.value" [formControl]="control()" [value]="option.value"
       [attr.name]="id()" (blur)="onBlur()" />
-    <label [attr.for]="id() + '-' + option.value">{{ option.label }}</label>
+    <label [attr.for]="id() + '-' + option.value">
+      @if (option.template) {
+      <ng-container *ngTemplateOutlet="option.template"></ng-container>
+      } @else if (option.label) {
+      <span [innerHTML]="sanitizeHtml(option.label)"></span>
+      }
+    </label>
   </div>
   }
 </fieldset>
 @if (control().invalid && control().touched) {
 <div class="error">{{ error() }}</div>
-}
-@else {
-<div class="error"></div>
 }
