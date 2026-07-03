@@ -1,0 +1,23 @@
+<div class="card">
+    <h3 class="form-subtitle">Tarjeta de pago</h3>
+    <p>Selecciona una tarjeta guardada</p>
+    <div>
+        <radio-field [options]="paymentCards()" [control]="paymentCardControl"
+            (valueChange)="onCardSelect($event)"
+            (action)="onCardAction($event)"></radio-field>
+    </div>
+</div>
+
+<ng-template #cardTemplate1>
+    <span class="option-title">+ Agregar nueva tarjeta</span>
+</ng-template>
+
+<ng-template #cardTemplate2>
+    <span class="option-title">Mastercard •••• 5555</span>
+    <p class="option-description">Vencimiento: 08/2026</p>
+</ng-template>
+
+<ng-template #cardTemplate3>
+    <span class="option-title">American Express •••• 3782</span>
+    <p class="option-description">Vencimiento: 06/2027</p>
+</ng-template>
