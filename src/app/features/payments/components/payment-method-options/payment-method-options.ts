@@ -6,8 +6,8 @@ import { RadioComponent } from '../../../../shared/components/form-fields/radio/
 @Component({
   selector: 'app-payment-method-options',
   imports: [RadioComponent, ReactiveFormsModule, CommonModule],
-  templateUrl: './payment-methods-options.html',
-  styleUrl: './payment-methods-options.scss',
+  templateUrl: './payment-method-options.html',
+  styleUrl: './payment-method-options.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentMethodOptions implements AfterViewInit {

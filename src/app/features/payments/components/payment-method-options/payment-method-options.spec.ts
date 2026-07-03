@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaymentMethodOptions } from './payment-methods-options';
+import { PaymentMethodOptions } from './payment-method-options';
 
 describe('PaymentMethodsOptions', () => {
   let component: PaymentMethodOptions;
@@ -10,7 +10,7 @@ describe('PaymentMethodsOptions', () => {
     await TestBed.configureTestingModule({
       imports: [PaymentMethodOptions]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(PaymentMethodOptions);
     component = fixture.componentInstance;
