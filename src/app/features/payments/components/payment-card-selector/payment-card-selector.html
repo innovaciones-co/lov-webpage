@@ -21,16 +21,7 @@
     </div>
 </app-modal>
 
-<ng-template #cardTemplate1>
-    <span class="option-title">+ Agregar nueva tarjeta</span>
-</ng-template>
-
-<ng-template #cardTemplate2>
-    <span class="option-title">Mastercard •••• 5555</span>
-    <p class="option-description">Vencimiento: 08/2026</p>
-</ng-template>
-
-<ng-template #cardTemplate3>
-    <span class="option-title">American Express •••• 3782</span>
-    <p class="option-description">Vencimiento: 06/2027</p>
+<ng-template #cardTemplate let-card="card">
+    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.truncatedNumber }}</span>
+    <p class="option-description">Vence {{ card.expiration }}</p>
 </ng-template>

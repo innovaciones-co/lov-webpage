@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, AfterViewInit, signal, inject, input, effect } from '@angular/core';
+import { Component, ViewChild, TemplateRef, signal, inject, input, effect, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
@@ -13,10 +13,9 @@ import { CustomerSubscription } from '../../../../core/models/customer.model';
   templateUrl: './payment-card-selector.html',
   styleUrl: './payment-card-selector.scss'
 })
-export class PaymentCardSelector implements AfterViewInit {
-  @ViewChild('cardTemplate1') cardTemplate1?: TemplateRef<any>;
-  @ViewChild('cardTemplate2') cardTemplate2?: TemplateRef<any>;
-  @ViewChild('cardTemplate3') cardTemplate3?: TemplateRef<any>;
+export class PaymentCardSelector {
+  @ViewChild('addCardTemplate') addCardTemplate?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
 
   currentSubscription = input<CustomerSubscription | undefined>();
 
@@ -29,11 +28,27 @@ export class PaymentCardSelector implements AfterViewInit {
   isModalOpen = signal(false);
   refreshCreditCards = signal(0);
 
-  paymentCards = signal<any[]>([
-    { value: 'card1', template: this.cardTemplate1 },
-    { value: 'card2', template: this.cardTemplate2, actionIcon: 'delete', actionLabel: 'Eliminar tarjeta' },
-    { value: 'card3', template: this.cardTemplate3, actionIcon: 'delete', actionLabel: 'Eliminar tarjeta' }
-  ]);
+  paymentCards = computed(() => {
+    const options: any[] = [];
+
+    // Opciones para cada tarjeta guardada
+    this.creditCards()
+      .filter(card => card.truncatedNumber)
+      .forEach((card: any) => {
+        options.push({
+          value: card.id,
+          template: this.cardTemplate,
+          actionIcon: 'delete',
+          actionLabel: 'Eliminar tarjeta',
+          card: card,
+          issuer: card.issuer,
+          truncatedNumber: card.truncatedNumber,
+          expiration: card.expiryMonth + '/' + card.expiryYear.toString().slice(-2),
+        });
+      });
+
+    return options;
+  });
 
   constructor() {
     effect(() => {
@@ -55,14 +70,6 @@ export class PaymentCardSelector implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.paymentCards.set([
-      { value: 'card1', template: this.cardTemplate1 },
-      { value: 'card2', template: this.cardTemplate2, actionIcon: 'delete', actionLabel: 'Eliminar tarjeta' },
-      { value: 'card3', template: this.cardTemplate3, actionIcon: 'delete', actionLabel: 'Eliminar tarjeta' }
-    ]);
-  }
-
   onCardAction(cardId: string): void {
     // TODO: Implementar lógica para eliminar o la acción que necesites
     console.log('Acción ejecutada para tarjeta:', cardId);
@@ -79,5 +86,9 @@ export class PaymentCardSelector implements AfterViewInit {
   onPaymentMethodSuccess(): void {
     this.isModalOpen.set(false);
     this.refreshCreditCards.update(val => val + 1);
+  }
+
+  capitalizeFirstLetter(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 }
