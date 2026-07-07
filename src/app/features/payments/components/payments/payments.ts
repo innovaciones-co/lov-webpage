@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
@@ -12,6 +12,7 @@ import { BillingInfoComponent } from "../billing-info/billing-info";
 import { Summary } from "../summary/summary";
 import { PaymentMethodOptions } from "../payment-method-options/payment-method-options";
 import { PaymentCardSelector } from "../payment-card-selector/payment-card-selector";
+import { CustomerSubscription } from '../../../../core/models/customer.model';
 
 @Component({
   selector: 'app-payments',
@@ -19,8 +20,11 @@ import { PaymentCardSelector } from "../payment-card-selector/payment-card-selec
   templateUrl: './payments.html',
   styleUrl: './payments.scss'
 })
-export class Payments {
+export class Payments implements OnInit {
   private document = inject(DOCUMENT);
+
+  customerSubscriptions = signal<CustomerSubscription[]>([]);
+  currentSubscription = signal<CustomerSubscription | undefined>(undefined);
 
   constructor(
     private deviceDetectionService: DeviceDetectionService,
@@ -29,6 +33,15 @@ export class Payments {
     private authService: AuthService,
     private msisdnPipe: MsisdnPipe
   ) { }
+
+
+  ngOnInit(): void {
+    this.getMsisdn()
+      .pipe(
+        switchMap(msisdn => this.getActiveSubscription(msisdn)),
+      )
+      .subscribe();
+  }
 
   isMobile(): boolean {
     return this.deviceDetectionService?.isMobile() ?? false;
@@ -99,6 +112,9 @@ export class Payments {
         if (subscriptions.length === 0) {
           return throwError(() => new Error(`No active subscriptions found for MSISDN: ${msisdn}`));
         }
+
+        this.customerSubscriptions.set(subscriptions);
+        this.currentSubscription.set(subscriptions[0]);
 
         const subscriberId = subscriptions[0].id;
         return of({ msisdn, subscriberId });

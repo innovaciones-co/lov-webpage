@@ -5,7 +5,21 @@
         <radio-field [options]="paymentCards()" [control]="paymentCardControl"
             (action)="onCardAction($event)"></radio-field>
     </div>
+    <button (click)="onEditClick()" class="link-button">>> Añadir tarjeta</button>
 </div>
+
+<app-modal [size]="'lg'" [isOpen]="isModalOpen()" (closed)="onCancelModal()">
+    <div class="modal-content">
+        <div class="modal-content-info">
+            <p class="info-content-title">Añadir nueva tarjeta</p>
+            <div class="info-section">
+                <p>Ingresa los datos de tu tarjeta.</p>
+                <app-create-payment-method [customerId]="currentSubscription()?.customerId!"
+                    (paymentMethodCreated)="onPaymentMethodSuccess()"></app-create-payment-method>
+            </div>
+        </div>
+    </div>
+</app-modal>
 
 <ng-template #cardTemplate1>
     <span class="option-title">+ Agregar nueva tarjeta</span>
