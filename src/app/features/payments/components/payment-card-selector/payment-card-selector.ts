@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, TemplateRef, AfterViewInit, signal, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
@@ -7,45 +7,31 @@ import { RadioComponent } from '../../../../shared/components/form-fields/radio/
   selector: 'app-payment-card-selector',
   imports: [RadioComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './payment-card-selector.html',
-  styleUrl: './payment-card-selector.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './payment-card-selector.scss'
 })
 export class PaymentCardSelector implements AfterViewInit {
   @ViewChild('cardTemplate1') cardTemplate1?: TemplateRef<any>;
   @ViewChild('cardTemplate2') cardTemplate2?: TemplateRef<any>;
   @ViewChild('cardTemplate3') cardTemplate3?: TemplateRef<any>;
 
-  paymentCardControl = new FormControl('');
+  readonly paymentCardControl = new FormControl<string | null>(null);
 
-  paymentCards = signal<any[]>([]);
+  paymentCards = signal<any[]>([
+    { value: 'card1', template: this.cardTemplate1 },
+    { value: 'card2', template: this.cardTemplate2, actionIcon: 'delete', actionLabel: 'Eliminar tarjeta' },
+    { value: 'card3', template: this.cardTemplate3, actionIcon: 'delete', actionLabel: 'Eliminar tarjeta' }
+  ]);
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.paymentCards.set([
-      {
-        value: 'card1',
-        template: this.cardTemplate1
-      },
-      {
-        value: 'card2',
-        template: this.cardTemplate2,
-        actionIcon: 'delete',
-        actionLabel: 'Eliminar tarjeta'
-      },
-      {
-        value: 'card3',
-        template: this.cardTemplate3,
-        actionIcon: 'delete',
-        actionLabel: 'Eliminar tarjeta'
-      }
+      { value: 'card1', template: this.cardTemplate1 },
+      { value: 'card2', template: this.cardTemplate2, actionIcon: 'delete', actionLabel: 'Eliminar tarjeta' },
+      { value: 'card3', template: this.cardTemplate3, actionIcon: 'delete', actionLabel: 'Eliminar tarjeta' }
     ]);
   }
 
-  onCardSelect(cardId: string): void {
-    console.log('Tarjeta seleccionada:', cardId);
-  }
-
   onCardAction(cardId: string): void {
+    // TODO: Implementar lógica para eliminar o la acción que necesites
     console.log('Acción ejecutada para tarjeta:', cardId);
-    // Aquí va tu lógica para eliminar o la acción que necesites
   }
 }

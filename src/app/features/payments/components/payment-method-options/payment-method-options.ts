@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, TemplateRef, AfterViewInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
@@ -7,36 +7,26 @@ import { RadioComponent } from '../../../../shared/components/form-fields/radio/
   selector: 'app-payment-method-options',
   imports: [RadioComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './payment-method-options.html',
-  styleUrl: './payment-method-options.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './payment-method-options.scss'
 })
 export class PaymentMethodOptions implements AfterViewInit {
   @ViewChild('recurringTemplate') recurringTemplate?: TemplateRef<any>;
   @ViewChild('balanceTemplate') balanceTemplate?: TemplateRef<any>;
   @ViewChild('payuTemplate') payuTemplate?: TemplateRef<any>;
 
-  paymentMethodControl = new FormControl('');
+  readonly paymentMethodControl = new FormControl<string | null>(null);
 
-  paymentMethods = signal<any[]>([]);
+  paymentMethods = signal<any[]>([
+    { value: 'recurring', template: this.recurringTemplate },
+    { value: 'balance', template: this.balanceTemplate },
+    { value: 'payu', template: this.payuTemplate }
+  ]);
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.paymentMethods.set([
-      {
-        value: 'recurring',
-        template: this.recurringTemplate
-      },
-      {
-        value: 'balance',
-        template: this.balanceTemplate
-      },
-      {
-        value: 'payu',
-        template: this.payuTemplate
-      }
+      { value: 'recurring', template: this.recurringTemplate },
+      { value: 'balance', template: this.balanceTemplate },
+      { value: 'payu', template: this.payuTemplate }
     ]);
-  }
-
-  onPaymentMethodChange(method: string): void {
-    console.log('Método de pago seleccionado:', method);
   }
 }
