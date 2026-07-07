@@ -10,10 +10,12 @@ import { PaymentInitiationResponse } from '../../models/order.model';
 import { PaymentService } from '../../services/payment.service';
 import { BillingInfoComponent } from "../billing-info/billing-info";
 import { Summary } from "../summary/summary";
+import { PaymentMethodOptions } from "../payment-method-options/payment-method-options";
+import { PaymentCardSelector } from "../payment-card-selector/payment-card-selector";
 
 @Component({
   selector: 'app-payments',
-  imports: [Summary, BillingInfoComponent],
+  imports: [Summary, BillingInfoComponent, PaymentMethodOptions, PaymentCardSelector],
   templateUrl: './payments.html',
   styleUrl: './payments.scss'
 })
