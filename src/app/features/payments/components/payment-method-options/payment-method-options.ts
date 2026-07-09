@@ -22,6 +22,9 @@ export class PaymentMethodOptions implements AfterViewInit {
   readonly paymentMethodControl = new FormControl<string | null>(null);
   accounts = signal<any[]>([]);
 
+  disclaimerTitle = signal<string>('');
+  disclaimerContent = signal<string>('');
+
   pesoBalance = computed(() => {
     const currencyAccount = this.accounts().find(account => account.name === 'Pesos');
     if (!currencyAccount || !currencyAccount.unit?.relation) {

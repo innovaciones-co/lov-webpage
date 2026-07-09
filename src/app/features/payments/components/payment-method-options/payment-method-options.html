@@ -4,6 +4,16 @@
     <div>
         <radio-field [options]="paymentMethods()" [control]="paymentMethodControl"></radio-field>
     </div>
+    @if (disclaimerTitle() || disclaimerContent()) {
+    <div class="disclaimer-card">
+        @if (disclaimerTitle()) {
+        <h4>{{ disclaimerTitle() }}</h4>
+        }
+        @if (disclaimerContent()) {
+        <p>{{ disclaimerContent() }}</p>
+        }
+    </div>
+    }
 </div>
 
 <ng-template #recurringTemplate>
