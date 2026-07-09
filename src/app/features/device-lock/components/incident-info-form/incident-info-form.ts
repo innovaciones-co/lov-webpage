@@ -4,13 +4,21 @@ import { InputTextComponent } from '../../../../shared/components/form-fields/in
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
 import { Router } from '@angular/router';
+import { DeviceLockService } from '../../services/device-lock.service';
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface IncidentInfoFormData {
+  name: string;
+  lastName: string;
+  documentType: string;
+  documentID: string;
   lovNumber: string;
   incidentDate: string;
   blockType: string;
   isMinor: string;
   violenceApplied: string;
+  weaponType?: string;
+  subscriptionId?: string;
 }
 
 @Component({
@@ -18,13 +26,16 @@ export interface IncidentInfoFormData {
   imports: [ReactiveFormsModule,
     InputTextComponent,
     SelectComponent,
-    DatePickerComponent
-  ],
+    DatePickerComponent, ErrorCard],
   templateUrl: './incident-info-form.html',
   styleUrl: './incident-info-form.scss'
 })
 export class IncidentInfoForm {
   private router = inject(Router);
+  private deviceLockService = inject(DeviceLockService);
+
+  isLoading = signal(false);
+  validationError = signal<string>('');
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -33,6 +44,9 @@ export class IncidentInfoForm {
     },
     incidentDate: {
       pastDate: 'La fecha debe ser anterior o igual a hoy'
+    },
+    documentID: {
+      pattern: 'El documento debe tener el formato correcto'
     }
   };
 
@@ -53,19 +67,56 @@ export class IncidentInfoForm {
     };
   }
 
+  // Conditional validator: weaponType is required if violenceApplied is 'yes'
+  private conditionalWeaponTypeValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const formGroup = control as FormGroup;
+      const violenceApplied = formGroup.get('violenceApplied')?.value;
+      const weaponType = formGroup.get('weaponType')?.value;
+
+      if (violenceApplied === 'yes' && !weaponType) {
+        return { weaponTypeRequired: true };
+      }
+
+      return null;
+    };
+  }
+
   form = signal(
     new FormGroup({
+      name: new FormControl('', Validators.required),
+      lastName: new FormControl('', Validators.required),
+      documentType: new FormControl('', Validators.required),
+      documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
       lovNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
       incidentDate: new FormControl('', [Validators.required, this.pastDateValidator()]),
       blockType: new FormControl('', Validators.required),
       isMinor: new FormControl('', Validators.required),
       violenceApplied: new FormControl('', Validators.required),
-    })
+      weaponType: new FormControl(''),
+    }, { validators: this.conditionalWeaponTypeValidator() })
   );
 
+  constructor() {
+    // Re-validate and clear weaponType when violenceApplied changes
+    this.form().get('violenceApplied')?.valueChanges.subscribe((value) => {
+      if (value !== 'yes') {
+        this.form().get('weaponType')?.reset(null, { emitEvent: false });
+      }
+      this.form().updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
   blockType = signal([
-    { label: 'Hurto', value: 'theft' },
-    { label: 'Extravío', value: 'loss' },
+    { label: 'Hurto', value: 'THEFT_DEVICE' },
+    { label: 'Extravío', value: 'LOST_DEVICE' },
+  ]);
+
+  documentType = signal([
+    { label: 'Cédula', value: '1' },
+    { label: 'NIT', value: '2' },
+    { label: 'Cédula de extranjeria', value: '3' },
+    { label: 'Pasaporte', value: '4' },
   ]);
 
   yesNoOptions = signal([
@@ -73,7 +124,14 @@ export class IncidentInfoForm {
     { label: 'No', value: 'no' },
   ]);
 
+  weaponType = signal([
+    { label: 'Arma de fuego', value: 'FIREARM' },
+    { label: 'Arma blanca', value: 'BLADE' },
+    { label: 'Otro', value: 'OTHER' },
+  ]);
+
   formSubmit = output<IncidentInfoFormData>();
+  imeiListEmit = output<{ label: string; value: string }[]>();
 
   // Get error message for a specific field
   getFieldErrorMessage(fieldName: string): string {
@@ -91,7 +149,47 @@ export class IncidentInfoForm {
 
   onSubmit(): void {
     if (this.form().valid) {
-      this.formSubmit.emit(this.form().value as IncidentInfoFormData);
+      const lovNumber = this.form().get('lovNumber')?.value as string;
+
+      // Limpiar error previo
+      this.validationError.set('');
+      this.isLoading.set(true);
+
+      this.deviceLockService.getSubscriber(lovNumber)
+        .then(async (subscriber) => {
+          const documentIdFromForm = this.form().get('documentID')?.value;
+          const documentId = subscriber.document?.id;
+          const subscriptionId = subscriber.subscriptions?.[0]?.id;
+
+          console.debug('Subscriber fetched:', subscriber);
+          //this.formSubmit.emit(this.form().value as IncidentInfoFormData);
+
+          if (documentIdFromForm == documentId) {
+            try {
+              const imeiList = await this.deviceLockService.getImeiList(subscriptionId);
+              this.imeiListEmit.emit(imeiList);
+              const formData = { ...this.form().value as IncidentInfoFormData, subscriptionId };
+              this.formSubmit.emit(formData);
+
+
+              if (imeiList.length === 0) {
+                this.validationError.set('Lo sentimos, no se encontraron dispositivos asociados a tu número LOV. Por favor, contacta al equipo de soporte para más información.');
+              }
+            } catch {
+              this.imeiListEmit.emit([]);
+              this.validationError.set('Error al obtener la lista de dispositivos asociados. Por favor, intenta nuevamente más tarde.');
+            }
+          } else {
+            this.validationError.set('Lo sentimos, la información no coincide con la registrada para este número LOV. Por favor, verifica la información ingresada e intenta nuevamente.');
+          }
+
+          this.isLoading.set(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching subscriber:', error);
+          this.isLoading.set(false);
+          this.validationError.set('Error al obtener la información del suscriptor. Verifica el número LOV e intenta nuevamente.');
+        });
     }
   }
 }

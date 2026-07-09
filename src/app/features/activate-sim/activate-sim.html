@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>Activa tu SIM en minutos</h1>
+    <h1>Activa tu SIM en segundos</h1>
     <p>Solo necesitarás tus datos personales y el número de tu SIM.
     </p>
     <div class="stepper-container">
@@ -11,12 +11,15 @@
             </div>
             @if (showDocumentValidationForm()) {
             <div class="form-wrapper">
-                <app-document-validation [hideButton]="showPersonalInfoForm()" (formSubmit)="onDocumentValidationFormSubmit($event)"></app-document-validation>
+                <app-document-validation [hideButton]="showPersonalInfoForm()"
+                    (formSubmit)="onDocumentValidationFormSubmit($event)"></app-document-validation>
             </div>
             }
             @if (showPersonalInfoForm()) {
             <div class="form-wrapper">
-                <app-personal-info-form [documentValidationData]="documentValidationData()" (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
+                <app-personal-info-form [documentValidationData]="documentValidationData()"
+                    [iccid]="iccidData()?.iccid || ''"
+                    (formSubmit)="onPersonalInfoFormSubmit($event)"></app-personal-info-form>
             </div>
             }
         </div>

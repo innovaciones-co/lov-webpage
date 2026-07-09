@@ -1,0 +1,37 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.card-title {
+    color: $color-extra-1;
+    font-size: 1.2rem;
+}
+
+.total-balance {
+    display: flex;
+    justify-content: space-between;
+    color: $color-primary;
+    font-weight: 700;
+}
+
+.balance-list {
+    margin-top: 22px;
+
+    ul {
+
+        li {
+            font-size: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .material-symbols-outlined {
+                font-size: 20px;
+            }
+
+            p {
+                margin: 0;
+            }
+        }
+    }
+}

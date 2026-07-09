@@ -1,0 +1,132 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+
+.card-title {
+    color: $color-extra-1;
+    font-size: 1.2rem;
+
+    &.no-border {
+        border-bottom: none;
+        margin-bottom: 5px !important;
+    }
+}
+
+.history-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.history-filter-button {
+    background-color: $color-primary-light;
+    border: 1px solid $gray-100;
+    border-radius: 7px;
+    color: $gray-900;
+    cursor: pointer;
+    font-size: .875rem;
+    font-weight: 500;
+    padding: 0.45rem 1.4rem;
+    flex: 1;
+    text-align: center;
+
+    &.active {
+        background-color: $color-extra-1;
+        border-color: $color-extra-1;
+        color: $color-primary-light;
+    }
+}
+
+
+
+.history-custom-range {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr)) auto;
+    gap: 0.75rem;
+    align-items: end;
+    margin-bottom: 0.75rem;
+}
+
+.history-custom-range__field {
+    display: grid;
+    gap: 0.3rem;
+
+    span {
+        font-size: 0.75rem;
+        color: $gray-700;
+        font-weight: 600;
+    }
+
+    input {
+        width: 100%;
+        border: 1px solid $gray-100;
+        border-radius: 7px;
+        padding: 0.45rem 0.65rem;
+        color: $gray-900;
+        background-color: $color-primary-light;
+        font: inherit;
+    }
+}
+
+.history-custom-range__apply,
+.history-download-button {
+    border: 1px solid $color-extra-1;
+    border-radius: 7px;
+    background-color: $color-primary-light;
+    color: $color-extra-1;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.45rem 1rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover:not(:disabled),
+    &.active {
+        background-color: $color-extra-1;
+        color: $color-primary-light;
+    }
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+}
+
+.history-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.9rem;
+}
+
+.history-download-button {
+    border-color: $gray-400;
+    color: $gray-700;
+
+    &:hover:not(:disabled) {
+        border-color: $gray-700;
+        background-color: $gray-700;
+    }
+}
+
+.history-type-icon {
+    display: inline-flex;
+    font-size: 1.1rem;
+    font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+    line-height: 1;
+}
+
+@media (max-width: 768px) {
+    .history-custom-range {
+        grid-template-columns: 1fr;
+    }
+
+    .history-actions {
+        justify-content: stretch;
+    }
+
+    .history-download-button,
+    .history-custom-range__apply {
+        width: 100%;
+    }
+}

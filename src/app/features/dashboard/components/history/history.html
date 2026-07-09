@@ -1,0 +1,103 @@
+<div class="card">
+
+    <h3 class="card-title no-border">Historial de consumo</h3>
+
+    <div class="history-filters" role="group" aria-label="Filtros de historial">
+        <button class="history-filter-button" [class.active]="isDateRangeSelected(1)" (click)="setDateRange(1)">
+            Ultimo mes
+        </button>
+        <button class="history-filter-button" [class.active]="isDateRangeSelected(3)" (click)="setDateRange(3)">
+            3 meses
+        </button>
+        <button class="history-filter-button" [class.active]="isDateRangeSelected(6)" (click)="setDateRange(6)">
+            6 meses
+        </button>
+    </div>
+
+    <div class="history-custom-range">
+        <label class="history-custom-range__field">
+            <span>Desde</span>
+            <input type="date" [value]="customStartDate()" (change)="onCustomStartDateChange($any($event.target).value)"
+                max="9999-12-31" />
+        </label>
+
+        <label class="history-custom-range__field">
+            <span>Hasta</span>
+            <input type="date" [value]="customEndDate()" (change)="onCustomEndDateChange($any($event.target).value)"
+                max="9999-12-31" />
+        </label>
+
+        <button class="history-custom-range__apply" type="button" (click)="applyCustomDateRange()"
+            [class.active]="isDateRangeSelected('custom')">
+            Aplicar rango
+        </button>
+    </div>
+
+    @if (customDateError()) {
+    <p class="error-message">{{ customDateError() }}</p>
+    }
+
+    @if(loading$()) {
+    <app-loading></app-loading>
+    } @else if (error$()) {
+    <p class="error-message">Ocurrió un error al cargar el historial de consumo. Por favor, intenta nuevamente más
+        tarde.</p>
+    <p> {{ error$() }}</p>
+    } @else if (history$()?.content?.length === 0) {
+    <p>No se encontraron eventos de consumo para esta suscripción.</p>
+    } @else {
+    <table class="history-table table-rounded table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Detalle</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of history$()?.content; track $index) {
+            <tr>
+                <td>{{ item.date | datetime }}</td>
+                <td class="history-type-cell">
+                    <span class="history-type-icon material-symbols-outlined" aria-hidden="true">{{
+                        getTypeIcon(item.type) }}</span>
+                </td>
+                <td>{{ item.detail }}</td>
+                <td>{{ item.amount }} {{ item.measure }}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="history-actions">
+        <button class="history-download-button" type="button" (click)="downloadCurrentHistoryAsCsv()"
+            [disabled]="(history$()?.content?.length ?? 0) === 0 || exportingCsv()">
+            {{ exportingCsv() ? 'Generando CSV...' : 'Descargar CSV' }}
+        </button>
+    </div>
+
+    @if ((history$()?.page?.totalPages ?? 0) > 1) {
+    <nav class="table-paginator" aria-label="Paginador de historial">
+        <button class="table-paginator__button" type="button" (click)="changePage(currentPage() - 1)"
+            [disabled]="!hasPreviousPage()">
+            Anterior
+        </button>
+
+        <div class="table-paginator__pages">
+            @for (page of getPageNumbers(); track page) {
+            <button class="table-paginator__button" type="button" [class.active]="page === currentPage()"
+                (click)="changePage(page)">
+                {{ page + 1 }}
+            </button>
+            }
+        </div>
+
+        <button class="table-paginator__button" type="button" (click)="changePage(currentPage() + 1)"
+            [disabled]="!hasNextPage()">
+            Siguiente
+        </button>
+    </nav>
+    }
+    }
+</div>

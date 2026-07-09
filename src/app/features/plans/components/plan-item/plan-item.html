@@ -2,6 +2,22 @@
   <div class="card-body">
     <h3 class="card-plan">{{plan.name}}</h3>
     <p class="card-price">{{plan.totalPrice | currency}}</p>
+
+    <div class="plan-detailed-pricing">
+      @if(plan.voiceQuantity > 0 || plan.smsQuantity > 0) {
+      <div class="phone-pricing">
+        <span>Telefonía</span>
+        {{plan.totalPrice * (plan.voiceQuantity + plan.smsQuantity) | currency}}
+      </div>
+      }
+      @if(plan.dataQuantity > 0) {
+      <div class="data-pricing">
+        <span>Datos</span>
+        {{plan.totalPrice * plan.dataQuantity | currency}}
+      </div>
+      }
+    </div>
+
     <hr class="divider" />
 
     <ul class="card-features">

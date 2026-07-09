@@ -1,8 +1,10 @@
 <div class="container">
   <h1>¡Trae tu número siempre a LOV!</h1>
-  <p>Para iniciar el proceso de portabilidad debes tener una SIM LOV activa. Sí aún . no la has activado ingresa aquí.
+  <p>Para iniciar el proceso de portabilidad debes tener una SIM LOV activa. Sí aún no la has activado ingresa <a
+      href="/activar-sim">aquí</a>.
   </p>
   <div class="form-container">
-    <app-navigation-tabs [tabs]="tabs()" [initialActiveTabId]="activeTabId()" (activeTabChanged)="onTabSelected($event)"></app-navigation-tabs>
+    <app-navigation-tabs [tabs]="tabs()" [initialActiveTabId]="activeTabId()"
+      (activeTabChanged)="onTabSelected($event)"></app-navigation-tabs>
   </div>
 </div>

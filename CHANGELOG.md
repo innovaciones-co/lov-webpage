@@ -1,3 +1,169 @@
+# [1.23.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.22.0...v1.23.0) (2026-06-19)
+
+
+### Bug Fixes
+
+* correct text and formatting in portabilidad and successful activation components ([45cbb5f](https://github.com/innovaciones-co/lov-webpage/commit/45cbb5fd3f0ab0cab14a342adc56064b2b995f06))
+
+
+### Features
+
+* add DatetimePipe for date formatting and update history component to use it ([780b0a0](https://github.com/innovaciones-co/lov-webpage/commit/780b0a023bf5a88e1d6462c27298d201378c45a0))
+* add history component and service for subscriber consumption history ([e7f934c](https://github.com/innovaciones-co/lov-webpage/commit/e7f934c5520ae0fd25075ce6ef55b139defb52c5))
+* implement custom date range selection and CSV download functionality in history component ([12bf9b4](https://github.com/innovaciones-co/lov-webpage/commit/12bf9b4714049200c8f0980ac0c288dd8993e8e7))
+
+# [1.22.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.21.0...v1.22.0) (2026-06-05)
+
+
+### Bug Fixes
+
+* removing redundant slash ([9f8808a](https://github.com/innovaciones-co/lov-webpage/commit/9f8808ada83be924087790e3978c8d5475dd2891))
+
+
+### Features
+
+* add detailed pricing section for voice and data plans ([482ebb6](https://github.com/innovaciones-co/lov-webpage/commit/482ebb6f67fbc9e4f1fdef947dc758e1c432b63c))
+* sorting for plans ([6c0c3ed](https://github.com/innovaciones-co/lov-webpage/commit/6c0c3edd4c35e7532255790a7ee5222e13b5ef5a))
+
+# [1.21.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.20.0...v1.21.0) (2026-05-29)
+
+
+### Features
+
+* enhance activation messages and update plan descriptions for clarity ([7dfbf23](https://github.com/innovaciones-co/lov-webpage/commit/7dfbf23580e0806d9b937521b47877df2d9546ad))
+
+# [1.20.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.19.1...v1.20.0) (2026-05-29)
+
+
+### Features
+
+* add no-border class to card titles ([6b8a73f](https://github.com/innovaciones-co/lov-webpage/commit/6b8a73f0ae4217bd7474469856b7970bd5f5be6a))
+* enhance billing information section with form controls and update styles ([e2555f1](https://github.com/innovaciones-co/lov-webpage/commit/e2555f1183915561a8cb6000ad89896a6ed2b4be))
+
+## [1.19.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.19.0...v1.19.1) (2026-05-29)
+
+
+### Bug Fixes
+
+* update card titles for consistency in dashboard layout ([9d7187c](https://github.com/innovaciones-co/lov-webpage/commit/9d7187c6aea41a1d1812549705469a88e4e7bd69))
+
+# [1.19.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.18.0...v1.19.0) (2026-05-28)
+
+
+### Features
+
+* add document validation process ([aea972f](https://github.com/innovaciones-co/lov-webpage/commit/aea972f8b3c664be3d2277583ccd135ba07717f1))
+* enhance successful activation flow with ICCID handling and loading state ([946e5f4](https://github.com/innovaciones-co/lov-webpage/commit/946e5f47885716cf373707ebc92ba6869c2d3683))
+
+# [1.18.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.17.0...v1.18.0) (2026-05-27)
+
+
+### Features
+
+* add past date validation for document issue date ([20e7586](https://github.com/innovaciones-co/lov-webpage/commit/20e75869d6f65eba45ca578331c98aaa15c34895))
+* implement loading state ([0fa34e6](https://github.com/innovaciones-co/lov-webpage/commit/0fa34e6c59ec2d30e52467a5c94f7bc17e443a50))
+* pass msisdn to successful activation page and display it conditionally ([2c7dccc](https://github.com/innovaciones-co/lov-webpage/commit/2c7dccc0f0718447f9658122b80b317afaecbf53))
+* remove gap ([52ac7f0](https://github.com/innovaciones-co/lov-webpage/commit/52ac7f08785d132bdfc0d1c55949dfad727701ae))
+* update data consumption display for unlimited data accounts ([75a0631](https://github.com/innovaciones-co/lov-webpage/commit/75a063154e8f909182852c6bef7022d391a085ec))
+
+# [1.17.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.16.0...v1.17.0) (2026-05-22)
+
+
+### Features
+
+* add data usage component ([fcf2eb4](https://github.com/innovaciones-co/lov-webpage/commit/fcf2eb4c181d23d9809109d78660d856fa526dea))
+* enhance data usage component ([f907368](https://github.com/innovaciones-co/lov-webpage/commit/f90736812c54e90e75962d4985a4999f8490539e))
+* implement current plan component ([2e93d76](https://github.com/innovaciones-co/lov-webpage/commit/2e93d7603c081ac67aea4831d21fbf2751d518d9))
+* improve login layout and responsiveness with updated styles ([eee510b](https://github.com/innovaciones-co/lov-webpage/commit/eee510b4fdf0c74024576e315f75793b7cc070d4))
+* refactor recharge scheduler component and add data usage component ([685fa3b](https://github.com/innovaciones-co/lov-webpage/commit/685fa3b807ecfcb7672522445638ee2a5dca8b37))
+* update subscription service methods and improve dashboard functionality ([8e58962](https://github.com/innovaciones-co/lov-webpage/commit/8e58962a74383799151cc1ccdfff5e59459b8540))
+* update subscription styles ([57953da](https://github.com/innovaciones-co/lov-webpage/commit/57953daa9248f894b965a315ad7112e2a299878d))
+
+# [1.16.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.15.0...v1.16.0) (2026-05-22)
+
+
+### Features
+
+* enhance incident and personal info forms with weapon type and terms acceptance ([a731feb](https://github.com/innovaciones-co/lov-webpage/commit/a731feb60d9b612579bf44fb8c3f5cb2ec9af126))
+
+# [1.15.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.14.0...v1.15.0) (2026-05-15)
+
+
+### Features
+
+* enhance lovk device forms with subscriber data handling and validation ([20b7c80](https://github.com/innovaciones-co/lov-webpage/commit/20b7c80c528ab19b287be7060478850d8d58ead7))
+* update device lock flow ([9b8d321](https://github.com/innovaciones-co/lov-webpage/commit/9b8d321d1f6a986ec262803700e66d29f52e28ff))
+
+# [1.14.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.13.2...v1.14.0) (2026-05-15)
+
+
+### Features
+
+* add confirmation modal for disabling auto-recharge and improve error handling ([5b56422](https://github.com/innovaciones-co/lov-webpage/commit/5b5642203954f4427ae4516176a9ef1214752490))
+* enhance CreatePaymentMethod component to refresh credit cards ([a865c31](https://github.com/innovaciones-co/lov-webpage/commit/a865c31e8321367f75dc19bbff33424bc7eddf8e))
+* refactor payment method creation logic ([c0b4dbb](https://github.com/innovaciones-co/lov-webpage/commit/c0b4dbb39d0af037b7f7c77359a7b8e05aaf3562))
+
+## [1.13.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.13.1...v1.13.2) (2026-05-15)
+
+
+### Bug Fixes
+
+* update mismatch error message for donor number confirmation ([1c2865e](https://github.com/innovaciones-co/lov-webpage/commit/1c2865e370d8972106a7244785770024dffb7d90))
+
+## [1.13.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.13.0...v1.13.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* uncomment nipRequest call in onSubmit method for form submission ([b621426](https://github.com/innovaciones-co/lov-webpage/commit/b62142652f7858759839a865bc15649a72e321cc))
+
+# [1.13.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.12.0...v1.13.0) (2026-05-05)
+
+
+### Features
+
+* update route guard for 'planes' path to use guestGuard and remove debug information from login component ([22c6240](https://github.com/innovaciones-co/lov-webpage/commit/22c62401fbccdb80e5941d48cc61e0e77287cdae))
+
+# [1.12.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.11.0...v1.12.0) (2026-05-05)
+
+
+### Features
+
+* enhance account management with SubscriptionAccount model and update dashboard display ([eecab7f](https://github.com/innovaciones-co/lov-webpage/commit/eecab7fd2b2ce317f6a33804cfc957e0bf0ab624))
+
+# [1.11.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.10.0...v1.11.0) (2026-05-05)
+
+
+### Features
+
+* add guestGuard to all routes for improved access control ([86c0750](https://github.com/innovaciones-co/lov-webpage/commit/86c0750a00550f3ba5fdbab8cb22d077cf3edf7c))
+
+# [1.10.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.9.0...v1.10.0) (2026-05-05)
+
+
+### Features
+
+* update OTP error handling and state management in authentication flow ([f3e5a81](https://github.com/innovaciones-co/lov-webpage/commit/f3e5a812a743fcdae6e4f3c1d02cdb08bc30bfce))
+
+# [1.9.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.8.0...v1.9.0) (2026-04-24)
+
+
+### Features
+
+* add active subscriptions input to recharge scheduler and implement saved recharge fetching ([12ae218](https://github.com/innovaciones-co/lov-webpage/commit/12ae2184b0346e721195e1d14b4fc0791a5be944))
+* add refresh mechanism for saved recharge data in RechargeScheduler ([eab5bb6](https://github.com/innovaciones-co/lov-webpage/commit/eab5bb6e1e88b40d666d45841402db95e4001a3d))
+* add switch component with toggle functionality ([d0dcf21](https://github.com/innovaciones-co/lov-webpage/commit/d0dcf215f4008f5e839b1afa2f4fece1a2c0fda6))
+* enhance recharge scheduler with submission handling and modal for adding credit cards ([5a57991](https://github.com/innovaciones-co/lov-webpage/commit/5a579911486779dd4efcf8a774c39eb8d0d376d5))
+* enhance saved recharge handling and update auto-recharge switch state ([cac7be3](https://github.com/innovaciones-co/lov-webpage/commit/cac7be3cdc8cb4db19148f1d4d158089d8db0646))
+* implement auto-recharge option ([a5b23b7](https://github.com/innovaciones-co/lov-webpage/commit/a5b23b7796f824b0aff37f91753fcc4e0668914f))
+* implement credit card fetching service ([1fa9072](https://github.com/innovaciones-co/lov-webpage/commit/1fa9072600f078e7227b83904234ab0b0b49feb5))
+* implement recharge scheduler component ([71ccf3f](https://github.com/innovaciones-co/lov-webpage/commit/71ccf3f9fb29489fe11a56d68ae7dbfcec29b67e))
+* integrate CreatePaymentMethod component into recharge scheduler ([d555b0c](https://github.com/innovaciones-co/lov-webpage/commit/d555b0c53c818471117a9bd309baf1aa836d12aa))
+* recharge scheduling with validation and enhancements ([dc95f6a](https://github.com/innovaciones-co/lov-webpage/commit/dc95f6a3e198c6daa3a094906349add67f322aea))
+* toggle auto-recharge switch on cancel ([92bdf8b](https://github.com/innovaciones-co/lov-webpage/commit/92bdf8be28c0c7c39e3a057f2685870da8c47a30))
+* update payment method ([5b7ed7d](https://github.com/innovaciones-co/lov-webpage/commit/5b7ed7d60babd40dc7a112cdd55b4796c76663d1))
+* update recharge scheduler to handle subscription and adjust credit card fetching logic ([27445ea](https://github.com/innovaciones-co/lov-webpage/commit/27445eabd7792e41afdd4a26d185299898f5cf2d))
+
 # [1.8.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.7.0...v1.8.0) (2026-04-24)
 
 

@@ -3,11 +3,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestro
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
 import { OtpInputComponent } from "../../../../shared/components/form-fields/otp-input/otp-input";
 import { AuthState } from '../../models/auth.models';
 import { AuthError } from '../../models/error.models';
 import { AuthService } from '../../services/auth.service';
-import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
 
 @Component({
   selector: 'app-login',
@@ -41,7 +41,7 @@ export class Login implements OnInit, OnDestroy {
   error: AuthError | null = null;
   countdown = signal<number>(0);
   isLoading = false;
-  returnUrl = '/';
+  returnUrl = '/dashboard';
   currentOtpValue = signal<string>('');
   isOtpComplete = signal<boolean>(false);
 
@@ -51,7 +51,7 @@ export class Login implements OnInit, OnDestroy {
   ngOnInit() {
     this.initializeForms();
     this.setupSubscriptions();
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
   }
 
   ngOnDestroy() {
@@ -78,7 +78,6 @@ export class Login implements OnInit, OnDestroy {
   onOtpComplete(otp: string) {
     this.currentOtpValue.set(otp);
     this.isOtpComplete.set(true);
-    console.log('OTP Complete:', otp);
   }
 
   onOtpChange(otp: string) {
@@ -122,7 +121,7 @@ export class Login implements OnInit, OnDestroy {
 
         // Navigate after successful authentication
         if (state === AuthState.AUTHENTICATED) {
-          this.router.navigate([this.returnUrl]);
+          this.router.navigateByUrl(this.returnUrl);
         }
 
         this.cdr.markForCheck(); // Trigger change detection
@@ -134,6 +133,9 @@ export class Login implements OnInit, OnDestroy {
       .subscribe(error => {
         this.error = error;
         this.cdr.markForCheck(); // Trigger change detection
+        this.currentOtpValue.set(''); // Clear OTP value on error
+        this.isOtpComplete.set(false); // Reset OTP completion state on error
+        this.otpFormArray.reset(); // Clear OTP form on error
       });
 
     // Subscribe to OTP countdown

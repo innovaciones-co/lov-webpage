@@ -45,7 +45,7 @@ export class DonorInformationFormComponent {
     },
     donorNumberConfirm: {
       pattern: 'El número debe tener 10 dígitos numéricos',
-      mismatch: 'El número de la SIM Lov no coincide'
+      mismatch: 'El número del número a portar no coincide'
     }
   };
 
@@ -171,7 +171,7 @@ export class DonorInformationFormComponent {
     try {
       const formData = this.form().value as DonorInformationData;
       const lovNumber = this.portabilityData().lovNumber;
-      //await this.portabilityService.nipRequest(formData, lovNumber);
+      await this.portabilityService.nipRequest(formData, lovNumber);
 
       this.formSubmit.emit(formData);
       this.showModal.set(false);

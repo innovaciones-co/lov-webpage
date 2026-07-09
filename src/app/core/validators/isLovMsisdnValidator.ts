@@ -18,9 +18,8 @@ export function isLovMsisdnValidator(
 
         const formattedMsisdn = msisdnPipe.transform(value);
 
-        return subscriptionService.getSubscriptionByMsisdn(formattedMsisdn).pipe(
+        return subscriptionService.getSubscriptionsByMsisdn(formattedMsisdn).pipe(
             map((response) => {
-                console.log('Subscription response:', response);
                 // If subscription exists, it's a valid LOV MSISDN, so no validation error
                 return null;
             }),

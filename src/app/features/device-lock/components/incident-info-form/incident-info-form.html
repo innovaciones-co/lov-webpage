@@ -3,7 +3,7 @@
         <h3 class="form-subtitle">Información del incidente</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Número LOV implicado'" [placeholder]="'0000000000'"
+                <input-text-field [label]="'Número LOV implicado'" [placeholder]="'3001234567'"
                     [control]="form().controls.lovNumber"
                     [error]="getFieldErrorMessage('lovNumber')"></input-text-field>
 
@@ -23,8 +23,39 @@
                 <select-field [label]="'Se aplicó violencia'" [placeholder]="''" [options]="yesNoOptions()"
                     [control]="form().controls.violenceApplied"
                     [error]="getFieldErrorMessage('violenceApplied')"></select-field>
+                @if (form().controls.violenceApplied.value === 'yes') {
+                <select-field [label]="'Tipo de arma'" [placeholder]="''" [options]="weaponType()"
+                    [control]="form().controls.weaponType" [error]="getFieldErrorMessage('weaponType')"></select-field>
+                }
             </div>
         </div>
+        <h3 class="form-subtitle">Información personal</h3>
+        <div class="form-grid">
+            <div class="form-row">
+                <input-text-field [label]="'Nombre'" [placeholder]="'Arturo'" [control]="form().controls.name"
+                    [error]="getFieldErrorMessage('name')"></input-text-field>
+
+                <input-text-field [label]="'Apellidos'" [placeholder]="'Pérez Rodiguez'"
+                    [control]="form().controls.lastName" [error]="getFieldErrorMessage('lastName')"></input-text-field>
+            </div>
+            <div class="form-row">
+                <select-field [label]="'Tipo de documento'" [placeholder]="''" [options]="documentType()"
+                    [control]="form().controls.documentType"
+                    [error]="getFieldErrorMessage('documentType')"></select-field>
+
+                <input-text-field [label]="'Documento'" [placeholder]="'123456789'"
+                    [control]="form().controls.documentID"
+                    [error]="getFieldErrorMessage('documentID')"></input-text-field>
+            </div>
+        </div>
+        <error-card [message]="validationError()"></error-card>
     </div>
-    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+        @if (isLoading()) {
+        <span class="loading-spinner"></span>
+        Validando...
+        } @else {
+        Continuar
+        }
+    </button>
 </form>

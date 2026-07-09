@@ -1,10 +1,11 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../../shared/components/form-fields/select/select';
 import { Router } from '@angular/router';
 import { ActivateSimService } from '../../services/activate-sim.service';
 import { DatePickerComponent } from "../../../../shared/components/form-fields/date-picker/date-picker";
+import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface DocumentValidationData {
   documentType: string;
@@ -14,7 +15,7 @@ export interface DocumentValidationData {
 
 @Component({
   selector: 'app-document-validation',
-  imports: [ReactiveFormsModule, InputTextComponent, SelectComponent, DatePickerComponent],
+  imports: [ReactiveFormsModule, InputTextComponent, SelectComponent, DatePickerComponent, ErrorCard],
   templateUrl: './document-validation.html',
   styleUrl: './document-validation.scss'
 })
@@ -24,19 +25,40 @@ export class DocumentValidation {
 
   hideButton = input(false);
   isLoading = signal(false);
+  validationError = signal<string>('');
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
     documentID: {
       pattern: 'El documento debe tener el formato correcto'
+    },
+    documentIssueDate: {
+      pastDate: 'La fecha debe ser anterior o igual a hoy'
     }
   };
+
+  // Past date validator (date must be today or earlier)
+  private pastDateValidator(): ValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value) return null;
+
+      const dateValue = control.value;
+      const [year, month, day] = dateValue.split('-').map(Number);
+
+      // Create dates in local timezone
+      const selectedDate = new Date(year, month - 1, day);
+      const today = new Date();
+      today.setHours(23, 59, 59, 999);
+
+      return selectedDate <= today ? null : { pastDate: true };
+    };
+  }
 
   form = signal(
     new FormGroup({
       documentType: new FormControl('', Validators.required),
       documentID: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{7,15}$')]),
-      documentIssueDate: new FormControl<string | null>(null, Validators.required),
+      documentIssueDate: new FormControl<string | null>(null, [Validators.required, this.pastDateValidator()]),
     })
   );
 
@@ -76,20 +98,30 @@ export class DocumentValidation {
       const formData = this.form().value as DocumentValidationData;
       this.isLoading.set(true);
 
+      // Limpiar error previo
+      this.validationError.set('');
+
       this.activateSimService.validateDocument(formData.documentID, formData.documentType, formData.documentIssueDate).subscribe({
         next: (response) => {
-          console.log('Documento validado exitosamente:', response);
           this.isLoading.set(false);
 
           if (response?.success && response?.data) {
             this.activateSimService.setDocumentValidationData(response.data);
+            this.validationError.set('');
+            this.formSubmit.emit(formData);
+          } else {
+            const errorMessage = response?.error?.message ||
+              'Error en la validación del documento. Por favor verifica los datos e intenta de nuevo.';
+            this.validationError.set(errorMessage);
           }
-
-          this.formSubmit.emit(formData);
         },
         error: (error) => {
-          console.error('Error al validar documento:', error);
+          // console.error('Error al validar documento:', error);
           this.isLoading.set(false);
+
+          const errorMessage = error?.error?.message ||
+            'Los datos ingresados no son válidos. Por favor verifica el documento e intenta de nuevo.';
+          this.validationError.set(errorMessage);
         }
       });
     }

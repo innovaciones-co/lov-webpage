@@ -1,5 +1,5 @@
 <div id="dashboard" class="container">
-    <main class="card">
+    <main class="">
         <div class="card-title">
             <h1>Mi Cuenta</h1>
 
@@ -7,94 +7,103 @@
             <button class="btn logout-btn" (click)="logout()">Cerrar sesión</button>
             }
         </div>
-
-        <div class="user-info">
-            @if (loading()) {
-            <app-loading></app-loading>
-            }
-            @else {@if (user) {
-            <span>Bienvenido, {{ user.firstName | capitalize }} {{ user.lastName | capitalize }}</span>
-            }}
-        </div>
     </main>
 
-    <aside class="card">
-        <div class="card-title">
-            <h2>Suscripciones</h2>
+    <div class="dashboard-content">
+        <div class="left-column">
+            <app-data-usage [accountViews]="accountViews()" [isAccountLoading]="isAccountLoading()"></app-data-usage>
+
+            <aside class="card">
+                <h3 class="card-title no-border">Suscripciones</h3>
+                <div class="subscriptions-list">
+                    @if (loading()) {
+                    <app-loading></app-loading>
+                    }
+                    @else {
+                    @if (activeSubscriptions().length > 0) {
+                    <ul>
+                        @for (subscription of activeSubscriptions(); track subscription.msisdn) {
+                        <li class="subscription-item" (click)="selectSubscription(subscription)"
+                            [class.active]="subscription.id === currentSubscription()?.id">
+                            <span class="subscription-name">Plan: {{ subscription.tariff.tariffName }}</span>
+                            <span class="subscription-msisdn">Número de teléfono: {{ subscription.msisdn }}</span>
+                            <span class="subscription-status">Estado: {{ getStateLabel(subscription.state) }}</span>
+                            <span class="subscription-activation">Activado: {{ subscription.activationDate |
+                                date:'shortDate'
+                                }}</span>
+                            <span class="subscription-payment">Tipo de Pago: {{
+                                getSubscriptionType(subscription.paymentType) }}</span>
+                        </li>
+                        }
+                    </ul>
+                    }
+                    @else {
+                    <p>No tienes suscripciones activas.</p>
+                    }}
+
+                </div>
+            </aside>
+
+            @if (currentSubscription()?.id) {
+            <app-history [subscriberId]="currentSubscription()!.id"></app-history>
+            }
+
+            @if (billingInfo) {
+            <div id="billing-info" class="card">
+                <h3 class="card-title no-border">Datos de Facturación</h3>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <input-text-field [label]="'Nombre'" [control]="firstNameControl">
+                        </input-text-field>
+
+                        <input-text-field [label]="'Apellido'" [control]="lastNameControl">
+                        </input-text-field>
+                    </div>
+
+                    <div class="form-row">
+                        <input-text-field [label]="'Tipo de Documento'" [control]="documentTypeControl">
+                        </input-text-field>
+
+                        <input-text-field [label]="'Número de Documento'" [control]="documentNumberControl">
+                        </input-text-field>
+                    </div>
+                </div>
+
+                <h3 class="card-title no-border">Información de contacto</h3>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <input-text-field [label]="'Correo Electrónico'" [control]="emailControl">
+                        </input-text-field>
+
+                        <input-text-field [label]="'Teléfono'" [control]="phoneControl">
+                        </input-text-field>
+                    </div>
+
+                    <div class="form-row">
+                        <input-text-field [label]="'País'" [control]="countryControl">
+                        </input-text-field>
+
+                        <input-text-field [label]="'Ciudad'" [control]="cityControl">
+                        </input-text-field>
+                    </div>
+
+                    <div class="form-row">
+                        <input-text-field [label]="'Dirección'" [control]="addressControl">
+                        </input-text-field>
+
+                        <input-text-field [label]="'Información Adicional'" [control]="additionalInfoControl">
+                        </input-text-field>
+                    </div>
+                </div>
+            </div>
+            }
+
+            <app-recharge-scheduler [subscription]="currentSubscription()"></app-recharge-scheduler>
         </div>
 
-        <div class="subscriptions-list">
-            @if (loading()) {
-            <app-loading></app-loading>
-            }
-            @else {
-            @if (activeSubscriptions().length > 0) {
-            <ul>
-                @for (subscription of activeSubscriptions(); track subscription.msisdn) {
-                <li class="subscription-item">
-                    <span class="subscription-name">Plan: {{ subscription.tariff.tariffName }}</span>
-                    <span class="subscription-msisdn">Número de teléfono: {{ subscription.msisdn }}</span>
-                    <span class="subscription-status">Estado: {{ subscription.state | capitalize }}</span>
-                    <span class="subscription-activation">Activado: {{ subscription.activationDate | date:'shortDate'
-                        }}</span>
-                    <span class="subscription-payment">Tipo de Pago: {{ subscription.paymentType | lowercase }}</span>
-                </li>
-                }
-            </ul>
-            }
-            @else {
-            <p>No tienes suscripciones activas.</p>
-            }}
-
+        <div class="right-column">
+            <app-current-plan [accountViews]="accountViews()"
+                [isAccountLoading]="isAccountLoading()"></app-current-plan>
         </div>
-    </aside>
-
-    @if (billingInfo) {
-    <div id="billing-info" class="card">
-        <h3 class="form-subtitle">Datos de Facturación</h3>
-
-        <p><strong>Nombre:</strong> {{ billingInfo.firstName | capitalize }} {{ billingInfo.lastName | capitalize }}
-        </p>
-        <p><strong>Tipo de Documento:</strong> {{ billingInfo.documentType }}</p>
-        <p><strong>Número de Documento:</strong> {{ billingInfo.documentNumber }}</p>
-        <p><strong>Correo Electrónico:</strong> {{ billingInfo.email }}</p>
-
-
-        <div class="divider"></div>
-        <h3 class="form-subtitle">Información de contacto</h3>
-
-        <p><strong>Teléfono:</strong> {{ billingInfo.phone | msisdn }}</p>
-        <p><strong>País:</strong> {{ billingInfo.country | capitalize}}</p>
-        <p><strong>Ciudad:</strong> {{ billingInfo.city | capitalize }}</p>
-        <p><strong>Dirección:</strong> {{ billingInfo.address }}</p>
-        <p><strong>Información Adicional:</strong> {{ billingInfo.additionalInfo }}</p>
     </div>
-    }
-
-    <app-recharge-scheduler
-        [subscription]="activeSubscriptions().length > 0 ? activeSubscriptions()[0] : undefined"></app-recharge-scheduler>
-
-    <div id="account-balances" class="card">
-        <div class="card-title">
-            <h2>Balances de Cuentas</h2>
-        </div>
-
-        <div class="account-list">
-            @if (accounts().length > 0) {
-            <ul>
-                @for (account of accounts(); track account.id) {
-                <li class="account-item">
-                    <p class="account-name">{{ account.name }}</p>
-                    <p class="account-balance">Saldo: {{ account.balance | currency }}</p>
-                    <p class="account-expiry">Vence: {{ account.expiryDate | date:'shortDate' }}</p>
-                </li>
-                }
-            </ul>
-            }
-            @else {
-            <p>No hay cuentas disponibles para esta suscripción.</p>
-            }
-        </div>
-    </div>
-
 </div>

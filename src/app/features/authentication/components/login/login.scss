@@ -22,14 +22,22 @@
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    padding: 45px 15px;
-    max-width: 100%;
-    width: 650px;
+    padding: 24px 12px;
+    width: 100%;
+    max-width: 650px;
     margin: auto;
 
+    @include tablet {
+        padding: 45px 15px;
+    }
+
     .card {
-        width: 650px;
+        width: 100%;
         max-width: 100%;
+
+        @include tablet {
+            width: 650px;
+        }
     }
 }
 
@@ -58,16 +66,26 @@
     width: 100%;
 
     .login-title {
-        font-size: 32px;
+        font-size: 1.75rem;
         font-weight: 700;
         margin: 0 0 10px 0;
+
+        @include tablet {
+            font-size: 32px;
+        }
     }
 
     .login-subtitle {
-        font-size: 1.1rem;
+        font-size: 1rem;
         color: $gray-700;
-        margin-bottom: 32px;
-        padding: 0 16px;
+        margin-bottom: 24px;
+        padding: 0 8px;
+
+        @include tablet {
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+            padding: 0 16px;
+        }
     }
 }
 
@@ -224,15 +242,15 @@
     }
 
     .disclaimer {
-        display: flex;
+        display: none;
         gap: 10px;
         padding: 16px;
         border-radius: 10px;
         background: #F9FAFB;
-        display: none;
 
         @include tablet {
-            display: block;
+            display: flex;
+            align-items: flex-start;
         }
 
 
@@ -298,10 +316,18 @@
     margin-top: 20px;
     justify-content: space-between;
 
+    .btn {
+        width: 100%;
+    }
+
     @include tablet {
         flex-direction: row;
         gap: 12px;
         margin-top: 24px;
+
+        .btn {
+            width: auto;
+        }
     }
 }
 
@@ -335,14 +361,11 @@
     }
 }
 
-// Touch-friendly adjustments for mobile
-@include mobile {
-    .form-input {
-        appearance: none;
-        -webkit-appearance: none;
-        border-radius: 6px;
-        -webkit-border-radius: 6px;
-    }
+.form-input {
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
 }
 
 // Prevent zoom on iOS

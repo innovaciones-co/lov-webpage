@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
-import { environment } from "../../../../environments/environment";
-import { switchMap } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
+import { environment } from "../../../../environments/environment";
 import { PersonalInfoFormData } from "../components/personal-info-form/personal-info-form";
 
 @Injectable({
@@ -30,12 +30,14 @@ export class ActivateSimService {
 
         return this.http.get(firstUrl).pipe(
             switchMap((firstResponse) => {
-                console.log('Primera solicitud exitosa:', firstResponse);
-                // Segunda solicitud GET - solo se ejecuta si la primera fue exitosa
-                const secondUrl = `${this.gatewayUrl}/api/subscriptions?iccid=${iccid}`;
-                return this.http.get(secondUrl);
+                return this.getSubscriptionsByIccid(iccid);
             })
         );
+    }
+
+    getSubscriptionsByIccid(iccid: string): Observable<any> {
+        const url = `${this.gatewayUrl}/api/subscriptions?iccid=${iccid}`;
+        return this.http.get(url);
     }
 
     validateDocument(documentID: string, documentType: string, documentIssueDate: string): Observable<any> {
@@ -43,12 +45,7 @@ export class ActivateSimService {
         this.loading.set(true);
 
         const url = `${this.gatewayUrl}/api/personal-data/get`;
-
-        // documentIssueDate: YYYY-MM-DDTHH:mm:ss.sssZ
         const issueYear = documentIssueDate.substring(0, 4);
-
-        console.log('Fecha capturada (ISO):', documentIssueDate);
-        console.log('Año extraído:', issueYear);
 
         const body = {
             providerId: "6",
@@ -66,7 +63,6 @@ export class ActivateSimService {
     }
 
     submitPersonalInfo(data: PersonalInfoFormData) {
-        console.debug('Submitting personal info');
         this.loading.set(true);
         this.success.set(false);
 
@@ -108,8 +104,6 @@ export class ActivateSimService {
 
         return this.http.put(firstUrl, firstBody).pipe(
             switchMap((firstResponse) => {
-                console.log('Primer PUT exitoso:', firstResponse);
-
                 // Validation customer PUT request
                 const secondUrl = `${this.gatewayUrl}/api/customers/${customerId}/residential`;
                 const secondBody = {
@@ -122,8 +116,6 @@ export class ActivateSimService {
                 return this.http.put(secondUrl, secondBody);
             }),
             switchMap((secondResponse) => {
-                console.log('Segundo PUT exitoso:', secondResponse);
-
                 // Activate SIM PUT request
                 const thirdUrl = `${this.gatewayUrl}/api/customers/${customerId}/subscriptions/${subscription}/sim/activate`;
                 const thirdBody = {

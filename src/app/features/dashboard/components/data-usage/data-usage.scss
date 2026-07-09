@@ -1,0 +1,40 @@
+@use '../../../../../styles/variables' as *;
+@use '../../../../../styles/mixins' as *;
+
+.card-title {
+    color: $color-extra-1;
+    font-size: 1.2rem;
+
+    &.no-border {
+        border-bottom: none;
+        margin-bottom: 5px !important;
+    }
+}
+
+.data-balance {
+    span {
+        font-weight: 600;
+    }
+}
+
+.data-consumption {
+    .data-consumption-bar {
+        height: 20px;
+        background-color: $gray-100;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+
+        .progress {
+            height: 100%;
+            background: $color-extra-1;
+            border-radius: 10px;
+        }
+    }
+
+    .data-consumption-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+    }
+}

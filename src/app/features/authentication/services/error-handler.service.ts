@@ -106,7 +106,7 @@ export class HttpErrorMapper implements IErrorMapper {
             return 'El código OTP es inválido. Por favor intenta nuevamente.';
         }
 
-        if (status === 500 && error.error?.message === 'Invalid OTP code') {
+        if (status === 401 && error.error?.message === 'Invalid OTP code') {
             return 'El código OTP es inválido. Por favor intenta nuevamente.';
         }
 

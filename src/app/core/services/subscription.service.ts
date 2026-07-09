@@ -1,13 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, map, switchMap, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
+import { SubscriptionAccount } from '../models/account.model';
 import { ApiResponse } from '../models/api-response.model';
 import { CustomerSubscriptionResponse } from '../models/customer.model';
 
 export interface GetSubscriptionParams {
     msisdn: string;
+}
+
+interface CustomerLookupResponse {
+    id: number;
 }
 
 @Injectable({
@@ -22,13 +27,22 @@ export class SubscriptionService {
      * @param params - Object containing the MSISDN
      * @returns Observable of the subscription response
      */
-    getSubscription(params: GetSubscriptionParams): Observable<ApiResponse<CustomerSubscriptionResponse>> {
+    getSubscriptions(customerId: number): Observable<ApiResponse<CustomerSubscriptionResponse>> {
+        return this.http.get<ApiResponse<CustomerSubscriptionResponse>>(
+            `${this.baseUrl}/api/customers/${customerId}`,
+        ).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    getCustomerId(params: GetSubscriptionParams): Observable<CustomerLookupResponse> {
         const httpParams = new HttpParams().set('msisdn', params.msisdn);
 
-        return this.http.get<ApiResponse<CustomerSubscriptionResponse>>(
+        return this.http.get<ApiResponse<CustomerLookupResponse>>(
             `${this.baseUrl}/api/subscriptions`,
             { params: httpParams }
         ).pipe(
+            map((response) => response.payload),
             catchError(this.handleError)
         );
     }
@@ -38,8 +52,10 @@ export class SubscriptionService {
      * @param msisdn - The MSISDN to query
      * @returns Observable of the subscription response
      */
-    getSubscriptionByMsisdn(msisdn: string): Observable<ApiResponse<CustomerSubscriptionResponse>> {
-        return this.getSubscription({ msisdn });
+    getSubscriptionsByMsisdn(msisdn: string): Observable<ApiResponse<CustomerSubscriptionResponse>> {
+        return this.getCustomerId({ msisdn }).pipe(
+            switchMap((response) => this.getSubscriptions(response.id))
+        );
     }
 
     /**
@@ -48,8 +64,8 @@ export class SubscriptionService {
      * @param subscriptionId - The subscription ID
      * @returns Observable of the accounts response
      */
-    getAccounts(customerId: string, subscriptionId: string): Observable<ApiResponse<any>> {
-        return this.http.get<ApiResponse<any>>(
+    getAccounts(customerId: string, subscriptionId: string): Observable<ApiResponse<SubscriptionAccount[]>> {
+        return this.http.get<ApiResponse<SubscriptionAccount[]>>(
             `${this.baseUrl}/api/customers/${customerId}/subscriptions/${subscriptionId}/accounts`,
             {
                 headers: { 'accept': 'application/json' }
