@@ -14,7 +14,7 @@
 <div id="summary" class="flex">
     <div class="col-8">
         <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
-        <app-payment-method-options></app-payment-method-options>
+        <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
         <!-- <app-billing-info></app-billing-info> -->
     </div>
     <div class="col-4">
