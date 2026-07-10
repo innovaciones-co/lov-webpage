@@ -1,10 +1,13 @@
-import { Component, ViewChild, TemplateRef, AfterViewInit, signal, input, inject, computed, effect } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, computed, effect, inject, input, signal, TemplateRef, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
 import { CustomerSubscription } from '../../../../core/models/customer.model';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
+import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
+import PaymentMethod from '../../models/payment-method.model';
+import { ProductType } from '../../models/product.model';
+import { PaymentService } from '../../services/payment.service';
 
 @Component({
   selector: 'app-payment-method-options',
@@ -38,12 +41,14 @@ export class PaymentMethodOptions implements AfterViewInit {
   });
 
   paymentMethods = signal<any[]>([
-    { value: 'recurring', template: this.recurringTemplate },
-    { value: 'balance', template: this.balanceTemplate },
-    { value: 'payu', template: this.payuTemplate }
+    { value: PaymentMethod.CARD, template: this.recurringTemplate },
+    { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
+    { value: PaymentMethod.PAYU, template: this.payuTemplate }
   ]);
 
-  constructor() {
+  constructor(
+    private paymentService: PaymentService
+  ) {
     effect(() => {
       const subscription = this.currentSubscription();
       if (subscription) {
@@ -59,10 +64,12 @@ export class PaymentMethodOptions implements AfterViewInit {
 
     effect(() => {
       const selectedMethod = this.selectedPaymentMethod();
-      if (selectedMethod === 'recurring') {
+      this.paymentService.paymentMethod.set(selectedMethod as PaymentMethod | undefined);
+
+      if (selectedMethod === PaymentMethod.CARD) {
         this.disclaimerTitle.set('Este método pagará tu suscripción recurrente');
         this.disclaimerContent.set('Próximo cobro: 14 de junio de 2026 por $49,900'); // TODO: Replace with dynamic date and amount
-      } else if (selectedMethod === 'balance') {
+      } else if (selectedMethod === PaymentMethod.BALANCE) {
         this.disclaimerTitle.set('Saldo insuficiente');
         this.disclaimerContent.set('El saldo disponible es insuficiente para cubrir el costo del plan. Al continuar, se realizará un cobro adicional.');
       } else {
@@ -73,10 +80,27 @@ export class PaymentMethodOptions implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.paymentMethods.set([
-      { value: 'recurring', template: this.recurringTemplate },
-      { value: 'balance', template: this.balanceTemplate },
-      { value: 'payu', template: this.payuTemplate }
-    ]);
+    const product = this.paymentService.selectedProduct();
+    switch (product?.productType) {
+      case ProductType.BUNDLE:
+        this.paymentMethods.set([
+          { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
+          { value: PaymentMethod.PAYU, template: this.payuTemplate }
+        ]);
+        break;
+      case ProductType.PLAN:
+        this.paymentMethods.set([
+          { value: PaymentMethod.CARD, template: this.recurringTemplate },
+          { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
+          { value: PaymentMethod.PAYU, template: this.payuTemplate }
+        ]);
+        break;
+      case ProductType.TOPUP:
+        this.paymentMethods.set([{ value: PaymentMethod.PAYU, template: this.payuTemplate }]);
+        break;
+      default:
+        this.paymentMethods.set([{ value: PaymentMethod.PAYU, template: this.payuTemplate }]);
+    }
   }
+
 }

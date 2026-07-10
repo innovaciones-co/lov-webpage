@@ -1,3 +1,4 @@
+@if (isVisible()) {
 <div class="card">
     <h3 class="form-subtitle">Tarjeta de pago</h3>
     <p>Selecciona una tarjeta guardada</p>
@@ -25,3 +26,4 @@
     <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.truncatedNumber }}</span>
     <p class="option-description">Vence {{ card.expiration }}</p>
 </ng-template>
+}

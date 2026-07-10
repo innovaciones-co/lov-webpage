@@ -1,11 +1,13 @@
-import { Component, ViewChild, TemplateRef, signal, inject, input, effect, computed } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component, TemplateRef, ViewChild, computed, effect, inject, input, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { CustomerSubscription } from '../../../../core/models/customer.model';
 import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
 import { Modal } from '../../../../shared/components/modal/modal';
-import { CreatePaymentMethod } from '../../../payment-methods/create-payment-method/create-payment-method';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
-import { CustomerSubscription } from '../../../../core/models/customer.model';
+import { CreatePaymentMethod } from '../../../payment-methods/create-payment-method/create-payment-method';
+import PaymentMethod from '../../models/payment-method.model';
+import { PaymentService } from '../../services/payment.service';
 
 @Component({
   selector: 'app-payment-card-selector',
@@ -15,11 +17,15 @@ import { CustomerSubscription } from '../../../../core/models/customer.model';
 })
 export class PaymentCardSelector {
   @ViewChild('addCardTemplate') addCardTemplate?: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+  @ViewChild('cardTemplate')
+  set cardTemplate(value: TemplateRef<any> | undefined) {
+    this.cardTemplateRef.set(value);
+  }
 
   currentSubscription = input<CustomerSubscription | undefined>();
 
   private dashboardService = inject(DashboardService);
+  private paymentService = inject(PaymentService);
 
   readonly paymentCardControl = new FormControl<string | null>(null);
 
@@ -27,8 +33,11 @@ export class PaymentCardSelector {
   loadingCreditCards = signal<boolean>(true);
   isModalOpen = signal(false);
   refreshCreditCards = signal(0);
+  isVisible = signal(false);
+  private cardTemplateRef = signal<TemplateRef<any> | undefined>(undefined);
 
   paymentCards = computed(() => {
+    const cardTemplate = this.cardTemplateRef();
     const options: any[] = [];
 
     // Opciones para cada tarjeta guardada
@@ -37,7 +46,7 @@ export class PaymentCardSelector {
       .forEach((card: any) => {
         options.push({
           value: card.id,
-          template: this.cardTemplate,
+          template: cardTemplate,
           actionIcon: 'delete',
           actionLabel: 'Eliminar tarjeta',
           card: card,
@@ -52,21 +61,38 @@ export class PaymentCardSelector {
 
   constructor() {
     effect(() => {
+      const selectedMethod = this.paymentService.paymentMethod();
+      if (selectedMethod == PaymentMethod.CARD) {
+        this.isVisible.set(true);
+      } else {
+        this.isVisible.set(false);
+      }
+    });
+
+    effect(() => {
+      if (!this.isVisible()) {
+        return;
+      }
+
       this.refreshCreditCards();
-      console.debug('Fetching credit cards');
-      this.loadingCreditCards.set(true);
-      this.dashboardService.getCreditCards().subscribe({
-        next: (response) => {
-          const cards = Array.isArray(response) ? response : (response.payload || []);
-          this.creditCards.set(cards);
-          this.dashboardService.setCreditCardsData(response);
-          this.loadingCreditCards.set(false);
-        },
-        error: (error) => {
-          console.error('Error fetching credit cards:', error);
-          this.loadingCreditCards.set(false);
-        }
-      });
+      this.fetchCreditCards();
+    });
+  }
+
+  private fetchCreditCards(): void {
+    console.debug('Fetching credit cards');
+    this.loadingCreditCards.set(true);
+    this.dashboardService.getCreditCards().subscribe({
+      next: (response) => {
+        const cards = Array.isArray(response) ? response : (response.payload || []);
+        this.creditCards.set(cards);
+        this.dashboardService.setCreditCardsData(response);
+        this.loadingCreditCards.set(false);
+      },
+      error: (error) => {
+        console.error('Error fetching credit cards:', error);
+        this.loadingCreditCards.set(false);
+      }
     });
   }
 

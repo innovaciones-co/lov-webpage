@@ -7,6 +7,7 @@ import { environment } from "../../../../environments/environment";
 import { Plan } from "../../plans/models/plan.model";
 import { BillingInfo } from "../models/billing-info.model";
 import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderResponse, PaymentInitiationResponse, PaymentStatus } from "../models/order.model";
+import PaymentMethod from "../models/payment-method.model";
 import { PlanProduct, Product, ProductType, RechargeProduct } from "../models/product.model";
 
 @Injectable({
@@ -18,6 +19,8 @@ export class PaymentService implements OnDestroy {
     billingInfo = signal<BillingInfo | undefined>(undefined);
     billingForm = signal<FormGroup | undefined>(undefined);
     selectedProduct = signal<Product | undefined>(undefined);
+    paymentMethod = signal<PaymentMethod | undefined>(undefined);
+
     private _formValid = signal<boolean>(false);
     private httpClient = inject(HttpClient);
     private stopPolling = new Subject<void>();
