@@ -4,13 +4,13 @@ import { PaymentService } from '../../services/payment.service';
 import { PlanProduct } from '../../models/product.model';
 
 @Component({
-  selector: 'app-subscription-summary',
+  selector: 'app-purchase-summary',
   imports: [CurrencyPipe],
-  templateUrl: './subscription-summary.html',
-  styleUrl: './subscription-summary.scss',
+  templateUrl: './purchase-summary.html',
+  styleUrl: './purchase-summary.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SubscriptionSummary {
+export class PurchaseSummary {
   private static readonly DATE_FORMATTER = new Intl.DateTimeFormat('es-CO', {
     day: 'numeric',
     month: 'long',
@@ -44,10 +44,10 @@ export class SubscriptionSummary {
 
     const renewalDate = new Date();
     renewalDate.setDate(renewalDate.getDate() + validity);
-    return SubscriptionSummary.DATE_FORMATTER.format(renewalDate);
+    return PurchaseSummary.DATE_FORMATTER.format(renewalDate);
   });
 
-  confirmSubscription() {
+  confirmPurchase() {
     // TODO: implement subscription confirmation flow.
   }
 

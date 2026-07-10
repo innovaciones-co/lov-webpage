@@ -16,7 +16,7 @@ import { Portability } from './features/portability/portability';
 import { PqrConfirmation } from './features/pqr/componets/pqr-confirmation/pqr-confirmation';
 import { Pqr } from './features/pqr/pqr';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
-import { SubscriptionSummary } from './features/payments/components/subscription-summary/subscription-summary';
+import { PurchaseSummary } from './features/payments/components/purchase-summary/purchase-summary';
 
 export const routes: Routes = [
     {
@@ -88,8 +88,8 @@ export const routes: Routes = [
         component: PqrConfirmation
     },
     {
-        path: 'pagos/suscripcion',
-        component: SubscriptionSummary,
+        path: 'pagos/resumen',
+        component: PurchaseSummary,
         canActivate: [authGuard] // TODO: Only authenticated users can access it.
     },
     {
