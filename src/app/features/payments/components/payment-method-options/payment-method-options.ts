@@ -1,4 +1,5 @@
 import { Component, ViewChild, TemplateRef, AfterViewInit, signal, input, inject, computed, effect } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
@@ -24,6 +25,8 @@ export class PaymentMethodOptions implements AfterViewInit {
 
   disclaimerTitle = signal<string>('');
   disclaimerContent = signal<string>('');
+
+  selectedPaymentMethod = toSignal(this.paymentMethodControl.valueChanges, { initialValue: null });
 
   pesoBalance = computed(() => {
     const currencyAccount = this.accounts().find(account => account.name === 'Pesos');
@@ -51,6 +54,20 @@ export class PaymentMethodOptions implements AfterViewInit {
           //console.log('📊 Accounts completa:', accounts[0].balance);
           this.accounts.set(accounts);
         });
+      }
+    });
+
+    effect(() => {
+      const selectedMethod = this.selectedPaymentMethod();
+      if (selectedMethod === 'recurring') {
+        this.disclaimerTitle.set('Este método pagará tu suscripción recurrente');
+        this.disclaimerContent.set('Próximo cobro: 14 de junio de 2026 por $49,900'); // TODO: Replace with dynamic date and amount
+      } else if (selectedMethod === 'balance') {
+        this.disclaimerTitle.set('Saldo insuficiente');
+        this.disclaimerContent.set('El saldo disponible es insuficiente para cubrir el costo del plan. Al continuar, se realizará un cobro adicional.');
+      } else {
+        this.disclaimerTitle.set('');
+        this.disclaimerContent.set('');
       }
     });
   }

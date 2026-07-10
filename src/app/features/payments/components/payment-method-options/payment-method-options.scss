@@ -26,6 +26,8 @@
     border-radius: 8px;
     background-color: #FFFBEB;
     border: 1px solid #FEF3C7;
+    animation: fadeIn 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
     h4 {
         margin: 0 0 4px 0;
@@ -39,5 +41,17 @@
         font-size: 13px;
         line-height: 1.5;
         color: #92400E;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
