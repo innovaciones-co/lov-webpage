@@ -1,8 +1,10 @@
 <div class="summary-container">
+    @if (selectedProduct(); as product) {
     <div class="heart"></div>
 
-    <h2>Resumen de tu Suscripción</h2>
-    <p class="summary-subtitle">Este plan se renovará automáticamente cada 30 días y que puedes cancelarlo en cualquier
+    <h2>Resumen de tu suscripción</h2>
+    <p class="summary-subtitle">Este plan se renovará automáticamente cada {{ validity() }} días y que puedes cancelarlo
+        en cualquier
         momento.</p>
 
     <span>COBRO HOY</span>
@@ -10,29 +12,29 @@
     <dl class="summary-list card">
         <div class="summary-row">
             <dt>Plan:</dt>
-            <dd class="plan-name">Plan Prepago Ultra 20GB</dd>
+            <dd class="plan-name">{{ product.name }}</dd>
         </div>
 
         <div class="summary-row">
             <dt>Duración:</dt>
-            <dd>30 días</dd>
+            <dd>{{ validity() }} días</dd>
         </div>
 
         <div class="summary-row">
             <dt>Subtotal</dt>
-            <dd>$42.016</dd>
+            <dd>{{ product.basePrice | currency }}</dd>
         </div>
 
         <div class="summary-row">
             <dt>Impuestos</dt>
-            <dd>$7.983</dd>
+            <dd>{{ product.totalTax | currency }}</dd>
         </div>
 
         <hr class="divider">
 
         <div class="summary-row total-row">
             <dt>Total a pagar</dt>
-            <dd>$49.990</dd>
+            <dd>{{ product.totalPrice | currency }}</dd>
         </div>
     </dl>
 
@@ -40,12 +42,12 @@
     <dl class="summary-list card">
         <div class="summary-row">
             <dt>Valor:</dt>
-            <dd class="plan-name">$49.990</dd>
+            <dd class="plan-name">{{ product.totalPrice | currency }}</dd>
         </div>
 
         <div class="summary-row">
             <dt>Próxima renovación</dt>
-            <dd>14 de junio de 2026</dd>
+            <dd>{{ nextRenewalDate() ?? 'No disponible' }}</dd>
         </div>
 
         <div class="summary-row">
@@ -56,7 +58,10 @@
 
     <div class="actions-container">
         <button type="button" class="btn" (click)="confirmSubscription()">
-            Confirmar Suscripción
+            Confirmar suscripción
         </button>
     </div>
+    } @else {
+    <p class="summary-subtitle">No hay un producto seleccionado para mostrar.</p>
+    }
 </div>
