@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
+import { CustomerSubscription } from '../../../../core/models/customer.model';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 import { DeviceDetectionService } from '../../../../core/services/device-detection.service';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
@@ -9,10 +10,9 @@ import { AuthService } from '../../../authentication/services/auth.service';
 import { PaymentInitiationResponse } from '../../models/order.model';
 import { PaymentService } from '../../services/payment.service';
 import { BillingInfoComponent } from "../billing-info/billing-info";
-import { Summary } from "../summary/summary";
-import { PaymentMethodOptions } from "../payment-method-options/payment-method-options";
 import { PaymentCardSelector } from "../payment-card-selector/payment-card-selector";
-import { CustomerSubscription } from '../../../../core/models/customer.model';
+import { PaymentMethodOptions } from "../payment-method-options/payment-method-options";
+import { Summary } from "../summary/summary";
 
 @Component({
   selector: 'app-payments',
@@ -41,6 +41,8 @@ export class Payments implements OnInit {
         switchMap(msisdn => this.getActiveSubscription(msisdn)),
       )
       .subscribe();
+
+    this.paymentService.setFormValidityStatus(true);
   }
 
   isMobile(): boolean {
