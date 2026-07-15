@@ -63,6 +63,14 @@ export class PaymentService {
     return this.http.post(url, paymentMethodData);
   }
 
+  deletePaymentMethod(paymentMethodId: string): Observable<any> {
+    //console.debug('Deleting payment method id:', paymentMethodId);
+
+    const url = `${this.apiUrl}/paymentMethods/${paymentMethodId}`;
+
+    return this.http.delete(url);
+  }
+
   validateExpiry(month: string, year: string): boolean {
     const monthNumber = Number(month);
     const yearNumber = year.length === 2 ? Number(`20${year}`) : Number(year);

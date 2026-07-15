@@ -22,6 +22,38 @@
     </div>
 </app-modal>
 
+<app-modal [size]="'md'" [isOpen]="isDeleteConfirmationModalOpen()" (closed)="onCancelDeleteModal()">
+    <div class="modal-content">
+        <div class="modal-content-info">
+            <p class="info-content-title">Eliminar tarjeta</p>
+            <div class="info-section">
+                <p>
+                    ¿Seguro que deseas eliminar esta tarjeta
+                    @if (pendingDeleteCard()?.truncatedNumber) {
+                    <strong>{{ capitalizeFirstLetter(pendingDeleteCard()?.issuer) }} (•••• {{
+                        pendingDeleteCard()?.truncatedNumber
+                        }})</strong>
+                    }
+                    ?
+                </p>
+            </div>
+            <div class="action">
+                <button type="button" class="btn btn-secondary" (click)="onCancelDeleteModal()"
+                    [disabled]="isDeletingCard()">
+                    Cancelar
+                </button>
+                <button type="button" class="btn" (click)="onConfirmDeleteCard()" [disabled]="isDeletingCard()">
+                    @if (isDeletingCard()) {
+                    Eliminando...
+                    } @else {
+                    Eliminar
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+</app-modal>
+
 <ng-template #cardTemplate let-card="card">
     <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.truncatedNumber }}</span>
     <p class="option-description">Vence {{ card.expiration }}</p>

@@ -6,8 +6,9 @@ import { RadioComponent } from '../../../../shared/components/form-fields/radio/
 import { Modal } from '../../../../shared/components/modal/modal';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { CreatePaymentMethod } from '../../../payment-methods/create-payment-method/create-payment-method';
+import { PaymentService as PaymentMethodsService } from '../../../payment-methods/services/payment-service';
 import PaymentMethod from '../../models/payment-method.model';
-import { PaymentService } from '../../services/payment.service';
+import { PaymentService as CheckoutPaymentService } from '../../services/payment.service';
 
 @Component({
   selector: 'app-payment-card-selector',
@@ -25,16 +26,29 @@ export class PaymentCardSelector {
   currentSubscription = input<CustomerSubscription | undefined>();
 
   private dashboardService = inject(DashboardService);
-  private paymentService = inject(PaymentService);
+  private checkoutPaymentService = inject(CheckoutPaymentService);
+  private paymentMethodsService = inject(PaymentMethodsService);
 
   readonly paymentCardControl = new FormControl<string | null>(null);
 
   creditCards = signal<any[]>([]);
   loadingCreditCards = signal<boolean>(true);
   isModalOpen = signal(false);
+  isDeleteConfirmationModalOpen = signal(false);
+  isDeletingCard = signal(false);
+  pendingDeleteCardId = signal<string | null>(null);
   refreshCreditCards = signal(0);
   isVisible = signal(false);
   private cardTemplateRef = signal<TemplateRef<any> | undefined>(undefined);
+
+  pendingDeleteCard = computed(() => {
+    const pendingDeleteCardId = this.pendingDeleteCardId();
+    if (!pendingDeleteCardId) {
+      return undefined;
+    }
+
+    return this.creditCards().find(card => card.id === pendingDeleteCardId);
+  });
 
   paymentCards = computed(() => {
     const cardTemplate = this.cardTemplateRef();
@@ -61,7 +75,7 @@ export class PaymentCardSelector {
 
   constructor() {
     effect(() => {
-      const selectedMethod = this.paymentService.paymentMethod();
+      const selectedMethod = this.checkoutPaymentService.paymentMethod();
       if (selectedMethod == PaymentMethod.CARD) {
         this.isVisible.set(true);
       } else {
@@ -97,8 +111,49 @@ export class PaymentCardSelector {
   }
 
   onCardAction(cardId: string): void {
-    // TODO: Implementar lógica para eliminar o la acción que necesites
-    console.log('Acción ejecutada para tarjeta:', cardId);
+    if (!cardId) {
+      return;
+    }
+
+    this.pendingDeleteCardId.set(cardId);
+    this.isDeleteConfirmationModalOpen.set(true);
+  }
+
+  onCancelDeleteModal(): void {
+    if (this.isDeletingCard()) {
+      return;
+    }
+
+    this.isDeleteConfirmationModalOpen.set(false);
+    this.pendingDeleteCardId.set(null);
+  }
+
+  onConfirmDeleteCard(): void {
+    const cardId = this.pendingDeleteCardId();
+    if (!cardId || this.isDeletingCard()) {
+      return;
+    }
+
+    this.isDeletingCard.set(true);
+
+    this.paymentMethodsService.deletePaymentMethod(cardId).subscribe({
+      next: () => {
+        this.creditCards.update(cards => cards.filter(card => card.id !== cardId));
+
+        if (this.paymentCardControl.value === cardId) {
+          this.paymentCardControl.setValue(null);
+        }
+
+        this.isDeleteConfirmationModalOpen.set(false);
+        this.pendingDeleteCardId.set(null);
+        this.isDeletingCard.set(false);
+        this.refreshCreditCards.update(val => val + 1);
+      },
+      error: (error) => {
+        console.error('Error deleting payment method:', error);
+        this.isDeletingCard.set(false);
+      }
+    });
   }
 
   onEditClick(): void {
