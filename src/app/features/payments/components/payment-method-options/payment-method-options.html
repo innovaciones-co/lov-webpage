@@ -21,12 +21,14 @@
     <p class="option-description">Requiere tarjeta débito o crédito</p>
 </ng-template>
 
+@if (pesoBalance() > 0) {
 <ng-template #balanceTemplate>
     <span class="option-title">Pago único con saldo</span>
     <p class="option-description">Saldo actual: ${{ pesoBalance() }} COP</p>
 </ng-template>
+}
 
 <ng-template #payuTemplate>
     <span class="option-title">Pago único por PayU</span>
-    <p class="option-description">PSE, tarjeta débito o crédito</p>
+    <p class="option-description">PSE, tarjeta débito o crédito, Nequi o Daviplata</p>
 </ng-template>

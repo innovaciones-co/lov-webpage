@@ -3,6 +3,7 @@ import { AfterViewInit, Component, computed, effect, inject, input, signal, Temp
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CustomerSubscription } from '../../../../core/models/customer.model';
+import { CurrencyPipe } from '../../../../core/pipes/currency.pipe';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
 import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
 import PaymentMethod from '../../models/payment-method.model';
@@ -25,6 +26,7 @@ export class PaymentMethodOptions implements AfterViewInit {
 
   readonly paymentMethodControl = new FormControl<string | null>(null);
   accounts = signal<any[]>([]);
+  private remainingPayment = signal<number>(0);
 
   disclaimerTitle = signal<string>('');
   disclaimerContent = signal<string>('');
@@ -34,10 +36,10 @@ export class PaymentMethodOptions implements AfterViewInit {
   pesoBalance = computed(() => {
     const currencyAccount = this.accounts().find(account => account.name === 'Pesos');
     if (!currencyAccount || !currencyAccount.unit?.relation) {
-      return '-';
+      return 0;
     }
     const adjustedBalance = currencyAccount.balance / currencyAccount.unit.relation;
-    return adjustedBalance.toString();
+    return adjustedBalance;
   });
 
   paymentMethods = signal<any[]>([
@@ -49,6 +51,15 @@ export class PaymentMethodOptions implements AfterViewInit {
   constructor(
     private paymentService: PaymentService
   ) {
+
+    effect(() => {
+      const product = this.paymentService.selectedProduct();
+      if (product) {
+        const balance = this.pesoBalance();
+        this.remainingPayment.set(product.totalPrice - balance);
+      }
+    });
+
     effect(() => {
       const subscription = this.currentSubscription();
       if (subscription) {
@@ -70,8 +81,13 @@ export class PaymentMethodOptions implements AfterViewInit {
         this.disclaimerTitle.set('Este método pagará tu suscripción recurrente');
         this.disclaimerContent.set('Próximo cobro: 14 de junio de 2026 por $49,900'); // TODO: Replace with dynamic date and amount
       } else if (selectedMethod === PaymentMethod.BALANCE) {
-        this.disclaimerTitle.set('Saldo insuficiente');
-        this.disclaimerContent.set('El saldo disponible es insuficiente para cubrir el costo del plan. Al continuar, se realizará un cobro adicional.');
+        if (this.remainingPayment() > 0) {
+          this.disclaimerTitle.set('Saldo parcial');
+          this.disclaimerContent.set(`Tu saldo ${new CurrencyPipe().transform(this.pesoBalance())} cubrirá parte del pago. El resto (${new CurrencyPipe().transform(this.remainingPayment())}) se cobrará por a través de Pay U.`);
+        } else {
+          this.disclaimerTitle.set('Pago completo con saldo');
+          this.disclaimerContent.set(`Tu saldo ${new CurrencyPipe().transform(this.pesoBalance())} cubrirá el pago completo.`);
+        }
       } else {
         this.disclaimerTitle.set('');
         this.disclaimerContent.set('');
