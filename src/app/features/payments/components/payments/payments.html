@@ -14,6 +14,9 @@
 <div id="summary" class="flex">
     <div class="col-8">
         <app-billing-info></app-billing-info>
+        <app-subscription-selector [subscriptions]="customerSubscriptions()"
+            [selectedSubscriptionId]="currentSubscription()?.id"
+            (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
         <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
         <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
     </div>

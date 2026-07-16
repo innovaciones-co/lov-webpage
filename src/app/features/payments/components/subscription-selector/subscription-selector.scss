@@ -1,0 +1,14 @@
+@use '../../../../../styles/variables' as *;
+
+.option-title {
+	font-weight: 600;
+	display: block;
+	margin-bottom: 4px;
+	font-size: 1rem;
+	color: $color-primary;
+}
+
+.option-description {
+	margin: 4px 0 0 0;
+	font-size: 0.875rem;
+}

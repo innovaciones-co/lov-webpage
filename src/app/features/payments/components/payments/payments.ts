@@ -13,10 +13,11 @@ import { BillingInfoComponent } from "../billing-info/billing-info";
 import { PaymentCardSelector } from "../payment-card-selector/payment-card-selector";
 import { PaymentMethodOptions } from "../payment-method-options/payment-method-options";
 import { Summary } from "../summary/summary";
+import { SubscriptionSelector } from "../subscription-selector/subscription-selector";
 
 @Component({
   selector: 'app-payments',
-  imports: [Summary, BillingInfoComponent, PaymentMethodOptions, PaymentCardSelector],
+  imports: [Summary, BillingInfoComponent, PaymentMethodOptions, PaymentCardSelector, SubscriptionSelector],
   templateUrl: './payments.html',
   styleUrl: './payments.scss'
 })
@@ -51,6 +52,18 @@ export class Payments implements OnInit {
 
   canContinue() {
     return this.paymentService.canCheckout();
+  }
+
+  onSubscriptionSelected(subscriptionId: number): void {
+    const selectedSubscription = this.customerSubscriptions().find(
+      (subscription) => subscription.id === subscriptionId
+    );
+
+    if (!selectedSubscription) {
+      return;
+    }
+
+    this.currentSubscription.set(selectedSubscription);
   }
 
   onContinue(): void {
@@ -115,13 +128,24 @@ export class Payments implements OnInit {
           return throwError(() => new Error(`No active subscriptions found for MSISDN: ${msisdn}`));
         }
 
-        this.customerSubscriptions.set(subscriptions);
-        this.currentSubscription.set(subscriptions[0]);
+        const selectedSubscription = this.resolveSelectedSubscription(subscriptions);
 
-        const subscriberId = subscriptions[0].id;
+        this.customerSubscriptions.set(subscriptions);
+        this.currentSubscription.set(selectedSubscription);
+
+        const subscriberId = selectedSubscription.id;
         return of({ msisdn, subscriberId });
       })
     );
+  }
+
+  private resolveSelectedSubscription(subscriptions: CustomerSubscription[]): CustomerSubscription {
+    const currentSubscriptionId = this.currentSubscription()?.id;
+    if (!currentSubscriptionId) {
+      return subscriptions[0];
+    }
+
+    return subscriptions.find(subscription => subscription.id === currentSubscriptionId) ?? subscriptions[0];
   }
 
   /**
