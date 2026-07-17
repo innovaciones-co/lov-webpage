@@ -14,7 +14,7 @@ import { PaymentMethodOptions } from "../payment-method-options/payment-method-o
 import { Summary } from "../summary/summary";
 import { SubscriptionSelector } from "../subscription-selector/subscription-selector";
 import { CardData, OrderPaymentRequest, PaymentInitiationResponse } from '../../models/order.model';
-import PaymentMethod from '../../models/payment-method.model';
+import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method.model';
 
 @Component({
   selector: 'app-payments',
@@ -184,17 +184,14 @@ export class Payments implements OnInit {
     };
   }
 
-  private getDefaultCardData(): CardData { // TODO: Populate with actual card data from form or service
-    return {
-      payerId: '',
-      name: '',
-      identificationNumber: '',
-      creditCardNumber: '',
-      creditCardSecurityCode: 0,
-      creditCardExpirationMonth: '',
-      creditCardExpirationYear: '',
-      paymentMethod: ''
-    };
+  private getDefaultCardData(): PaymentMethodPayload { // TODO: Populate with actual card data from form or service
+    const selectedCreditCard = this.paymentService.selectedCreditCard(); // This is just a placeholder; replace with actual card data retrieval logic
+    
+    if (!selectedCreditCard) {
+      throw new Error('No credit card selected for payment');
+    }
+    
+    return selectedCreditCard!;
   }
 
   /**

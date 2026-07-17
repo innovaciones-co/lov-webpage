@@ -6,8 +6,8 @@ import { catchError, map, retry, share, switchMap, takeUntil, takeWhile } from "
 import { environment } from "../../../../environments/environment";
 import { Plan } from "../../plans/models/plan.model";
 import { BillingInfo } from "../models/billing-info.model";
-import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderResponse, PaymentInitiationResponse, OrderPaymentRequest, PaymentStatus } from "../models/order.model";
-import PaymentMethod from "../models/payment-method.model";
+import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderPaymentRequest, OrderResponse, PaymentInitiationResponse, PaymentStatus } from "../models/order.model";
+import PaymentMethod, { PaymentMethodPayload } from "../models/payment-method.model";
 import { PlanProduct, Product, ProductType, RechargeProduct } from "../models/product.model";
 
 @Injectable({
@@ -20,6 +20,7 @@ export class PaymentService implements OnDestroy {
     billingForm = signal<FormGroup | undefined>(undefined);
     selectedProduct = signal<Product | undefined>(undefined);
     paymentMethod = signal<PaymentMethod | undefined>(undefined);
+    selectedCreditCard = signal<PaymentMethodPayload | undefined>(undefined);
 
     private _formValid = signal<boolean>(false);
     private httpClient = inject(HttpClient);
@@ -30,7 +31,10 @@ export class PaymentService implements OnDestroy {
     }
 
     canCheckout: Signal<boolean> = computed(() => {
-        return this._formValid() && this.selectedProduct() !== undefined;
+        return this._formValid()
+            && this.selectedProduct() !== undefined
+            && this.paymentMethod() !== undefined
+            && (this.paymentMethod() !== PaymentMethod.CARD || this.selectedCreditCard() !== undefined);
     });
 
     setFormValidityStatus(isValid: boolean) {
@@ -43,8 +47,13 @@ export class PaymentService implements OnDestroy {
         console.log('Product selected:', product.getSummaryView());
     }
 
+    setSelectedCreditCard(paymentMethodPayload: PaymentMethodPayload | undefined): void {
+        this.selectedCreditCard.set(paymentMethodPayload);
+    }
+
     clearProduct() {
         this.selectedProduct.set(undefined);
+        this.selectedCreditCard.set(undefined);
         this.removeSelectedProductFromStorage();
     }
 
@@ -77,8 +86,6 @@ export class PaymentService implements OnDestroy {
         };
 
         this.billingInfo.set(billingInfo);
-        console.log('Billing info submitted:', billingInfo);
-        console.log('Selected product:', product.getSummaryView());
         return true;
     }
 

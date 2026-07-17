@@ -90,14 +90,12 @@ export class RechargeScheduler {
 
   constructor() {
     effect(() => {
-      this.refreshCreditCards(); // Dependency para recargar tarjetas
+      this.refreshCreditCards();
       console.debug('Fetching credit cards');
       this.loadingCreditCards.set(true);
       this.dashboardService.getCreditCards().subscribe({
         next: (response) => {
-          // console.debug('Credit cards fetched:', response);
-          const cards = Array.isArray(response) ? response : (response.payload || []);
-          this.creditCards.set(cards);
+          this.creditCards.set(response);
           this.dashboardService.setCreditCardsData(response);
           this.loadingCreditCards.set(false);
         },

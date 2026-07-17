@@ -1,4 +1,4 @@
-import PaymentMethod from "./payment-method.model";
+import PaymentMethod, { PaymentMethodPayload } from "./payment-method.model";
 import { ProductType } from "./product.model";
 
 export interface CreateOrderRequest {
@@ -88,7 +88,7 @@ export interface PaymentFields {
 
 export interface OrderPaymentRequest {
     paymentMethodType: PaymentMethod;
-    cardData?: CardData;
+    cardData?: PaymentMethodPayload;
 }
 
 export interface CardData {

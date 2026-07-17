@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, TemplateRef, ViewChild, computed, effect, inject, input, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CustomerSubscription } from '../../../../core/models/customer.model';
 import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
@@ -30,6 +31,7 @@ export class PaymentCardSelector {
   private paymentMethodsService = inject(PaymentMethodsService);
 
   readonly paymentCardControl = new FormControl<string | null>(null);
+  selectedPaymentCardId = toSignal(this.paymentCardControl.valueChanges, { initialValue: null });
 
   creditCards = signal<PaymentMethodPayload[]>([]);
   loadingCreditCards = signal<boolean>(true);
@@ -85,11 +87,23 @@ export class PaymentCardSelector {
 
     effect(() => {
       if (!this.isVisible()) {
+        this.checkoutPaymentService.setSelectedCreditCard(undefined);
         return;
       }
 
       this.refreshCreditCards();
       this.fetchCreditCards();
+    });
+
+    effect(() => {
+      const selectedCardId = this.selectedPaymentCardId();
+      if (!selectedCardId) {
+        this.checkoutPaymentService.setSelectedCreditCard(undefined);
+        return;
+      }
+
+      const selectedCard = this.creditCards().find(card => card.id.toString() === selectedCardId);
+      this.checkoutPaymentService.setSelectedCreditCard(selectedCard);
     });
   }
 
