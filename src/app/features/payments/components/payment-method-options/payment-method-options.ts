@@ -133,11 +133,7 @@ export class PaymentMethodOptions implements AfterViewInit {
         }
         this.allowedPaymentMethods.push({ value: PaymentMethod.CARD, template: this.recurringTemplate });
         break;
-      case ProductType.TOPUP:
-        this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate });
-        break;
-      default:
-        this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate });
+
     }
 
     this.paymentMethods.set(this.allowedPaymentMethods);
