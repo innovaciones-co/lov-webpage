@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CustomerSubscription } from '../../../../core/models/customer.model';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 import { DeviceDetectionService } from '../../../../core/services/device-detection.service';
@@ -24,6 +25,7 @@ import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method
 })
 export class Payments implements OnInit {
   private document = inject(DOCUMENT);
+  private router = inject(Router);
 
   customerSubscriptions = signal<CustomerSubscription[]>([]);
   currentSubscription = signal<CustomerSubscription | undefined>(undefined);
@@ -76,11 +78,28 @@ export class Payments implements OnInit {
         switchMap(() => this.getMsisdn()),
         switchMap(msisdn => this.getActiveSubscription(msisdn)),
         switchMap(({ msisdn, subscriberId }) => this.createOrder(subscriberId, msisdn)),
-        switchMap(orderId => this.initiatePayment(orderId, paymentRequest)),
-        tap(paymentData => this.submitPaymentForm(paymentData)),
+        switchMap(({ orderId, referenceCode }) =>
+          this.initiatePayment(orderId, paymentRequest).pipe(
+            map(paymentData => ({ paymentData, referenceCode }))
+          )
+        ),
+        tap(({ paymentData, referenceCode }) => this.handlePaymentResult(paymentData, paymentRequest, referenceCode)),
         catchError(error => this.handleError(error))
       )
       .subscribe();
+  }
+
+  private handlePaymentResult(paymentData: PaymentInitiationResponse, paymentRequest: OrderPaymentRequest, referenceCode?: string): void {
+    if (paymentRequest.paymentMethodType === PaymentMethod.BALANCE && paymentData.checkoutUrl === null) {
+      console.log('Payment method BALANCE detected, skipping checkout form submission');
+
+      void this.router.navigate(['pagos/resultado'], {
+        queryParams: { referenceCode }
+      });
+      return;
+    }
+
+    this.submitPaymentForm(paymentData);
   }
 
   /**
@@ -155,9 +174,9 @@ export class Payments implements OnInit {
    * Creates an order using the payment service
    * @param subscriberId The subscriber ID
    * @param msisdn The MSISDN
-   * @returns Observable with the order ID
+   * @returns Observable with order ID and reference code
    */
-  private createOrder(subscriberId: number, msisdn: string): Observable<string> {
+  private createOrder(subscriberId: number, msisdn: string): Observable<{ orderId: string; referenceCode: string }> {
     return this.paymentService.createOrderFromCurrentState(subscriberId, msisdn);
   }
 
