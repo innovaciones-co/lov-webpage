@@ -7,7 +7,7 @@ import { CurrencyPipe } from '../../../../core/pipes/currency.pipe';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
 import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
 import PaymentMethod from '../../models/payment-method.model';
-import { ProductType } from '../../models/product.model';
+import { PlanProduct, ProductType } from '../../models/product.model';
 import { PaymentService } from '../../services/payment.service';
 
 @Component({
@@ -24,6 +24,7 @@ export class PaymentMethodOptions implements AfterViewInit {
 
   currentSubscription = input<CustomerSubscription | undefined>();
   private subscriptionFacade = inject(SubscriptionFacadeService);
+  private currencyPipe = new CurrencyPipe();
   private allowedPaymentMethods: any[] = [];
 
   readonly paymentMethodControl = new FormControl<string | null>(null);
@@ -80,20 +81,16 @@ export class PaymentMethodOptions implements AfterViewInit {
       this.paymentService.paymentMethod.set(selectedMethod as PaymentMethod | undefined);
 
       if (selectedMethod === PaymentMethod.CARD) {
-        this.disclaimerTitle.set('Este método pagará tu suscripción recurrente');
-        this.disclaimerContent.set('Próximo cobro: 14 de junio de 2026 por $49,900'); // TODO: Replace with dynamic date and amount
-      } else if (selectedMethod === PaymentMethod.BALANCE) {
-        if (this.remainingPayment() > 0) {
-          this.disclaimerTitle.set('Saldo parcial');
-          this.disclaimerContent.set(`Tu saldo ${new CurrencyPipe().transform(this.pesoBalance())} cubrirá parte del pago. El resto (${new CurrencyPipe().transform(this.remainingPayment())}) se cobrará por a través de Pay U.`);
-        } else {
-          this.disclaimerTitle.set('Pago completo con saldo');
-          this.disclaimerContent.set(`Tu saldo ${new CurrencyPipe().transform(this.pesoBalance())} cubrirá el pago completo.`);
-        }
-      } else {
-        this.disclaimerTitle.set('');
-        this.disclaimerContent.set('');
+        this.setCardDisclaimer();
+        return;
       }
+
+      if (selectedMethod === PaymentMethod.BALANCE) {
+        this.setBalanceDisclaimer();
+        return;
+      }
+
+      this.clearDisclaimer();
     });
 
     effect(() => {
@@ -138,6 +135,45 @@ export class PaymentMethodOptions implements AfterViewInit {
 
     this.paymentMethods.set(this.allowedPaymentMethods);
 
+  }
+
+  private setCardDisclaimer(): void {
+    const product = this.paymentService.selectedProduct();
+
+    if (!(product instanceof PlanProduct)) {
+      this.clearDisclaimer();
+      return;
+    }
+
+    const validityDays = Number(product.plan.validity) || 0;
+    const nextChargeDate = new Date();
+    nextChargeDate.setDate(nextChargeDate.getDate() + validityDays);
+
+    this.disclaimerTitle.set('Este método pagará tu suscripción recurrente');
+    this.disclaimerContent.set(
+      `Próximo cobro: ${nextChargeDate.toLocaleDateString('es-CO')} por ${product.getDisplayPrice()}.`
+    );
+  }
+
+  private setBalanceDisclaimer(): void {
+    const formattedBalance = this.currencyPipe.transform(this.pesoBalance());
+    const formattedRemaining = this.currencyPipe.transform(this.remainingPayment());
+
+    if (this.remainingPayment() > 0) {
+      this.disclaimerTitle.set('Saldo parcial');
+      this.disclaimerContent.set(
+        `Tu saldo ${formattedBalance} cubrirá parte del pago. El resto (${formattedRemaining}) se cobrará por a través de Pay U.`
+      );
+      return;
+    }
+
+    this.disclaimerTitle.set('Pago completo con saldo');
+    this.disclaimerContent.set(`Tu saldo ${formattedBalance} cubrirá el pago completo.`);
+  }
+
+  private clearDisclaimer(): void {
+    this.disclaimerTitle.set('');
+    this.disclaimerContent.set('');
   }
 
 }
