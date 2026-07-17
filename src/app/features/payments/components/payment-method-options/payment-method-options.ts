@@ -45,7 +45,7 @@ export class PaymentMethodOptions implements AfterViewInit {
   paymentMethods = signal<any[]>([
     { value: PaymentMethod.CARD, template: this.recurringTemplate },
     { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
-    { value: PaymentMethod.PAYU, template: this.payuTemplate }
+    { value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate }
   ]);
 
   constructor(
@@ -101,21 +101,21 @@ export class PaymentMethodOptions implements AfterViewInit {
       case ProductType.BUNDLE:
         this.paymentMethods.set([
           { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
-          { value: PaymentMethod.PAYU, template: this.payuTemplate }
+          { value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate }
         ]);
         break;
       case ProductType.PLAN:
         this.paymentMethods.set([
           { value: PaymentMethod.CARD, template: this.recurringTemplate },
           { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
-          { value: PaymentMethod.PAYU, template: this.payuTemplate }
+          { value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate }
         ]);
         break;
       case ProductType.TOPUP:
-        this.paymentMethods.set([{ value: PaymentMethod.PAYU, template: this.payuTemplate }]);
+        this.paymentMethods.set([{ value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate }]);
         break;
       default:
-        this.paymentMethods.set([{ value: PaymentMethod.PAYU, template: this.payuTemplate }]);
+        this.paymentMethods.set([{ value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate }]);
     }
   }
 

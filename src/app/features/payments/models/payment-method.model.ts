@@ -1,7 +1,7 @@
 enum PaymentMethod {
-    BALANCE = 'balance',
-    CARD = 'card',
-    PAYU = 'payu'
+    BALANCE = 'BALANCE',
+    CARD = 'CARD',
+    WEB_CHECKOUT = 'WEB_CHECKOUT'
 }
 
 export default PaymentMethod;

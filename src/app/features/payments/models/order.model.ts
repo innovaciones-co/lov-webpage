@@ -1,3 +1,4 @@
+import PaymentMethod from "./payment-method.model";
 import { ProductType } from "./product.model";
 
 export interface CreateOrderRequest {
@@ -48,6 +49,17 @@ export interface OrderErrorResponse {
 }
 
 export interface PaymentInitiationResponse {
+    success: boolean;
+    transactionId: string;
+    message: string;
+    checkoutUrl: string;
+    checkoutData: PaymentCheckoutData;
+    requiresAdditionalPayment: boolean;
+    remainingAmount: number;
+    currentBalance: number;
+}
+
+export interface PaymentCheckoutData {
     action: string;
     fields: PaymentFields;
 }
@@ -72,6 +84,22 @@ export interface PaymentFields {
     confirmationUrl: string;
     extra1: string;
     extra2: string;
+}
+
+export interface OrderPaymentRequest {
+    paymentMethodType: PaymentMethod;
+    cardData?: CardData;
+}
+
+export interface CardData {
+    payerId: string;
+    name: string;
+    identificationNumber: string;
+    creditCardNumber: string;
+    creditCardSecurityCode: number;
+    creditCardExpirationMonth: string;
+    creditCardExpirationYear: string;
+    paymentMethod: string;
 }
 
 export type OrderStatus = 'CREATED' | 'CANCELLED' | 'COMPLETED' | 'PAYMENT' | 'PROCESSED' | 'REFUNDED';

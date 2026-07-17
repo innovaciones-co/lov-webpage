@@ -7,13 +7,14 @@ import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 import { DeviceDetectionService } from '../../../../core/services/device-detection.service';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
 import { AuthService } from '../../../authentication/services/auth.service';
-import { PaymentInitiationResponse } from '../../models/order.model';
 import { PaymentService } from '../../services/payment.service';
 import { BillingInfoComponent } from "../billing-info/billing-info";
 import { PaymentCardSelector } from "../payment-card-selector/payment-card-selector";
 import { PaymentMethodOptions } from "../payment-method-options/payment-method-options";
 import { Summary } from "../summary/summary";
 import { SubscriptionSelector } from "../subscription-selector/subscription-selector";
+import { CardData, OrderPaymentRequest, PaymentInitiationResponse } from '../../models/order.model';
+import PaymentMethod from '../../models/payment-method.model';
 
 @Component({
   selector: 'app-payments',
@@ -68,12 +69,14 @@ export class Payments implements OnInit {
 
   onContinue(): void {
     console.log('onContinue() called - starting payment flow');
+    const paymentRequest = this.buildPaymentRequest();
+
     this.processBillingInfo()
       .pipe(
         switchMap(() => this.getMsisdn()),
         switchMap(msisdn => this.getActiveSubscription(msisdn)),
         switchMap(({ msisdn, subscriberId }) => this.createOrder(subscriberId, msisdn)),
-        switchMap(orderId => this.initiatePayment(orderId)),
+        switchMap(orderId => this.initiatePayment(orderId, paymentRequest)),
         tap(paymentData => this.submitPaymentForm(paymentData)),
         catchError(error => this.handleError(error))
       )
@@ -163,9 +166,35 @@ export class Payments implements OnInit {
    * @param orderId The order ID to initiate payment for
    * @returns Observable with the payment initiation response
    */
-  private initiatePayment(orderId: string): Observable<PaymentInitiationResponse> {
+  private initiatePayment(orderId: string, paymentRequest: OrderPaymentRequest): Observable<PaymentInitiationResponse> {
     console.log('Initiating payment for order ID:', orderId);
-    return this.paymentService.initiatePayment(orderId);
+    return this.paymentService.initiatePayment(orderId, paymentRequest);
+  }
+
+  private buildPaymentRequest(): OrderPaymentRequest {
+    const selectedMethod = this.paymentService.paymentMethod();
+
+    if (!selectedMethod) {
+      throw new Error('No payment method selected');
+    }
+
+    return {
+      paymentMethodType: selectedMethod,
+      cardData: selectedMethod == PaymentMethod.CARD ? this.getDefaultCardData() : undefined,
+    };
+  }
+
+  private getDefaultCardData(): CardData { // TODO: Populate with actual card data from form or service
+    return {
+      payerId: '',
+      name: '',
+      identificationNumber: '',
+      creditCardNumber: '',
+      creditCardSecurityCode: 0,
+      creditCardExpirationMonth: '',
+      creditCardExpirationYear: '',
+      paymentMethod: ''
+    };
   }
 
   /**
@@ -174,19 +203,20 @@ export class Payments implements OnInit {
    */
   private submitPaymentForm(paymentData: PaymentInitiationResponse): void {
     console.log('Submitting payment form to PayU:', paymentData);
+    const checkoutAction = paymentData.checkoutData.action || paymentData.checkoutUrl;
 
     // Create a form element
     const form = this.document.createElement('form');
     form.method = 'post';
-    form.action = paymentData.action;
+    form.action = checkoutAction;
     form.style.display = 'none';
 
     // Add all payment fields as hidden inputs
-    Object.entries(paymentData.fields).forEach(([key, value]) => {
+    Object.entries(paymentData.checkoutData.fields).forEach(([key, value]) => {
       const input = this.document.createElement('input');
       input.type = 'hidden';
       input.name = key;
-      input.value = value;
+      input.value = String(value);
       form.appendChild(input);
     });
 

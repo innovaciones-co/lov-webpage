@@ -6,7 +6,7 @@ import { catchError, map, retry, share, switchMap, takeUntil, takeWhile } from "
 import { environment } from "../../../../environments/environment";
 import { Plan } from "../../plans/models/plan.model";
 import { BillingInfo } from "../models/billing-info.model";
-import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderResponse, PaymentInitiationResponse, PaymentStatus } from "../models/order.model";
+import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderResponse, PaymentInitiationResponse, OrderPaymentRequest, PaymentStatus } from "../models/order.model";
 import PaymentMethod from "../models/payment-method.model";
 import { PlanProduct, Product, ProductType, RechargeProduct } from "../models/product.model";
 
@@ -28,7 +28,6 @@ export class PaymentService implements OnDestroy {
     constructor() {
         this.restoreSelectedProduct();
     }
-
 
     canCheckout: Signal<boolean> = computed(() => {
         return this._formValid() && this.selectedProduct() !== undefined;
@@ -135,10 +134,10 @@ export class PaymentService implements OnDestroy {
      * @param orderId The order ID to initiate payment for
      * @returns Observable with the payment initiation response containing PayU form data
      */
-    initiatePayment(orderId: string): Observable<PaymentInitiationResponse> {
-        const url = `${environment.apiUrl}/orders/${orderId}/pay`;
+    initiatePayment(orderId: string, paymentRequest: OrderPaymentRequest): Observable<PaymentInitiationResponse> {
+        const url = `${environment.apiUrl}/orders/${orderId}/payment`;
 
-        return this.httpClient.put<PaymentInitiationResponse>(url, {}, {
+        return this.httpClient.post<PaymentInitiationResponse>(url, paymentRequest, {
             headers: {
                 'accept': 'application/json'
             }
