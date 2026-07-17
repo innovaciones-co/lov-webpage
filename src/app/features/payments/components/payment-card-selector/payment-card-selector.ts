@@ -7,7 +7,7 @@ import { Modal } from '../../../../shared/components/modal/modal';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { CreatePaymentMethod } from '../../../payment-methods/create-payment-method/create-payment-method';
 import { PaymentService as PaymentMethodsService } from '../../../payment-methods/services/payment-service';
-import PaymentMethod from '../../models/payment-method.model';
+import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method.model';
 import { PaymentService as CheckoutPaymentService } from '../../services/payment.service';
 
 @Component({
@@ -31,7 +31,7 @@ export class PaymentCardSelector {
 
   readonly paymentCardControl = new FormControl<string | null>(null);
 
-  creditCards = signal<any[]>([]);
+  creditCards = signal<PaymentMethodPayload[]>([]);
   loadingCreditCards = signal<boolean>(true);
   isModalOpen = signal(false);
   isDeleteConfirmationModalOpen = signal(false);
@@ -47,7 +47,7 @@ export class PaymentCardSelector {
       return undefined;
     }
 
-    return this.creditCards().find(card => card.id === pendingDeleteCardId);
+    return this.creditCards().find(card => card.id.toString() === pendingDeleteCardId);
   });
 
   paymentCards = computed(() => {
@@ -98,8 +98,7 @@ export class PaymentCardSelector {
     this.loadingCreditCards.set(true);
     this.dashboardService.getCreditCards().subscribe({
       next: (response) => {
-        const cards = Array.isArray(response) ? response : (response.payload || []);
-        this.creditCards.set(cards);
+        this.creditCards.set(response);
         this.dashboardService.setCreditCardsData(response);
         this.loadingCreditCards.set(false);
       },
@@ -138,9 +137,9 @@ export class PaymentCardSelector {
 
     this.paymentMethodsService.deletePaymentMethod(cardId).subscribe({
       next: () => {
-        this.creditCards.update(cards => cards.filter(card => card.id !== cardId));
+        this.creditCards.update(cards => cards.filter(card => card.id.toString() !== cardId));
 
-        if (this.paymentCardControl.value === cardId) {
+        if (this.paymentCardControl.value === cardId.toString()) {
           this.paymentCardControl.setValue(null);
         }
 
