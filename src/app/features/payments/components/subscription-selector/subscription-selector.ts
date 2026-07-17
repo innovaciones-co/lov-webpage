@@ -14,17 +14,27 @@ import { PaymentService } from '../../services/payment.service';
 })
 export class SubscriptionSelector {
   @ViewChild('subscriptionTemplate')
-  set subscriptionTemplate(value: TemplateRef<any> | undefined) {
+  set subscriptionTemplate(value: TemplateRef<unknown> | undefined) {
     this.subscriptionTemplateRef.set(value);
   }
 
   subscriptions = input<CustomerSubscription[]>([]);
   selectedSubscriptionId = input<number | undefined>();
-  paymentService = inject(PaymentService);
+  private readonly paymentService = inject(PaymentService);
 
   readonly subscriptionControl = new FormControl<string | null>(null);
   readonly subscriptionSelected = output<number>();
-  private readonly subscriptionTemplateRef = signal<TemplateRef<any> | undefined>(undefined);
+  private readonly subscriptionTemplateRef = signal<TemplateRef<unknown> | undefined>(undefined);
+
+  private readonly subscriptionByPhone = computed(() => {
+    const phoneIndex = new Map<string, number>();
+
+    for (const subscription of this.subscriptions()) {
+      phoneIndex.set(subscription.msisdn.slice(2), subscription.id);
+    }
+
+    return phoneIndex;
+  });
 
   readonly subscriptionOptions = computed(() => {
     const template = this.subscriptionTemplateRef();
@@ -40,17 +50,14 @@ export class SubscriptionSelector {
     effect(() => {
       const selectedProduct = this.paymentService.selectedProduct();
 
-      if (selectedProduct?.getProductType() == ProductType.TOPUP) {
-        this.subscriptions().forEach((subscription) => {
-          if (subscription.msisdn.includes(selectedProduct.id)) {
-            const parsedSubscriptionId = Number(subscription.id);
-            if (Number.isNaN(parsedSubscriptionId)) {
-              return;
-            }
-
-            this.subscriptionSelected.emit(parsedSubscriptionId);
-          }
-        });
+      if (selectedProduct?.getProductType() === ProductType.TOPUP) {
+        const matchedSubscriptionId = this.subscriptionByPhone().get(selectedProduct.id);
+        if (
+          matchedSubscriptionId !== undefined
+          && this.selectedSubscriptionId() !== matchedSubscriptionId
+        ) {
+          this.subscriptionSelected.emit(matchedSubscriptionId);
+        }
       }
     });
 
@@ -71,11 +78,24 @@ export class SubscriptionSelector {
     }
 
     const selectedProduct = this.paymentService.selectedProduct();
-    if (selectedProduct?.getProductType() == ProductType.TOPUP) {
+    if (selectedProduct?.getProductType() === ProductType.TOPUP) {
       const msisdn = this.subscriptions().find((subscription) => subscription.id === parsedSubscriptionId)?.msisdn;
-      selectedProduct.id = msisdn ? msisdn.slice(2, undefined) : selectedProduct.id;
+      const nextProductId = msisdn ? msisdn.slice(2) : selectedProduct.id;
 
-      this.paymentService.selectedProduct.set(new RechargeProduct(selectedProduct.id, selectedProduct.name, selectedProduct.description, selectedProduct.basePrice, selectedProduct.totalPrice, selectedProduct.totalTax, selectedProduct.imageUrl));
+      if (nextProductId !== selectedProduct.id) {
+        this.paymentService.selectedProduct.set(
+          new RechargeProduct(
+            nextProductId,
+            selectedProduct.name,
+            selectedProduct.description,
+            selectedProduct.basePrice,
+            selectedProduct.totalPrice,
+            selectedProduct.totalTax,
+            selectedProduct.imageUrl,
+            selectedProduct.productType
+          )
+        );
+      }
     }
 
     this.subscriptionSelected.emit(parsedSubscriptionId);
