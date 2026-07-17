@@ -115,9 +115,9 @@ export class PaymentService implements OnDestroy {
      * @param subscriberId The subscriber ID for the order
      * @param msisdn The MSISDN in E.164 format (e.g., +1234567890)
      * @param referenceCode Optional reference code, will be generated if not provided
-     * @returns Observable with the order ID string on success
+     * @returns Observable with the order ID and reference code
      */
-    createOrderFromCurrentState(subscriberId: number, msisdn: string, referenceCode?: string): Observable<string> {
+    createOrderFromCurrentState(subscriberId: number, msisdn: string, referenceCode?: string): Observable<{ orderId: string; referenceCode: string }> {
         const billingInfo = this.billingInfo();
         const product = this.selectedProduct();
 
@@ -126,7 +126,9 @@ export class PaymentService implements OnDestroy {
         }
 
         const orderRequest = this.buildOrderRequest(billingInfo, product, subscriberId, msisdn, referenceCode);
-        return this.createOrder(orderRequest);
+        return this.createOrder(orderRequest).pipe(
+            map(orderId => ({ orderId, referenceCode: orderRequest.referenceCode }))
+        );
     }
 
     /**
