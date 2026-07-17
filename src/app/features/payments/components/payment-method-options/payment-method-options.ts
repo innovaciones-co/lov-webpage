@@ -20,9 +20,11 @@ export class PaymentMethodOptions implements AfterViewInit {
   @ViewChild('recurringTemplate') recurringTemplate?: TemplateRef<any>;
   @ViewChild('balanceTemplate') balanceTemplate?: TemplateRef<any>;
   @ViewChild('payuTemplate') payuTemplate?: TemplateRef<any>;
+  private viewInitialized = signal(false);
 
   currentSubscription = input<CustomerSubscription | undefined>();
   private subscriptionFacade = inject(SubscriptionFacadeService);
+  private allowedPaymentMethods: any[] = [];
 
   readonly paymentMethodControl = new FormControl<string | null>(null);
   accounts = signal<any[]>([]);
@@ -93,30 +95,53 @@ export class PaymentMethodOptions implements AfterViewInit {
         this.disclaimerContent.set('');
       }
     });
+
+    effect(() => {
+      if (this.viewInitialized() && this.paymentService.selectedProduct()) {
+        this.refreshAllowedPaymentMethods();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
+    this.viewInitialized.set(true);
+    this.refreshAllowedPaymentMethods();
+  }
+
+  refreshAllowedPaymentMethods() {
     const product = this.paymentService.selectedProduct();
-    switch (product?.productType) {
+
+    if (!product) {
+      this.allowedPaymentMethods = [];
+      this.paymentMethods.set(this.allowedPaymentMethods);
+      return;
+    }
+
+    this.allowedPaymentMethods = [
+      { value: PaymentMethod.PAYU, template: this.payuTemplate }
+    ];
+
+    switch (product!.productType) {
       case ProductType.BUNDLE:
-        this.paymentMethods.set([
-          { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
-          { value: PaymentMethod.PAYU, template: this.payuTemplate }
-        ]);
+        if (this.pesoBalance() > 0) {
+          this.allowedPaymentMethods.push({ value: PaymentMethod.BALANCE, template: this.balanceTemplate });
+        }
         break;
       case ProductType.PLAN:
-        this.paymentMethods.set([
-          { value: PaymentMethod.CARD, template: this.recurringTemplate },
-          { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
-          { value: PaymentMethod.PAYU, template: this.payuTemplate }
-        ]);
+        if (this.pesoBalance() > 0) {
+          this.allowedPaymentMethods.push({ value: PaymentMethod.BALANCE, template: this.balanceTemplate });
+        }
+        this.allowedPaymentMethods.push({ value: PaymentMethod.CARD, template: this.recurringTemplate });
         break;
       case ProductType.TOPUP:
-        this.paymentMethods.set([{ value: PaymentMethod.PAYU, template: this.payuTemplate }]);
+        this.allowedPaymentMethods.push({ value: PaymentMethod.PAYU, template: this.payuTemplate });
         break;
       default:
-        this.paymentMethods.set([{ value: PaymentMethod.PAYU, template: this.payuTemplate }]);
+        this.allowedPaymentMethods.push({ value: PaymentMethod.PAYU, template: this.payuTemplate });
     }
+
+    this.paymentMethods.set(this.allowedPaymentMethods);
+
   }
 
 }
