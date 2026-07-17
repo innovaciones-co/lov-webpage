@@ -1,10 +1,34 @@
 <!-- Mobile Layout -->
 @if (isMobile()) {
 <div id="mobile-payment" class="mobile-layout">
+    @if (canGoBackMobileStep()) {
+    <button class="link-button" (click)="onMobileBack()">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Atrás
+    </button>
+    }
+    <p class="step-label">Paso {{ mobileStep() }} de {{ totalMobileSteps }}</p>
+
+    @if (isMobileStep(1)) {
     <app-summary class="summary-section"></app-summary>
     <app-billing-info class="billing-section"></app-billing-info>
-    <div class="button-section">
-        <button class="btn" [disabled]="!canContinue()" (click)="onContinue()">Continuar</button>
+    <app-subscription-selector [subscriptions]="customerSubscriptions()"
+        [selectedSubscriptionId]="currentSubscription()?.id"
+        (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
+    }
+
+    @if (isMobileStep(2)) {
+    <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
+    }
+
+    @if (isMobileStep(3)) {
+    <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
+    }
+
+    <div class="button-section mobile-actions">
+        <button class="btn" [disabled]="isLastMobileStep() && !canContinue()" (click)="onMobileContinue()">
+            {{ isLastMobileStep() ? 'Pagar' : 'Continuar' }}
+        </button>
     </div>
 </div>
 }

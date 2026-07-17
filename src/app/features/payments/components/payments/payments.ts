@@ -26,9 +26,11 @@ import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method
 export class Payments implements OnInit {
   private document = inject(DOCUMENT);
   private router = inject(Router);
+  readonly totalMobileSteps = 3;
 
   customerSubscriptions = signal<CustomerSubscription[]>([]);
   currentSubscription = signal<CustomerSubscription | undefined>(undefined);
+  mobileStep = signal(1);
 
   constructor(
     private deviceDetectionService: DeviceDetectionService,
@@ -55,6 +57,18 @@ export class Payments implements OnInit {
 
   canContinue() {
     return this.paymentService.canCheckout();
+  }
+
+  isMobileStep(step: number): boolean {
+    return this.mobileStep() === step;
+  }
+
+  isLastMobileStep(): boolean {
+    return this.mobileStep() === this.totalMobileSteps;
+  }
+
+  canGoBackMobileStep(): boolean {
+    return this.mobileStep() > 1;
   }
 
   onSubscriptionSelected(subscriptionId: number): void {
@@ -87,6 +101,27 @@ export class Payments implements OnInit {
         catchError(error => this.handleError(error))
       )
       .subscribe();
+  }
+
+  onMobileContinue(): void {
+    if (!this.isLastMobileStep()) {
+      if (this.isMobileStep(1) && !this.paymentService.submitBillingInfo()) {
+        return;
+      }
+
+      this.mobileStep.update(step => Math.min(step + 1, this.totalMobileSteps));
+      return;
+    }
+
+    this.onContinue();
+  }
+
+  onMobileBack(): void {
+    if (!this.canGoBackMobileStep()) {
+      return;
+    }
+
+    this.mobileStep.update(step => Math.max(step - 1, 1));
   }
 
   private handlePaymentResult(paymentData: PaymentInitiationResponse, paymentRequest: OrderPaymentRequest, referenceCode?: string): void {
@@ -205,11 +240,11 @@ export class Payments implements OnInit {
 
   private getDefaultCardData(): PaymentMethodPayload { // TODO: Populate with actual card data from form or service
     const selectedCreditCard = this.paymentService.selectedCreditCard(); // This is just a placeholder; replace with actual card data retrieval logic
-    
+
     if (!selectedCreditCard) {
       throw new Error('No credit card selected for payment');
     }
-    
+
     return selectedCreditCard!;
   }
 

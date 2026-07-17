@@ -121,8 +121,4 @@ export class PaymentResultComponent {
             });
         }
     }
-
-    onGoHome(): void {
-        this.router.navigate(['/']);
-    }
 }
