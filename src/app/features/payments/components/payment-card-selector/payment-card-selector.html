@@ -30,7 +30,7 @@
                 <p>
                     ¿Seguro que deseas eliminar esta tarjeta
                     @if (pendingDeleteCard()?.truncatedNumber) {
-                    <strong>{{ capitalizeFirstLetter(pendingDeleteCard()?.issuer) }} (•••• {{
+                    <strong>{{ capitalizeFirstLetter(pendingDeleteCard()?.issuer!) }} (•••• {{
                         pendingDeleteCard()?.truncatedNumber
                         }})</strong>
                     }
