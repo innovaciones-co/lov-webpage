@@ -55,3 +55,12 @@
         transform: translateY(0);
     }
 }
+
+
+@include mobile {
+    .card {
+        //background: transparent;
+        padding: 1rem;
+        box-shadow: none;
+    }
+}

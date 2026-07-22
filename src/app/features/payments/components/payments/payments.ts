@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -26,11 +26,24 @@ import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method
 export class Payments implements OnInit {
   private document = inject(DOCUMENT);
   private router = inject(Router);
-  readonly totalMobileSteps = 3;
 
   customerSubscriptions = signal<CustomerSubscription[]>([]);
   currentSubscription = signal<CustomerSubscription | undefined>(undefined);
   mobileStep = signal(1);
+  requiresCardStep = computed(() => this.paymentService.paymentMethod() === PaymentMethod.CARD);
+  totalMobileSteps = computed(() => this.requiresCardStep() ? 3 : 2);
+  mobileStepTitle = computed(() => {
+    switch (this.mobileStep()) {
+      case 1:
+        return 'Confirma el plan y número de teléfono';
+      case 2:
+        return 'Elige tu método de pago';
+      case 3:
+        return this.requiresCardStep() ? 'Selecciona una tarjeta' : 'Pago';
+      default:
+        return 'Pago';
+    }
+  });
 
   constructor(
     private deviceDetectionService: DeviceDetectionService,
@@ -38,8 +51,24 @@ export class Payments implements OnInit {
     private subscriptionFacadeService: SubscriptionFacadeService,
     private authService: AuthService,
     private msisdnPipe: MsisdnPipe
-  ) { }
+  ) {
+    effect(() => {
+      const maxStep = this.totalMobileSteps();
 
+      if (this.mobileStep() > maxStep) {
+        this.mobileStep.set(maxStep);
+      }
+    });
+
+    effect(() => {
+      const currentStep = this.mobileStep();
+      const requiresCardStep = this.requiresCardStep();
+
+      if (currentStep === 3 && !requiresCardStep) {
+        this.mobileStep.set(2);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.getMsisdn()
@@ -64,7 +93,7 @@ export class Payments implements OnInit {
   }
 
   isLastMobileStep(): boolean {
-    return this.mobileStep() === this.totalMobileSteps;
+    return this.mobileStep() === this.totalMobileSteps();
   }
 
   canGoBackMobileStep(): boolean {
@@ -109,7 +138,7 @@ export class Payments implements OnInit {
         return;
       }
 
-      this.mobileStep.update(step => Math.min(step + 1, this.totalMobileSteps));
+      this.mobileStep.update(step => Math.min(step + 1, this.totalMobileSteps()));
       return;
     }
 

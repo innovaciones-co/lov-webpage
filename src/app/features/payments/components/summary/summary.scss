@@ -1,3 +1,5 @@
+@use '../../../../../styles/mixins' as *;
+
 .product-summary {
 
     .product-header {
@@ -97,5 +99,14 @@
 
     small {
         color: #999;
+    }
+}
+
+
+@include mobile {
+    .card {
+        //background: transparent;
+        padding: 1rem;
+        box-shadow: none;
     }
 }
