@@ -31,10 +31,12 @@ export class PaymentService implements OnDestroy {
     }
 
     canCheckout: Signal<boolean> = computed(() => {
+        const selectedMethod = this.paymentMethod();
+
         return this._formValid()
             && this.selectedProduct() !== undefined
-            && this.paymentMethod() !== undefined
-            && (this.paymentMethod() !== PaymentMethod.CARD || this.selectedCreditCard() !== undefined);
+            && selectedMethod != null
+            && (selectedMethod !== PaymentMethod.CARD || this.selectedCreditCard() != null);
     });
 
     setFormValidityStatus(isValid: boolean) {
