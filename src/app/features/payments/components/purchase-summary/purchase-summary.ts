@@ -1,0 +1,54 @@
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { CurrencyPipe } from '../../../../core/pipes/currency.pipe';
+import { PaymentService } from '../../services/payment.service';
+import { PlanProduct } from '../../models/product.model';
+
+@Component({
+  selector: 'app-purchase-summary',
+  imports: [CurrencyPipe],
+  templateUrl: './purchase-summary.html',
+  styleUrl: './purchase-summary.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class PurchaseSummary {
+  private static readonly DATE_FORMATTER = new Intl.DateTimeFormat('es-CO', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  private paymentService = inject(PaymentService);
+
+  selectedProduct = this.paymentService.selectedProduct;
+
+  productSummary = computed(() => {
+    const product = this.selectedProduct();
+    return product ? product.getSummaryView() : null;
+  });
+
+  validity = computed(() => {
+    const product = this.selectedProduct();
+    //if (product?.getProductType() === ProductType.PLAN && product instanceof PlanProduct) { 
+    if (product instanceof PlanProduct) {
+      return product.plan.validity;
+    }
+
+    return null;
+  });
+
+  nextRenewalDate = computed(() => {
+    const validity = this.validity();
+    if (validity === null) {
+      return null;
+    }
+
+    const renewalDate = new Date();
+    renewalDate.setDate(renewalDate.getDate() + validity);
+    return PurchaseSummary.DATE_FORMATTER.format(renewalDate);
+  });
+
+  confirmPurchase() {
+    // TODO: implement subscription confirmation flow.
+  }
+
+}

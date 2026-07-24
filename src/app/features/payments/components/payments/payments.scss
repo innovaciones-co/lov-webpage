@@ -29,8 +29,35 @@
     justify-content: flex-end;
 }
 
-@include tablet {
-    .btn {
-        width: 100% !important;
+@include mobile {
+
+    .link-button {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+
+        span {
+            font-size: 1.1rem;
+        }
+    }
+
+    .step-label {
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .step-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .mobile-actions {
+        gap: 0.75rem;
+    }
+
+    .mobile-back-btn {
+        background: transparent;
+        border: 1px solid currentColor;
     }
 }

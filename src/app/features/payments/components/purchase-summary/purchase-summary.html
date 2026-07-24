@@ -1,0 +1,67 @@
+<div class="summary-container">
+    @if (selectedProduct(); as product) {
+    <div class="heart"></div>
+
+    <h2>Resumen de tu suscripción</h2>
+    <h2>Resumen de tu compra</h2>
+    <p class="summary-subtitle">Este plan se renovará automáticamente cada {{ validity() }} días y que puedes cancelarlo
+        en cualquier momento.</p>
+
+    <span>COBRO HOY</span>
+
+    <dl class="summary-list card">
+        <div class="summary-row">
+            <dt>Plan:</dt>
+            <dd class="plan-name">{{ product.name }}</dd>
+        </div>
+
+        <div class="summary-row">
+            <dt>Duración:</dt>
+            <dd>{{ validity() }} días</dd>
+        </div>
+
+        <div class="summary-row">
+            <dt>Subtotal</dt>
+            <dd>{{ product.basePrice | currency }}</dd>
+        </div>
+
+        <div class="summary-row">
+            <dt>Impuestos</dt>
+            <dd>{{ product.totalTax | currency }}</dd>
+        </div>
+
+        <hr class="divider">
+
+        <div class="summary-row total-row">
+            <dt>Total a pagar</dt>
+            <dd>{{ product.totalPrice | currency }}</dd>
+        </div>
+    </dl>
+
+    <span>COBROS FUTUROS</span>
+    <dl class="summary-list card">
+        <div class="summary-row">
+            <dt>Valor:</dt>
+            <dd class="plan-name">{{ product.totalPrice | currency }}</dd>
+        </div>
+
+        <div class="summary-row">
+            <dt>Próxima renovación</dt>
+            <dd>{{ nextRenewalDate() ?? 'No disponible' }}</dd>
+        </div>
+
+        <div class="summary-row">
+            <dt>Método de pago</dt>
+            <dd>Visa •••• 4532</dd>
+        </div>
+    </dl>
+
+    <div class="actions-container">
+        <button type="button" class="btn" (click)="confirmPurchase()">
+            Confirmar
+        </button>
+    </div>
+    } @else {
+    <p class="summary-subtitle">No hay un producto seleccionado para mostrar.</p>
+    }
+</div>

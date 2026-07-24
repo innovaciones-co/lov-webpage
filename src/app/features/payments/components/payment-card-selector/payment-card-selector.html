@@ -1,0 +1,61 @@
+@if (isVisible()) {
+<div class="card">
+    <h3 class="form-subtitle">Tarjeta de pago</h3>
+    <p>Selecciona una tarjeta guardada</p>
+    <div>
+        <radio-field [options]="paymentCards()" [control]="paymentCardControl"
+            (action)="onCardAction($event)"></radio-field>
+    </div>
+    <button (click)="onEditClick()" class="link-button">>> Añadir tarjeta</button>
+</div>
+
+<app-modal [size]="'lg'" [isOpen]="isModalOpen()" (closed)="onCancelModal()">
+    <div class="modal-content">
+        <div class="modal-content-info">
+            <p class="info-content-title">Añadir nueva tarjeta</p>
+            <div class="info-section">
+                <p>Ingresa los datos de tu tarjeta.</p>
+                <app-create-payment-method [customerId]="currentSubscription()?.customerId!"
+                    (paymentMethodCreated)="onPaymentMethodSuccess()"></app-create-payment-method>
+            </div>
+        </div>
+    </div>
+</app-modal>
+
+<app-modal [size]="'md'" [isOpen]="isDeleteConfirmationModalOpen()" (closed)="onCancelDeleteModal()">
+    <div class="modal-content">
+        <div class="modal-content-info">
+            <p class="info-content-title">Eliminar tarjeta</p>
+            <div class="info-section">
+                <p>
+                    ¿Seguro que deseas eliminar esta tarjeta
+                    @if (pendingDeleteCard()?.truncatedNumber) {
+                    <strong>{{ capitalizeFirstLetter(pendingDeleteCard()?.issuer!) }} (•••• {{
+                        pendingDeleteCard()?.truncatedNumber
+                        }})</strong>
+                    }
+                    ?
+                </p>
+            </div>
+            <div class="action">
+                <button type="button" class="btn btn-secondary" (click)="onCancelDeleteModal()"
+                    [disabled]="isDeletingCard()">
+                    Cancelar
+                </button>
+                <button type="button" class="btn" (click)="onConfirmDeleteCard()" [disabled]="isDeletingCard()">
+                    @if (isDeletingCard()) {
+                    Eliminando...
+                    } @else {
+                    Eliminar
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+</app-modal>
+
+<ng-template #cardTemplate let-card="card">
+    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.truncatedNumber }}</span>
+    <p class="option-description">Vence {{ card.expiration }}</p>
+</ng-template>
+}

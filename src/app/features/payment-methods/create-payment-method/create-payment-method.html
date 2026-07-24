@@ -43,13 +43,14 @@
 
         </div>
     </div>
-
-    <button class="btn" type="submit" [disabled]="form().invalid || isLoading()">
-        @if (isLoading()) {
-        <span class="loading-spinner"></span>
-        Agregando...
-        } @else {
-        Agregar método de pago
-        }
-    </button>
+    <div class="form-actions">
+        <button class="btn" type="submit" [disabled]="form().invalid || isLoading()">
+            @if (isLoading()) {
+            <span class="loading-spinner"></span>
+            Agregando...
+            } @else {
+            Agregar método de pago
+            }
+        </button>
+    </div>
 </form>

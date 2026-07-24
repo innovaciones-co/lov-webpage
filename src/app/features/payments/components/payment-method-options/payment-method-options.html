@@ -1,0 +1,32 @@
+<div class="card">
+    <h3 class="form-subtitle">Método de pago</h3>
+    <p>Selecciona tu método de pago</p>
+    <div>
+        <radio-field [options]="paymentMethods()" [control]="paymentMethodControl"></radio-field>
+    </div>
+    @if (disclaimerTitle() || disclaimerContent()) {
+    <div class="disclaimer-card">
+        @if (disclaimerTitle()) {
+        <h4>{{ disclaimerTitle() }}</h4>
+        }
+        @if (disclaimerContent()) {
+        <p>{{ disclaimerContent() }}</p>
+        }
+    </div>
+    }
+</div>
+
+<ng-template #recurringTemplate>
+    <span class="option-title">Suscripción recurrente</span>
+    <p class="option-description">Requiere tarjeta débito o crédito</p>
+</ng-template>
+
+<ng-template #balanceTemplate>
+    <span class="option-title">Pago único con saldo</span>
+    <p class="option-description">Saldo actual: ${{ pesoBalance() }} COP</p>
+</ng-template>
+
+<ng-template #payuTemplate>
+    <span class="option-title">Pago único por PayU</span>
+    <p class="option-description">PSE, tarjeta débito o crédito, Nequi o Daviplata</p>
+</ng-template>

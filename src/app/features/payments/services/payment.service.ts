@@ -4,24 +4,39 @@ import { FormGroup } from "@angular/forms";
 import { Observable, Subject, throwError, timer } from "rxjs";
 import { catchError, map, retry, share, switchMap, takeUntil, takeWhile } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
+import { Plan } from "../../plans/models/plan.model";
 import { BillingInfo } from "../models/billing-info.model";
-import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderResponse, PaymentInitiationResponse, PaymentStatus } from "../models/order.model";
-import { Product } from "../models/product.model";
+import { CreateOrderRequest, OrderErrorResponse, OrderItem, OrderPaymentRequest, OrderResponse, PaymentInitiationResponse, PaymentStatus } from "../models/order.model";
+import PaymentMethod, { PaymentMethodPayload } from "../models/payment-method.model";
+import { PlanProduct, Product, ProductType, RechargeProduct } from "../models/product.model";
 
 @Injectable({
     providedIn: 'root'
 })
 export class PaymentService implements OnDestroy {
+    private static readonly SELECTED_PRODUCT_STORAGE_KEY = 'payment.selectedProduct';
+
     billingInfo = signal<BillingInfo | undefined>(undefined);
     billingForm = signal<FormGroup | undefined>(undefined);
     selectedProduct = signal<Product | undefined>(undefined);
+    paymentMethod = signal<PaymentMethod | undefined>(undefined);
+    selectedCreditCard = signal<PaymentMethodPayload | undefined>(undefined);
+
     private _formValid = signal<boolean>(false);
     private httpClient = inject(HttpClient);
-    private stopPolling = new Subject();
+    private stopPolling = new Subject<void>();
 
+    constructor() {
+        this.restoreSelectedProduct();
+    }
 
     canCheckout: Signal<boolean> = computed(() => {
-        return this._formValid() && this.selectedProduct() !== undefined;
+        const selectedMethod = this.paymentMethod();
+
+        return this._formValid()
+            && this.selectedProduct() !== undefined
+            && selectedMethod != null
+            && (selectedMethod !== PaymentMethod.CARD || this.selectedCreditCard() != null);
     });
 
     setFormValidityStatus(isValid: boolean) {
@@ -30,11 +45,18 @@ export class PaymentService implements OnDestroy {
 
     selectProduct(product: Product) {
         this.selectedProduct.set(product);
+        this.saveSelectedProduct(product);
         console.log('Product selected:', product.getSummaryView());
+    }
+
+    setSelectedCreditCard(paymentMethodPayload: PaymentMethodPayload | undefined): void {
+        this.selectedCreditCard.set(paymentMethodPayload);
     }
 
     clearProduct() {
         this.selectedProduct.set(undefined);
+        this.selectedCreditCard.set(undefined);
+        this.removeSelectedProductFromStorage();
     }
 
     submitBillingInfo(): boolean {
@@ -66,8 +88,6 @@ export class PaymentService implements OnDestroy {
         };
 
         this.billingInfo.set(billingInfo);
-        console.log('Billing info submitted:', billingInfo);
-        console.log('Selected product:', product.getSummaryView());
         return true;
     }
 
@@ -104,9 +124,9 @@ export class PaymentService implements OnDestroy {
      * @param subscriberId The subscriber ID for the order
      * @param msisdn The MSISDN in E.164 format (e.g., +1234567890)
      * @param referenceCode Optional reference code, will be generated if not provided
-     * @returns Observable with the order ID string on success
+     * @returns Observable with the order ID and reference code
      */
-    createOrderFromCurrentState(subscriberId: number, msisdn: string, referenceCode?: string): Observable<string> {
+    createOrderFromCurrentState(subscriberId: number, msisdn: string, referenceCode?: string): Observable<{ orderId: string; referenceCode: string }> {
         const billingInfo = this.billingInfo();
         const product = this.selectedProduct();
 
@@ -115,7 +135,9 @@ export class PaymentService implements OnDestroy {
         }
 
         const orderRequest = this.buildOrderRequest(billingInfo, product, subscriberId, msisdn, referenceCode);
-        return this.createOrder(orderRequest);
+        return this.createOrder(orderRequest).pipe(
+            map(orderId => ({ orderId, referenceCode: orderRequest.referenceCode }))
+        );
     }
 
     /**
@@ -123,10 +145,10 @@ export class PaymentService implements OnDestroy {
      * @param orderId The order ID to initiate payment for
      * @returns Observable with the payment initiation response containing PayU form data
      */
-    initiatePayment(orderId: string): Observable<PaymentInitiationResponse> {
-        const url = `${environment.apiUrl}/orders/${orderId}/pay`;
+    initiatePayment(orderId: string, paymentRequest: OrderPaymentRequest): Observable<PaymentInitiationResponse> {
+        const url = `${environment.apiUrl}/orders/${orderId}/payment`;
 
-        return this.httpClient.put<PaymentInitiationResponse>(url, {}, {
+        return this.httpClient.post<PaymentInitiationResponse>(url, paymentRequest, {
             headers: {
                 'accept': 'application/json'
             }
@@ -271,7 +293,95 @@ export class PaymentService implements OnDestroy {
         return status === 'INITIATED' || status === 'PENDING';
     }
 
+    private saveSelectedProduct(product: Product): void {
+        if (typeof localStorage === 'undefined') {
+            return;
+        }
+
+        localStorage.setItem(
+            PaymentService.SELECTED_PRODUCT_STORAGE_KEY,
+            JSON.stringify(product)
+        );
+    }
+
+    private restoreSelectedProduct(): void {
+        if (typeof localStorage === 'undefined') {
+            return;
+        }
+
+        const storedProduct = localStorage.getItem(PaymentService.SELECTED_PRODUCT_STORAGE_KEY);
+        if (!storedProduct) {
+            return;
+        }
+
+        try {
+            const parsedProduct = JSON.parse(storedProduct) as Partial<PlanProduct & RechargeProduct>;
+            const hydratedProduct = this.hydrateStoredProduct(parsedProduct);
+
+            if (!hydratedProduct) {
+                this.removeSelectedProductFromStorage();
+                return;
+            }
+
+            this.selectedProduct.set(hydratedProduct);
+        } catch {
+            this.removeSelectedProductFromStorage();
+        }
+    }
+
+    private hydrateStoredProduct(storedProduct: Partial<PlanProduct & RechargeProduct>): Product | undefined {
+        if (!storedProduct.id || !storedProduct.name) {
+            return undefined;
+        }
+
+        if (storedProduct.productType === ProductType.TOPUP) {
+            if (storedProduct.totalPrice === undefined) {
+                return undefined;
+            }
+
+            const totalTax = storedProduct.totalTax ?? storedProduct.totalPrice * 0.19;
+            const basePrice = storedProduct.basePrice ?? storedProduct.totalPrice - totalTax;
+
+            return new RechargeProduct(
+                storedProduct.id,
+                storedProduct.name,
+                storedProduct.description ?? `Recarga de saldo por $${storedProduct.totalPrice.toLocaleString()} COP para el número ${storedProduct.id}`,
+                basePrice,
+                storedProduct.totalPrice,
+                totalTax,
+                storedProduct.imageUrl,
+                ProductType.TOPUP,
+            );
+        }
+
+        const plan = storedProduct.plan as Plan | undefined;
+        if (!plan) {
+            return undefined;
+        }
+
+        return new PlanProduct(
+            String(storedProduct.id),
+            storedProduct.name,
+            storedProduct.description ?? plan.description ?? '',
+            storedProduct.basePrice ?? plan.price,
+            storedProduct.totalPrice ?? plan.totalPrice,
+            storedProduct.totalTax ?? plan.totalTax,
+            plan,
+            storedProduct.productType ?? ProductType.BUNDLE,
+            storedProduct.imageUrl ?? plan.image,
+        );
+    }
+
+    private removeSelectedProductFromStorage(): void {
+        if (typeof localStorage === 'undefined') {
+            return;
+        }
+
+        localStorage.removeItem(PaymentService.SELECTED_PRODUCT_STORAGE_KEY);
+    }
+
     ngOnDestroy() {
+        this.stopPolling.next();
         this.stopPolling.complete();
     }
 }

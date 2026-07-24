@@ -176,7 +176,7 @@ export class CreatePaymentMethod {
       creditCardSecurityCode: Number(cvv.trim()),
       creditCardExpirationMonth: Number(expirationMonth),
       creditCardExpirationYear: Number(expirationYear),
-      paymentMethod: this.brand(),
+      franchise: this.brand(),
     };
 
     this.isLoading.set(true);

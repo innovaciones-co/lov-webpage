@@ -36,3 +36,9 @@ form {
     overflow-wrap: anywhere;
     color: #264653;
 }
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}

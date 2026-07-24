@@ -1,7 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
-import { environment } from "../../../../environments/environment";
 import { Observable } from "rxjs";
+import { environment } from "../../../../environments/environment";
+import { PaymentMethodPayload } from "../../payments/models/payment-method.model";
 
 @Injectable({
     providedIn: 'root'
@@ -20,13 +21,13 @@ export class DashboardService {
         this.apiUrl = environment.apiUrl;
     }
 
-    getCreditCards(): Observable<any> {
+    getCreditCards(): Observable<PaymentMethodPayload[]> {
         console.debug('Fetching credit cards');
         this.loading.set(true);
 
         const url = `${this.apiUrl}/paymentMethods`;
 
-        return this.http.get(url);
+        return this.http.get<PaymentMethodPayload[]>(url);
     }
 
     submitRecharge(subscriptionId: string, rechargeData: any): Observable<any> {

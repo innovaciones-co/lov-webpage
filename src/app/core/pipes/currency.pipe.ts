@@ -39,7 +39,7 @@ export class CurrencyPipe implements PipeTransform {
                 formatted = `COP ${numericPart}`;
             } else {
                 // ensure common spacing like "$ 1.234.567,00" (Intl sometimes uses NBSP)
-                formatted = formatted.replace(/\u00A0/g, ' ');
+                formatted = formatted.replace(/\u00A0/g, '');
             }
 
             return formatted;
@@ -57,7 +57,7 @@ export class CurrencyPipe implements PipeTransform {
 
             if (!showSymbol) return sign + numberStr;
             if (useCode) return `${sign}COP ${numberStr}`;
-            return `${sign}$ ${numberStr}`;
+            return `${sign}$${numberStr}`;
         }
     }
 }

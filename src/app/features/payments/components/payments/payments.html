@@ -1,10 +1,35 @@
 <!-- Mobile Layout -->
 @if (isMobile()) {
 <div id="mobile-payment" class="mobile-layout">
+    @if (canGoBackMobileStep()) {
+    <button class="link-button" (click)="onMobileBack()">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Atrás
+    </button>
+    }
+    <!-- <p class="step-label">Paso {{ mobileStep() }} de {{ totalMobileSteps }}</p> -->
+    <h2 class="step-title">{{ mobileStepTitle() }}</h2>
+
+    @if (isMobileStep(1)) {
     <app-summary class="summary-section"></app-summary>
     <app-billing-info class="billing-section"></app-billing-info>
-    <div class="button-section">
-        <button class="btn" [disabled]="!canContinue()" (click)="onContinue()">Continuar</button>
+    <app-subscription-selector [subscriptions]="customerSubscriptions()"
+        [selectedSubscriptionId]="currentSubscription()?.id"
+        (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
+    }
+
+    @if (isMobileStep(2)) {
+    <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
+    }
+
+    @if (isMobileStep(3)) {
+    <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
+    }
+
+    <div class="button-section mobile-actions">
+        <button class="btn" [disabled]="isLastMobileStep() && !canContinue()" (click)="onMobileContinue()">
+            {{ isLastMobileStep() ? 'Pagar' : 'Continuar' }}
+        </button>
     </div>
 </div>
 }
@@ -12,7 +37,14 @@
 <!-- Desktop Layout -->
 @else {
 <div id="summary" class="flex">
-    <app-billing-info class="col-8"></app-billing-info>
+    <div class="col-8">
+        <app-billing-info></app-billing-info>
+        <app-subscription-selector [subscriptions]="customerSubscriptions()"
+            [selectedSubscriptionId]="currentSubscription()?.id"
+            (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
+        <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
+        <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
+    </div>
     <div class="col-4">
         <div id="cart-container">
             <app-summary></app-summary>

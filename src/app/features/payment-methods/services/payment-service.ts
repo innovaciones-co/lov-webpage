@@ -1,6 +1,6 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 
@@ -12,7 +12,7 @@ export interface PaymentRequest {
   creditCardSecurityCode: number;
   creditCardExpirationMonth: number;
   creditCardExpirationYear: number;
-  paymentMethod: string;
+  franchise: string;
 }
 
 export type PaymentCardData = PaymentRequest;
@@ -61,6 +61,14 @@ export class PaymentService {
     const url = `${this.apiUrl}/paymentMethods`;
 
     return this.http.post(url, paymentMethodData);
+  }
+
+  deletePaymentMethod(paymentMethodId: string): Observable<any> {
+    //console.debug('Deleting payment method id:', paymentMethodId);
+
+    const url = `${this.apiUrl}/paymentMethods/${paymentMethodId}`;
+
+    return this.http.delete(url);
   }
 
   validateExpiry(month: string, year: string): boolean {

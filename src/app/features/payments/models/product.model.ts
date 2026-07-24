@@ -33,9 +33,15 @@ export interface ProductSummaryView {
     title: string;
     subtitle?: string;
     price: string;
-    details: string[];
+    details: ProductSummaryDetailView[];
     imageUrl?: string;
     type: ProductType;
+}
+
+export interface ProductSummaryDetailView {
+    name: string;
+    description?: string | null;
+    measure?: string;
 }
 
 // Plan Product implementation
@@ -70,13 +76,17 @@ export class PlanProduct extends Product {
     getSummaryView(): ProductSummaryView {
         const mainFeatures = this.plan.features
             //.filter(f => f.mainFeature || f.isMainFeature)
-            .map(f => `${f.name}`);
+            .map(f => ({
+                name: f.name,
+                description: f.description,
+                measure: f.measure,
+            }));
 
         return {
             title: this.getDisplayName(),
             subtitle: `Plan ${this.plan.validity} días`,
             price: this.getDisplayPrice(),
-            details: mainFeatures.length > 0 ? mainFeatures : [this.getDisplayDescription()],
+            details: mainFeatures.length > 0 ? mainFeatures : [{ name: this.getDisplayDescription() }],
             imageUrl: this.plan.image || this.imageUrl,
             type: ProductType.BUNDLE
         };
@@ -120,9 +130,17 @@ export class RechargeProduct extends Product {
             subtitle: this.getDisplayDescription(),
             price: this.getDisplayPrice(),
             details: [
-                `Saldo a recargar: $${this.totalPrice.toLocaleString()} COP`,
-                `Número a recargar: ${this.id}`,
-                'Disponible inmediatamente después del pago'
+                {
+                    name: 'Saldo a recargar',
+                    description: `$${this.totalPrice.toLocaleString()} COP`,
+                },
+                {
+                    name: 'Número a recargar',
+                    description: this.id,
+                },
+                {
+                    name: 'Disponible inmediatamente después del pago',
+                },
             ],
             imageUrl: this.imageUrl,
             type: ProductType.TOPUP
