@@ -61,10 +61,3 @@
         border: 1px solid currentColor;
     }
 }
-
-
-@include tablet {
-    .btn {
-        width: 100% !important;
-    }
-}
