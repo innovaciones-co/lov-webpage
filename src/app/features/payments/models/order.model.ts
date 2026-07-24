@@ -99,7 +99,7 @@ export interface CardData {
     creditCardSecurityCode: number;
     creditCardExpirationMonth: string;
     creditCardExpirationYear: string;
-    paymentMethod: string;
+    franchise: string;
 }
 
 export type OrderStatus = 'CREATED' | 'CANCELLED' | 'COMPLETED' | 'PAYMENT' | 'PROCESSED' | 'REFUNDED';
