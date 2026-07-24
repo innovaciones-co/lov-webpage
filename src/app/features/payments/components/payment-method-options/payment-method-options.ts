@@ -27,7 +27,7 @@ export class PaymentMethodOptions implements AfterViewInit {
   private currencyPipe = new CurrencyPipe();
   private allowedPaymentMethods: any[] = [];
 
-  readonly paymentMethodControl = new FormControl<string | null>(null);
+  readonly paymentMethodControl = new FormControl<PaymentMethod | null>(null);
   accounts = signal<any[]>([]);
   private remainingPayment = signal<number>(0);
 
@@ -78,7 +78,7 @@ export class PaymentMethodOptions implements AfterViewInit {
 
     effect(() => {
       const selectedMethod = this.selectedPaymentMethod();
-      this.paymentService.paymentMethod.set(selectedMethod as PaymentMethod | undefined);
+      this.paymentService.paymentMethod.set(selectedMethod ?? undefined);
 
       if (selectedMethod === PaymentMethod.CARD) {
         this.setCardDisclaimer();

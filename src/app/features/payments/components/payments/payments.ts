@@ -76,8 +76,6 @@ export class Payments implements OnInit {
         switchMap(msisdn => this.getActiveSubscription(msisdn)),
       )
       .subscribe();
-
-    this.paymentService.setFormValidityStatus(true);
   }
 
   isMobile(): boolean {
