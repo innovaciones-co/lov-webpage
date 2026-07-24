@@ -7,18 +7,27 @@
             }
             <div class="product-info">
                 <h3 class="product-title">{{ summary.title }}</h3>
-                @if (summary.subtitle) {
-                <p class="product-subtitle">{{ summary.subtitle }}</p>
-                }
                 <p class="product-price">{{ summary.price }}</p>
             </div>
         </div>
 
+        <hr class="divider" />
+
         <div class="product-details">
-            <h4>Detalles:</h4>
             <ul>
-                @for (detail of summary.details; track detail) {
-                <li>{{ detail }}</li>
+                @for (detail of summary.details; track $index) {
+                <li>
+                    <span class="material-symbols-outlined">{{ getMaterialSymbol(detail.measure) }}</span>
+                    {{ detail.name }} {{ detail.description }}
+                </li>
+                }
+                @if (summary.subtitle) {
+                <li>
+                    <span class="material-symbols-outlined">
+                        calendar_today
+                    </span>
+                    {{ summary.subtitle }}
+                </li>
                 }
             </ul>
         </div>

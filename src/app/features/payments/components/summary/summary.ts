@@ -21,4 +21,15 @@ export class Summary {
 
   // Expose ProductType enum to template
   ProductType = ProductType;
+
+  getMaterialSymbol(measure?: string): string {
+    const symbolMap: Record<string, string> = {
+      GB: 'mail',
+      MB: 'mail',
+      MINUTE: 'call',
+      SMS: 'chat',
+    };
+
+    return measure ? symbolMap[measure] || 'check_circle' : 'check_circle';
+  }
 }

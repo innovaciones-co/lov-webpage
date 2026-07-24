@@ -1,11 +1,18 @@
 @use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/variables' as *;
+
+.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 0 0 12px 0;
+}
 
 .product-summary {
 
     .product-header {
         display: flex;
         gap: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
 
         .product-image {
             width: 60px;
@@ -20,8 +27,8 @@
 
             .product-title {
                 margin: 0 0 0.5rem 0;
-                font-size: 1.1rem;
-                font-weight: 600;
+                font-size: 1rem;
+                font-weight: 500;
                 color: #333;
             }
 
@@ -33,9 +40,8 @@
 
             .product-price {
                 margin: 0;
-                font-size: 1.2rem;
-                font-weight: 700;
-                color: #007bff;
+                font-size: 1.4rem;
+                font-weight: 600;
             }
         }
     }
@@ -52,12 +58,20 @@
 
         ul {
             margin: 0;
-            padding-left: 1.2rem;
+            padding: 0;
+            list-style: none;
 
             li {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
                 font-size: 0.85rem;
                 color: #555;
                 margin-bottom: 0.25rem;
+
+                span.material-symbols-outlined {
+                    color: $color-extra-1;
+                }
             }
         }
     }
