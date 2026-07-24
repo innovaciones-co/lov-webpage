@@ -89,6 +89,7 @@ export interface PaymentFields {
 export interface OrderPaymentRequest {
     paymentMethodType: PaymentMethod;
     cardData?: PaymentMethodPayload;
+    creditCardId?: number;
 }
 
 export interface CardData {
