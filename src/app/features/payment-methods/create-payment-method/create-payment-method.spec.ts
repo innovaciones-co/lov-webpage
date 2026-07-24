@@ -65,7 +65,7 @@ describe('CreatePaymentMethod', () => {
         creditCardSecurityCode: 123,
         creditCardExpirationMonth: 12,
         creditCardExpirationYear: 2028,
-        paymentMethod: 'VISA'
+        franchise: 'VISA'
       })
     );
   });

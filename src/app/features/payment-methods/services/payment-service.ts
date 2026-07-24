@@ -1,6 +1,6 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 
@@ -12,7 +12,7 @@ export interface PaymentRequest {
   creditCardSecurityCode: number;
   creditCardExpirationMonth: number;
   creditCardExpirationYear: number;
-  paymentMethod: string;
+  franchise: string;
 }
 
 export type PaymentCardData = PaymentRequest;
