@@ -8,14 +8,14 @@ import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 import { DeviceDetectionService } from '../../../../core/services/device-detection.service';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
 import { AuthService } from '../../../authentication/services/auth.service';
+import { OrderPaymentRequest, PaymentInitiationResponse } from '../../models/order.model';
+import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method.model';
 import { PaymentService } from '../../services/payment.service';
 import { BillingInfoComponent } from "../billing-info/billing-info";
 import { PaymentCardSelector } from "../payment-card-selector/payment-card-selector";
 import { PaymentMethodOptions } from "../payment-method-options/payment-method-options";
-import { Summary } from "../summary/summary";
 import { SubscriptionSelector } from "../subscription-selector/subscription-selector";
-import { CardData, OrderPaymentRequest, PaymentInitiationResponse } from '../../models/order.model';
-import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method.model';
+import { Summary } from "../summary/summary";
 
 @Component({
   selector: 'app-payments',
@@ -152,8 +152,8 @@ export class Payments implements OnInit {
   }
 
   private handlePaymentResult(paymentData: PaymentInitiationResponse, paymentRequest: OrderPaymentRequest, referenceCode?: string): void {
-    if (paymentRequest.paymentMethodType === PaymentMethod.BALANCE && paymentData.checkoutUrl === null) {
-      console.log('Payment method BALANCE detected, skipping checkout form submission');
+    if ((paymentRequest.paymentMethodType === PaymentMethod.BALANCE || paymentRequest.paymentMethodType === PaymentMethod.CARD) && paymentData.checkoutUrl === null) {
+      console.log('Payment method BALANCE or CARD with no checkout URL detected, skipping checkout form submission');
 
       void this.router.navigate(['pagos/resultado'], {
         queryParams: { referenceCode }
@@ -262,6 +262,7 @@ export class Payments implements OnInit {
     return {
       paymentMethodType: selectedMethod,
       cardData: selectedMethod == PaymentMethod.CARD ? this.getDefaultCardData() : undefined,
+      creditCardId: selectedMethod == PaymentMethod.CARD ? this.paymentService.selectedCreditCard()?.id : undefined
     };
   }
 
