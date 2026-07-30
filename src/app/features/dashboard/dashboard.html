@@ -98,6 +98,9 @@
             </div>
             }
 
+            <app-payment-card-selector [currentSubscription]="currentSubscription()"
+                [selectorEnabled]="false"></app-payment-card-selector>
+
             <app-recharge-scheduler [subscription]="currentSubscription()"></app-recharge-scheduler>
         </div>
 

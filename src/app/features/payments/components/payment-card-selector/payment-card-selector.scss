@@ -28,6 +28,48 @@
     font-size: 0.875rem;
 }
 
+.saved-cards-list-wrapper {
+    margin-bottom: 0.75rem;
+}
+
+.saved-cards-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.saved-card-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 10px 0;
+    padding: 12px 16px;
+    border: 1px solid $gray-100;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.saved-card-content {
+    flex: 1;
+}
+
+.saved-card-action {
+    margin-right: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: $color-extra-1;
+
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 200, "GRAD" 0, "opsz" 24;
+        }
+    }
+}
+
 
 @include mobile {
     .card {

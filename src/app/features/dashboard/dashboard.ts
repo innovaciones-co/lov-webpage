@@ -14,6 +14,7 @@ import { DataUsage } from "./components/data-usage/data-usage";
 import { RechargeScheduler } from './components/recharge-scheduler/recharge-scheduler';
 import { CurrentPlan } from './current-plan/current-plan';
 import { History } from "./components/history/history";
+import { PaymentCardSelector } from "../payments/components/payment-card-selector/payment-card-selector";
 
 export interface AccountViewModel {
   name: string;
@@ -37,7 +38,7 @@ interface BillingInfo {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Loading, RechargeScheduler, CurrentPlan, DataUsage, InputTextComponent, History],
+  imports: [CommonModule, Loading, RechargeScheduler, CurrentPlan, DataUsage, InputTextComponent, History, PaymentCardSelector],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })

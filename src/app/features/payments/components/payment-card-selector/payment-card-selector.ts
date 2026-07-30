@@ -24,7 +24,8 @@ export class PaymentCardSelector {
     this.cardTemplateRef.set(value);
   }
 
-  currentSubscription = input<CustomerSubscription | undefined>();
+  currentSubscription = input<CustomerSubscription | null | undefined>();
+  selectorEnabled = input(true);
 
   private dashboardService = inject(DashboardService);
   private checkoutPaymentService = inject(CheckoutPaymentService);
@@ -75,10 +76,21 @@ export class PaymentCardSelector {
     return options;
   });
 
+  listedCards = computed(() =>
+    this.creditCards()
+      .filter(card => card.truncatedNumber)
+      .map(card => ({
+        id: card.id.toString(),
+        issuer: card.issuer,
+        truncatedNumber: card.truncatedNumber,
+        expiration: card.expiryMonth + '/' + card.expiryYear.toString().slice(-2),
+      }))
+  );
+
   constructor() {
     effect(() => {
       const selectedMethod = this.checkoutPaymentService.paymentMethod();
-      if (selectedMethod == PaymentMethod.CARD) {
+      if (!this.selectorEnabled() || selectedMethod == PaymentMethod.CARD) {
         this.isVisible.set(true);
       } else {
         this.isVisible.set(false);
@@ -96,6 +108,11 @@ export class PaymentCardSelector {
     });
 
     effect(() => {
+      if (!this.selectorEnabled()) {
+        this.checkoutPaymentService.setSelectedCreditCard(undefined);
+        return;
+      }
+
       const selectedCardId = this.selectedPaymentCardId();
       if (!selectedCardId) {
         this.checkoutPaymentService.setSelectedCreditCard(undefined);
@@ -105,6 +122,7 @@ export class PaymentCardSelector {
       const selectedCard = this.creditCards().find(card => card.id.toString() === selectedCardId);
       this.checkoutPaymentService.setSelectedCreditCard(selectedCard);
     });
+
   }
 
   private fetchCreditCards(): void {
@@ -171,6 +189,10 @@ export class PaymentCardSelector {
 
   onEditClick(): void {
     this.isModalOpen.set(true);
+  }
+
+  onListDelete(cardId: string): void {
+    this.onCardAction(cardId);
   }
 
   onCancelModal(): void {
