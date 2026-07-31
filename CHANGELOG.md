@@ -1,3 +1,11 @@
+# [1.25.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.24.0...v1.25.0) (2026-07-31)
+
+
+### Features
+
+* add payment card selector with saved cards display ([a4719ef](https://github.com/innovaciones-co/lov-webpage/commit/a4719ef9138fd1d8c12e0c651c62ab6ed6497f1e))
+* implement subscription carousel ([f58bda9](https://github.com/innovaciones-co/lov-webpage/commit/f58bda9939b8b239900878795f4d341c80db6733))
+
 # [1.24.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.23.0...v1.24.0) (2026-07-24)
 
 
