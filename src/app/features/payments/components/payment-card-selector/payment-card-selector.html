@@ -1,11 +1,43 @@
 @if (isVisible()) {
 <div class="card">
+    @if (selectorEnabled()) {
     <h3 class="form-subtitle">Tarjeta de pago</h3>
     <p>Selecciona una tarjeta guardada</p>
+    }
+    @else {
+    <h3 class="form-subtitle">Tarjetas de pago</h3>
+    <p>Estas son tus tarjetas guardadas:</p>
+    }
+    @if (selectorEnabled()) {
     <div>
         <radio-field [options]="paymentCards()" [control]="paymentCardControl"
             (action)="onCardAction($event)"></radio-field>
     </div>
+    }
+    @else {
+    <div class="saved-cards-list-wrapper">
+        @if (listedCards().length > 0) {
+        <ul class="saved-cards-list">
+            @for (card of listedCards(); track card.id) {
+            <li class="saved-card-item">
+                <div class="saved-card-content">
+                    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.truncatedNumber
+                        }}</span>
+                    <p class="option-description">Vence {{ card.expiration }}</p>
+                </div>
+                <button type="button" class="saved-card-action" (click)="onListDelete(card.id)" title="Eliminar tarjeta"
+                    aria-label="Eliminar tarjeta">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </li>
+            }
+        </ul>
+        }
+        @else {
+        <p class="option-description">No tienes tarjetas guardadas.</p>
+        }
+    </div>
+    }
     <button (click)="onEditClick()" class="link-button">>> Añadir tarjeta</button>
 </div>
 
