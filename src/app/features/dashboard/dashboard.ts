@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { EMPTY, forkJoin, of, switchMap, tap } from 'rxjs';
@@ -46,6 +46,7 @@ export class Dashboard implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly subscriptionFacade = inject(SubscriptionFacadeService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly carouselItemsPerPage = 3;
   user: User | null = null;
   activeSubscriptions = signal<CustomerSubscription[]>([]);
   loading = signal(true);
@@ -69,6 +70,12 @@ export class Dashboard implements OnInit {
   );
   currentSubscription = signal<CustomerSubscription | null>(null);
   isAccountLoading = signal(false);
+  carouselPage = signal(0);
+  carouselDots = computed<number[]>(() => {
+    const totalPages = Math.ceil(this.activeSubscriptions().length / this.carouselItemsPerPage);
+    return totalPages > 1 ? Array.from({ length: totalPages }, (_, index) => index) : [];
+  });
+  @ViewChild('subscriptionsCarousel') private subscriptionsCarousel?: ElementRef<HTMLUListElement>;
 
   submitError = signal<string>('');
 
@@ -140,6 +147,46 @@ export class Dashboard implements OnInit {
     this.fetchAccounts(subscription.customerId, subscription.id.toString());
   }
 
+  onSubscriptionsScroll(): void {
+    const carouselElement = this.subscriptionsCarousel?.nativeElement;
+    if (!carouselElement) {
+      return;
+    }
+
+    const maxPageIndex = Math.max(0, this.carouselDots().length - 1);
+    const maxScrollLeft = carouselElement.scrollWidth - carouselElement.clientWidth;
+
+    if (maxPageIndex === 0 || maxScrollLeft <= 0) {
+      this.carouselPage.set(0);
+      return;
+    }
+
+    const scrollRatio = carouselElement.scrollLeft / maxScrollLeft;
+    const pageFromScroll = Math.round(scrollRatio * maxPageIndex);
+    this.carouselPage.set(Math.min(Math.max(pageFromScroll, 0), maxPageIndex));
+  }
+
+  goToSubscriptionsPage(pageIndex: number): void {
+    const carouselElement = this.subscriptionsCarousel?.nativeElement;
+    if (!carouselElement) {
+      return;
+    }
+
+    const maxPageIndex = Math.max(0, this.carouselDots().length - 1);
+    const targetPage = Math.min(Math.max(pageIndex, 0), maxPageIndex);
+    this.carouselPage.set(targetPage);
+
+    const maxScrollLeft = carouselElement.scrollWidth - carouselElement.clientWidth;
+    const targetScrollLeft = maxPageIndex > 0
+      ? (targetPage / maxPageIndex) * maxScrollLeft
+      : 0;
+
+    carouselElement.scrollTo({
+      left: targetScrollLeft,
+      behavior: 'smooth'
+    });
+  }
+
   private setBillingInfo(customerInfo: Omit<Customer, 'subscriptions'>, storedMsisdn: string): void {
     this.billingInfo = {
       firstName: customerInfo.givenName,
@@ -184,6 +231,13 @@ export class Dashboard implements OnInit {
 
     const firstSubscription = subscriptions[0];
     this.activeSubscriptions.set(subscriptions);
+    this.carouselPage.set(0);
+
+    this.subscriptionsCarousel?.nativeElement.scrollTo({
+      left: 0,
+      behavior: 'auto'
+    });
+
     this.currentSubscription.set(firstSubscription);
     this.fetchAccounts(customerId, firstSubscription.id.toString());
   }

@@ -39,40 +39,121 @@ main>.card-title {
 }
 
 .subscriptions-list {
-    margin-top: 20px;
+    margin-top: 10px;
+
+    .subscriptions-carousel {
+        .carousel-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            .carousel-dot {
+                width: 8px;
+                height: 8px;
+                border: none;
+                border-radius: 50%;
+                background: $gray-200;
+                cursor: pointer;
+                transition: transform 0.2s ease, background-color 0.2s ease;
+
+                &.active {
+                    background: $color-extra-1;
+                    transform: scale(1.2);
+                }
+
+                &:hover:not(.active) {
+                    background: $color-secondary;
+                }
+            }
+        }
+    }
 
     ul {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
         list-style: none;
         padding: 0;
+
+        &:has(> .subscription-item:only-child) {
+            grid-template-columns: 1fr;
+        }
+
+        &:has(> .subscription-item:first-child:nth-last-child(2)) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        &.is-carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .subscription-item {
+                flex: 0 0 calc((100% - 20px) / 3);
+                min-width: calc((100% - 20px) / 3);
+                scroll-snap-align: start;
+            }
+        }
 
         .subscription-item {
             display: flex;
             flex-direction: column;
-            padding: 15px;
-            margin-bottom: 10px;
+            padding: 12px 15px;
+            margin-top: 10px;
             border-radius: 8px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
 
             &:hover {
                 cursor: pointer;
-                transform: translateY(-5px);
+                transform: translateY(-4px);
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            &.active {
+                background: $color-extra-1;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+                span {
+                    color: white;
+
+                    &.subscription-status {
+                        color: $color-extra-1;
+                        background: white;
+                    }
+                }
+
+                .divider {
+                    border-top: 1px solid $gray-200;
+                }
             }
 
             span {
                 display: block;
                 font-size: 14px;
                 color: $color-primary;
-                margin-bottom: 5px;
 
-                &.subscription-name {
-                    font-weight: bold;
+                &.subscription-msisdn {
+                    font-weight: 600;
                     font-size: 16px;
                 }
 
+                &.subscription-name {
+                    font-size: 13px;
+                }
+
                 &.subscription-status {
-                    color: $color-secondary;
-                    font-style: italic;
+                    font-weight: 600;
+                    color: #057A55;
+                    background: #057A551F;
+                    padding: 1px 10px;
+                    border-radius: 14px;
+                    margin-left: 8px;
                 }
 
                 &.subscription-activation {
@@ -80,15 +161,22 @@ main>.card-title {
                 }
 
                 &.subscription-payment {
-                    font-weight: 600;
+                    font-size: 12px;
                 }
             }
 
-            &.active {
-                background: $color-primary-light;
-                border-left: 4px solid $color-extra-1;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-                transform: translateY(-2px);
+            .divider {
+                margin: 6px 0;
+            }
+
+            .subscription-item-details {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .subscription-item-footer {
+                display: flex;
+                gap: 10px;
             }
         }
 
@@ -109,11 +197,6 @@ main>.card-title {
             font-weight: bold;
         }
     }
-}
-
-.divider {
-    margin: 15px 0;
-    height: 1px;
 }
 
 .dashboard-content {
@@ -144,4 +227,10 @@ main>.card-title {
     @include large {
         order: 2;
     }
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 10px 0 25px 0;
 }

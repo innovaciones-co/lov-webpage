@@ -9,40 +9,67 @@
         </div>
     </main>
 
+    <aside class="">
+        @if (activeSubscriptions().length > 1) {
+        <p class="card-description">Selecciona una línea:</p>
+        }
+        <div class="subscriptions-list">
+            @if (loading()) {
+            <app-loading></app-loading>
+            }
+            @else {
+            @if (activeSubscriptions().length > 0) {
+            <div class="subscriptions-carousel">
+                <ul #subscriptionsCarousel [class.is-carousel]="activeSubscriptions().length > 3"
+                    (scroll)="onSubscriptionsScroll()">
+                    @for (subscription of activeSubscriptions(); track subscription.msisdn) {
+                    <li class="subscription-item card" (click)="selectSubscription(subscription)"
+                        [class.active]="subscription.id === currentSubscription()?.id">
+                        <div class="subscription-item-details">
+                            <div class="">
+                                <span class="subscription-msisdn">+{{ subscription.msisdn }}</span>
+                                <span class="subscription-name">{{ subscription.tariff.tariffName }}</span>
+                            </div>
+                            <div class="">
+                                <span class="subscription-status">{{ getStateLabel(subscription.state) }}</span>
+                            </div>
+                        </div>
+                        <hr class="divider">
+                        <div class="subscription-item-footer">
+                            <span class="subscription-activation">Act. {{ subscription.activationDate |
+                                date:'shortDate'
+                                }}</span>
+                            <span class="subscription-payment">{{ getSubscriptionType(subscription.paymentType)
+                                }}</span>
+                        </div>
+                    </li>
+                    }
+                </ul>
+
+                @if (activeSubscriptions().length > 3) {
+                <div class="carousel-dots" aria-label="Paginacion de suscripciones">
+                    @for (dot of carouselDots(); track dot) {
+                    <button type="button" class="carousel-dot" [class.active]="dot === carouselPage()"
+                        [attr.aria-current]="dot === carouselPage() ? 'true' : null"
+                        [attr.aria-label]="'Ir a la pagina ' + (dot + 1)" (click)="goToSubscriptionsPage(dot)">
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+            }
+            @else {
+            <p>No tienes suscripciones activas.</p>
+            }}
+
+        </div>
+    </aside>
+
+    <hr class="divider">
+
     <div class="dashboard-content">
         <div class="left-column">
             <app-data-usage [accountViews]="accountViews()" [isAccountLoading]="isAccountLoading()"></app-data-usage>
-
-            <aside class="card">
-                <h3 class="card-title no-border">Suscripciones</h3>
-                <div class="subscriptions-list">
-                    @if (loading()) {
-                    <app-loading></app-loading>
-                    }
-                    @else {
-                    @if (activeSubscriptions().length > 0) {
-                    <ul>
-                        @for (subscription of activeSubscriptions(); track subscription.msisdn) {
-                        <li class="subscription-item" (click)="selectSubscription(subscription)"
-                            [class.active]="subscription.id === currentSubscription()?.id">
-                            <span class="subscription-name">Plan: {{ subscription.tariff.tariffName }}</span>
-                            <span class="subscription-msisdn">Número de teléfono: {{ subscription.msisdn }}</span>
-                            <span class="subscription-status">Estado: {{ getStateLabel(subscription.state) }}</span>
-                            <span class="subscription-activation">Activado: {{ subscription.activationDate |
-                                date:'shortDate'
-                                }}</span>
-                            <span class="subscription-payment">Tipo de Pago: {{
-                                getSubscriptionType(subscription.paymentType) }}</span>
-                        </li>
-                        }
-                    </ul>
-                    }
-                    @else {
-                    <p>No tienes suscripciones activas.</p>
-                    }}
-
-                </div>
-            </aside>
 
             @if (currentSubscription()?.id) {
             <app-history [subscriberId]="currentSubscription()!.id"></app-history>
