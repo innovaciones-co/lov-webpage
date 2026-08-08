@@ -48,6 +48,29 @@
     flex-direction: column;
 }
 
+.method-link-row {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 13px;
+    color: color-lighten($color-primary, 20);
+
+    @include tablet {
+        margin-top: 16px;
+        font-size: 14px;
+    }
+
+    a {
+        margin-left: 6px;
+        color: $color-secondary;
+        text-decoration: none;
+        font-weight: 600;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
 @keyframes slideUp {
     from {
         opacity: 0;

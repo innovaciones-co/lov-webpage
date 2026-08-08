@@ -1,7 +1,8 @@
 <div class="login-container">
     <figure class="image-container">
-        @if (currentState == AuthState.REQUESTING_OTP || currentState == AuthState.VALIDATING_OTP || currentState ==
-        AuthState.OTP_SENT || currentState == AuthState.ERROR_OTP) {
+        @if (loginMethod === 'phone-otp' && (currentState == AuthState.REQUESTING_OTP || currentState ==
+        AuthState.VALIDATING_OTP || currentState ==
+        AuthState.OTP_SENT || currentState == AuthState.ERROR_OTP)) {
         <img src="otp.png" alt="">
         } @else {
         <img src="login.png" alt="">
@@ -10,29 +11,38 @@
 
     <!-- Header -->
     <div class="login-header">
-        @if (currentState === AuthState.INITIAL|| currentState === AuthState.REQUESTING_OTP || currentState ===
-        AuthState.ERROR) {
+        @if (loginMethod === 'phone-otp' && (currentState === AuthState.INITIAL || currentState ===
+        AuthState.REQUESTING_OTP || currentState ===
+        AuthState.ERROR)) {
         <h1 class="login-title">Inicia sesión con tu número de celular</h1>
-        } @else if (currentState === AuthState.OTP_SENT || currentState === AuthState.VALIDATING_OTP || currentState ===
-        AuthState.ERROR_OTP) {
+        } @else if (loginMethod === 'phone-otp' && (currentState === AuthState.OTP_SENT || currentState ===
+        AuthState.VALIDATING_OTP || currentState ===
+        AuthState.ERROR_OTP)) {
         <h1 class="login-title">Ingresa el código</h1>
+        } @else {
+        <h1 class="login-title">Inicia sesión con tu correo</h1>
         }
 
         <p class="login-subtitle">
-            @if (currentState === AuthState.INITIAL|| currentState === AuthState.REQUESTING_OTP || currentState ===
-            AuthState.ERROR) {
+            @if (loginMethod === 'phone-otp' && (currentState === AuthState.INITIAL || currentState ===
+            AuthState.REQUESTING_OTP || currentState ===
+            AuthState.ERROR)) {
             Enviaremos un código de verificación para confirmar tu identidad y activar tu plan
-            } @else if (currentState === AuthState.OTP_SENT || currentState === AuthState.VALIDATING_OTP || currentState
-            === AuthState.ERROR_OTP) {
+            } @else if (loginMethod === 'phone-otp' && (currentState === AuthState.OTP_SENT || currentState ===
+            AuthState.VALIDATING_OTP || currentState
+            === AuthState.ERROR_OTP)) {
             Ingresa el código que enviamos a tu número de teléfono. Si no lo recibiste, podrás solicitar uno nuevo
             en unos segundos.
+            } @else {
+            Ingresa tu correo y contraseña para acceder a tu cuenta.
             }
         </p>
     </div>
 
     <!-- MSISDN Form -->
-    @if (currentState === AuthState.INITIAL || currentState === AuthState.REQUESTING_OTP || currentState ===
-    AuthState.ERROR) {
+    @if (loginMethod === 'phone-otp' && (currentState === AuthState.INITIAL || currentState === AuthState.REQUESTING_OTP
+    || currentState ===
+    AuthState.ERROR)) {
     <form [formGroup]="msisdnForm" (ngSubmit)="onRequestOtp()" class="auth-form-wrapper">
         <div class="login card">
             <!-- Error Display -->
@@ -73,6 +83,13 @@
                     </div>
                 </div>
             </div>
+
+            <div class="method-link-row">
+                <span>¿Prefieres otro método?</span>
+                <a href="" (click)="$event.preventDefault(); onSelectLoginMethod('email-password')">
+                    Iniciar sesión con correo y contraseña
+                </a>
+            </div>
         </div>
 
         <div class="form-actions">
@@ -91,8 +108,9 @@
     }
 
     <!-- OTP Form -->
-    @if (currentState === AuthState.OTP_SENT || currentState === AuthState.VALIDATING_OTP || currentState ===
-    AuthState.ERROR_OTP) {
+    @if (loginMethod === 'phone-otp' && (currentState === AuthState.OTP_SENT || currentState ===
+    AuthState.VALIDATING_OTP || currentState ===
+    AuthState.ERROR_OTP)) {
     <form [formGroup]="otpForm" (ngSubmit)="onValidateOtp()" class="auth-form">
         <div class="card">
             @if (shouldShowOtpError()) {
@@ -108,7 +126,7 @@
 
             <div class="otp-info">
                 <p class="otp-sent-to">
-                    Código enviado a {{ msisdnControl?.value | msisdn }}
+                    Código enviado a {{ (msisdnControl?.value ?? '') | msisdn }}
                 </p>
 
                 @if (countdown() > 0) {
@@ -135,6 +153,43 @@
                 } @else {
                 Verificar código
                 }
+            </button>
+        </div>
+    </form>
+    }
+
+    <!-- Email and Password Form -->
+    @if (loginMethod === 'email-password') {
+    <form [formGroup]="credentialsForm" (ngSubmit)="onLoginWithCredentials()" class="auth-form-wrapper">
+        <div class="card">
+            @if (shouldShowCredentialsError()) {
+            <div class="error-banner">
+                <span class="error-icon">⚠️</span>
+                <span class="error-message">{{ error?.message }}</span>
+            </div>
+            }
+
+            <div class="auth-form">
+                <input-text-field [label]="'Correo electrónico'" [placeholder]="'tu@correo.com'"
+                    [autocomplete]="'email'" [control]="emailControl"
+                    [error]="getCredentialsFieldErrorMessage('email')"></input-text-field>
+
+                <input-text-field [label]="'Contraseña'" [placeholder]="'Ingresa tu contraseña'" [type]="'password'"
+                    [autocomplete]="'current-password'" [control]="passwordControl"
+                    [error]="getCredentialsFieldErrorMessage('password')"></input-text-field>
+            </div>
+
+            <div class="method-link-row">
+                <span>¿Prefieres otro método?</span>
+                <a href="" (click)="$event.preventDefault(); onSelectLoginMethod('phone-otp')">
+                    Ingresar con número de celular
+                </a>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading || credentialsForm.invalid">
+                Iniciar sesión
             </button>
         </div>
     </form>
