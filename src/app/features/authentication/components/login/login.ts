@@ -134,7 +134,10 @@ export class Login implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
         this.currentState = state;
-        this.isLoading = state === AuthState.REQUESTING_OTP || state === AuthState.VALIDATING_OTP;
+        this.isLoading =
+          state === AuthState.REQUESTING_OTP ||
+          state === AuthState.VALIDATING_OTP ||
+          state === AuthState.AUTHENTICATING_CREDENTIALS;
 
         // Navigate after successful authentication
         if (state === AuthState.AUTHENTICATED) {
@@ -239,7 +242,10 @@ export class Login implements OnInit, OnDestroy {
       return;
     }
 
-    // UI only. Service integration will be added later.
+    const email = this.emailControl.value?.toString().trim() ?? '';
+    const password = this.passwordControl.value?.toString() ?? '';
+
+    this.authService.loginWithCredentials(email, password).subscribe();
   }
 
   getCountdownDisplay(): string {

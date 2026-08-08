@@ -7,6 +7,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { MsisdnPipe } from '../../../core/pipes/msisdn.pipe';
 import {
+    CredentialsLoginRequest,
     AuthResponse,
     AuthState,
     OtpRequest,
@@ -87,7 +88,7 @@ export class AuthService {
                         this.handleBusinessError({ message: response.message, code: 'OTP_REQUEST_FAILED' });
                     }
                 }),
-                catchError(this.handleHttpError.bind(this))
+                catchError((error: HttpErrorResponse) => this.handleHttpError(error, AuthState.ERROR_OTP))
             );
     }
 
@@ -109,7 +110,28 @@ export class AuthService {
                     // If we reach this point, the HTTP request was successful (status 200-299)
                     this.handleAuthSuccess(response, this.msisdnPipe.transform(msisdn));
                 }),
-                catchError(this.handleHttpError.bind(this))
+                catchError((error: HttpErrorResponse) => this.handleHttpError(error, AuthState.ERROR_OTP))
+            );
+    }
+
+    /**
+     * Authenticate user using email and password
+     */
+    loginWithCredentials(email: string, password: string): Observable<AuthResponse> {
+        this.authStateSubject.next(AuthState.AUTHENTICATING_CREDENTIALS);
+        this.errorStateManager.clearError();
+
+        const credentials: CredentialsLoginRequest = {
+            email: email.trim(),
+            password
+        };
+
+        return this.http.post<AuthResponse>(`${environment.apiUrl}/authentication/login`, credentials)
+            .pipe(
+                tap(response => {
+                    this.handleAuthSuccess(response);
+                }),
+                catchError((error: HttpErrorResponse) => this.handleHttpError(error, AuthState.ERROR))
             );
     }
 
@@ -201,7 +223,7 @@ export class AuthService {
 
     // Private methods
 
-    private handleAuthSuccess(response: AuthResponse, msisdn: string): void {
+    private handleAuthSuccess(response: AuthResponse, msisdn?: string): void {
         this.storeAuthData(response, msisdn);
 
         const user: User = {
@@ -226,8 +248,10 @@ export class AuthService {
         }
 
         this.setItem(this.USER_KEY, JSON.stringify(response.user));
-        if (msisdn != undefined) {
+        if (msisdn !== undefined) {
             this.setItem(this.USER_MSISDN, msisdn);
+        } else {
+            this.removeItem(this.USER_MSISDN);
         }
     }
 
@@ -292,10 +316,10 @@ export class AuthService {
     /**
      * Handle HTTP errors using the dedicated error handler
      */
-    private handleHttpError(error: HttpErrorResponse): Observable<never> {
+    private handleHttpError(error: HttpErrorResponse, errorState: AuthState = AuthState.ERROR_OTP): Observable<never> {
         const processedError = this.errorHandler.handle(error);
         this.errorStateManager.setError(processedError);
-        this.authStateSubject.next(AuthState.ERROR_OTP);
+        this.authStateSubject.next(errorState);
         return throwError(() => processedError);
     }
 

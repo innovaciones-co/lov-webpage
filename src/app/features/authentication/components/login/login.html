@@ -162,13 +162,6 @@
     @if (loginMethod === 'email-password') {
     <form [formGroup]="credentialsForm" (ngSubmit)="onLoginWithCredentials()" class="auth-form-wrapper">
         <div class="card">
-            @if (shouldShowCredentialsError()) {
-            <div class="error-banner">
-                <span class="error-icon">⚠️</span>
-                <span class="error-message">{{ error?.message }}</span>
-            </div>
-            }
-
             <div class="auth-form">
                 <input-text-field [label]="'Correo electrónico'" [placeholder]="'tu@correo.com'"
                     [autocomplete]="'email'" [control]="emailControl"
@@ -178,6 +171,13 @@
                     [autocomplete]="'current-password'" [control]="passwordControl"
                     [error]="getCredentialsFieldErrorMessage('password')"></input-text-field>
             </div>
+
+            @if (shouldShowCredentialsError()) {
+            <div class="error-banner">
+                <span class="error-icon">⚠️</span>
+                <span class="error-message">{{ error?.message }}</span>
+            </div>
+            }
 
             <div class="method-link-row">
                 <span>¿Prefieres otro método?</span>
