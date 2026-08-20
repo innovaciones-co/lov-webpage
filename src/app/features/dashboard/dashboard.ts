@@ -85,8 +85,8 @@ export class Dashboard implements OnInit {
         this.user = user;
         this.loading.set(false);
       }),
-      switchMap(() => {
-        const storedMsisdn = this.authService.getStoredMsisdn();
+      switchMap(() => this.authService.getStoredMsisdn()),
+      switchMap((storedMsisdn) => {
         if (!storedMsisdn) {
           return EMPTY;
         }

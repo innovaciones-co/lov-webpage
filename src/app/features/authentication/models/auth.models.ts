@@ -23,17 +23,11 @@ export interface CredentialsLoginRequest {
 }
 
 export interface AuthResponse {
-  "accessToken": string,
-  "refreshToken": string,
-  "expiresIn": 0,
-  "tokenType": string,
-  "user": {
-    "id"?: 0,
-    "openId"?: string,
-    "firstName": string,
-    "lastName": string,
-    "email": string
-  }
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  tokenType: string;
+  user: User;
 }
 
 export enum AuthState {
@@ -52,4 +46,5 @@ export interface User {
   firstName: string,
   lastName: string,
   email: string,
+  customerId?: number,
 }

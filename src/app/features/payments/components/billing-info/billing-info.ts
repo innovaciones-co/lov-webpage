@@ -64,8 +64,11 @@ export class BillingInfoComponent {
       additionalInfo: new FormControl('', { nonNullable: true })
     });
 
-    const storedMsisdn = this.authService.getStoredMsisdn();
-    if (storedMsisdn) {
+    this.authService.getStoredMsisdn().subscribe(storedMsisdn => {
+      if (!storedMsisdn) {
+        return;
+      }
+
       this.subscriptionFacade.getCustomerInfo(storedMsisdn).subscribe(customerInfo => {
         if (customerInfo) {
           this.billingInfoForm.patchValue({
@@ -82,7 +85,7 @@ export class BillingInfoComponent {
           });
         }
       });
-    }
+    });
 
     // Register the form with the payment service
     this.paymentService.billingForm.set(this.billingInfoForm);
