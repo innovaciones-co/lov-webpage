@@ -43,11 +43,13 @@ export class Login implements OnInit, OnDestroy {
   currentState = AuthState.INITIAL;
   loginMethod: 'phone-otp' | 'email-password' = 'phone-otp';
   error: AuthError | null = null;
+  successMessage: string | null = null;
   countdown = signal<number>(0);
   isLoading = false;
   returnUrl = '/dashboard';
   currentOtpValue = signal<string>('');
   isOtpComplete = signal<boolean>(false);
+  successMessageTimer: any;
 
   // Expose AuthState enum to template
   AuthState = AuthState;
@@ -56,10 +58,23 @@ export class Login implements OnInit, OnDestroy {
     this.initializeForms();
     this.setupSubscriptions();
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
-    
+
     const method = this.route.snapshot.queryParams['method'];
     if (method === 'email-password') {
       this.loginMethod = 'email-password';
+    }
+
+    const resetSuccess = this.route.snapshot.queryParams['reset'];
+    if (resetSuccess === 'success') {
+      this.successMessage = 'Tu contraseña ha sido restablecida exitosamente.';
+      // Auto-clear success message after 5 seconds
+      this.successMessageTimer = setTimeout(() => {
+        this.successMessage = null;
+        this.cdr.markForCheck();
+      }, 5000);
+    }
+    if (this.successMessageTimer) {
+      clearTimeout(this.successMessageTimer);
     }
   }
 
@@ -127,8 +142,17 @@ export class Login implements OnInit, OnDestroy {
     this.credentialsForm.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        // Clear error when user starts typing
         if (this.error) {
           this.error = null;
+          this.cdr.markForCheck();
+        }
+        // Clear success message when user starts typing
+        if (this.successMessage) {
+          this.successMessage = null;
+          if (this.successMessageTimer) {
+            clearTimeout(this.successMessageTimer);
+          }
           this.cdr.markForCheck();
         }
       });
@@ -147,6 +171,10 @@ export class Login implements OnInit, OnDestroy {
 
         // Navigate after successful authentication
         if (state === AuthState.AUTHENTICATED) {
+          if (this.successMessageTimer) {
+            clearTimeout(this.successMessageTimer);
+          }
+          this.successMessage = null; // Clear success message on authenticated state
           this.router.navigateByUrl(this.returnUrl);
         }
 
@@ -229,6 +257,12 @@ export class Login implements OnInit, OnDestroy {
 
     this.loginMethod = method;
     this.error = null;
+    if (this.successMessage) {
+      this.successMessage = null;
+      if (this.successMessageTimer) {
+        clearTimeout(this.successMessageTimer);
+      }
+    }
 
     if (method === 'phone-otp') {
       this.authService.resetState();

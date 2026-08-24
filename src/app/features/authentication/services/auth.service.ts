@@ -217,13 +217,53 @@ export class AuthService {
     }
 
     /**
-     * Check if current error is retryable
+     * Request password reset for the given email
      */
-    isCurrentErrorRetryable(): boolean {
-        return this.errorStateManager.isCurrentErrorRetryable();
+    requestPasswordReset(email: string): Observable<any> {
+        this.errorStateManager.clearError();
+
+        const request = {
+            email: email.trim()
+        };
+
+        return this.http.post<any>(`${environment.apiUrl}/authentication/password/reset/request`, request)
+            .pipe(
+                tap(response => {
+                    // Success handling
+                    console.log('Password reset request sent successfully');
+                }),
+                catchError((error: HttpErrorResponse) => {
+                    const processedError = this.errorHandler.handle(error);
+                    this.errorStateManager.setError(processedError);
+                    return throwError(() => processedError);
+                })
+            );
     }
 
-    // Private methods
+    /**
+     * Confirm password reset with token and new password
+     */
+    resetPasswordConfirm(token: string, newPassword: string): Observable<any> {
+        this.errorStateManager.clearError();
+
+        const request = {
+            token,
+            newPassword
+        };
+
+        return this.http.post<any>(`${environment.apiUrl}/authentication/password/reset/confirm`, request)
+            .pipe(
+                tap(response => {
+                    // Success handling
+                    console.log('Password reset confirmed successfully');
+                }),
+                catchError((error: HttpErrorResponse) => {
+                    const processedError = this.errorHandler.handle(error);
+                    this.errorStateManager.setError(processedError);
+                    return throwError(() => processedError);
+                })
+            );
+    }
 
     private handleAuthSuccess(response: AuthResponse, msisdn?: string): void {
         this.storeAuthData(response, msisdn);
