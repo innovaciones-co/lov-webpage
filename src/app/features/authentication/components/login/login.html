@@ -170,6 +170,12 @@
                 <input-text-field [label]="'Contraseña'" [placeholder]="'Ingresa tu contraseña'" [type]="'password'"
                     [autocomplete]="'current-password'" [control]="passwordControl"
                     [error]="getCredentialsFieldErrorMessage('password')"></input-text-field>
+
+                <div class="method-link-row">
+                    <a href="" (click)="$event.preventDefault(); router.navigate(['/recuperar-contraseña'])">
+                        Olvidé mi contraseña
+                    </a>
+                </div>
             </div>
 
             @if (shouldShowCredentialsError()) {

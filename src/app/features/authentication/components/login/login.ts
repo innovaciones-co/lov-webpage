@@ -22,9 +22,10 @@ export class Login implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
+
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   msisdnForm!: FormGroup;
   otpForm!: FormGroup;
@@ -55,6 +56,11 @@ export class Login implements OnInit, OnDestroy {
     this.initializeForms();
     this.setupSubscriptions();
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+    
+    const method = this.route.snapshot.queryParams['method'];
+    if (method === 'email-password') {
+      this.loginMethod = 'email-password';
+    }
   }
 
   ngOnDestroy() {

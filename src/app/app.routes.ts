@@ -3,6 +3,7 @@ import { authGuard, guestGuard } from './core/guards/auth.guard';
 import { ActivateSim } from './features/activate-sim/activate-sim';
 import { SuccessfulActivation } from './features/activate-sim/components/successful-activation/successful-activation';
 import { Login } from './features/authentication/components/login/login';
+import { ForgotPassword } from './features/authentication/components/forgot-password/forgot-password';
 import { Dashboard } from './features/dashboard/dashboard';
 import { DeviceLock } from './features/device-lock/device-lock';
 import { Faq } from './features/faq/components/faq';
@@ -50,6 +51,11 @@ export const routes: Routes = [
     {
         path: 'ingreso',
         component: Login,
+        canActivate: [guestGuard]
+    },
+    {
+        path: 'recuperar-contraseña',
+        component: ForgotPassword,
         canActivate: [guestGuard]
     },
     {
