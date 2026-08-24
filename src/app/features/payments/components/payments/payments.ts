@@ -188,15 +188,19 @@ export class Payments implements OnInit {
    */
   private getMsisdn(): Observable<string> {
     console.log('Attempting to retrieve MSISDN from AuthService or BillingInfo');
-    const msisdn = this.authService.getStoredMsisdn() || this.paymentService?.billingInfo()?.phone;
 
-    console.log('Retrieved MSISDN:', msisdn);
+    return this.authService.getStoredMsisdn().pipe(
+      map(storedMsisdn => storedMsisdn || this.paymentService?.billingInfo()?.phone),
+      switchMap(msisdn => {
+        console.log('Retrieved MSISDN:', msisdn);
 
-    if (!msisdn) {
-      return throwError(() => new Error('MSISDN is required but not available'));
-    }
+        if (!msisdn) {
+          return throwError(() => new Error('MSISDN is required but not available'));
+        }
 
-    return of(this.msisdnPipe.transform(msisdn));
+        return of(this.msisdnPipe.transform(msisdn));
+      })
+    );
   }
 
   /**

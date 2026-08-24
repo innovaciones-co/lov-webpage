@@ -17,18 +17,17 @@ export interface OtpValidation {
   otp: string;
 }
 
+export interface CredentialsLoginRequest {
+  email: string;
+  password: string;
+}
+
 export interface AuthResponse {
-  "accessToken": string,
-  "refreshToken": string,
-  "expiresIn": 0,
-  "tokenType": string,
-  "user": {
-    "id"?: 0,
-    "openId"?: string,
-    "firstName": string,
-    "lastName": string,
-    "email": string
-  }
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  tokenType: string;
+  user: User;
 }
 
 export enum AuthState {
@@ -36,6 +35,7 @@ export enum AuthState {
   REQUESTING_OTP = 'requesting-otp',
   OTP_SENT = 'otp-sent',
   VALIDATING_OTP = 'validating-otp',
+  AUTHENTICATING_CREDENTIALS = 'authenticating-credentials',
   AUTHENTICATED = 'authenticated',
   ERROR = 'error',
   ERROR_OTP = 'error-otp'
@@ -46,4 +46,5 @@ export interface User {
   firstName: string,
   lastName: string,
   email: string,
+  customerId?: number,
 }

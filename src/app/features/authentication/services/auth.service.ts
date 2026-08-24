@@ -2,13 +2,15 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError, timer } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError, timer } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { MsisdnPipe } from '../../../core/pipes/msisdn.pipe';
+import { SubscriptionService } from '../../../core/services/subscription.service';
 import {
     AuthResponse,
     AuthState,
+    CredentialsLoginRequest,
     OtpRequest,
     OtpResponse,
     OtpValidation,
@@ -27,6 +29,7 @@ export class AuthService {
     private platformId = inject(PLATFORM_ID);
     private errorHandler = inject(AuthHttpErrorHandler);
     private errorStateManager = inject(AuthErrorStateManager);
+    private subscriptionService = inject(SubscriptionService);
 
     private readonly TOKEN_KEY = 'auth_token';
     private readonly REFRESH_TOKEN_KEY = 'refresh_token';
@@ -87,7 +90,7 @@ export class AuthService {
                         this.handleBusinessError({ message: response.message, code: 'OTP_REQUEST_FAILED' });
                     }
                 }),
-                catchError(this.handleHttpError.bind(this))
+                catchError((error: HttpErrorResponse) => this.handleHttpError(error, AuthState.ERROR_OTP))
             );
     }
 
@@ -109,7 +112,28 @@ export class AuthService {
                     // If we reach this point, the HTTP request was successful (status 200-299)
                     this.handleAuthSuccess(response, this.msisdnPipe.transform(msisdn));
                 }),
-                catchError(this.handleHttpError.bind(this))
+                catchError((error: HttpErrorResponse) => this.handleHttpError(error, AuthState.ERROR_OTP))
+            );
+    }
+
+    /**
+     * Authenticate user using email and password
+     */
+    loginWithCredentials(email: string, password: string): Observable<AuthResponse> {
+        this.authStateSubject.next(AuthState.AUTHENTICATING_CREDENTIALS);
+        this.errorStateManager.clearError();
+
+        const credentials: CredentialsLoginRequest = {
+            email: email.trim(),
+            password
+        };
+
+        return this.http.post<AuthResponse>(`${environment.apiUrl}/authentication/login`, credentials)
+            .pipe(
+                tap(response => {
+                    this.handleAuthSuccess(response);
+                }),
+                catchError((error: HttpErrorResponse) => this.handleHttpError(error, AuthState.ERROR))
             );
     }
 
@@ -193,23 +217,58 @@ export class AuthService {
     }
 
     /**
-     * Check if current error is retryable
+     * Request password reset for the given email
      */
-    isCurrentErrorRetryable(): boolean {
-        return this.errorStateManager.isCurrentErrorRetryable();
+    requestPasswordReset(email: string): Observable<any> {
+        this.errorStateManager.clearError();
+
+        const request = {
+            email: email.trim()
+        };
+
+        return this.http.post<any>(`${environment.apiUrl}/authentication/password/reset/request`, request)
+            .pipe(
+                tap(response => {
+                    // Success handling
+                    console.log('Password reset request sent successfully');
+                }),
+                catchError((error: HttpErrorResponse) => {
+                    const processedError = this.errorHandler.handle(error);
+                    this.errorStateManager.setError(processedError);
+                    return throwError(() => processedError);
+                })
+            );
     }
 
-    // Private methods
+    /**
+     * Confirm password reset with token and new password
+     */
+    resetPasswordConfirm(token: string, newPassword: string): Observable<any> {
+        this.errorStateManager.clearError();
 
-    private handleAuthSuccess(response: AuthResponse, msisdn: string): void {
+        const request = {
+            token,
+            newPassword
+        };
+
+        return this.http.post<any>(`${environment.apiUrl}/authentication/password/reset/confirm`, request)
+            .pipe(
+                tap(response => {
+                    // Success handling
+                    console.log('Password reset confirmed successfully');
+                }),
+                catchError((error: HttpErrorResponse) => {
+                    const processedError = this.errorHandler.handle(error);
+                    this.errorStateManager.setError(processedError);
+                    return throwError(() => processedError);
+                })
+            );
+    }
+
+    private handleAuthSuccess(response: AuthResponse, msisdn?: string): void {
         this.storeAuthData(response, msisdn);
 
-        const user: User = {
-            id: response.user.id,
-            firstName: response.user.firstName,
-            lastName: response.user.lastName,
-            email: response.user.email,
-        };
+        const user: User = response.user;
 
         this.userSubject.next(user);
         this.authStateSubject.next(AuthState.AUTHENTICATED);
@@ -226,8 +285,19 @@ export class AuthService {
         }
 
         this.setItem(this.USER_KEY, JSON.stringify(response.user));
-        if (msisdn != undefined) {
+        if (msisdn !== undefined) {
             this.setItem(this.USER_MSISDN, msisdn);
+
+            if (response.user.customerId == undefined) {
+                console.error('Customer ID is not present in the user object:', response.user);
+                return;
+            }
+
+            const customerId: number = response.user.customerId;
+
+            this.fetchAndStoreFirstMsisdn(customerId).subscribe();
+        } else {
+            this.removeItem(this.USER_MSISDN);
         }
     }
 
@@ -249,8 +319,39 @@ export class AuthService {
         return userData ? JSON.parse(userData) : null;
     }
 
-    getStoredMsisdn(): string | null {
-        return this.getItem(this.USER_MSISDN);
+    /**
+     * Get the stored MSISDN, falling back to the customer's first subscription when not stored yet
+     */
+    getStoredMsisdn(): Observable<string | null> {
+        const storedMsisdn = this.getItem(this.USER_MSISDN);
+        if (storedMsisdn) {
+            return of(storedMsisdn);
+        }
+
+        const customerId = this.getStoredUser()?.customerId;
+        if (customerId === undefined) {
+            return of(null);
+        }
+
+        return this.fetchAndStoreFirstMsisdn(customerId);
+    }
+
+    private fetchAndStoreFirstMsisdn(customerId: number): Observable<string | null> {
+        return this.subscriptionService.getSubscriptions(customerId).pipe(
+            map(customer => {
+                const firstSubscription = customer?.payload?.subscriptions?.[0];
+                if (!firstSubscription) {
+                    return null;
+                }
+
+                this.setItem(this.USER_MSISDN, firstSubscription.msisdn);
+                return firstSubscription.msisdn;
+            }),
+            catchError(error => {
+                console.error('Error fetching subscriptions:', error);
+                return of(null);
+            })
+        );
     }
 
     private startOtpCountdown(seconds: number): void {
@@ -292,10 +393,10 @@ export class AuthService {
     /**
      * Handle HTTP errors using the dedicated error handler
      */
-    private handleHttpError(error: HttpErrorResponse): Observable<never> {
+    private handleHttpError(error: HttpErrorResponse, errorState: AuthState = AuthState.ERROR_OTP): Observable<never> {
         const processedError = this.errorHandler.handle(error);
         this.errorStateManager.setError(processedError);
-        this.authStateSubject.next(AuthState.ERROR_OTP);
+        this.authStateSubject.next(errorState);
         return throwError(() => processedError);
     }
 

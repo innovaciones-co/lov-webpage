@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
+import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
 import { OtpInputComponent } from "../../../../shared/components/form-fields/otp-input/otp-input";
 import { AuthState } from '../../models/auth.models';
 import { AuthError } from '../../models/error.models';
@@ -11,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, OtpInputComponent, MsisdnPipe],
+  imports: [CommonModule, ReactiveFormsModule, OtpInputComponent, InputTextComponent, MsisdnPipe],
   templateUrl: './login.html',
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,12 +22,14 @@ export class Login implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
+
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   msisdnForm!: FormGroup;
   otpForm!: FormGroup;
+  credentialsForm!: FormGroup;
 
   otpFormArray = new FormArray([
     new FormControl('', [Validators.required]),
@@ -38,12 +41,15 @@ export class Login implements OnInit, OnDestroy {
   ], [this.otpCompleteValidator()]);
 
   currentState = AuthState.INITIAL;
+  loginMethod: 'phone-otp' | 'email-password' = 'phone-otp';
   error: AuthError | null = null;
+  successMessage: string | null = null;
   countdown = signal<number>(0);
   isLoading = false;
   returnUrl = '/dashboard';
   currentOtpValue = signal<string>('');
   isOtpComplete = signal<boolean>(false);
+  successMessageTimer: any;
 
   // Expose AuthState enum to template
   AuthState = AuthState;
@@ -52,6 +58,24 @@ export class Login implements OnInit, OnDestroy {
     this.initializeForms();
     this.setupSubscriptions();
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+
+    const method = this.route.snapshot.queryParams['method'];
+    if (method === 'email-password') {
+      this.loginMethod = 'email-password';
+    }
+
+    const resetSuccess = this.route.snapshot.queryParams['reset'];
+    if (resetSuccess === 'success') {
+      this.successMessage = 'Tu contraseña ha sido restablecida exitosamente.';
+      // Auto-clear success message after 5 seconds
+      this.successMessageTimer = setTimeout(() => {
+        this.successMessage = null;
+        this.cdr.markForCheck();
+      }, 5000);
+    }
+    if (this.successMessageTimer) {
+      clearTimeout(this.successMessageTimer);
+    }
   }
 
   ngOnDestroy() {
@@ -100,12 +124,35 @@ export class Login implements OnInit, OnDestroy {
       //otp: ['', [Validators.required, Validators.pattern(/^[0-9]{4,6}$/)]]
     });
 
+    this.credentialsForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]]
+    });
+
     // Clear errors when MSISDN changes
     this.msisdnForm.get('msisdn')?.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         if (this.error) {
           this.error = null;
+          this.cdr.markForCheck();
+        }
+      });
+
+    this.credentialsForm.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        // Clear error when user starts typing
+        if (this.error) {
+          this.error = null;
+          this.cdr.markForCheck();
+        }
+        // Clear success message when user starts typing
+        if (this.successMessage) {
+          this.successMessage = null;
+          if (this.successMessageTimer) {
+            clearTimeout(this.successMessageTimer);
+          }
           this.cdr.markForCheck();
         }
       });
@@ -117,10 +164,17 @@ export class Login implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
         this.currentState = state;
-        this.isLoading = state === AuthState.REQUESTING_OTP || state === AuthState.VALIDATING_OTP;
+        this.isLoading =
+          state === AuthState.REQUESTING_OTP ||
+          state === AuthState.VALIDATING_OTP ||
+          state === AuthState.AUTHENTICATING_CREDENTIALS;
 
         // Navigate after successful authentication
         if (state === AuthState.AUTHENTICATED) {
+          if (this.successMessageTimer) {
+            clearTimeout(this.successMessageTimer);
+          }
+          this.successMessage = null; // Clear success message on authenticated state
           this.router.navigateByUrl(this.returnUrl);
         }
 
@@ -196,6 +250,44 @@ export class Login implements OnInit, OnDestroy {
     this.isOtpComplete.set(false);
   }
 
+  onSelectLoginMethod(method: 'phone-otp' | 'email-password') {
+    if (this.loginMethod === method) {
+      return;
+    }
+
+    this.loginMethod = method;
+    this.error = null;
+    if (this.successMessage) {
+      this.successMessage = null;
+      if (this.successMessageTimer) {
+        clearTimeout(this.successMessageTimer);
+      }
+    }
+
+    if (method === 'phone-otp') {
+      this.authService.resetState();
+      this.credentialsForm.reset();
+    } else {
+      this.authService.resetState();
+      this.otpForm.reset();
+      this.otpFormArray.reset();
+      this.currentOtpValue.set('');
+      this.isOtpComplete.set(false);
+    }
+  }
+
+  onLoginWithCredentials() {
+    if (this.credentialsForm.invalid) {
+      this.markFormGroupTouched(this.credentialsForm);
+      return;
+    }
+
+    const email = this.emailControl.value?.toString().trim() ?? '';
+    const password = this.passwordControl.value?.toString() ?? '';
+
+    this.authService.loginWithCredentials(email, password).subscribe();
+  }
+
   getCountdownDisplay(): string {
     const minutes = Math.floor(this.countdown() / 60);
     const seconds = this.countdown() % 60;
@@ -222,6 +314,14 @@ export class Login implements OnInit, OnDestroy {
     return this.otpForm.get('otp') as FormArray;
   }
 
+  get emailControl() {
+    return this.credentialsForm.get('email') as FormControl;
+  }
+
+  get passwordControl() {
+    return this.credentialsForm.get('password') as FormControl;
+  }
+
   get isMsisdnInvalid() {
     return this.msisdnControl?.invalid && this.msisdnControl?.touched;
   }
@@ -234,6 +334,14 @@ export class Login implements OnInit, OnDestroy {
     return this.isOtpComplete() && this.otpFormArray.valid;
   }
 
+  get isEmailInvalid() {
+    return this.emailControl?.invalid && this.emailControl?.touched;
+  }
+
+  get isPasswordInvalid() {
+    return this.passwordControl?.invalid && this.passwordControl?.touched;
+  }
+
   getOtpErrorMessage(): string {
     if (this.otpFormArray.hasError('otpIncomplete') && this.otpFormArray.touched) {
       return 'Ingresa el código de 6 dígitos completo';
@@ -241,21 +349,53 @@ export class Login implements OnInit, OnDestroy {
     return 'Código de verificación inválido';
   }
 
+  getCredentialsFieldErrorMessage(field: 'email' | 'password'): string {
+    const control = field === 'email' ? this.emailControl : this.passwordControl;
+
+    if (!control?.errors || !control.touched) {
+      return '';
+    }
+
+    if (control.errors['required']) {
+      return field === 'email'
+        ? 'El correo electrónico es requerido'
+        : 'La contraseña es requerida';
+    }
+
+    if (field === 'email' && control.errors['email']) {
+      return 'Ingresa un correo electrónico válido';
+    }
+
+    if (field === 'password' && control.errors['minlength']) {
+      return 'La contraseña debe tener al menos 8 caracteres';
+    }
+
+    return 'Error de validación';
+  }
+
   // Helper methods to determine when to show errors
   shouldShowMsisdnError(): boolean {
     return !!(this.error && (
-      this.currentState === AuthState.INITIAL ||
-      this.currentState === AuthState.REQUESTING_OTP ||
-      this.currentState === AuthState.ERROR
+      this.loginMethod === 'phone-otp' && (
+        this.currentState === AuthState.INITIAL ||
+        this.currentState === AuthState.REQUESTING_OTP ||
+        this.currentState === AuthState.ERROR
+      )
     ));
   }
 
   shouldShowOtpError(): boolean {
     return !!(this.error && (
-      this.currentState === AuthState.OTP_SENT ||
-      this.currentState === AuthState.VALIDATING_OTP ||
-      this.currentState === AuthState.ERROR_OTP
+      this.loginMethod === 'phone-otp' && (
+        this.currentState === AuthState.OTP_SENT ||
+        this.currentState === AuthState.VALIDATING_OTP ||
+        this.currentState === AuthState.ERROR_OTP
+      )
     ));
+  }
+
+  shouldShowCredentialsError(): boolean {
+    return !!(this.error && this.loginMethod === 'email-password');
   }
 }
 
