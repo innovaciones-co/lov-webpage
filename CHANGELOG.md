@@ -1,3 +1,14 @@
+# [1.26.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.25.0...v1.26.0) (2026-08-24)
+
+
+### Features
+
+* add email and password login method with form validation ([8427373](https://github.com/innovaciones-co/lov-webpage/commit/842737365ce8a219396981052d91edba048bbd8e))
+* add forgot password functionality with recovery form ([8709fd9](https://github.com/innovaciones-co/lov-webpage/commit/8709fd968be683e03505e6a794e67db177c719c3))
+* enhance authentication and billing info handling with improved MSISDN retrieval ([96f9506](https://github.com/innovaciones-co/lov-webpage/commit/96f950636bcfb7d0bec7efaaea457b73259d9b9e))
+* implement email and password authentication ([b9c019e](https://github.com/innovaciones-co/lov-webpage/commit/b9c019eb0374e8c1f1181c706ecff9037e0e6467))
+* reset password functionality ([c3d0264](https://github.com/innovaciones-co/lov-webpage/commit/c3d02643d17736dba5132d89c4e6ebd39214feeb))
+
 # [1.25.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.24.0...v1.25.0) (2026-07-31)
 
 
