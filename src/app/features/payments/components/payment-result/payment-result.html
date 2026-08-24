@@ -91,19 +91,14 @@
       </div>
     </div>
 
+    @if (isProcessingStatus(orderData.paymentStatus)) {
     <div class="order-actions">
-      @if (isFailureStatus(orderData.paymentStatus)) {
-      <button type="button" class="btn btn-secondary" (click)="onContactSupport()">
-        <span class="material-symbols-outlined">support_agent</span>
-        Contactar soporte
-      </button>
-      } @else if (isProcessingStatus(orderData.paymentStatus)) {
       <button type="button" class="btn btn-secondary" (click)="onCheckStatus()">
         <span class="material-symbols-outlined">refresh</span>
         Verificar estado
       </button>
-      }
     </div>
+    }
 
     @if (isProcessingStatus(orderData.paymentStatus)) {
     <div class="processing-notice">
