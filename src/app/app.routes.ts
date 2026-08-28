@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/guards/auth.guard';
+import { AboutUs } from './features/about-us/about-us';
 import { ActivateSim } from './features/activate-sim/activate-sim';
 import { SuccessfulActivation } from './features/activate-sim/components/successful-activation/successful-activation';
-import { Login } from './features/authentication/components/login/login';
 import { ForgotPassword } from './features/authentication/components/forgot-password/forgot-password';
+import { Login } from './features/authentication/components/login/login';
 import { ResetPassword } from './features/authentication/components/reset-password/reset-password';
 import { Dashboard } from './features/dashboard/dashboard';
 import { DeviceLock } from './features/device-lock/device-lock';
@@ -12,13 +13,13 @@ import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
 import { PaymentResultComponent } from './features/payments/components/payment-result/payment-result';
 import { Payments } from './features/payments/components/payments/payments';
+import { PurchaseSummary } from './features/payments/components/purchase-summary/purchase-summary';
 import { Plans } from './features/plans/components/plans/plans';
 import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
 import { Portability } from './features/portability/portability';
 import { PqrConfirmation } from './features/pqr/componets/pqr-confirmation/pqr-confirmation';
 import { Pqr } from './features/pqr/pqr';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
-import { PurchaseSummary } from './features/payments/components/purchase-summary/purchase-summary';
 
 export const routes: Routes = [
     {
@@ -102,7 +103,11 @@ export const routes: Routes = [
     {
         path: 'pagos/resumen',
         component: PurchaseSummary,
-        canActivate: [authGuard] // TODO: Only authenticated users can access it.
+        canActivate: [authGuard]
+    },
+    {
+        path: 'quienes-somos',
+        component: AboutUs,
     },
     {
         path: '**',
