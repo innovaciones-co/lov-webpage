@@ -21,7 +21,7 @@ export class PlansDashboard implements OnInit {
     const plans = this.plansService.getPlansSignal()();
     if (!plans || plans.length === 0) return [];
 
-    const sorted = [...plans].sort((a, b) => {
+    const sorted = plans.filter(plan => plan.isActive).sort((a, b) => {
       if (a.order !== b.order) return a.order - b.order;
       return a.id - b.id;
     });
