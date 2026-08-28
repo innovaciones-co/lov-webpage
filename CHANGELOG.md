@@ -1,3 +1,12 @@
+# [1.27.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.26.0...v1.27.0) (2026-08-28)
+
+
+### Features
+
+* add About Us page and update routing; enhance data usage logic ([4e7cab1](https://github.com/innovaciones-co/lov-webpage/commit/4e7cab1dc2be6e4f05aee6ffb98a5d162fa7d3ba))
+* filter active plans before sorting in plans dashboard ([bd59363](https://github.com/innovaciones-co/lov-webpage/commit/bd5936370e4fbaf31ca0718373a380782a42debc))
+* simplify order actions for processing payment status ([2fdc8bd](https://github.com/innovaciones-co/lov-webpage/commit/2fdc8bd2cb58dd6d2731bc9e26f0892e10fc496c))
+
 # [1.26.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.25.0...v1.26.0) (2026-08-24)
 
 
