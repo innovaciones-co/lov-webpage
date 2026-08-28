@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, signal } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { Loading } from '../../../../shared/components/loading/loading';
 
 export interface AccountViewModel {
@@ -19,7 +19,7 @@ export class DataUsage {
   isAccountLoading = input(false);
 
   dataAccount = computed(() => {
-    return this.accountViews().find(account => account.name === 'MB');
+    return this.accountViews().find(account => account.name.startsWith('MB'));
   });
 
   convertToGB(value: number, type: 'Bytes' | 'MB' | 'GB'): number {
@@ -46,7 +46,7 @@ export class DataUsage {
     const mb = this.dataAccount();
     if (!mb) return 0;
     if (mb.type === 'UNLIMITED') return 100;
-    return this.convertToGB(mb.balance, 'MB');
+    return this.convertToGB(mb.initialBalance - mb.balance, 'MB');
   });
 
   totalData = computed(() => {
