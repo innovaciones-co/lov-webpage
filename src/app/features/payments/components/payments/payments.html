@@ -49,7 +49,16 @@
         <div id="cart-container">
             <app-summary></app-summary>
             <div class="button-section">
-                <button class="btn" [disabled]="!canContinue()" (click)="onContinue()">Continuar</button>
+                <button class="btn" [disabled]="!canContinue() || isLoading()" (click)="onContinue()">
+                    @if (isLoading()) {
+                    <span class="loading-spinner"></span>
+                    Procesando...
+                    }
+                    @else {
+                    Continuar
+                    }
+                </button>
+
             </div>
         </div>
     </div>

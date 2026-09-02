@@ -26,6 +26,7 @@ import { Summary } from "../summary/summary";
 export class Payments implements OnInit {
   private document = inject(DOCUMENT);
   private router = inject(Router);
+  isLoading = signal(false);
 
   customerSubscriptions = signal<CustomerSubscription[]>([]);
   currentSubscription = signal<CustomerSubscription | undefined>(undefined);
@@ -111,6 +112,8 @@ export class Payments implements OnInit {
   }
 
   onContinue(): void {
+    this.isLoading.set(true);
+
     console.log('onContinue() called - starting payment flow');
     const paymentRequest = this.buildPaymentRequest();
 
@@ -127,7 +130,8 @@ export class Payments implements OnInit {
         tap(({ paymentData, referenceCode }) => this.handlePaymentResult(paymentData, paymentRequest, referenceCode)),
         catchError(error => this.handleError(error))
       )
-      .subscribe();
+      .subscribe()
+      .add(() => this.isLoading.set(false));
   }
 
   onMobileContinue(): void {
