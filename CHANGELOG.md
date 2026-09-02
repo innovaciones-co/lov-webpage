@@ -1,3 +1,12 @@
+# [1.28.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.27.0...v1.28.0) (2026-09-02)
+
+
+### Features
+
+* add error handling modal for payment flow with user-friendly messages ([0762515](https://github.com/innovaciones-co/lov-webpage/commit/0762515e2270356f4cd69ee68b94f687a245a6f3))
+* enhance payment flow with loading state and update button behavior ([80fbc25](https://github.com/innovaciones-co/lov-webpage/commit/80fbc25a790626e59c2784b426bf801191cb3a94))
+* update error modal layout for improved readability and user interaction ([0729aa2](https://github.com/innovaciones-co/lov-webpage/commit/0729aa25bef7e99dfabf51896530292e29e1b566))
+
 # [1.27.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.26.0...v1.27.0) (2026-08-28)
 
 
