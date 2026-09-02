@@ -64,3 +64,10 @@
     </div>
 </div>
 }
+
+<app-modal [isOpen]="isErrorModalOpen()" [showHeader]="true" title="Error en el pago" [showFooter]="true" [size]="'md'" (closed)="closeErrorModal()">
+    <p>{{ errorMessage() }}</p>
+    <div slot="footer" class="button-section">
+        <button type="button" class="btn" (click)="closeErrorModal()">Aceptar</button>
+    </div>
+</app-modal>

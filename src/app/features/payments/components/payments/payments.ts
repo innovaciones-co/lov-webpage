@@ -7,6 +7,7 @@ import { CustomerSubscription } from '../../../../core/models/customer.model';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 import { DeviceDetectionService } from '../../../../core/services/device-detection.service';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
+import { Modal } from "../../../../shared/components/modal/modal";
 import { AuthService } from '../../../authentication/services/auth.service';
 import { OrderPaymentRequest, PaymentInitiationResponse } from '../../models/order.model';
 import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method.model';
@@ -19,7 +20,7 @@ import { Summary } from "../summary/summary";
 
 @Component({
   selector: 'app-payments',
-  imports: [Summary, BillingInfoComponent, PaymentMethodOptions, PaymentCardSelector, SubscriptionSelector],
+  imports: [Summary, BillingInfoComponent, PaymentMethodOptions, PaymentCardSelector, SubscriptionSelector, Modal],
   templateUrl: './payments.html',
   styleUrl: './payments.scss'
 })
@@ -27,6 +28,8 @@ export class Payments implements OnInit {
   private document = inject(DOCUMENT);
   private router = inject(Router);
   isLoading = signal(false);
+  isErrorModalOpen = signal(false);
+  errorMessage = signal('');
 
   customerSubscriptions = signal<CustomerSubscription[]>([]);
   currentSubscription = signal<CustomerSubscription | undefined>(undefined);
@@ -115,23 +118,28 @@ export class Payments implements OnInit {
     this.isLoading.set(true);
 
     console.log('onContinue() called - starting payment flow');
-    const paymentRequest = this.buildPaymentRequest();
+    try {
+      const paymentRequest = this.buildPaymentRequest();
 
-    this.processBillingInfo()
-      .pipe(
-        switchMap(() => this.getMsisdn()),
-        switchMap(msisdn => this.getActiveSubscription(msisdn)),
-        switchMap(({ msisdn, subscriberId }) => this.createOrder(subscriberId, msisdn)),
-        switchMap(({ orderId, referenceCode }) =>
-          this.initiatePayment(orderId, paymentRequest).pipe(
-            map(paymentData => ({ paymentData, referenceCode }))
-          )
-        ),
-        tap(({ paymentData, referenceCode }) => this.handlePaymentResult(paymentData, paymentRequest, referenceCode)),
-        catchError(error => this.handleError(error))
-      )
-      .subscribe()
-      .add(() => this.isLoading.set(false));
+      this.processBillingInfo()
+        .pipe(
+          switchMap(() => this.getMsisdn()),
+          switchMap(msisdn => this.getActiveSubscription(msisdn)),
+          switchMap(({ msisdn, subscriberId }) => this.createOrder(subscriberId, msisdn)),
+          switchMap(({ orderId, referenceCode }) =>
+            this.initiatePayment(orderId, paymentRequest).pipe(
+              map(paymentData => ({ paymentData, referenceCode }))
+            )
+          ),
+          tap(({ paymentData, referenceCode }) => this.handlePaymentResult(paymentData, paymentRequest, referenceCode)),
+          catchError(error => this.handleError(error))
+        )
+        .subscribe()
+        .add(() => this.isLoading.set(false));
+    } catch (error) {
+      this.handleError(error);
+      this.isLoading.set(false);
+    }
   }
 
   onMobileContinue(): void {
@@ -313,17 +321,78 @@ export class Payments implements OnInit {
     this.document.body.removeChild(form);
   }
 
+  closeErrorModal(): void {
+    this.isErrorModalOpen.set(false);
+    this.errorMessage.set('');
+  }
+
   /**
    * Handles errors during the payment flow
    * @param error The error that occurred
    * @returns Observable that completes (to prevent re-subscription)
    */
-  private handleError(error: Error): Observable<never> {
-    console.error('Payment flow error:', error.message);
+  private handleError(error: unknown): Observable<never> {
+    console.error('Payment flow error:', error);
 
-    // TODO: Show user-friendly error message
-    // this.notificationService.showError(error.message);
+    const spanishMessage = this.mapErrorToSpanish(error);
+    this.errorMessage.set(spanishMessage);
+    this.isErrorModalOpen.set(true);
 
     return of() as Observable<never>;
+  }
+
+  private readonly errorMap: Record<string, string> = {
+    'card data not found': 'No se pudieron obtener los datos de tu tarjeta. Por favor bórrala y agrégala nuevamente.',
+    'billing info validation failed': 'La información de facturación no es válida. Por favor, revisa los datos e inténtalo de nuevo.',
+    'msisdn is required': 'El número de teléfono es requerido para continuar.',
+    'no active subscriptions found': 'No se encontraron suscripciones activas para este número de teléfono.',
+    'no payment method selected': 'Por favor, selecciona un método de pago.',
+    'no credit card selected': 'Por favor, selecciona una tarjeta de crédito para realizar el pago.',
+    'payment failed': 'El pago no pudo ser procesado. Por favor, intenta de nuevo.',
+    'insufficient funds': 'Fondos insuficientes para completar la transacción.',
+    'invalid card': 'La información de la tarjeta de crédito no es válida.',
+    'expired card': 'La tarjeta de créencontraron los datos de la tarjeta.dito se encuentra vencida.',
+    'transaction rejected': 'La transacción ha sido rechazada por la entidad bancaria.',
+    'order creation failed': 'No se pudo crear la orden de pago. Por favor, reintenta.',
+    'server error': 'Ocurrió un error en el servidor. Inténtalo más tarde.',
+    'unauthorized': 'Sesión no válida o expirada. Por favor, inicia sesión nuevamente.',
+    'network error': 'Error de conexión. Revisa tu conexión a internet.'
+  };
+
+  private mapErrorToSpanish(error: unknown): string {
+    const rawMessage = this.extractErrorMessage(error);
+
+    if (!rawMessage) {
+      return 'Ocurrió un error inesperado al procesar tu pago. Por favor, intenta nuevamente.';
+    }
+
+    const lowerMessage = rawMessage.toLowerCase();
+
+    for (const [englishPattern, spanishTranslation] of Object.entries(this.errorMap)) {
+      if (lowerMessage.includes(englishPattern)) {
+        return spanishTranslation;
+      }
+    }
+
+    return 'Ocurrió un error al procesar tu pago. Por favor, intenta nuevamente.';
+  }
+
+  private extractErrorMessage(error: unknown): string {
+    if (typeof error === 'string') {
+      return error;
+    }
+    if (error && typeof error === 'object') {
+      const errObj = error as { message?: string; error?: { message?: string } | string };
+      if (typeof errObj.error === 'string') {
+        return errObj.error;
+      }
+      if (errObj.error && typeof errObj.error === 'object' && errObj.error?.message) {
+        return errObj.error.message;
+      }
+      if (errObj.message) {
+        return errObj.message;
+      }
+    }
+    return '';
   }
 }
