@@ -49,9 +49,26 @@
         <div id="cart-container">
             <app-summary></app-summary>
             <div class="button-section">
-                <button class="btn" [disabled]="!canContinue()" (click)="onContinue()">Continuar</button>
+                <button class="btn" [disabled]="!canContinue() || isLoading()" (click)="onContinue()">
+                    @if (isLoading()) {
+                    <span class="loading-spinner"></span>
+                    Procesando...
+                    }
+                    @else {
+                    Continuar
+                    }
+                </button>
+
             </div>
         </div>
     </div>
 </div>
 }
+
+<app-modal [isOpen]="isErrorModalOpen()" [showHeader]="true" title="Error en el pago" [showFooter]="true" [size]="'md'"
+    (closed)="closeErrorModal()">
+    <p>{{ errorMessage() }}</p>
+    <div slot="footer" class="button-section">
+        <button type="button" class="btn" (click)="closeErrorModal()">Aceptar</button>
+    </div>
+</app-modal>
