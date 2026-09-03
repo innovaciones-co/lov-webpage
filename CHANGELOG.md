@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.28.0...v1.29.0) (2026-09-03)
+
+
+### Features
+
+* add user-friendly error message for credit card token retrieval failure ([4074e7a](https://github.com/innovaciones-co/lov-webpage/commit/4074e7a6336a9a517a7f0fbd35ddce82f0092145))
+
 # [1.28.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.27.0...v1.28.0) (2026-09-02)
 
 
