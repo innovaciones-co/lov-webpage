@@ -342,6 +342,7 @@ export class Payments implements OnInit {
   }
 
   private readonly errorMap: Record<string, string> = {
+    'error to find the credit card token with identifier': 'No pudimos procesar tu tarjeta de crédito; por favor, agrega nuevamente la tarjeta e intenta de nuevo.',
     'card data not found': 'No se pudieron obtener los datos de tu tarjeta. Por favor bórrala y agrégala nuevamente.',
     'billing info validation failed': 'La información de facturación no es válida. Por favor, revisa los datos e inténtalo de nuevo.',
     'msisdn is required': 'El número de teléfono es requerido para continuar.',
