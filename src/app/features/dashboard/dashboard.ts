@@ -6,15 +6,14 @@ import { EMPTY, forkJoin, of, switchMap, tap } from 'rxjs';
 import { SubscriptionAccount } from '../../core/models/account.model';
 import { Customer, CustomerSubscription } from '../../core/models/customer.model';
 import { SubscriptionFacadeService } from '../../core/services/subscription-facade.service';
-import { Loading } from "../../shared/components/loading/loading";
 import { InputTextComponent } from '../../shared/components/form-fields/input-text/input-text';
+import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
-import { DataUsage } from "./components/data-usage/data-usage";
-import { RechargeScheduler } from './components/recharge-scheduler/recharge-scheduler';
-import { CurrentPlan } from './current-plan/current-plan';
-import { History } from "./components/history/history";
 import { PaymentCardSelector } from "../payments/components/payment-card-selector/payment-card-selector";
+import { DataUsage } from "./components/data-usage/data-usage";
+import { History } from "./components/history/history";
+import { CurrentPlan } from './current-plan/current-plan';
 
 export interface AccountViewModel {
   name: string;
@@ -38,7 +37,7 @@ interface BillingInfo {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Loading, RechargeScheduler, CurrentPlan, DataUsage, InputTextComponent, History, PaymentCardSelector],
+  imports: [CommonModule, Loading, CurrentPlan, DataUsage, InputTextComponent, History, PaymentCardSelector],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })

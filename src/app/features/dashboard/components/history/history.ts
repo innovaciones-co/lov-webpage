@@ -155,7 +155,26 @@ export class History {
 
   getPageNumbers(): number[] {
     const totalPages = this.history$()?.page?.totalPages ?? 0;
-    return Array.from({ length: totalPages }, (_, index) => index);
+    const currentPage = this.history$()?.page?.number ?? this.currentPage();
+    const maxVisiblePages = 5;
+    const pagesBefore = Math.min(Math.floor(maxVisiblePages / 2), currentPage);
+    let start = currentPage - pagesBefore;
+    let end = Math.min(start + maxVisiblePages - 1, totalPages - 1);
+    start = Math.max(end - maxVisiblePages + 1, 0);
+    return Array.from({ length: Math.max(end - start + 1, 0) }, (_, index) => start + index);
+  }
+
+  hasMorePagesBefore(): boolean {
+    const pageNumbers = this.getPageNumbers();
+    const firstVisiblePage = pageNumbers[0] ?? 0;
+    return firstVisiblePage > 0;
+  }
+
+  hasMorePagesAfter(): boolean {
+    const totalPages = this.history$()?.page?.totalPages ?? 0;
+    const pageNumbers = this.getPageNumbers();
+    const lastVisiblePage = pageNumbers[pageNumbers.length - 1] ?? -1;
+    return lastVisiblePage < totalPages - 1;
   }
 
   hasPreviousPage(): boolean {
