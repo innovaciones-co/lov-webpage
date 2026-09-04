@@ -1,3 +1,11 @@
+# [1.32.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.31.0...v1.32.0) (2026-09-04)
+
+
+### Features
+
+* update logo image for brand consistency ([75d4e0d](https://github.com/innovaciones-co/lov-webpage/commit/75d4e0da9b3d175351f91d9ff904bdd96f166c7c))
+* update logo image for brand consistency ([059c61c](https://github.com/innovaciones-co/lov-webpage/commit/059c61cd6583137f70186fe6c0477a49e9dcc489))
+
 # [1.31.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.30.0...v1.31.0) (2026-09-04)
 
 
