@@ -1,3 +1,11 @@
+# [1.30.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.29.0...v1.30.0) (2026-09-04)
+
+
+### Features
+
+* enhance pagination with ellipsis for improved navigation in history component ([f91da0b](https://github.com/innovaciones-co/lov-webpage/commit/f91da0bc868ad7f2f3fe0a57dd981b7be3018978))
+* update about us section and change language to Spanish for better localization ([b816a76](https://github.com/innovaciones-co/lov-webpage/commit/b816a763c49977818fabb5d11c73d474c690ffac))
+
 # [1.29.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.28.0...v1.29.0) (2026-09-03)
 
 
