@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.30.0...v1.31.0) (2026-09-04)
+
+
+### Features
+
+* remove duplicate intro component for cleaner layout ([ad5c024](https://github.com/innovaciones-co/lov-webpage/commit/ad5c02435757021b6dd6e97bdf5a6321a32f8d5b))
+
 # [1.30.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.29.0...v1.30.0) (2026-09-04)
 
 
