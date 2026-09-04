@@ -85,11 +85,17 @@
         </button>
 
         <div class="table-paginator__pages">
+            @if (hasMorePagesBefore()) {
+            <span class="table-paginator__ellipsis" aria-hidden="true">&hellip;</span>
+            }
             @for (page of getPageNumbers(); track page) {
             <button class="table-paginator__button" type="button" [class.active]="page === currentPage()"
                 (click)="changePage(page)">
                 {{ page + 1 }}
             </button>
+            }
+            @if (hasMorePagesAfter()) {
+            <span class="table-paginator__ellipsis" aria-hidden="true">&hellip;</span>
             }
         </div>
 

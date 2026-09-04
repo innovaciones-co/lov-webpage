@@ -268,6 +268,12 @@ button.link-button {
     }
 }
 
+.table-paginator__ellipsis {
+    color: $gray-700;
+    font-size: 0.9rem;
+    padding: 0.38rem 0.35rem;
+}
+
 // Utility classes
 .text-center {
     text-align: center !important;
