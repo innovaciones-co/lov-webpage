@@ -35,14 +35,16 @@ export class Payments implements OnInit {
   currentSubscription = signal<CustomerSubscription | undefined>(undefined);
   mobileStep = signal(1);
   requiresCardStep = computed(() => this.paymentService.paymentMethod() === PaymentMethod.CARD);
-  totalMobileSteps = computed(() => this.requiresCardStep() ? 3 : 2);
+  totalMobileSteps = computed(() => this.requiresCardStep() ? 4 : 3);
   mobileStepTitle = computed(() => {
     switch (this.mobileStep()) {
       case 1:
         return 'Confirma el plan y número de teléfono';
       case 2:
-        return 'Elige tu método de pago';
+        return 'Confirma tu información de facturación';
       case 3:
+        return 'Elige tu método de pago';
+      case 4:
         return this.requiresCardStep() ? 'Selecciona una tarjeta' : 'Pago';
       default:
         return 'Pago';
@@ -68,8 +70,8 @@ export class Payments implements OnInit {
       const currentStep = this.mobileStep();
       const requiresCardStep = this.requiresCardStep();
 
-      if (currentStep === 3 && !requiresCardStep) {
-        this.mobileStep.set(2);
+      if (currentStep === 4 && !requiresCardStep) {
+        this.mobileStep.set(3);
       }
     });
   }
@@ -143,8 +145,10 @@ export class Payments implements OnInit {
   }
 
   onMobileContinue(): void {
+    console.log('onMobileContinue() called');
     if (!this.isLastMobileStep()) {
-      if (this.isMobileStep(1) && !this.paymentService.submitBillingInfo()) {
+      console.log('Not the last mobile step, moving to the next step if possible');
+      if (this.isMobileStep(2) && !this.paymentService.submitBillingInfo()) {
         return;
       }
 
