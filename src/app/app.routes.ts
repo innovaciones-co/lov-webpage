@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/guards/auth.guard';
+import { authGuard, guestGuard, paymentsGuard } from './core/guards/auth.guard';
 import { AboutUs } from './features/about-us/about-us';
 import { ActivateSim } from './features/activate-sim/activate-sim';
 import { SuccessfulActivation } from './features/activate-sim/components/successful-activation/successful-activation';
@@ -81,7 +81,7 @@ export const routes: Routes = [
     {
         path: 'pagos',
         component: Payments,
-        canActivate: [authGuard]
+        canActivate: [paymentsGuard]
     },
     {
         path: 'bloqueo-equipo',

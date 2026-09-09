@@ -15,6 +15,27 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
 };
 
+export const paymentsGuard: CanActivateFn = (route, state) => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    if (authService.isAuthenticated()) {
+        return true;
+    }
+
+    const navigationState = router.getCurrentNavigation()?.extras.state as { from?: string, msisdn?: string } | undefined;
+
+    if (navigationState?.from === '/recargas') {
+        if (navigationState.msisdn) {
+            authService.setStoredMsisdn(navigationState.msisdn);
+            return true;
+        }
+    }
+    // Store the attempted URL for redirecting after login
+    router.navigate(['/ingreso'], { queryParams: { returnUrl: state.url } });
+    return false;
+};
+
 export const guestGuard: CanActivateFn = (route, state) => {
     const authService = inject(AuthService);
     const router = inject(Router);

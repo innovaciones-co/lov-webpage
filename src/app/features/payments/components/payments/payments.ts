@@ -119,7 +119,6 @@ export class Payments implements OnInit {
   onContinue(): void {
     this.isLoading.set(true);
 
-    console.log('onContinue() called - starting payment flow');
     try {
       const paymentRequest = this.buildPaymentRequest();
 
@@ -145,7 +144,6 @@ export class Payments implements OnInit {
   }
 
   onMobileContinue(): void {
-    console.log('onMobileContinue() called');
     if (!this.isLastMobileStep()) {
       console.log('Not the last mobile step, moving to the next step if possible');
       if (this.isMobileStep(2) && !this.paymentService.submitBillingInfo()) {
@@ -211,6 +209,7 @@ export class Payments implements OnInit {
         console.log('Retrieved MSISDN:', msisdn);
 
         if (!msisdn) {
+          
           return throwError(() => new Error('MSISDN is required but not available'));
         }
 
@@ -226,7 +225,6 @@ export class Payments implements OnInit {
    */
   private getActiveSubscription(msisdn: string): Observable<{ msisdn: string; subscriberId: number }> {
     return this.subscriptionFacadeService.getActiveSubscriptions(msisdn).pipe(
-      tap(subscriptions => console.log('Fetched active subscriptions:', subscriptions)),
       switchMap(subscriptions => {
         if (subscriptions.length === 0) {
           return throwError(() => new Error(`No active subscriptions found for MSISDN: ${msisdn}`));

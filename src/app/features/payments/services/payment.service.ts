@@ -173,7 +173,6 @@ export class PaymentService implements OnDestroy {
         }).pipe(
             catchError(this.handleOrderError),
             map(order => {
-                console.log('Order fetched by reference code:', order);
                 return order;
             })
         );

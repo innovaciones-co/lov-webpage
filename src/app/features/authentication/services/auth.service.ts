@@ -336,6 +336,10 @@ export class AuthService {
         return this.fetchAndStoreFirstMsisdn(customerId);
     }
 
+    setStoredMsisdn(msisdn: string): void {
+        this.setItem(this.USER_MSISDN, msisdn);
+    }
+
     private fetchAndStoreFirstMsisdn(customerId: number): Observable<string | null> {
         return this.subscriptionService.getSubscriptions(customerId).pipe(
             map(customer => {
