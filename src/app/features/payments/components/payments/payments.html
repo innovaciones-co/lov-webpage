@@ -10,24 +10,32 @@
     <!-- <p class="step-label">Paso {{ mobileStep() }} de {{ totalMobileSteps }}</p> -->
     <h2 class="step-title">{{ mobileStepTitle() }}</h2>
 
+
     @if (isMobileStep(1)) {
     <app-summary class="summary-section"></app-summary>
-    <app-billing-info class="billing-section"></app-billing-info>
     <app-subscription-selector [subscriptions]="customerSubscriptions()"
         [selectedSubscriptionId]="currentSubscription()?.id"
         (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
     }
 
     @if (isMobileStep(2)) {
-    <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
+    <app-billing-info class="billing-section"></app-billing-info>
     }
 
     @if (isMobileStep(3)) {
+    <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
+    }
+
+    @if (isMobileStep(4)) {
     <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
     }
 
     <div class="button-section mobile-actions">
-        <button class="btn" [disabled]="isLastMobileStep() && !canContinue()" (click)="onMobileContinue()">
+        <button class="btn" [disabled]="(isLastMobileStep() && !canContinue()) || isLoading()"
+            (click)="onMobileContinue()">
+            @if (isLoading()) {
+            <span class="loading-spinner"></span>
+            }
             {{ isLastMobileStep() ? 'Pagar' : 'Continuar' }}
         </button>
     </div>

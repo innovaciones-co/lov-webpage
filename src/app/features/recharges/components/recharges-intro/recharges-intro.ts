@@ -90,7 +90,7 @@ export class RechargesIntro {
       const product: Product = this.productFactoryService.createRechargeProduct(msisdn, Number(rechargeValue), Number(rechargeValue));
 
       this.paymentsService.selectProduct(product);
-      await this.router.navigate(['/pagos']);
+      await this.router.navigate(['/pagos'], { state: { from: '/recargas', msisdn, rechargeValue } });
       // Example: await this.rechargeService.processRecharge(msisdn, rechargeValue);
     }
     console.log('Form submitted:', this.form().value);
