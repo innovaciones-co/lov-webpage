@@ -1,3 +1,11 @@
+# [1.34.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.33.0...v1.34.0) (2026-09-09)
+
+
+### Features
+
+* implement paymentsGuard for payment route access control and enhance navigation state handling ([68f381c](https://github.com/innovaciones-co/lov-webpage/commit/68f381c51a2046da065a9108f311511d32cdab13))
+* implement paymentsGuard for payment route access control and enhance navigation state handling ([a28cb35](https://github.com/innovaciones-co/lov-webpage/commit/a28cb35e71dba41a9ae93e83ae55ab81c393dca0))
+
 # [1.33.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.32.0...v1.33.0) (2026-09-09)
 
 
