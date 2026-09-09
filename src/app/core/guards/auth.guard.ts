@@ -23,13 +23,11 @@ export const paymentsGuard: CanActivateFn = (route, state) => {
         return true;
     }
 
-    const navigationState = router.getCurrentNavigation()?.extras.state as { from?: string, msisdn?: string } | undefined;
+    const navigationState = router.currentNavigation()?.extras.state as { from?: string, msisdn?: string } | undefined;
 
-    if (navigationState?.from === '/recargas') {
-        if (navigationState.msisdn) {
-            authService.setStoredMsisdn(navigationState.msisdn);
-            return true;
-        }
+    if (navigationState?.from === '/recargas' && navigationState.msisdn) {
+        authService.setStoredMsisdn(navigationState.msisdn);
+        return true;
     }
     // Store the attempted URL for redirecting after login
     router.navigate(['/ingreso'], { queryParams: { returnUrl: state.url } });
