@@ -1,3 +1,12 @@
+# [1.33.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.32.0...v1.33.0) (2026-09-09)
+
+
+### Features
+
+* change object-fit property to scale-down for product images in summary and recharges-intro components ([0f505ce](https://github.com/innovaciones-co/lov-webpage/commit/0f505ce4a1c4b501880da5eb3ae18501589cfdcf))
+* implement paymentsGuard for payment route access control and enhance navigation state handling ([8d2b0e2](https://github.com/innovaciones-co/lov-webpage/commit/8d2b0e2224081576b3beef685f04c92cca411594))
+* update mobile payment steps and titles for improved user guidance ([220fb9d](https://github.com/innovaciones-co/lov-webpage/commit/220fb9dc1058ab870672b20854b83ae06e73d34a))
+
 # [1.32.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.31.0...v1.32.0) (2026-09-04)
 
 
