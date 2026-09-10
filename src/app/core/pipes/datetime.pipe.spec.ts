@@ -8,7 +8,7 @@ describe('DatetimePipe', () => {
 
   it('formats an ISO date into a human readable datetime', () => {
     const pipe = new DatetimePipe();
-    const value = pipe.transform('2026-06-19T14:35:00Z', 'es-CO');
+    const value = pipe.transform('2026-06-19T14:35:00Z');
 
     expect(value).toContain('2026');
     expect(value).toContain('14:35');

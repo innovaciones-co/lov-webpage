@@ -74,7 +74,7 @@ export class SubscriptionFacadeService {
      */
     getAccountsForSubscription(customerId: string, subscriptionId: string): Observable<SubscriptionAccount[]> {
         return this.subscriptionService.getAccounts(customerId, subscriptionId).pipe(
-            map(response => response?.payload || []),
+            map(response => response?.payload.filter(sub => Date.parse(sub.expiryDate) >= Date.now()) || []),
             catchError(() => of([]))
         );
     }
