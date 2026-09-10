@@ -1,3 +1,12 @@
+# [1.35.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.34.0...v1.35.0) (2026-09-10)
+
+
+### Features
+
+* add redirect for planesconsolidados.html to external URL ([9b392e0](https://github.com/innovaciones-co/lov-webpage/commit/9b392e00bfda42f48081f2cbb2ed5a152e7f4a42))
+* enhance dropdown functionality for mobile devices and update menu styles ([5fed03f](https://github.com/innovaciones-co/lov-webpage/commit/5fed03f1e0d66fb0a19c52420bab6bbe210e69f3))
+* update getAccountsForSubscription to filter out expired accounts and add unit tests for SubscriptionFacadeService ([2a1d6a0](https://github.com/innovaciones-co/lov-webpage/commit/2a1d6a0f4b3af0bdf189eecef8878744f3160cf7))
+
 # [1.34.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.33.0...v1.34.0) (2026-09-09)
 
 
