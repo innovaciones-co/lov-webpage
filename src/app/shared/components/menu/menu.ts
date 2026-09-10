@@ -100,8 +100,8 @@ export class Menu implements OnInit {
   }
 
   toggleDropdown(event: Event): void {
-    // Only work on small devices (screen width less than 768px) and in browser
-    if (!this.isBrowser || window.innerWidth >= 768) {
+    // Only work on small devices (screen width less than 1024px) and in browser
+    if (!this.isBrowser || window.innerWidth >= 1280) {
       return;
     }
 
