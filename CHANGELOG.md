@@ -1,3 +1,11 @@
+# [1.36.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.35.0...v1.36.0) (2026-09-15)
+
+
+### Features
+
+* show current plan functionality with action buttons ([22fd717](https://github.com/innovaciones-co/lov-webpage/commit/22fd717b20d94ce15a395881d641a1c21ba7aff0))
+* update form submission to use getRawValue for accurate data retrieval ([69523a2](https://github.com/innovaciones-co/lov-webpage/commit/69523a211eb2cdb64743ed791ea97102c55931ce))
+
 # [1.35.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.34.0...v1.35.0) (2026-09-10)
 
 
