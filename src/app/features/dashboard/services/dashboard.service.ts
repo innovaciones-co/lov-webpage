@@ -31,13 +31,13 @@ export class DashboardService {
         return this.http.get<PaymentMethodPayload[]>(url);
     }
 
-    getCurrentPlan(subscriptionId: string): Observable<Plan> {
+    getCurrentPlan(subscriptionId: string): Observable<Plan | null> {
         console.debug('Fetching current plan');
         this.loading.set(true);
 
         const url = `${this.apiUrl}/plans/currentPlan/${subscriptionId}`;
 
-        return this.http.get<Plan>(url);
+        return this.http.get<Plan | null>(url);
     }
 
     deactivateCurrentPlan(subscriptionId: string): Observable<any> {
