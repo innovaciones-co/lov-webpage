@@ -7,6 +7,9 @@
         <div>Saldo en pesos</div>
         <div>${{ pesoBalance() }}</div>
     </div>
+    <div class="plan">
+        <div>{{ currentPlan()?.name }}</div>
+    </div>
     <div class="balance-list">
         @if (displayItems().length > 0) {
         <ul>
@@ -24,4 +27,9 @@
         }
     </div>
     }
+</div>
+<div class="actions">
+    <button class="btn btn-primary" (click)="buyPlan()">Volver a comprar plan</button>
+    <button class="btn btn-secondary-2" (click)="viewOtherPlans()">Ver otros planes</button>
+    <button class="btn btn-secondary" (click)="deactivateCurrentPlan()">Cancelar plan</button>
 </div>
