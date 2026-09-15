@@ -1,6 +1,21 @@
 @use '../../../../styles/variables' as *;
 @use '../../../../styles/mixins' as *;
 
+.btn {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 8px;
+
+    &.btn-secondary-2 {
+        background-color: color-lighten($color-extra-1, 90);
+        color: $color-extra-1;
+
+        &:hover {
+            background: color-lighten($color-extra-1, 94)
+        }
+    }
+}
+
 .card-title {
     color: $color-extra-1;
     font-size: 1.2rem;
