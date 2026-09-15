@@ -7,6 +7,7 @@ import { PaymentService } from '../../payments/services/payment.service';
 import { ProductFactoryService } from '../../payments/services/product-factory.service';
 import { DashboardService } from '../services/dashboard.service';
 import { AccountViewModel } from '../dashboard';
+import { Modal } from "../../../shared/components/modal/modal";
 
 interface DisplayItem extends AccountViewModel {
   product: string;
@@ -16,7 +17,7 @@ interface DisplayItem extends AccountViewModel {
 
 @Component({
   selector: 'app-current-plan',
-  imports: [CommonModule, Loading],
+  imports: [CommonModule, Loading, Modal],
   templateUrl: './current-plan.html',
   styleUrl: './current-plan.scss'
 })
@@ -30,6 +31,7 @@ export class CurrentPlan {
   isAccountLoading = input(false);
   subscriptionId = input<number | null>(null);
   currentPlan = signal<Plan | null>(null);
+  showModal = signal(false);
 
   constructor() {
     effect(() => {
@@ -39,6 +41,7 @@ export class CurrentPlan {
         return;
       }
 
+      this.currentPlan.set(null);
       this.dashboardService.getCurrentPlan(subscriptionId.toString()).subscribe({
         next: (plan) => this.currentPlan.set(plan)
       });
@@ -62,6 +65,19 @@ export class CurrentPlan {
 
     this.paymentService.selectProduct(this.productFactoryService.createPlanProduct(plan));
     this.router.navigate(['/pagos']);
+  }
+
+  openCancellationModal(): void {
+    this.showModal.set(true);
+  }
+
+  onCancelModal(): void {
+    this.showModal.set(false);
+  }
+
+  onContinueModal(): void {
+    this.showModal.set(false);
+    this.deactivateCurrentPlan();
   }
 
   deactivateCurrentPlan(): void {
