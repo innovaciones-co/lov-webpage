@@ -19,4 +19,9 @@ export class Promo {
   image = input.required<string>();
   logo = input<string>();
   direction = input<PromoDirection>('left');
+  imageFit = input<'cover' | 'contain'>('cover');
+  mobileAspectRatio = input<string>();
+  objectPosition = input<string>('center');
+  /** When set (e.g. "1232 / 864"), the whole section height adapts to the image's own ratio at every breakpoint so the image never gets cropped. */
+  fullImage = input<string>();
 }

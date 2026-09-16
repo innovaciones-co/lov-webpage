@@ -8,7 +8,7 @@
 
     @include tablet {
         flex-direction: row;
-        height: 500px;
+        height: var(--promo-height, 500px);
     }
 
     // Reverse direction when direction is 'right'
@@ -23,13 +23,15 @@
 
         img {
             width: 100%;
-            max-height: 250px;
+            max-height: var(--mobile-max-height, 250px);
             height: auto;
+            aspect-ratio: var(--img-aspect-ratio, var(--mobile-aspect-ratio, auto));
             object-fit: cover;
 
             @include tablet {
-                height: 100%;
+                height: var(--img-height-desktop, 100%);
                 max-height: none;
+                aspect-ratio: var(--img-aspect-ratio, auto);
             }
         }
     }

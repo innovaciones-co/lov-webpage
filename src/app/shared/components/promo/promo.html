@@ -1,6 +1,12 @@
-<aside class="promo" [ngClass]="direction() === 'right' ? 'reverse' : ''">
+<aside class="promo" [ngClass]="direction() === 'right' ? 'reverse' : ''"
+    [style.--promo-height]="fullImage() ? 'auto' : null">
     <div class="image-container">
-        <img [ngSrc]="image()" [alt]="title()" width="500" height="300" priority>
+        <img [ngSrc]="image()" [alt]="title()" width="500" height="300" priority [style.object-fit]="imageFit()"
+            [style.object-position]="objectPosition()"
+            [style.--mobile-aspect-ratio]="mobileAspectRatio() ?? null"
+            [style.--mobile-max-height]="(mobileAspectRatio() || fullImage()) ? 'none' : null"
+            [style.--img-aspect-ratio]="fullImage() ?? null"
+            [style.--img-height-desktop]="fullImage() ? 'auto' : null">
     </div>
     <div class="text">
         @if (logo()) {
