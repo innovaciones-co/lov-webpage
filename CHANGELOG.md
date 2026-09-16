@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.37.0...v1.38.0) (2026-09-16)
+
+
+### Features
+
+* update sim-card promo image and fix responsive image cropping ([c4969d3](https://github.com/innovaciones-co/lov-webpage/commit/c4969d3a7bbca3b88ac67479b531ab5c94a4369a)), closes [#LaClaveEsVerificar](https://github.com/innovaciones-co/lov-webpage/issues/LaClaveEsVerificar)
+
 # [1.37.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.36.0...v1.37.0) (2026-09-15)
 
 
