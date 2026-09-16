@@ -7,6 +7,9 @@
         <div>Saldo en pesos</div>
         <div>${{ pesoBalance() }}</div>
     </div>
+    <div class="plan">
+        <div>{{ currentPlan()?.name }}</div>
+    </div>
     <div class="balance-list">
         @if (displayItems().length > 0) {
         <ul>
@@ -25,3 +28,27 @@
     </div>
     }
 </div>
+<div class="actions">
+    @if (currentPlan()) {
+    <button class="btn btn-primary" (click)="buyPlan()">Volver a comprar plan</button>
+    }
+    <button class="btn btn-secondary-2" (click)="viewOtherPlans()">Ver @if (currentPlan()) {otros} planes</button>
+    @if (currentPlan()) {
+    <button class="btn btn-secondary" (click)="openCancellationModal()">Cancelar plan</button>
+    }
+</div>
+
+<app-modal [isOpen]="showModal()" [size]="'md'" (closed)="onCancelModal()">
+    <div class="modal-content">
+        <div class="modal-content-info">
+            <p class="info-content-title">Cancelar plan</p>
+            <div class="info-section">
+                <p>¿Estás seguro de que deseas cancelar tu plan actual?</p>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" (click)="onCancelModal()">Cancelar</button>
+            <button type="button" class="btn" (click)="onContinueModal()">Confirmar</button>
+        </div>
+    </div>
+</app-modal>

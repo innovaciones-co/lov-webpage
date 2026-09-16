@@ -133,7 +133,8 @@
 
         <div class="right-column">
             <app-current-plan [accountViews]="accountViews()"
-                [isAccountLoading]="isAccountLoading()"></app-current-plan>
+                [isAccountLoading]="isAccountLoading()"
+                [subscriptionId]="currentSubscription()?.id ?? null"></app-current-plan>
         </div>
     </div>
 </div>

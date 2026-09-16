@@ -131,7 +131,7 @@ export class PersonalInfoForm {
 
   onSubmit(): void {
     if (this.form().valid) {
-      const formData = this.form().value as PersonalInfoFormData;
+      const formData = this.form().getRawValue() as PersonalInfoFormData;
       this.isLoading.set(true);
 
       // Limpiar error previo

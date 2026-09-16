@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { PaymentMethodPayload } from "../../payments/models/payment-method.model";
+import { Plan } from "../../plans/models/plan.model";
 
 @Injectable({
     providedIn: 'root'
@@ -28,6 +29,24 @@ export class DashboardService {
         const url = `${this.apiUrl}/paymentMethods`;
 
         return this.http.get<PaymentMethodPayload[]>(url);
+    }
+
+    getCurrentPlan(subscriptionId: string): Observable<Plan | null> {
+        console.debug('Fetching current plan');
+        this.loading.set(true);
+
+        const url = `${this.apiUrl}/plans/currentPlan/${subscriptionId}`;
+
+        return this.http.get<Plan | null>(url);
+    }
+
+    deactivateCurrentPlan(subscriptionId: string): Observable<any> {
+        console.debug('Deactivating current plan');
+        this.loading.set(true);
+
+        const url = `${this.apiUrl}/plans/currentPlan/${subscriptionId}/deactivate`;
+
+        return this.http.put(url, null);
     }
 
     submitRecharge(subscriptionId: string, rechargeData: any): Observable<any> {
