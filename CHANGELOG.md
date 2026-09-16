@@ -1,3 +1,10 @@
+## [1.38.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.38.0...v1.38.1) (2026-09-16)
+
+
+### Bug Fixes
+
+* update sim-card promo image and match exact aspect ratio ([0266dc9](https://github.com/innovaciones-co/lov-webpage/commit/0266dc9d43ad317dc33c34e823b83272fa634fb8))
+
 # [1.38.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.37.0...v1.38.0) (2026-09-16)
 
 
