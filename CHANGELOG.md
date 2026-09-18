@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.38.1...v1.39.0) (2026-09-18)
+
+
+### Features
+
+* update multiple PDF documents ([d02b17c](https://github.com/innovaciones-co/lov-webpage/commit/d02b17cda12e64bdb92c6e8d49d08a2e2b85db91))
+
 ## [1.38.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.38.0...v1.38.1) (2026-09-16)
 
 
