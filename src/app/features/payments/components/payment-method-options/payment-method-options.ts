@@ -108,15 +108,16 @@ export class PaymentMethodOptions implements AfterViewInit {
   refreshAllowedPaymentMethods() {
     const product = this.paymentService.selectedProduct();
 
+
+    this.allowedPaymentMethods = [];
     if (!product) {
-      this.allowedPaymentMethods = [];
       this.paymentMethods.set(this.allowedPaymentMethods);
       return;
     }
 
-    this.allowedPaymentMethods = [
-      { value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate }
-    ];
+    if (product.totalPrice > 3000) {
+      this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate });
+    }
 
     switch (product!.productType) {
       case ProductType.BUNDLE:

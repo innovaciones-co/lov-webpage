@@ -1,3 +1,24 @@
+# [1.40.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.39.0...v1.40.0) (2026-09-24)
+
+
+### Features
+
+* update allowed payment methods based on product price ([319f989](https://github.com/innovaciones-co/lov-webpage/commit/319f989be99f0d456e787d15a7541ff5f499445d))
+
+# [1.39.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.38.1...v1.39.0) (2026-09-18)
+
+
+### Features
+
+* update multiple PDF documents ([d02b17c](https://github.com/innovaciones-co/lov-webpage/commit/d02b17cda12e64bdb92c6e8d49d08a2e2b85db91))
+
+## [1.38.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.38.0...v1.38.1) (2026-09-16)
+
+
+### Bug Fixes
+
+* update sim-card promo image and match exact aspect ratio ([0266dc9](https://github.com/innovaciones-co/lov-webpage/commit/0266dc9d43ad317dc33c34e823b83272fa634fb8))
+
 # [1.38.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.37.0...v1.38.0) (2026-09-16)
 
 
