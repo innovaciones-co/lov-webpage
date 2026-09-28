@@ -19,7 +19,7 @@ import { PaymentService } from '../../services/payment.service';
 export class PaymentMethodOptions implements AfterViewInit {
   @ViewChild('recurringTemplate') recurringTemplate?: TemplateRef<any>;
   @ViewChild('balanceTemplate') balanceTemplate?: TemplateRef<any>;
-  @ViewChild('onePayTemplate') onePayTemplate?: TemplateRef<any>;
+  @ViewChild('payuTemplate') payuTemplate?: TemplateRef<any>;
   private viewInitialized = signal(false);
 
   currentSubscription = input<CustomerSubscription | undefined>();
@@ -48,7 +48,7 @@ export class PaymentMethodOptions implements AfterViewInit {
   paymentMethods = signal<any[]>([
     { value: PaymentMethod.CARD, template: this.recurringTemplate },
     { value: PaymentMethod.BALANCE, template: this.balanceTemplate },
-    { value: PaymentMethod.WEB_CHECKOUT, template: this.onePayTemplate }
+    { value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate }
   ]);
 
   constructor(
@@ -116,7 +116,7 @@ export class PaymentMethodOptions implements AfterViewInit {
     }
 
     if (product.totalPrice > 3000) {
-      this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.onePayTemplate });
+      this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.payuTemplate });
     }
 
     switch (product!.productType) {
@@ -163,7 +163,7 @@ export class PaymentMethodOptions implements AfterViewInit {
     if (this.remainingPayment() > 0) {
       this.disclaimerTitle.set('Saldo parcial');
       this.disclaimerContent.set(
-        `Tu saldo ${formattedBalance} cubrirá parte del pago. El resto (${formattedRemaining}) se cobrará a través de OnePay.`
+        `Tu saldo ${formattedBalance} cubrirá parte del pago. El resto (${formattedRemaining}) se cobrará por a través de Pay U.`
       );
       return;
     }

@@ -54,8 +54,6 @@ export interface PaymentInitiationResponse {
     message: string;
     checkoutUrl: string;
     checkoutData: PaymentCheckoutData;
-    // OnePay hosted checkout: redirect here directly. Replaces checkoutUrl/checkoutData for OnePay.
-    paymentLink: string | null;
     requiresAdditionalPayment: boolean;
     remainingAmount: number;
     currentBalance: number;
@@ -92,8 +90,6 @@ export interface OrderPaymentRequest {
     paymentMethodType: PaymentMethod;
     cardData?: PaymentMethodPayload;
     creditCardId?: number;
-    // Opt-in to schedule automatic plan renewal (OnePay-backed) after this payment succeeds.
-    autoRenew?: boolean;
 }
 
 export interface CardData {

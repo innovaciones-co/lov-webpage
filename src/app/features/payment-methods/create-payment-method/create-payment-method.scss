@@ -1,186 +1,44 @@
-@use '../../../../styles/variables' as *;
-@use '../../../../styles/mixins' as *;
-
 :host {
     display: block;
 }
 
-.card-form {
+form {
     display: grid;
-    gap: 1.75rem;
+    gap: 1rem;
 }
 
-.card-form-section {
-    display: grid;
-    gap: 1.1rem;
-
-    &+.card-form-section {
-        padding-top: 1.5rem;
-        border-top: 1px solid $gray-100;
-    }
-}
-
-.form-subtitle {
-    font-size: 1.05rem;
-}
-
-// OnePay fields -------------------------------------------------------------------
-.onepay-field-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    flex: 1;
-
-    &.full {
-        width: 100%;
-    }
-
-    label {
-        margin-left: 2px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #374151;
-    }
-}
-
-.onepay-input {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 46px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background: white;
-    padding: 0 12px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-    &:focus-within {
-        border-color: $color-extra-1;
-        box-shadow: 0 0 0 3px rgba(42, 113, 233, 0.12);
-    }
-
-    &.is-valid {
-        border-color: #22a35e;
-    }
-
-    &.is-invalid {
-        border-color: $color-warning;
-        box-shadow: 0 0 0 3px rgba(230, 90, 60, 0.1);
-    }
-}
-
-// OnePay's SDK mounts an iframe inside this div; reserve the space up front so
-// the layout doesn't jump while the SDK is still loading.
-.onepay-field {
-    flex: 1;
-    height: 100%;
-    min-height: 42px;
-    overflow: hidden;
-
-    iframe {
-        display: block;
-    }
-}
-
-// Card brand badges shown inside the card-number field, à la Stripe/checkout forms.
-.card-brands {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: 8px;
-    flex-shrink: 0;
-}
-
-.brand-badge {
+.brand-chip {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    height: 22px;
-    border-radius: 4px;
-    font-size: 0.55rem;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    color: white;
+    width: fit-content;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(38, 70, 83, 0.08);
+    color: #264653;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
-.brand-badge--mc {
-    width: 28px;
-    background: $gray-100;
-    position: relative;
+.token-feedback {
+    padding: 1rem;
+    border: 1px solid rgba(42, 157, 143, 0.24);
+    border-radius: 0.75rem;
+    background: rgba(42, 157, 143, 0.08);
 }
 
-.mc-circle {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    top: 4px;
-
-    &--red {
-        left: 4px;
-        background: #eb001b;
-    }
-
-    &--yellow {
-        left: 12px;
-        background: #f79e1b;
-        mix-blend-mode: multiply;
-    }
+.token-feedback h4 {
+    margin: 0 0 0.35rem;
+    color: #1f6f68;
 }
 
-.brand-badge--visa {
-    width: 32px;
-    background: $gray-100;
-    color: #1a1f71;
-    font-style: italic;
-}
-
-.cvv-hint {
-    font-size: 1.15rem;
-    color: $gray-400;
-    flex-shrink: 0;
-}
-
-.sdk-loading {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.token-feedback p {
     margin: 0;
-    font-size: 0.85rem;
-    color: $gray-400;
+    overflow-wrap: anywhere;
+    color: #264653;
 }
 
-.legal-note {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.4rem;
-    margin: 0;
-    font-size: 0.78rem;
-    line-height: 1.4;
-    color: $gray-400;
-
-    .material-symbols-outlined {
-        font-size: 0.95rem;
-        margin-top: 0.15rem;
-        flex-shrink: 0;
-    }
-}
-
-// Actions -----------------------------------------------------------------------
 .form-actions {
     display: flex;
-    justify-content: stretch;
-}
-
-.btn-submit {
-    width: 100%;
-    justify-content: center;
-    padding: 0.85rem 1.5rem;
-    border-radius: 8px;
-    font-size: 0.95rem;
-
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
+    justify-content: flex-end;
+    gap: 1rem;
 }

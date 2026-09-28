@@ -81,9 +81,6 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-           "options": {
-    "allowedHosts": [".trycloudflare.com"]
-  },
           "configurations": {
             "production": {
               "buildTarget": "lov-webpage:build:production"
