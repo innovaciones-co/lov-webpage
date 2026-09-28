@@ -1,3 +1,10 @@
+## [1.40.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.40.0...v1.40.1) (2026-09-28)
+
+
+### Bug Fixes
+
+* restore working hyperlinks in Internet Sano PDF ([22ee78b](https://github.com/innovaciones-co/lov-webpage/commit/22ee78bdd5d961b213c9f0e0de775df9b05d6c79))
+
 # [1.40.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.39.0...v1.40.0) (2026-09-24)
 
 
