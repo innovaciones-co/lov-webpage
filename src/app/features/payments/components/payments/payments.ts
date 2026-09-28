@@ -280,7 +280,8 @@ export class Payments implements OnInit {
     return {
       paymentMethodType: selectedMethod,
       cardData: selectedMethod == PaymentMethod.CARD ? this.getDefaultCardData() : undefined,
-      creditCardId: selectedMethod == PaymentMethod.CARD ? this.paymentService.selectedCreditCard()?.id : undefined
+      creditCardId: selectedMethod == PaymentMethod.CARD ? this.paymentService.selectedCreditCard()?.id : undefined,
+      autoRenew: selectedMethod == PaymentMethod.CARD ? this.paymentService.autoRenew() : undefined
     };
   }
 
@@ -295,10 +296,17 @@ export class Payments implements OnInit {
   }
 
   /**
-   * Submits the payment form to PayU checkout
-   * @param paymentData The payment initiation response containing form data
+   * Redirects to the payment checkout: OnePay's hosted payment_link when present,
+   * falling back to building/submitting the legacy PayU form otherwise.
+   * @param paymentData The payment initiation response
    */
   private submitPaymentForm(paymentData: PaymentInitiationResponse): void {
+    if (paymentData.paymentLink) {
+      console.log('Redirecting to OnePay checkout:', paymentData.paymentLink);
+      this.document.defaultView?.location.assign(paymentData.paymentLink);
+      return;
+    }
+
     console.log('Submitting payment form to PayU:', paymentData);
     const checkoutAction = paymentData.checkoutData.action || paymentData.checkoutUrl;
 

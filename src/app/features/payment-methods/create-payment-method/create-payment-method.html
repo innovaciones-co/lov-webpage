@@ -1,53 +1,108 @@
-<form [formGroup]="form()" (ngSubmit)="onSubmit()">
-    <div>
+<form [formGroup]="form()" (ngSubmit)="onSubmit()" class="card-form">
+
+    <div class="card-form-section">
         <h3 class="form-subtitle">Información del titular</h3>
         <div class="form-grid">
             <div class="form-row">
-                <input-text-field [label]="'Nombre del titular'" [placeholder]="'Como aparece en la tarjeta'"
+                <input-text-field [label]="'Nombre completo del titular'" [placeholder]="'Como aparece en la tarjeta'"
                     [autocomplete]="'cc-name'" [control]="form().controls.fullName"
                     [error]="getFieldErrorMessage('fullName')"></input-text-field>
 
-                <input-text-field [label]="'Documento de identidad'" [placeholder]="'Documento o ID del cliente'"
-                    [control]="form().controls.payerId" [error]="getFieldErrorMessage('payerId')"></input-text-field>
+                <select-field [label]="'Tipo de documento'" [options]="documentTypes()"
+                    [control]="form().controls.documentType"></select-field>
+            </div>
+
+            <div class="form-row">
+                <input-text-field [label]="'Número de documento'" [placeholder]="'Documento del titular'"
+                    [control]="form().controls.documentNumber"
+                    [error]="getFieldErrorMessage('documentNumber')"></input-text-field>
+
+                <input-text-field [label]="'Correo electrónico'" [placeholder]="'correo@ejemplo.com'"
+                    [autocomplete]="'email'" [control]="form().controls.email"
+                    [error]="getFieldErrorMessage('email')"></input-text-field>
+            </div>
+
+            <div class="form-row">
+                <input-text-field [label]="'Celular'" [placeholder]="'+573001234567'" [autocomplete]="'tel'"
+                    [control]="form().controls.phone" [error]="getFieldErrorMessage('phone')"></input-text-field>
             </div>
         </div>
     </div>
 
-    <div>
+    <div class="card-form-section">
         <h3 class="form-subtitle">Datos de la tarjeta</h3>
-        <div class="form-grid">
-            <div class="form-row">
-                <input-text-field [label]="'Número de tarjeta'" [placeholder]="'1234 5678 9012 3456'"
-                    [autocomplete]="'cc-number'" [control]="form().controls.cardNumber"
-                    [error]="getFieldErrorMessage('cardNumber')"></input-text-field>
 
-                <input-text-field [label]="'CVV'" [placeholder]="'123'" [type]="'password'" [autocomplete]="'cc-csc'"
-                    [control]="form().controls.cvv" [error]="getFieldErrorMessage('cvv')"></input-text-field>
+        <div class="onepay-field-wrapper full">
+            <label>Nombre en la tarjeta</label>
+            <div class="onepay-input" [class.is-valid]="fieldStatus().holder === 'valid'"
+                [class.is-invalid]="fieldStatus().holder === 'invalid'">
+                <div id="cc-holder" class="onepay-field"></div>
             </div>
-
-            <div class="form-row">
-                <select-field [label]="'Mes de expiración'" [placeholder]="'MM'" [options]="expirationMonths()"
-                    [control]="form().controls.expirationMonth"
-                    [error]="getFieldErrorMessage('expirationMonth')"></select-field>
-
-                <select-field [label]="'Año de expiración'" [placeholder]="'AAAA'" [options]="expirationYears()"
-                    [control]="form().controls.expirationYear"
-                    [error]="getFieldErrorMessage('expirationYear')"></select-field>
-            </div>
-
-            @if (brand()) {
-            <div class="brand-chip">Franquicia detectada: {{ brand() }}</div>
-            }
-
-            <error-card [message]="submitError()"></error-card>
-
         </div>
+
+        <div class="onepay-field-wrapper full">
+            <label>Número de tarjeta</label>
+            <div class="onepay-input" [class.is-valid]="fieldStatus().number === 'valid'"
+                [class.is-invalid]="fieldStatus().number === 'invalid'">
+                <div id="cc-number" class="onepay-field"></div>
+                <div class="card-brands" aria-hidden="true">
+                    <span class="brand-badge brand-badge--mc">
+                        <span class="mc-circle mc-circle--red"></span>
+                        <span class="mc-circle mc-circle--yellow"></span>
+                    </span>
+                    <span class="brand-badge brand-badge--visa">VISA</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="onepay-field-wrapper">
+                <label>Vencimiento</label>
+                <div class="onepay-input" [class.is-valid]="fieldStatus().expiration === 'valid'"
+                    [class.is-invalid]="fieldStatus().expiration === 'invalid'">
+                    <div id="cc-expiration-date" class="onepay-field"></div>
+                </div>
+            </div>
+
+            <div class="onepay-field-wrapper">
+                <label>Código de seguridad</label>
+                <div class="onepay-input" [class.is-valid]="fieldStatus().cvv === 'valid'"
+                    [class.is-invalid]="fieldStatus().cvv === 'invalid'">
+                    <div id="cc-cvv" class="onepay-field"></div>
+                    <span class="material-symbols-outlined cvv-hint" aria-hidden="true">credit_card</span>
+                </div>
+            </div>
+        </div>
+
+        @if (!sdkReady()) {
+        <p class="sdk-loading">
+            <span class="loading-spinner"></span>
+            Cargando módulo de pago seguro...
+        </p>
+        }
+
+        <error-card [message]="submitError()"></error-card>
+
+        @if (showAutoRenewOption()) {
+        <checkbox-field [control]="form().controls.autoRenew">
+            Activar débito automático para la renovación de este plan
+        </checkbox-field>
+        }
+
+        <p class="legal-note">
+            <span class="material-symbols-outlined">lock</span>
+            Al ingresar los datos de tu tarjeta, esta se guarda de forma segura en OnePay para tus próximos pagos.
+            Nunca pasan por nuestros servidores.
+        </p>
     </div>
+
     <div class="form-actions">
-        <button class="btn" type="submit" [disabled]="form().invalid || isLoading()">
+        <button class="btn btn-submit" type="submit" [disabled]="form().invalid || isLoading() || !sdkReady()">
             @if (isLoading()) {
             <span class="loading-spinner"></span>
             Agregando...
+            } @else if (showAutoRenewOption()) {
+            Guardar tarjeta y continuar
             } @else {
             Agregar método de pago
             }
