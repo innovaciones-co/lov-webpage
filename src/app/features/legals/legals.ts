@@ -86,6 +86,54 @@ export class Legals {
       description: 'Políticas contra contenido inapropiado',
       fileName: 'contra_material_de_contenido_de_abuso.pdf',
       category: 'regulatory'
+    },
+    {
+      title: 'Comparador de Planes y Tarifas',
+      description: 'Información para comparar diferentes planes y tarifas',
+      fileName: 'comparador_de_planes_y_tarifas.pdf',
+      category: 'user-info'
+    },
+    {
+      title: 'Trámites Digitalizados',
+      description: 'Listado de trámites digitalizados',
+      fileName: 'DIGITALIZACION_V2.pdf',
+      category: 'user-info'
+    },
+    {
+      title: 'Velocidad del Servicio de Internet',
+      description: 'Factores que Limitan la Velocidad del Servicio de Internet',
+      fileName: 'FACTORES_QUE_LIMITAN_LA_VELOCIDAD_DEL_SERVICIO_DE_INTERNET.pdf',
+      category: 'user-info'
+    },
+    {
+      title: 'Calidad del Servicio',
+      description: 'Indicadores de calidad del servicio',
+      fileName: 'INDICADORES_DE_CALIDAD_DEL_SERVICIO.pdf',
+      category: 'user-info'
+    },
+    {
+      title: 'Calidad del Servicio de Internet',
+      description: 'Indicadores de calidad del servicio de internet',
+      fileName: 'INDICADORES_DE_LA_CALIDAD_DEL_SERVICIO_DE_INTERNET.pdf',
+      category: 'user-info'
+    },
+    {
+      title: 'Prácticas de Gestión de Tráfico',
+      description: 'Políticas y prácticas relacionadas con la gestión del tráfico de red',
+      fileName: 'PRACTICAS_DE_GESTION_DE_TRAFICO.pdf',
+      category: 'user-info'
+    },
+    {
+      title: 'Procedimiento y Trámite de PQRs',
+      description: 'Información sobre el procedimiento y trámite de PQRs',
+      fileName: 'PROCEDIMIENTO_Y _TRAMITE_DE_PQRs.pdf',
+      category: 'user-info'
+    },
+    {
+      title: 'Términos y Condiciones de la Oferta Comercial',
+      description: 'Términos y condiciones aplicables a la oferta comercial',
+      fileName: 'TERMINOS_Y_CONDICIONES_DE_LA_OFERTA_COMERCIAL_V26.pdf',
+      category: 'user-info'
     }
   ];
 
