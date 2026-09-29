@@ -1,3 +1,10 @@
+# [1.42.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.41.0...v1.42.0) (2026-09-29)
+
+
+### Features
+
+* add redirect ([3bfe824](https://github.com/innovaciones-co/lov-webpage/commit/3bfe8245d0c4ba6b0473dd9dca70b8bcb1016031))
+
 # [1.41.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.40.1...v1.41.0) (2026-09-29)
 
 
