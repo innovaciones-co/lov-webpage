@@ -1113,3 +1113,43 @@ button.link-button {
     font-weight: 600;
     margin-bottom: 1rem;
 }
+
+// The "Añadir tarjeta" modal is a payment form — keep it on a bright, trustworthy white
+// background regardless of the visitor's OS dark-mode preference (bank/checkout UIs do this).
+// Specificity note: modal.scss's own `@media (prefers-color-scheme: dark)` rules for
+// `.modal-content`/`.modal-header`/`.modal-body` have the same specificity as a plain
+// `.card-payment-modal .modal-content` selector (class + component-encapsulation
+// attribute vs. two classes) and were winning the cascade tie. Adding `.modal-open`
+// (present on the host exactly while the modal is shown) breaks the tie in our favor
+// without needing `!important`.
+.card-payment-modal.modal-open .modal-content {
+    background: white;
+    color: $text-color;
+}
+
+.card-payment-modal.modal-open .modal-body {
+    color: $text-color;
+}
+
+// The header here only exists to host the close button — no title bar — so it should
+// blend into the white body instead of showing the default gray divider strip.
+.card-payment-modal.modal-open .modal-header {
+    background: white;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+// On small screens the modal's own padding + rounded corners are unnecessary chrome —
+// a payment sheet reads cleaner going fully edge-to-edge there. The backdrop keeps its
+// normal translucent dark dimming (now that .modal-content is reliably white, nothing
+// dark shows through it anymore).
+@media (max-width: 640px) {
+    .card-payment-modal.modal-open .modal-backdrop {
+        padding: 0;
+    }
+
+    .card-payment-modal .modal-content {
+        border-radius: 0;
+        max-height: 100vh;
+    }
+}

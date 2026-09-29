@@ -1,3 +1,36 @@
+# [1.42.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.41.0...v1.42.0) (2026-09-29)
+
+
+### Features
+
+* add redirect ([3bfe824](https://github.com/innovaciones-co/lov-webpage/commit/3bfe8245d0c4ba6b0473dd9dca70b8bcb1016031))
+
+# [1.41.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.40.1...v1.41.0) (2026-09-29)
+
+
+### Features
+
+* re-enable OnePay card tokenization frontend (Elements SDK) ([9420253](https://github.com/innovaciones-co/lov-webpage/commit/94202534d91124dcf02dfd25cd7093e7ac1ce5bf))
+
+
+### Reverts
+
+* exclude unfinished OnePay frontend work from production ([64268e6](https://github.com/innovaciones-co/lov-webpage/commit/64268e6b5823c396f42550c0a1a30a496cc5f0d6))
+
+## [1.40.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.40.0...v1.40.1) (2026-09-28)
+
+
+### Bug Fixes
+
+* restore working hyperlinks in Internet Sano PDF ([22ee78b](https://github.com/innovaciones-co/lov-webpage/commit/22ee78bdd5d961b213c9f0e0de775df9b05d6c79))
+
+# [1.40.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.39.0...v1.40.0) (2026-09-24)
+
+
+### Features
+
+* update allowed payment methods based on product price ([319f989](https://github.com/innovaciones-co/lov-webpage/commit/319f989be99f0d456e787d15a7541ff5f499445d))
+
 # [1.39.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.38.1...v1.39.0) (2026-09-18)
 
 

@@ -8,6 +8,13 @@
     <h3 class="form-subtitle">Tarjetas de pago</h3>
     <p>Estas son tus tarjetas guardadas:</p>
     }
+    @if (selectorEnabled() && !loadingCreditCards() && paymentCards().length === 0) {
+    <!-- No saved cards yet during a purchase: show the card form right here instead of
+         requiring an extra click to open a modal first. -->
+    <app-create-payment-method [customerId]="currentSubscription()?.customerId!" [showAutoRenewOption]="true"
+        (paymentMethodCreated)="onPaymentMethodSuccess($event)"></app-create-payment-method>
+    }
+    @else {
     @if (selectorEnabled()) {
     <div>
         <radio-field [options]="paymentCards()" [control]="paymentCardControl"
@@ -21,9 +28,11 @@
             @for (card of listedCards(); track card.id) {
             <li class="saved-card-item">
                 <div class="saved-card-content">
-                    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.truncatedNumber
+                    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} {{ card.truncatedNumber
                         }}</span>
+                    @if (card.expiration) {
                     <p class="option-description">Vence {{ card.expiration }}</p>
+                    }
                 </div>
                 <button type="button" class="saved-card-action" (click)="onListDelete(card.id)" title="Eliminar tarjeta"
                     aria-label="Eliminar tarjeta">
@@ -39,16 +48,27 @@
     </div>
     }
     <button (click)="onEditClick()" class="link-button">>> Añadir tarjeta</button>
+    }
 </div>
 
-<app-modal [size]="'lg'" [isOpen]="isModalOpen()" (closed)="onCancelModal()">
+<app-modal class="card-payment-modal" [size]="'lg'" [isOpen]="isModalOpen()" [showHeader]="true"
+    (closed)="onCancelModal()">
     <div class="modal-content">
         <div class="modal-content-info">
             <p class="info-content-title">Añadir nueva tarjeta</p>
             <div class="info-section">
                 <p>Ingresa los datos de tu tarjeta.</p>
+                @if (isModalOpen()) {
+                <!-- Gated on isModalOpen() (not just the modal's own internal @if) so this
+                     component isn't created at all until the modal is actually opened —
+                     otherwise it would run alongside the inline form above (when there are
+                     no saved cards) and both would call OnePay's FTCaptures.init(), which
+                     is a global singleton: the second call resets the first's mounted
+                     iframes and leaves it stuck mid-tokenization. -->
                 <app-create-payment-method [customerId]="currentSubscription()?.customerId!"
-                    (paymentMethodCreated)="onPaymentMethodSuccess()"></app-create-payment-method>
+                    [showAutoRenewOption]="selectorEnabled()"
+                    (paymentMethodCreated)="onPaymentMethodSuccess($event)"></app-create-payment-method>
+                }
             </div>
         </div>
     </div>
@@ -87,7 +107,9 @@
 </app-modal>
 
 <ng-template #cardTemplate let-card="card">
-    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.truncatedNumber }}</span>
+    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} {{ card.truncatedNumber }}</span>
+    @if (card.expiration) {
     <p class="option-description">Vence {{ card.expiration }}</p>
+    }
 </ng-template>
 }

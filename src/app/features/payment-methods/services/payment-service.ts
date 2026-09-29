@@ -17,6 +17,16 @@ export interface PaymentRequest {
 
 export type PaymentCardData = PaymentRequest;
 
+export interface OnePayCardTokenRequest {
+  cardToken: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  documentType: string;
+  documentNumber: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,6 +64,7 @@ export class PaymentService {
     return 'UNKNOWN';
   }
 
+  /** @deprecated Migrated to OnePay. Use createOnePayPaymentMethod instead. */
   createPaymentMethod(paymentMethodData: any): Observable<any> {
     console.debug('Creating payment method');
     console.log('Payment method data:', paymentMethodData);
@@ -61,6 +72,14 @@ export class PaymentService {
     const url = `${this.apiUrl}/paymentMethods`;
 
     return this.http.post(url, paymentMethodData);
+  }
+
+  createOnePayPaymentMethod(dto: OnePayCardTokenRequest): Observable<number> {
+    console.debug('Creating OnePay payment method');
+
+    const url = `${this.apiUrl}/paymentMethods/onepay`;
+
+    return this.http.post<number>(url, dto);
   }
 
   deletePaymentMethod(paymentMethodId: string): Observable<any> {
