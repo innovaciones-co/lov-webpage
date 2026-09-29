@@ -21,6 +21,9 @@ export class PaymentService implements OnDestroy {
     selectedProduct = signal<Product | undefined>(undefined);
     paymentMethod = signal<PaymentMethod | undefined>(undefined);
     selectedCreditCard = signal<PaymentMethodPayload | undefined>(undefined);
+    // Opt-in from the inline "add card" form during a CARD-method purchase: schedules an
+    // AutoRenewPlan on the backend after a successful payment (see OrderPaymentRequest).
+    autoRenew = signal<boolean>(false);
 
     private _formValid = signal<boolean>(false);
     private httpClient = inject(HttpClient);
@@ -53,9 +56,14 @@ export class PaymentService implements OnDestroy {
         this.selectedCreditCard.set(paymentMethodPayload);
     }
 
+    setAutoRenew(value: boolean): void {
+        this.autoRenew.set(value);
+    }
+
     clearProduct() {
         this.selectedProduct.set(undefined);
         this.selectedCreditCard.set(undefined);
+        this.autoRenew.set(false);
         this.removeSelectedProductFromStorage();
     }
 

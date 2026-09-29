@@ -62,14 +62,17 @@ export class PaymentCardSelector {
       .filter(card => card.truncatedNumber)
       .forEach((card: any) => {
         options.push({
-          value: card.id,
+          // Stringified to match paymentCardControl's string values (radio.html's
+          // [checked] does a strict === against this), and how selectedPaymentCardId's
+          // lookup effect below already compares (`card.id.toString() === selectedCardId`).
+          value: card.id.toString(),
           template: cardTemplate,
           actionIcon: 'delete',
           actionLabel: 'Eliminar tarjeta',
           card: card,
           issuer: card.issuer,
           truncatedNumber: card.truncatedNumber,
-          expiration: card.expiryMonth + '/' + card.expiryYear.toString().slice(-2),
+          expiration: this.formatExpiration(card),
         });
       });
 
@@ -83,9 +86,19 @@ export class PaymentCardSelector {
         id: card.id.toString(),
         issuer: card.issuer,
         truncatedNumber: card.truncatedNumber,
-        expiration: card.expiryMonth + '/' + card.expiryYear.toString().slice(-2),
+        expiration: this.formatExpiration(card),
       }))
   );
+
+  // OnePay-tokenized cards don't carry expiration data locally (PaymentMethodDTO only
+  // stores id/issuer/truncatedNumber for them), unlike legacy PayU-gateway cards which
+  // always had expiryMonth/expiryYear — so this can't assume either is present.
+  private formatExpiration(card: { expiryMonth?: number | null; expiryYear?: number | null }): string {
+    if (card.expiryMonth == null || card.expiryYear == null) {
+      return '';
+    }
+    return `${card.expiryMonth}/${card.expiryYear.toString().slice(-2)}`;
+  }
 
   constructor() {
     effect(() => {
@@ -199,8 +212,12 @@ export class PaymentCardSelector {
     this.isModalOpen.set(false);
   }
 
-  onPaymentMethodSuccess(): void {
+  onPaymentMethodSuccess(newPaymentMethodId: number): void {
     this.isModalOpen.set(false);
+    // Auto-select the card that was just created — whether it came from the inline form
+    // (no saved cards yet) or from the "add another card" modal — so the customer doesn't
+    // have to find and click it again in the list before paying.
+    this.paymentCardControl.setValue(newPaymentMethodId.toString());
     this.refreshCreditCards.update(val => val + 1);
   }
 
