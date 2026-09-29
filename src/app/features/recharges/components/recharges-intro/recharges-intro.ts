@@ -34,7 +34,7 @@ export class RechargesIntro {
       }),
       rechargeValue: new FormControl('', [
         Validators.required,
-        Validators.min(3000),
+        Validators.min(5000),
         Validators.pattern('^[0-9]+$'),
         multipleOf1000Validator()
       ])
@@ -50,7 +50,7 @@ export class RechargesIntro {
       isLovMsisdn: 'El número no está asociado a una suscripción LOV'
     },
     rechargeValue: {
-      min: 'El valor mínimo de recarga es $3.000',
+      min: 'El valor mínimo de recarga es $5.000',
       pattern: 'El valor debe ser un número válido',
       multipleOf1000: 'El valor debe ser un múltiplo de $1.000'
     }

@@ -115,8 +115,8 @@ export class PaymentMethodOptions implements AfterViewInit {
       return;
     }
 
-    if (product.totalPrice > 3000) {
-      this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.onePayTemplate });
+    if (product.totalPrice > 5000) {
+     this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.onePayTemplate });
     }
 
     switch (product!.productType) {
