@@ -27,6 +27,10 @@ app.get('/crc/planesconsolidados.html', (req, res) => {
   res.redirect(301, 'https://lov-webservices.orangeforest-c17ef1fc.eastus2.azurecontainerapps.io/crc/plans');
 });
 
+app.get('/directv', (req, res) => {
+  res.redirect(301, 'https://directv.innovaciones.co');
+});
+
 
 /**
  * Serve static files from /browser
