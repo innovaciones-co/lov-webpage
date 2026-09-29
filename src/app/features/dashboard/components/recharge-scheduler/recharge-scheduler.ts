@@ -40,8 +40,8 @@ export class RechargeScheduler {
 
   errorMessages: Record<string, Record<string, string>> = {
     amount: {
-      pattern: 'El monto debe ser entre $3.000 y $150.000',
-      min: 'El monto mínimo es $3.000',
+      pattern: 'El monto debe ser entre $5.000 y $150.000',
+      min: 'El monto mínimo es $5.000',
       max: 'El monto máximo es $150.000'
     },
     paymentMethod: {
