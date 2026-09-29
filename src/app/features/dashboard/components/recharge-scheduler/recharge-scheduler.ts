@@ -80,7 +80,7 @@ export class RechargeScheduler {
   form = signal(
     new FormGroup({
       autoRecharge: new FormControl(false),
-      amount: new FormControl('', [Validators.required, Validators.max(150000), Validators.min(3000), Validators.pattern('^[0-9]{4,6}$')]),
+      amount: new FormControl('', [Validators.required, Validators.max(150000), Validators.min(5000), Validators.pattern('^[0-9]{4,6}$')]),
       paymentMethod: new FormControl('', Validators.required),
       frequency: new FormControl('', Validators.required),
       dayOfMonth: new FormControl('', [Validators.min(1), Validators.max(31), Validators.pattern('^[0-9]{1,2}$')]),
