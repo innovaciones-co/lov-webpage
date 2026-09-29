@@ -1,3 +1,10 @@
+# [1.44.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.43.0...v1.44.0) (2026-09-29)
+
+
+### Features
+
+* add new legal documents ([f9ef37b](https://github.com/innovaciones-co/lov-webpage/commit/f9ef37b6d3d3877bda32cf7677a93d102d8da606))
+
 # [1.43.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.42.0...v1.43.0) (2026-09-29)
 
 
