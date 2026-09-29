@@ -1,3 +1,15 @@
+# [1.41.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.40.1...v1.41.0) (2026-09-29)
+
+
+### Features
+
+* re-enable OnePay card tokenization frontend (Elements SDK) ([9420253](https://github.com/innovaciones-co/lov-webpage/commit/94202534d91124dcf02dfd25cd7093e7ac1ce5bf))
+
+
+### Reverts
+
+* exclude unfinished OnePay frontend work from production ([64268e6](https://github.com/innovaciones-co/lov-webpage/commit/64268e6b5823c396f42550c0a1a30a496cc5f0d6))
+
 ## [1.40.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.40.0...v1.40.1) (2026-09-28)
 
 
