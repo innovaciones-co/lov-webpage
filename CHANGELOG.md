@@ -1,3 +1,10 @@
+# [1.43.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.42.0...v1.43.0) (2026-09-29)
+
+
+### Features
+
+* update minimum amount for recharge and payment methods ([194d86e](https://github.com/innovaciones-co/lov-webpage/commit/194d86e45d8bd76a4b157d04fd3d1a9d52e3137b))
+
 # [1.42.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.41.0...v1.42.0) (2026-09-29)
 
 
