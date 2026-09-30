@@ -1,3 +1,10 @@
+## [1.48.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.48.0...v1.48.1) (2026-09-30)
+
+
+### Bug Fixes
+
+* apply pending fixes from last session + check plan eligibility early ([113a9fb](https://github.com/innovaciones-co/lov-webpage/commit/113a9fb7a466b744f990486e2ad1fdc4d0f49bc3))
+
 # [1.48.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.47.0...v1.48.0) (2026-09-30)
 
 
