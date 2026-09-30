@@ -1,3 +1,10 @@
+# [1.46.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.45.0...v1.46.0) (2026-09-30)
+
+
+### Features
+
+* update terms and conditions documents with additional entries ([a936f69](https://github.com/innovaciones-co/lov-webpage/commit/a936f69792419a1ed83271d5a6c3852a6d0a6e60))
+
 # [1.45.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.44.0...v1.45.0) (2026-09-30)
 
 
