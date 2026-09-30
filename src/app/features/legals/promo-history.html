@@ -1,0 +1,83 @@
+<div class="legals-container">
+    <div class="legals-content">
+        <div class="legals-grid">
+            <div class="left-column">
+                <div class="legals-header">
+                    <h1>Histórico de Promociones</h1>
+                    <p class="legals-subtitle">Consulta toda la información histórica de la oferta comercial de LOV</p>
+                </div>
+
+                <div class="documents-section">
+
+
+                    <!-- Histórico de promociones -->
+                    <div class="document-category">
+                        <h2 class="category-title">Histórico de Promociones</h2>
+                        <div class="document-list">
+                            @for (doc of getDocumentsByCategory('promotions'); track doc.fileName) {
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h3 class="document-title">{{ doc.title }}</h3>
+                                    <p class="document-description">{{ doc.description }}</p>
+                                </div>
+                                <button class="download-btn" (click)="downloadDocument(doc.fileName)" type="button"
+                                    aria-label="Descargar {{ doc.title }}">
+                                    <span class="material-symbols-outlined">
+                                        download_2
+                                    </span>
+                                    Descargar
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Términos y Condiciones -->
+                    <div class="document-category">
+                        <h2 class="category-title">Términos y Condiciones</h2>
+                        <div class="document-list">
+                            @for (doc of getDocumentsByCategory('terms'); track doc.fileName) {
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h3 class="document-title">{{ doc.title }}</h3>
+                                    <p class="document-description">{{ doc.description }}</p>
+                                </div>
+                                <button class="download-btn" (click)="downloadDocument(doc.fileName)" type="button"
+                                    aria-label="Descargar {{ doc.title }}">
+                                    <span class="material-symbols-outlined">
+                                        download_2
+                                    </span>
+                                    <!-- <span class="download-icon"></span> -->
+                                    Descargar
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Información Regulatoria -->
+                    <div class="document-category">
+                        <h2 class="category-title">Histórico de promociones empresas</h2>
+                        <div class="document-list">
+                            @for (doc of getDocumentsByCategory('promotions-companies'); track doc.fileName) {
+                            <div class="document-item">
+                                <div class="document-info">
+                                    <h3 class="document-title">{{ doc.title }}</h3>
+                                    <p class="document-description">{{ doc.description }}</p>
+                                </div>
+                                <button class="download-btn" (click)="downloadDocument(doc.fileName)" type="button"
+                                    aria-label="Descargar {{ doc.title }}">
+                                    <span class="material-symbols-outlined">
+                                        download_2
+                                    </span>
+                                    Descargar
+                                </button>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

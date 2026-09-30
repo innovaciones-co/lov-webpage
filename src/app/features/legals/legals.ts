@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 
-interface LegalDocument {
+export interface LegalDocument {
   title: string;
   description: string;
   fileName: string;
-  category: 'terms' | 'privacy' | 'regulatory' | 'user-info';
+  category: 'terms' | 'privacy' | 'regulatory' | 'user-info' | 'promotions' | 'promotions-companies';
 }
 
 @Component({
   selector: 'app-legals',
   imports: [],
   templateUrl: './legals.html',
-  styleUrl: './legals.scss'
+  styleUrls: ['./legals.scss']
 })
 export class Legals {
   legalDocuments: LegalDocument[] = [
