@@ -149,6 +149,21 @@ export class PaymentService implements OnDestroy {
     }
 
     /**
+     * Confirms CYAN currently offers `planId` to `subscriberId` before an order is created —
+     * the catalog list a customer browses isn't filtered per-subscriber (CYAN eligibility is
+     * only known once we know which line is buying), so this is the earliest point in the
+     * purchase flow where that mismatch can be caught with a clear message instead of a
+     * generic failure deep inside order creation.
+     */
+    checkPlanAvailability(subscriberId: number, planId: number): Observable<void> {
+        const url = `${environment.apiUrl}/plans/${planId}/realPrice`;
+
+        return this.httpClient.get<number>(url, { params: { subscriberId } }).pipe(
+            map(() => undefined)
+        );
+    }
+
+    /**
      * Initiates payment for an existing order
      * @param orderId The order ID to initiate payment for
      * @returns Observable with the payment initiation response containing PayU form data
