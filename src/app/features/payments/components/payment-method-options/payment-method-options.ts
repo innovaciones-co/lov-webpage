@@ -119,7 +119,7 @@ export class PaymentMethodOptions implements AfterViewInit {
       this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.onePayTemplate });
     } else {
       this.disclaimerTitle.set('Recarga inferior a $5,000');
-      this.disclaimerContent.set('Para hacer compras inferiores a $5,000 debes usar tu saldo.');
+      this.disclaimerContent.set('Para hacer compras inferiores a $5,000 debes usar tu saldo. Asegúrate de tener saldo suficiente.');
     }
 
     switch (product!.productType) {
