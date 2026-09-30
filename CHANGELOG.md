@@ -1,3 +1,10 @@
+# [1.45.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.44.0...v1.45.0) (2026-09-30)
+
+
+### Features
+
+* add promotional history component with document download functionality ([a54976e](https://github.com/innovaciones-co/lov-webpage/commit/a54976e466299e4f5083179d40715c26ae8cbfba))
+
 # [1.44.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.43.0...v1.44.0) (2026-09-29)
 
 
