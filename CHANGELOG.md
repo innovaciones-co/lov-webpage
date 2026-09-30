@@ -1,3 +1,10 @@
+# [1.48.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.47.0...v1.48.0) (2026-09-30)
+
+
+### Features
+
+* enhance disclaimer for purchases under $5,000 with additional guidance ([2a180ee](https://github.com/innovaciones-co/lov-webpage/commit/2a180eef5388c096700021928aa5883b17018b77))
+
 # [1.47.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.46.0...v1.47.0) (2026-09-30)
 
 
