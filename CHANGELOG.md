@@ -1,3 +1,10 @@
+# [1.47.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.46.0...v1.47.0) (2026-09-30)
+
+
+### Features
+
+* update payment method eligibility based on total price ([3747a34](https://github.com/innovaciones-co/lov-webpage/commit/3747a342c05048a6e24f7266cf94a73c42770653))
+
 # [1.46.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.45.0...v1.46.0) (2026-09-30)
 
 
