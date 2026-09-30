@@ -115,8 +115,11 @@ export class PaymentMethodOptions implements AfterViewInit {
       return;
     }
 
-    if (product.totalPrice > 5000) {
-     this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.onePayTemplate });
+    if (product.totalPrice >= 5000) {
+      this.allowedPaymentMethods.push({ value: PaymentMethod.WEB_CHECKOUT, template: this.onePayTemplate });
+    } else {
+      this.disclaimerTitle.set('Recarga inferior a $5,000');
+      this.disclaimerContent.set('Para hacer compras inferiores a $5,000 debes usar tu saldo.');
     }
 
     switch (product!.productType) {
@@ -129,7 +132,10 @@ export class PaymentMethodOptions implements AfterViewInit {
         if (this.pesoBalance() > 0) {
           this.allowedPaymentMethods.push({ value: PaymentMethod.BALANCE, template: this.balanceTemplate });
         }
-        this.allowedPaymentMethods.push({ value: PaymentMethod.CARD, template: this.recurringTemplate });
+
+        if (product.totalPrice >= 5000) {
+          this.allowedPaymentMethods.push({ value: PaymentMethod.CARD, template: this.recurringTemplate });
+        }
         break;
 
     }
