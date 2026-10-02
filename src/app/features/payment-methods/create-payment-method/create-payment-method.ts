@@ -294,8 +294,7 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
           },
           error: (error) => {
             console.error('Error creating OnePay payment method:', error);
-            const errorMessage = error?.error?.message || 'Error al agregar la tarjeta. Por favor, intenta de nuevo más tarde.';
-            this.submitError.set(errorMessage);
+            this.submitError.set('No se pudo añadir la tarjeta. Verifica los datos e intenta de nuevo.');
           },
         });
     } catch (error) {

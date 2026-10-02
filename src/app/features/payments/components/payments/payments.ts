@@ -11,6 +11,7 @@ import { Modal } from "../../../../shared/components/modal/modal";
 import { AuthService } from '../../../authentication/services/auth.service';
 import { OrderPaymentRequest, PaymentInitiationResponse } from '../../models/order.model';
 import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method.model';
+import { PlanProduct } from '../../models/product.model';
 import { PaymentService } from '../../services/payment.service';
 import { BillingInfoComponent } from "../billing-info/billing-info";
 import { PaymentCardSelector } from "../payment-card-selector/payment-card-selector";
@@ -126,6 +127,9 @@ export class Payments implements OnInit {
         .pipe(
           switchMap(() => this.getMsisdn()),
           switchMap(msisdn => this.getActiveSubscription(msisdn)),
+          switchMap(({ msisdn, subscriberId }) =>
+            this.checkPlanAvailability(subscriberId).pipe(map(() => ({ msisdn, subscriberId })))
+          ),
           switchMap(({ msisdn, subscriberId }) => this.createOrder(subscriberId, msisdn)),
           switchMap(({ orderId, referenceCode }) =>
             this.initiatePayment(orderId, paymentRequest).pipe(
@@ -251,6 +255,20 @@ export class Payments implements OnInit {
   }
 
   /**
+   * For a PLAN purchase, confirms CYAN still offers the selected plan to this subscriber
+   * before an order is created. No-op for non-plan products (recharges/bundles aren't
+   * subject to this per-subscriber eligibility check).
+   */
+  private checkPlanAvailability(subscriberId: number): Observable<void> {
+    const product = this.paymentService.selectedProduct();
+    if (!(product instanceof PlanProduct)) {
+      return of(undefined);
+    }
+
+    return this.paymentService.checkPlanAvailability(subscriberId, product.plan.id);
+  }
+
+  /**
    * Creates an order using the payment service
    * @param subscriberId The subscriber ID
    * @param msisdn The MSISDN
@@ -352,6 +370,7 @@ export class Payments implements OnInit {
   }
 
   private readonly errorMap: Record<string, string> = {
+    'does not currently offer': 'Este paquete no está disponible para tu línea en este momento. Por favor elige otro.',
     'error to find the credit card token with identifier': 'No pudimos procesar tu tarjeta de crédito; por favor, agrega nuevamente la tarjeta e intenta de nuevo.',
     'card data not found': 'No se pudieron obtener los datos de tu tarjeta. Por favor bórrala y agrégala nuevamente.',
     'billing info validation failed': 'La información de facturación no es válida. Por favor, revisa los datos e inténtalo de nuevo.',

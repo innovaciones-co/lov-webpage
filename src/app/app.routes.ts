@@ -11,6 +11,7 @@ import { DeviceLock } from './features/device-lock/device-lock';
 import { Faq } from './features/faq/components/faq';
 import { Home } from './features/home/components/home';
 import { Legals } from './features/legals/legals';
+import { PromoHistory } from './features/legals/promo-history';
 import { PaymentResultComponent } from './features/payments/components/payment-result/payment-result';
 import { Payments } from './features/payments/components/payments/payments';
 import { PurchaseSummary } from './features/payments/components/purchase-summary/purchase-summary';
@@ -37,6 +38,10 @@ export const routes: Routes = [
     {
         path: 'legales',
         component: Legals
+    },
+    {
+        path: 'historico-promociones',
+        component: PromoHistory
     },
     {
         path: 'preguntas-frecuentes',

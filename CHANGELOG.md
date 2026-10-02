@@ -1,3 +1,52 @@
+## [1.48.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.48.0...v1.48.1) (2026-09-30)
+
+
+### Bug Fixes
+
+* apply pending fixes from last session + check plan eligibility early ([113a9fb](https://github.com/innovaciones-co/lov-webpage/commit/113a9fb7a466b744f990486e2ad1fdc4d0f49bc3))
+
+# [1.48.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.47.0...v1.48.0) (2026-09-30)
+
+
+### Features
+
+* enhance disclaimer for purchases under $5,000 with additional guidance ([2a180ee](https://github.com/innovaciones-co/lov-webpage/commit/2a180eef5388c096700021928aa5883b17018b77))
+
+# [1.47.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.46.0...v1.47.0) (2026-09-30)
+
+
+### Features
+
+* update payment method eligibility based on total price ([3747a34](https://github.com/innovaciones-co/lov-webpage/commit/3747a342c05048a6e24f7266cf94a73c42770653))
+
+# [1.46.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.45.0...v1.46.0) (2026-09-30)
+
+
+### Features
+
+* update terms and conditions documents with additional entries ([a936f69](https://github.com/innovaciones-co/lov-webpage/commit/a936f69792419a1ed83271d5a6c3852a6d0a6e60))
+
+# [1.45.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.44.0...v1.45.0) (2026-09-30)
+
+
+### Features
+
+* add promotional history component with document download functionality ([a54976e](https://github.com/innovaciones-co/lov-webpage/commit/a54976e466299e4f5083179d40715c26ae8cbfba))
+
+# [1.44.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.43.0...v1.44.0) (2026-09-29)
+
+
+### Features
+
+* add new legal documents ([f9ef37b](https://github.com/innovaciones-co/lov-webpage/commit/f9ef37b6d3d3877bda32cf7677a93d102d8da606))
+
+# [1.43.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.42.0...v1.43.0) (2026-09-29)
+
+
+### Features
+
+* update minimum amount for recharge and payment methods ([194d86e](https://github.com/innovaciones-co/lov-webpage/commit/194d86e45d8bd76a4b157d04fd3d1a9d52e3137b))
+
 # [1.42.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.41.0...v1.42.0) (2026-09-29)
 
 
