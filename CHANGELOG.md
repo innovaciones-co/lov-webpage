@@ -1,3 +1,15 @@
+# [1.49.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.48.1...v1.49.0) (2026-10-02)
+
+
+### Bug Fixes
+
+* add missing required validator for msisdnConfirmation field ([7243526](https://github.com/innovaciones-co/lov-webpage/commit/72435263d48508a4766ecb81260132296076b2e2))
+
+
+### Features
+
+* update minimum amount in error messages for recharge ([5f66521](https://github.com/innovaciones-co/lov-webpage/commit/5f665218e2123e5b612fb04bf9ba3155bb2a8840))
+
 ## [1.48.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.48.0...v1.48.1) (2026-09-30)
 
 
