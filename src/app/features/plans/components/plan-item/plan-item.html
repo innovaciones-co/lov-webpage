@@ -21,7 +21,7 @@
     <hr class="divider" />
 
     <ul class="card-features">
-      @for (feature of plan.features; track $index) {
+      @for (feature of orderedFeatures; track $index) {
       <li>
         <span class="material-symbols-outlined">{{getMaterialSymbol(feature.measure)}}</span>
         {{feature.name}} {{feature.description}}
