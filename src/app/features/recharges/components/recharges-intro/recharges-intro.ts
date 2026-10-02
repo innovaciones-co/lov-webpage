@@ -1,6 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from "@angular/router";
+import { Observable, of } from 'rxjs';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 import { SubscriptionService } from '../../../../core/services/subscription.service';
 import { isLovMsisdnValidator } from '../../../../core/validators/isLovMsisdnValidator';
@@ -24,13 +26,15 @@ export class RechargesIntro {
   private router = inject(Router);
   private subscriptionService = inject(SubscriptionService);
   private msisdnPipe = inject(MsisdnPipe);
+  private destroyRef = inject(DestroyRef);
 
 
   form = signal(
     new FormGroup({
       msisdn: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
       msisdnConfirmation: new FormControl('', {
-        asyncValidators: [isLovMsisdnValidator(this.subscriptionService, this.msisdnPipe)]
+        validators: [Validators.required],
+        asyncValidators: [this.msisdnConfirmationValidator()]
       }),
       rechargeValue: new FormControl('', [
         Validators.required,
@@ -38,8 +42,21 @@ export class RechargesIntro {
         Validators.pattern('^[0-9]+$'),
         multipleOf1000Validator()
       ])
-    }, { validators: this.msisdnMatchValidator })
+    })
   );
+
+  constructor() {
+    // Re-run msisdnConfirmation's validation whenever msisdn changes, since
+    // Angular won't automatically revalidate a sibling control.
+    this.form().controls.msisdn.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        const confirmationControl = this.form().controls.msisdnConfirmation;
+        if (confirmationControl.value) {
+          confirmationControl.updateValueAndValidity();
+        }
+      });
+  }
 
   errorMessages: Record<string, Record<string, string>> = {
     msisdn: {
@@ -56,16 +73,26 @@ export class RechargesIntro {
     }
   };
 
-  msisdnMatchValidator(control: AbstractControl): ValidationErrors | null {
-    const msisdn = control.get('msisdn')?.value;
-    const msisdnConfirmation = control.get('msisdnConfirmation')?.value;
+  /**
+   * Combines the match check and the async LOV subscription check into a single
+   * async validator. Angular's `setErrors` call when an async validator resolves
+   * replaces all of the control's errors, so a separate cross-field validator that
+   * sets errors directly on this control would get overwritten once the async
+   * validator completes. Keeping both checks in one validator avoids that race.
+   */
+  private msisdnConfirmationValidator(): AsyncValidatorFn {
+    const lovValidator = isLovMsisdnValidator(this.subscriptionService, this.msisdnPipe);
 
-    if (msisdn && msisdnConfirmation && msisdn !== msisdnConfirmation) {
-      control.get('msisdnConfirmation')?.setErrors({ mismatch: true });
-      return { mismatch: true };
-    }
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const msisdn = control.parent?.get('msisdn')?.value;
+      const msisdnConfirmation = control.value;
 
-    return null;
+      if (msisdn && msisdnConfirmation && msisdn !== msisdnConfirmation) {
+        return of({ mismatch: true });
+      }
+
+      return lovValidator(control) as Observable<ValidationErrors | null>;
+    };
   }
 
   getFieldErrorMessage(fieldName: string): string {

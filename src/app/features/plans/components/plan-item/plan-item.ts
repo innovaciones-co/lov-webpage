@@ -6,6 +6,14 @@ import { PaymentService } from '../../../payments/services/payment.service';
 import { ProductFactoryService } from '../../../payments/services/product-factory.service';
 import { Plan } from '../../models/plan.model';
 
+const SYMBOL_MAP: Record<string, string> = {
+  'GB': 'mail',
+  'MB': 'mail',
+  'MINUTE': 'call',
+  'SMS': 'chat',
+};
+const FEATURE_ORDER = Object.keys(SYMBOL_MAP);
+
 @Component({
   selector: 'app-plan-item',
   imports: [CurrencyPipe, RouterLink],
@@ -19,14 +27,14 @@ export class PlanItem {
   private paymentService = inject(PaymentService);
   private productFactoryService = inject(ProductFactoryService);
 
+  get orderedFeatures() {
+    return [...this.plan.features].sort((left, right) =>
+      FEATURE_ORDER.indexOf(left.measure) - FEATURE_ORDER.indexOf(right.measure)
+    );
+  }
+
   getMaterialSymbol(measure: string): string {
-    const symbolMap: Record<string, string> = {
-      'GB': 'mail',
-      'MB': 'mail',
-      'MINUTE': 'call',
-      'SMS': 'chat',
-    };
-    return symbolMap[measure] || 'check_circle';
+    return SYMBOL_MAP[measure] || 'check_circle';
   }
 
   addPlanToCart() {
