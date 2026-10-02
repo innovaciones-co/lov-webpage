@@ -44,6 +44,32 @@ export class PaymentCardSelector {
   isVisible = signal(false);
   private cardTemplateRef = signal<TemplateRef<any> | undefined>(undefined);
 
+  // Card management (dashboard view): which card the action buttons apply to.
+  managedCardId = signal<string | null>(null);
+  isSettingDefault = signal(false);
+  cardActionError = signal<string | null>(null);
+
+  managedCards = computed(() =>
+    this.creditCards()
+      .filter(card => card.truncatedNumber)
+      .map(card => ({
+        id: card.id.toString(),
+        issuer: card.issuer,
+        lastFour: card.truncatedNumber.replace(/\D/g, '').slice(-4),
+        holderName: card.holderName,
+        expiration: this.formatExpiration(card),
+        isDefault: !!card.defaultMethod,
+        chargeable: !!card.chargeable,
+      }))
+  );
+
+  managedCard = computed(() => this.managedCards().find(card => card.id === this.managedCardId()));
+
+  canSetDefault = computed(() => {
+    const card = this.managedCard();
+    return !!card && card.chargeable && !card.isDefault && !this.isSettingDefault();
+  });
+
   pendingDeleteCard = computed(() => {
     const pendingDeleteCardId = this.pendingDeleteCardId();
     if (!pendingDeleteCardId) {
@@ -73,22 +99,12 @@ export class PaymentCardSelector {
           issuer: card.issuer,
           truncatedNumber: card.truncatedNumber,
           expiration: this.formatExpiration(card),
+          isDefault: !!card.defaultMethod,
         });
       });
 
     return options;
   });
-
-  listedCards = computed(() =>
-    this.creditCards()
-      .filter(card => card.truncatedNumber)
-      .map(card => ({
-        id: card.id.toString(),
-        issuer: card.issuer,
-        truncatedNumber: card.truncatedNumber,
-        expiration: this.formatExpiration(card),
-      }))
-  );
 
   // OnePay-tokenized cards don't carry expiration data locally (PaymentMethodDTO only
   // stores id/issuer/truncatedNumber for them), unlike legacy PayU-gateway cards which
@@ -146,6 +162,17 @@ export class PaymentCardSelector {
         this.creditCards.set(response);
         this.dashboardService.setCreditCardsData(response);
         this.loadingCreditCards.set(false);
+
+        const defaultCard = response.find(card => card.defaultMethod) ?? response[0];
+        // Checkout: preselect the default card so the customer can pay without picking one.
+        if (this.selectorEnabled() && !this.paymentCardControl.value && defaultCard) {
+          this.paymentCardControl.setValue(defaultCard.id.toString());
+        }
+        // Card management: keep the current selection if it still exists, else the default.
+        const managedStillExists = response.some(card => card.id.toString() === this.managedCardId());
+        if (!managedStillExists) {
+          this.managedCardId.set(defaultCard ? defaultCard.id.toString() : null);
+        }
       },
       error: (error) => {
         console.error('Error fetching credit cards:', error);
@@ -159,8 +186,35 @@ export class PaymentCardSelector {
       return;
     }
 
+    this.cardActionError.set(null);
     this.pendingDeleteCardId.set(cardId);
     this.isDeleteConfirmationModalOpen.set(true);
+  }
+
+  onSelectManagedCard(cardId: string): void {
+    this.cardActionError.set(null);
+    this.managedCardId.set(cardId);
+  }
+
+  onSetDefault(): void {
+    const cardId = this.managedCardId();
+    if (!cardId || !this.canSetDefault()) {
+      return;
+    }
+
+    this.isSettingDefault.set(true);
+    this.cardActionError.set(null);
+    this.paymentMethodsService.setDefaultPaymentMethod(cardId).subscribe({
+      next: () => {
+        this.creditCards.update(cards => cards.map(card => ({ ...card, defaultMethod: card.id.toString() === cardId })));
+        this.isSettingDefault.set(false);
+      },
+      error: (error) => {
+        console.error('Error setting default payment method:', error);
+        this.cardActionError.set(error?.error?.message || 'No pudimos cambiar tu tarjeta predeterminada. Intenta de nuevo.');
+        this.isSettingDefault.set(false);
+      }
+    });
   }
 
   onCancelDeleteModal(): void {
@@ -195,6 +249,10 @@ export class PaymentCardSelector {
       },
       error: (error) => {
         console.error('Error deleting payment method:', error);
+        // e.g. the backend refuses to delete the only card paying for an active recurring charge.
+        this.cardActionError.set(error?.error?.message || 'No pudimos eliminar la tarjeta. Intenta de nuevo.');
+        this.isDeleteConfirmationModalOpen.set(false);
+        this.pendingDeleteCardId.set(null);
         this.isDeletingCard.set(false);
       }
     });

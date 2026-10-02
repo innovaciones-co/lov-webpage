@@ -14,6 +14,10 @@ export interface PaymentMethodPayload {
     paymentMethodType: string;
     transparentData: TransparentData;
     truncatedNumber: string;
+    /** The customer's default card: preselected at checkout and charged by recurring payments. */
+    defaultMethod?: boolean;
+    /** Whether this card can be charged by recurring payments / set as default (OnePay cards only). */
+    chargeable?: boolean;
 }
 
 export interface TransparentData {

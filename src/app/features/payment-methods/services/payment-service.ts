@@ -82,6 +82,12 @@ export class PaymentService {
     return this.http.post<number>(url, dto);
   }
 
+  setDefaultPaymentMethod(paymentMethodId: string): Observable<void> {
+    const url = `${this.apiUrl}/paymentMethods/${paymentMethodId}/default`;
+
+    return this.http.put<void>(url, {});
+  }
+
   deletePaymentMethod(paymentMethodId: string): Observable<any> {
     //console.debug('Deleting payment method id:', paymentMethodId);
 

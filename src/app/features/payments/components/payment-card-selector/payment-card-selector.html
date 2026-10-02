@@ -20,34 +20,60 @@
         <radio-field [options]="paymentCards()" [control]="paymentCardControl"
             (action)="onCardAction($event)"></radio-field>
     </div>
+    @if (cardActionError()) {
+    <p class="card-action-error" role="alert">{{ cardActionError() }}</p>
+    }
+    <button (click)="onEditClick()" class="link-button">>> Añadir tarjeta</button>
     }
     @else {
-    <div class="saved-cards-list-wrapper">
-        @if (listedCards().length > 0) {
-        <ul class="saved-cards-list">
-            @for (card of listedCards(); track card.id) {
-            <li class="saved-card-item">
-                <div class="saved-card-content">
-                    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} {{ card.truncatedNumber
-                        }}</span>
-                    @if (card.expiration) {
-                    <p class="option-description">Vence {{ card.expiration }}</p>
-                    }
-                </div>
-                <button type="button" class="saved-card-action" (click)="onListDelete(card.id)" title="Eliminar tarjeta"
-                    aria-label="Eliminar tarjeta">
-                    <span class="material-symbols-outlined">delete</span>
-                </button>
-            </li>
+    <div class="card-manager">
+        <div class="card-manager-actions">
+            <button type="button" class="btn btn--outline" [disabled]="!canSetDefault()" (click)="onSetDefault()">
+                @if (isSettingDefault()) { Guardando... } @else { Establecer como predeterminada }
+            </button>
+            <button type="button" class="btn btn--outline" [disabled]="!managedCardId()" (click)="onListDelete(managedCardId()!)">
+                Eliminar
+            </button>
+            <button type="button" class="btn" (click)="onEditClick()">Agregar método de pago</button>
+        </div>
+
+        @if (cardActionError()) {
+        <p class="card-action-error" role="alert">{{ cardActionError() }}</p>
+        }
+
+        @if (managedCards().length > 0) {
+        <p class="option-description card-manager-hint">
+            Tu tarjeta predeterminada es la que usamos para tus pagos automáticos (renovación de plan y recarga automática).
+        </p>
+        <div class="card-grid" role="radiogroup" aria-label="Tarjetas guardadas">
+            @for (card of managedCards(); track card.id) {
+            <button type="button" class="card-tile" role="radio" [class.is-selected]="card.id === managedCardId()"
+                [attr.aria-checked]="card.id === managedCardId()" (click)="onSelectManagedCard(card.id)">
+                <span class="card-tile-header">
+                    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.lastFour }}</span>
+                    <span class="card-tile-radio" aria-hidden="true"></span>
+                </span>
+                @if (card.holderName) {
+                <span class="card-tile-line">{{ card.holderName }}</span>
+                }
+                @if (card.expiration) {
+                <span class="card-tile-line">Vence {{ card.expiration }}</span>
+                }
+                @if (card.isDefault) {
+                <span class="card-tile-badge">Predeterminada</span>
+                }
+                @if (!card.chargeable) {
+                <span class="card-tile-note">No disponible para pagos automáticos</span>
+                }
+            </button>
             }
-        </ul>
+        </div>
         }
         @else {
         <p class="option-description">No tienes tarjetas guardadas.</p>
         }
     </div>
     }
-    <button (click)="onEditClick()" class="link-button">>> Añadir tarjeta</button>
     }
 </div>
 
@@ -107,7 +133,11 @@
 </app-modal>
 
 <ng-template #cardTemplate let-card="card">
-    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} {{ card.truncatedNumber }}</span>
+    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} {{ card.truncatedNumber }}
+        @if (card.isDefault) {
+        <span class="card-tile-badge card-tile-badge--inline">Predeterminada</span>
+        }
+    </span>
     @if (card.expiration) {
     <p class="option-description">Vence {{ card.expiration }}</p>
     }
