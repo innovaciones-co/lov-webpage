@@ -30,6 +30,7 @@ export class RechargesIntro {
     new FormGroup({
       msisdn: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
       msisdnConfirmation: new FormControl('', {
+        validators: [Validators.required],
         asyncValidators: [isLovMsisdnValidator(this.subscriptionService, this.msisdnPipe)]
       }),
       rechargeValue: new FormControl('', [
