@@ -1,3 +1,10 @@
+# [1.52.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.51.0...v1.52.0) (2026-10-03)
+
+
+### Features
+
+* **dashboard:** compact row layout for saved payment cards ([3d9bf1c](https://github.com/innovaciones-co/lov-webpage/commit/3d9bf1c6a9ef09bdc80678266f044c738f0ad614))
+
 # [1.51.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.50.0...v1.51.0) (2026-10-03)
 
 
