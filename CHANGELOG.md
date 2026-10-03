@@ -1,3 +1,10 @@
+# [1.50.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.49.0...v1.50.0) (2026-10-02)
+
+
+### Features
+
+* manage saved cards with a default card ([998a54d](https://github.com/innovaciones-co/lov-webpage/commit/998a54d75724ea6c86fc034c088f44f0c644fb8c))
+
 # [1.49.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.48.1...v1.49.0) (2026-10-02)
 
 
