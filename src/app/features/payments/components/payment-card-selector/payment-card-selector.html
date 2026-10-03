@@ -27,51 +27,83 @@
     }
     @else {
     <div class="card-manager">
-        <div class="card-manager-actions">
-            <button type="button" class="btn btn--outline" [disabled]="!canSetDefault()" (click)="onSetDefault()">
-                @if (isSettingDefault()) { Guardando... } @else { Establecer como predeterminada }
-            </button>
-            <button type="button" class="btn btn--outline" [disabled]="!managedCardId()" (click)="onListDelete(managedCardId()!)">
-                Eliminar
-            </button>
-            <button type="button" class="btn" (click)="onEditClick()">Agregar método de pago</button>
-        </div>
-
-        @if (cardActionError()) {
-        <p class="card-action-error" role="alert">{{ cardActionError() }}</p>
-        }
-
         @if (managedCards().length > 0) {
-        <p class="option-description card-manager-hint">
-            Tu tarjeta predeterminada es la que usamos para tus pagos automáticos (renovación de plan y recarga automática).
-        </p>
         <div class="card-grid" role="radiogroup" aria-label="Tarjetas guardadas">
             @for (card of managedCards(); track card.id) {
-            <button type="button" class="card-tile" role="radio" [class.is-selected]="card.id === managedCardId()"
-                [attr.aria-checked]="card.id === managedCardId()" (click)="onSelectManagedCard(card.id)">
-                <span class="card-tile-header">
-                    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} •••• {{ card.lastFour }}</span>
-                    <span class="card-tile-radio" aria-hidden="true"></span>
+            <button type="button" class="pay-card" role="radio" [ngClass]="'pay-card--' + card.brand"
+                [class.is-selected]="card.id === managedCardId()" [attr.aria-checked]="card.id === managedCardId()"
+                [attr.aria-label]="card.issuer + ' terminada en ' + card.lastFour + (card.isDefault ? ', predeterminada' : '')"
+                (click)="onSelectManagedCard(card.id)">
+                <span class="pay-card-top">
+                    <svg class="pay-card-chip" viewBox="0 0 40 30" aria-hidden="true">
+                        <rect x="0.5" y="0.5" width="39" height="29" rx="6" fill="#E9C46A" stroke="#C9A227" />
+                        <path d="M0.5 10H13M0.5 20H13M27 10H39.5M27 20H39.5M13 0.5V29.5M27 0.5V29.5M13 15H27"
+                            stroke="#B8901E" stroke-width="1.2" fill="none" />
+                    </svg>
+                    @if (card.isDefault) {
+                    <span class="pay-card-chip-label">
+                        <span class="material-symbols-outlined" aria-hidden="true">star</span>
+                        Predeterminada
+                    </span>
+                    }
+                    <span class="pay-card-check material-symbols-outlined" aria-hidden="true">check_circle</span>
                 </span>
-                @if (card.holderName) {
-                <span class="card-tile-line">{{ card.holderName }}</span>
-                }
-                @if (card.expiration) {
-                <span class="card-tile-line">Vence {{ card.expiration }}</span>
-                }
-                @if (card.isDefault) {
-                <span class="card-tile-badge">Predeterminada</span>
-                }
-                @if (!card.chargeable) {
-                <span class="card-tile-note">No disponible para pagos automáticos</span>
-                }
+
+                <span class="pay-card-number">•••• •••• •••• {{ card.lastFour }}</span>
+
+                <span class="pay-card-bottom">
+                    <span class="pay-card-holder">
+                        @if (card.holderName) {
+                        <span class="pay-card-caption">Titular</span>
+                        <span class="pay-card-holder-name">{{ card.holderName }}</span>
+                        } @else if (!card.chargeable) {
+                        <span class="pay-card-caption">Solo pagos únicos</span>
+                        }
+                        @if (card.expiration) {
+                        <span class="pay-card-caption">Vence {{ card.expiration }}</span>
+                        }
+                    </span>
+                    <app-card-brand-logo class="pay-card-logo" [issuer]="card.issuer" [onDark]="true"></app-card-brand-logo>
+                </span>
             </button>
             }
         </div>
+
+        <p class="card-manager-hint">
+            <span class="material-symbols-outlined" aria-hidden="true">info</span>
+            Tu tarjeta predeterminada es la que usamos para tus pagos automáticos (renovación de plan y recarga automática).
+        </p>
         }
         @else {
-        <p class="option-description">No tienes tarjetas guardadas.</p>
+        <div class="card-empty">
+            <span class="material-symbols-outlined" aria-hidden="true">credit_card_off</span>
+            <p>Aún no tienes tarjetas guardadas.</p>
+        </div>
         }
+
+        @if (cardActionError()) {
+        <p class="card-action-error" role="alert">
+            <span class="material-symbols-outlined" aria-hidden="true">error</span>
+            {{ cardActionError() }}
+        </p>
+        }
+
+        <div class="card-manager-actions">
+            <button type="button" class="m-btn m-btn--filled" (click)="onEditClick()">
+                <span class="material-symbols-outlined" aria-hidden="true">add_card</span>
+                Agregar método de pago
+            </button>
+            @if (managedCards().length > 0) {
+            <button type="button" class="m-btn m-btn--tonal" [disabled]="!canSetDefault()" (click)="onSetDefault()">
+                <span class="material-symbols-outlined" aria-hidden="true">star</span>
+                @if (isSettingDefault()) { Guardando... } @else { Establecer como predeterminada }
+            </button>
+            <button type="button" class="m-btn m-btn--text-danger" [disabled]="!managedCardId()" (click)="onListDelete(managedCardId()!)">
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                Eliminar
+            </button>
+            }
+        </div>
     </div>
     }
     }
@@ -133,9 +165,11 @@
 </app-modal>
 
 <ng-template #cardTemplate let-card="card">
-    <span class="option-title">{{ capitalizeFirstLetter(card.issuer) }} {{ card.truncatedNumber }}
+    <span class="option-title option-title--with-logo">
+        <app-card-brand-logo class="option-logo" [issuer]="card.issuer"></app-card-brand-logo>
+        {{ capitalizeFirstLetter(card.issuer) }} {{ card.truncatedNumber }}
         @if (card.isDefault) {
-        <span class="card-tile-badge card-tile-badge--inline">Predeterminada</span>
+        <span class="default-chip">Predeterminada</span>
         }
     </span>
     @if (card.expiration) {

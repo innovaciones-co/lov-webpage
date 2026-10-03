@@ -7,13 +7,14 @@ import { RadioComponent } from '../../../../shared/components/form-fields/radio/
 import { Modal } from '../../../../shared/components/modal/modal';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { CreatePaymentMethod } from '../../../payment-methods/create-payment-method/create-payment-method';
+import { CardBrandLogo } from '../../../../shared/components/card-brand-logo/card-brand-logo';
 import { PaymentService as PaymentMethodsService } from '../../../payment-methods/services/payment-service';
 import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method.model';
 import { PaymentService as CheckoutPaymentService } from '../../services/payment.service';
 
 @Component({
   selector: 'app-payment-card-selector',
-  imports: [RadioComponent, ReactiveFormsModule, CommonModule, Modal, CreatePaymentMethod],
+  imports: [RadioComponent, ReactiveFormsModule, CommonModule, Modal, CreatePaymentMethod, CardBrandLogo],
   templateUrl: './payment-card-selector.html',
   styleUrl: './payment-card-selector.scss'
 })
@@ -60,8 +61,19 @@ export class PaymentCardSelector {
         expiration: this.formatExpiration(card),
         isDefault: !!card.defaultMethod,
         chargeable: !!card.chargeable,
+        brand: this.brandKey(card.issuer),
       }))
   );
+
+  // Drives each card tile's color scheme (see .pay-card--* in the stylesheet).
+  private brandKey(issuer: string | null | undefined): string {
+    const value = (issuer ?? '').toUpperCase();
+    if (value.includes('MASTER')) return 'mastercard';
+    if (value.includes('VISA')) return 'visa';
+    if (value.includes('AMEX') || value.includes('AMERICAN')) return 'amex';
+    if (value.includes('DINERS')) return 'diners';
+    return 'other';
+  }
 
   managedCard = computed(() => this.managedCards().find(card => card.id === this.managedCardId()));
 

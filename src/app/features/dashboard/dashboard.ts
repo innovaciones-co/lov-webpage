@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl } from '@angular/forms';
 import { EMPTY, forkJoin, of, switchMap, tap } from 'rxjs';
 import { SubscriptionAccount } from '../../core/models/account.model';
 import { Customer, CustomerSubscription } from '../../core/models/customer.model';
 import { SubscriptionFacadeService } from '../../core/services/subscription-facade.service';
-import { InputTextComponent } from '../../shared/components/form-fields/input-text/input-text';
 import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
 import { AuthService } from '../authentication/services/auth.service';
@@ -35,9 +33,14 @@ interface BillingInfo {
   additionalInfo: string;
 }
 
+interface InfoSection {
+  title: string;
+  items: { icon: string; label: string; value: string }[];
+}
+
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Loading, CurrentPlan, DataUsage, InputTextComponent, History, PaymentCardSelector],
+  imports: [CommonModule, Loading, CurrentPlan, DataUsage, History, PaymentCardSelector],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
@@ -51,17 +54,8 @@ export class Dashboard implements OnInit {
   loading = signal(true);
   billingInfo: BillingInfo | null = null;
 
-  // Billing form controls
-  firstNameControl = new FormControl({ value: '', disabled: true });
-  lastNameControl = new FormControl({ value: '', disabled: true });
-  documentTypeControl = new FormControl({ value: '', disabled: true });
-  documentNumberControl = new FormControl({ value: '', disabled: true });
-  emailControl = new FormControl({ value: '', disabled: true });
-  phoneControl = new FormControl({ value: '', disabled: true });
-  countryControl = new FormControl({ value: '', disabled: true });
-  cityControl = new FormControl({ value: '', disabled: true });
-  addressControl = new FormControl({ value: '', disabled: true });
-  additionalInfoControl = new FormControl({ value: '', disabled: true });
+  // Read-only billing/contact details, shown as information rather than disabled inputs.
+  billingSections: InfoSection[] = [];
 
   accounts = signal<SubscriptionAccount[]>([]);
   accountViews = computed<AccountViewModel[]>(() =>
@@ -200,17 +194,29 @@ export class Dashboard implements OnInit {
       additionalInfo: customerInfo.additionalInformationPlaceHolder.additionalInformationString || ''
     };
 
-    // Update form controls with billing info and apply transformations
-    this.firstNameControl.setValue(this.capitalize(this.billingInfo.firstName));
-    this.lastNameControl.setValue(this.capitalize(this.billingInfo.lastName));
-    this.documentTypeControl.setValue(this.billingInfo.documentType);
-    this.documentNumberControl.setValue(this.billingInfo.documentNumber);
-    this.emailControl.setValue(this.billingInfo.email);
-    this.phoneControl.setValue(this.formatMsisdn(this.billingInfo.phone));
-    this.countryControl.setValue(this.capitalize(this.billingInfo.country));
-    this.cityControl.setValue(this.capitalize(this.billingInfo.city));
-    this.addressControl.setValue(this.billingInfo.address);
-    this.additionalInfoControl.setValue(this.billingInfo.additionalInfo);
+    const info = this.billingInfo;
+    const fullName = [this.capitalize(info.firstName), this.capitalize(info.lastName)].filter(Boolean).join(' ');
+    const location = [this.capitalize(info.city), info.country?.toUpperCase()].filter(Boolean).join(', ');
+
+    this.billingSections = [
+      {
+        title: 'Datos de facturación',
+        items: [
+          { icon: 'person', label: 'Nombre', value: fullName },
+          { icon: 'badge', label: 'Documento', value: [info.documentType, info.documentNumber].filter(Boolean).join(' ') },
+        ],
+      },
+      {
+        title: 'Información de contacto',
+        items: [
+          { icon: 'mail', label: 'Correo electrónico', value: info.email },
+          { icon: 'call', label: 'Teléfono', value: this.formatMsisdn(info.phone) },
+          { icon: 'location_on', label: 'Ciudad', value: location },
+          { icon: 'home', label: 'Dirección', value: info.address },
+          { icon: 'notes', label: 'Información adicional', value: info.additionalInfo },
+        ].filter(item => !!item.value),
+      },
+    ];
   }
 
   private capitalize(value: string): string {

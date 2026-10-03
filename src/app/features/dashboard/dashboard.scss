@@ -184,18 +184,72 @@ main>.card-title {
 }
 
 #billing-info {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
 
-    h3 {
-        margin-top: 5px;
-        margin-bottom: 25px;
+.info-section-title {
+    margin: 0 0 14px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $color-extra-1;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: $gray-50;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background: $gray-100;
+    }
+}
+
+.info-icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: color-mix(in oklch, $color-extra-1 12%, white);
+    color: $color-extra-1;
+    font-size: 20px;
+}
+
+.info-text {
+    min-width: 0;
+
+    dt {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: $gray-700;
     }
 
-    p {
-        margin: 10px 0;
-
-        span {
-            font-weight: bold;
-        }
+    dd {
+        margin: 2px 0 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: $text-color;
+        overflow-wrap: anywhere;
     }
 }
 
