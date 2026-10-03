@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { Paginator } from '../../../../core/models/paginator.model';
 import { DatetimePipe } from "../../../../core/pipes/datetime.pipe";
@@ -8,10 +8,17 @@ import { HistoryService } from '../../services/history.service';
 
 type PresetHistoryRangeMonths = 1 | 3 | 6;
 type HistoryRangeOption = PresetHistoryRangeMonths | 'custom';
+type HistoryTone = 'data' | 'sms' | 'call' | 'other';
+
+interface HistoryDayGroup {
+  key: string;
+  label: string;
+  items: HistoryItem[];
+}
 
 @Component({
   selector: 'app-history',
-  imports: [Loading, DatetimePipe],
+  imports: [Loading],
   templateUrl: './history.html',
   styleUrl: './history.scss'
 })
@@ -20,10 +27,20 @@ export class History {
   private readonly pageSize = 10;
 
   private readonly typeIconMap: Record<string, string> = {
-    DATA: 'signal_cellular_alt',
+    DATA: 'language',
     CALL: 'call',
     SMS: 'sms'
   };
+
+  private readonly typeLabelMap: Record<string, string> = {
+    DATA: 'Datos móviles',
+    CALL: 'Llamada',
+    SMS: 'Mensaje de texto'
+  };
+
+  private readonly timeFormatter = new Intl.DateTimeFormat('es-CO', { hour: 'numeric', minute: '2-digit' });
+  private readonly dayFormatter = new Intl.DateTimeFormat('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
+  private readonly numberFormatter = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 2 });
 
   private historyService = inject(HistoryService);
   history$ = this.historyService.getHistorySignal();
@@ -35,13 +52,85 @@ export class History {
   customEndDate = signal('');
   customDateError = signal<string | null>(null);
   exportingCsv = signal(false);
+  showCustomRange = signal(false);
+
+  // The current page's events grouped by calendar day (newest first, as the API returns them),
+  // so the list reads like a bank statement: "Hoy", "Ayer", "Martes, 30 de septiembre".
+  groupedHistory = computed<HistoryDayGroup[]>(() => {
+    const groups: HistoryDayGroup[] = [];
+    for (const item of this.history$()?.content ?? []) {
+      const date = new Date(item.date);
+      const key = Number.isNaN(date.getTime()) ? 'unknown' : date.toDateString();
+      let group = groups[groups.length - 1];
+      if (!group || group.key !== key) {
+        group = { key, label: this.formatDayLabel(date), items: [] };
+        groups.push(group);
+      }
+      group.items.push(item);
+    }
+    return groups;
+  });
 
   getTypeIcon(type: string): string {
-    return this.typeIconMap[type?.toUpperCase?.()] ?? 'help';
+    return this.typeIconMap[type?.toUpperCase?.()] ?? 'receipt_long';
+  }
+
+  getTypeTone(type: string): HistoryTone {
+    const value = type?.toUpperCase?.();
+    if (value === 'DATA') return 'data';
+    if (value === 'SMS') return 'sms';
+    if (value === 'CALL') return 'call';
+    return 'other';
+  }
+
+  getTypeLabel(type: string): string {
+    return this.typeLabelMap[type?.toUpperCase?.()] ?? 'Consumo';
+  }
+
+  formatTime(value: string): string {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? '' : this.timeFormatter.format(date);
+  }
+
+  // Data comes in MB from CYAN; switch to GB once it's large enough to read better.
+  formatAmount(item: HistoryItem): string {
+    const amount = Number(item.amount ?? 0);
+    const measure = (item.measure ?? '').trim();
+    if (measure.toUpperCase() === 'MB' && amount >= 1024) {
+      return `${this.numberFormatter.format(amount / 1024)} GB`;
+    }
+    return `${this.numberFormatter.format(amount)} ${measure}`.trim();
+  }
+
+  isZeroAmount(item: HistoryItem): boolean {
+    return Number(item.amount ?? 0) === 0;
+  }
+
+  toggleCustomRange(): void {
+    this.showCustomRange.update(open => !open);
+    this.customDateError.set(null);
+  }
+
+  getTotalPages(): number {
+    return this.history$()?.page?.totalPages ?? 0;
+  }
+
+  private formatDayLabel(date: Date): string {
+    if (Number.isNaN(date.getTime())) {
+      return 'Sin fecha';
+    }
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (date.toDateString() === today.toDateString()) return 'Hoy';
+    if (date.toDateString() === yesterday.toDateString()) return 'Ayer';
+    const label = this.dayFormatter.format(date);
+    return label.charAt(0).toUpperCase() + label.slice(1);
   }
 
   setDateRange(months: PresetHistoryRangeMonths): void {
     this.selectedRangeMonths.set(months);
+    this.showCustomRange.set(false);
     this.customDateError.set(null);
     this.currentPage.set(0);
     this.fetchHistory();

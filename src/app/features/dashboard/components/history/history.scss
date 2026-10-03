@@ -1,132 +1,419 @@
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
 
-
 .card-title {
     color: $color-extra-1;
     font-size: 1.2rem;
 
     &.no-border {
         border-bottom: none;
-        margin-bottom: 5px !important;
+        margin-bottom: 2px !important;
     }
 }
 
-.history-filters {
+.history {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.history-filter-button {
-    background-color: $color-primary-light;
-    border: 1px solid $gray-100;
-    border-radius: 7px;
-    color: $gray-900;
-    cursor: pointer;
-    font-size: .875rem;
-    font-weight: 500;
-    padding: 0.45rem 1.4rem;
-    flex: 1;
-    text-align: center;
+// ── Header ─────────────────────────────────────────────────────────────────
 
-    &.active {
-        background-color: $color-extra-1;
-        border-color: $color-extra-1;
-        color: $color-primary-light;
-    }
+.history-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-
-
-.history-custom-range {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(140px, 1fr)) auto;
-    gap: 0.75rem;
-    align-items: end;
-    margin-bottom: 0.75rem;
-}
-
-.history-custom-range__field {
-    display: grid;
-    gap: 0.3rem;
-
-    span {
-        font-size: 0.75rem;
-        color: $gray-700;
-        font-weight: 600;
-    }
-
-    input {
-        width: 100%;
-        border: 1px solid $gray-100;
-        border-radius: 7px;
-        padding: 0.45rem 0.65rem;
-        color: $gray-900;
-        background-color: $color-primary-light;
-        font: inherit;
-    }
-}
-
-.history-custom-range__apply,
-.history-download-button {
-    border: 1px solid $color-extra-1;
-    border-radius: 7px;
-    background-color: $color-primary-light;
-    color: $color-extra-1;
-    cursor: pointer;
+.history-subtitle {
+    margin: 0;
     font-size: 0.875rem;
-    font-weight: 600;
-    padding: 0.45rem 1rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    color: $gray-700;
+}
 
-    &:hover:not(:disabled),
-    &.active {
-        background-color: $color-extra-1;
-        color: $color-primary-light;
+.history-download {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px 0 10px;
+    border: 1px solid $gray-200;
+    border-radius: 999px;
+    background: white;
+    color: $gray-900;
+    font-family: $font-family-base;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+
+    .material-symbols-outlined {
+        font-size: 18px;
+        color: $color-extra-1;
+    }
+
+    &:not(:disabled):hover {
+        background: $gray-50;
+        border-color: $gray-400;
     }
 
     &:disabled {
-        opacity: 0.55;
+        opacity: 0.5;
         cursor: not-allowed;
     }
 }
 
-.history-actions {
+// ── Period chips ───────────────────────────────────────────────────────────
+
+.history-chips {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 0.9rem;
-}
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
 
-.history-download-button {
-    border-color: $gray-400;
-    color: $gray-700;
-
-    &:hover:not(:disabled) {
-        border-color: $gray-700;
-        background-color: $gray-700;
+    &::-webkit-scrollbar {
+        display: none;
     }
 }
 
-.history-type-icon {
+.history-chip {
+    flex-shrink: 0;
     display: inline-flex;
-    font-size: 1.1rem;
-    font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 20;
-    line-height: 1;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px;
+    border: 1px solid $gray-200;
+    border-radius: 999px;
+    background: white;
+    color: $gray-700;
+    font-family: $font-family-base;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+    .material-symbols-outlined {
+        font-size: 18px;
+    }
+
+    &:hover:not(.active) {
+        background: $gray-50;
+    }
+
+    &.active {
+        background: color-mix(in oklch, $color-extra-1 12%, white);
+        border-color: color-mix(in oklch, $color-extra-1 40%, white);
+        color: color-mix(in oklch, $color-extra-1 85%, black);
+    }
+
+    &:focus-visible {
+        outline: 2px solid $color-extra-1;
+        outline-offset: 2px;
+    }
 }
 
-@media (max-width: 768px) {
-    .history-custom-range {
-        grid-template-columns: 1fr;
+// ── Custom range ───────────────────────────────────────────────────────────
+
+.history-range {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    gap: 10px;
+    align-items: end;
+    padding: 14px;
+    border-radius: 14px;
+    background: $gray-50;
+}
+
+.history-range__field {
+    display: grid;
+    gap: 4px;
+
+    span {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: $gray-700;
     }
 
-    .history-actions {
-        justify-content: stretch;
-    }
-
-    .history-download-button,
-    .history-custom-range__apply {
+    input {
         width: 100%;
+        height: 40px;
+        padding: 0 10px;
+        border: 1px solid $gray-200;
+        border-radius: 10px;
+        background: white;
+        color: $gray-900;
+        font: inherit;
+    }
+}
+
+.history-range__apply {
+    height: 40px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 999px;
+    background: $color-extra-1;
+    color: white;
+    font-family: $font-family-base;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+        background: color-mix(in oklch, $color-extra-1 88%, black);
+    }
+}
+
+.history-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: color-mix(in oklch, $color-danger 10%, white);
+    color: $color-danger;
+    font-size: 0.875rem;
+
+    .material-symbols-outlined {
+        font-size: 18px;
+    }
+}
+
+// ── Movements list (grouped by day) ────────────────────────────────────────
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.history-day__label {
+    margin: 0 0 6px;
+    padding: 0 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: $gray-700;
+}
+
+.history-day__items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid $gray-100;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: white;
+    transition: background-color 0.15s ease;
+
+    & + & {
+        border-top: 1px solid $gray-100;
+    }
+
+    &:hover {
+        background: $gray-50;
+    }
+}
+
+.history-item__icon {
+    --tone: #{$gray-700};
+
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: color-mix(in oklch, var(--tone) 12%, white);
+    color: var(--tone);
+    font-size: 20px;
+
+    &[data-tone='data'] { --tone: #{$color-extra-1}; }
+    &[data-tone='sms'] { --tone: #8b3fd9; }
+    &[data-tone='call'] { --tone: #0f9d58; }
+}
+
+.history-item__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+}
+
+.history-item__title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $text-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-item__meta {
+    font-size: 0.8rem;
+    color: $gray-700;
+}
+
+.history-item__amount {
+    flex-shrink: 0;
+    font-family: $font-family-tight;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $text-color;
+    text-align: right;
+    white-space: nowrap;
+
+    &.is-zero {
+        font-weight: 500;
+        color: $gray-400;
+    }
+}
+
+// ── Empty / error states ───────────────────────────────────────────────────
+
+.history-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 36px 16px;
+    border: 1.5px dashed $gray-200;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.history-state__icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 6px;
+    border-radius: 50%;
+    background: color-mix(in oklch, $color-extra-1 10%, white);
+    color: $color-extra-1;
+    font-size: 28px;
+
+    &--error {
+        background: color-mix(in oklch, $color-danger 10%, white);
+        color: $color-danger;
+    }
+}
+
+.history-state__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $text-color;
+}
+
+.history-state__text {
+    margin: 0;
+    font-size: 0.875rem;
+    color: $gray-700;
+}
+
+// ── Pagination ─────────────────────────────────────────────────────────────
+
+.history-pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.history-pager__pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.history-pager__btn,
+.history-pager__page {
+    display: grid;
+    place-items: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 6px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: $gray-700;
+    font-family: $font-family-base;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:not(:disabled):not(.active):hover {
+        background: $gray-100;
+    }
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+}
+
+.history-pager__btn {
+    border: 1px solid $gray-200;
+
+    .material-symbols-outlined {
+        font-size: 20px;
+    }
+}
+
+.history-pager__page.active {
+    background: $color-extra-1;
+    color: white;
+}
+
+.history-pager__ellipsis {
+    padding: 0 2px;
+    color: $gray-400;
+}
+
+.history-pager__caption {
+    margin: -8px 0 0;
+    font-size: 0.8rem;
+    color: $gray-700;
+    text-align: center;
+}
+
+@include mobile {
+    .history-header {
+        flex-wrap: wrap;
+    }
+
+    .history-range {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .history-range__apply {
+        grid-column: 1 / -1;
+    }
+
+    .history-item {
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .history-pager__pages .history-pager__page:not(.active) {
+        display: none;
+    }
+
+    .history-pager__ellipsis {
+        display: none;
     }
 }
