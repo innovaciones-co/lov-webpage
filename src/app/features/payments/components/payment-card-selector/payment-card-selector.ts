@@ -45,9 +45,8 @@ export class PaymentCardSelector {
   isVisible = signal(false);
   private cardTemplateRef = signal<TemplateRef<any> | undefined>(undefined);
 
-  // Card management (dashboard view): which card the action buttons apply to.
-  managedCardId = signal<string | null>(null);
-  isSettingDefault = signal(false);
+  // Card management (dashboard view): the card currently being made default, if any.
+  settingDefaultId = signal<string | null>(null);
   cardActionError = signal<string | null>(null);
 
   managedCards = computed(() =>
@@ -61,26 +60,8 @@ export class PaymentCardSelector {
         expiration: this.formatExpiration(card),
         isDefault: !!card.defaultMethod,
         chargeable: !!card.chargeable,
-        brand: this.brandKey(card.issuer),
       }))
   );
-
-  // Drives each card tile's color scheme (see .pay-card--* in the stylesheet).
-  private brandKey(issuer: string | null | undefined): string {
-    const value = (issuer ?? '').toUpperCase();
-    if (value.includes('MASTER')) return 'mastercard';
-    if (value.includes('VISA')) return 'visa';
-    if (value.includes('AMEX') || value.includes('AMERICAN')) return 'amex';
-    if (value.includes('DINERS')) return 'diners';
-    return 'other';
-  }
-
-  managedCard = computed(() => this.managedCards().find(card => card.id === this.managedCardId()));
-
-  canSetDefault = computed(() => {
-    const card = this.managedCard();
-    return !!card && card.chargeable && !card.isDefault && !this.isSettingDefault();
-  });
 
   pendingDeleteCard = computed(() => {
     const pendingDeleteCardId = this.pendingDeleteCardId();
@@ -180,11 +161,6 @@ export class PaymentCardSelector {
         if (this.selectorEnabled() && !this.paymentCardControl.value && defaultCard) {
           this.paymentCardControl.setValue(defaultCard.id.toString());
         }
-        // Card management: keep the current selection if it still exists, else the default.
-        const managedStillExists = response.some(card => card.id.toString() === this.managedCardId());
-        if (!managedStillExists) {
-          this.managedCardId.set(defaultCard ? defaultCard.id.toString() : null);
-        }
       },
       error: (error) => {
         console.error('Error fetching credit cards:', error);
@@ -203,28 +179,22 @@ export class PaymentCardSelector {
     this.isDeleteConfirmationModalOpen.set(true);
   }
 
-  onSelectManagedCard(cardId: string): void {
-    this.cardActionError.set(null);
-    this.managedCardId.set(cardId);
-  }
-
-  onSetDefault(): void {
-    const cardId = this.managedCardId();
-    if (!cardId || !this.canSetDefault()) {
+  onSetDefault(cardId: string): void {
+    if (!cardId || this.settingDefaultId()) {
       return;
     }
 
-    this.isSettingDefault.set(true);
+    this.settingDefaultId.set(cardId);
     this.cardActionError.set(null);
     this.paymentMethodsService.setDefaultPaymentMethod(cardId).subscribe({
       next: () => {
         this.creditCards.update(cards => cards.map(card => ({ ...card, defaultMethod: card.id.toString() === cardId })));
-        this.isSettingDefault.set(false);
+        this.settingDefaultId.set(null);
       },
       error: (error) => {
         console.error('Error setting default payment method:', error);
         this.cardActionError.set(error?.error?.message || 'No pudimos cambiar tu tarjeta predeterminada. Intenta de nuevo.');
-        this.isSettingDefault.set(false);
+        this.settingDefaultId.set(null);
       }
     });
   }

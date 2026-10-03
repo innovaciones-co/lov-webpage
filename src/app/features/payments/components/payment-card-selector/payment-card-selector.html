@@ -28,46 +28,41 @@
     @else {
     <div class="card-manager">
         @if (managedCards().length > 0) {
-        <div class="card-grid" role="radiogroup" aria-label="Tarjetas guardadas">
+        <ul class="pm-list" aria-label="Tarjetas guardadas">
             @for (card of managedCards(); track card.id) {
-            <button type="button" class="pay-card" role="radio" [ngClass]="'pay-card--' + card.brand"
-                [class.is-selected]="card.id === managedCardId()" [attr.aria-checked]="card.id === managedCardId()"
-                [attr.aria-label]="card.issuer + ' terminada en ' + card.lastFour + (card.isDefault ? ', predeterminada' : '')"
-                (click)="onSelectManagedCard(card.id)">
-                <span class="pay-card-top">
-                    <svg class="pay-card-chip" viewBox="0 0 40 30" aria-hidden="true">
-                        <rect x="0.5" y="0.5" width="39" height="29" rx="6" fill="#E9C46A" stroke="#C9A227" />
-                        <path d="M0.5 10H13M0.5 20H13M27 10H39.5M27 20H39.5M13 0.5V29.5M27 0.5V29.5M13 15H27"
-                            stroke="#B8901E" stroke-width="1.2" fill="none" />
-                    </svg>
-                    @if (card.isDefault) {
-                    <span class="pay-card-chip-label">
-                        <span class="material-symbols-outlined" aria-hidden="true">star</span>
-                        Predeterminada
+            <li class="pm-row" [class.is-default]="card.isDefault">
+                <span class="pm-logo">
+                    <app-card-brand-logo [issuer]="card.issuer"></app-card-brand-logo>
+                </span>
+                <span class="pm-text">
+                    <span class="pm-title">
+                        {{ capitalizeFirstLetter(card.issuer) }}
+                        @if (card.isDefault) {
+                        <span class="default-chip">Predeterminada</span>
+                        }
                     </span>
+                    <span class="pm-subtitle">
+                        •••• {{ card.lastFour }}
+                        @if (card.expiration) { <span class="pm-sep">|</span> {{ card.expiration }} }
+                        @if (card.holderName) { <span class="pm-sep">|</span> {{ card.holderName }} }
+                        @else if (!card.chargeable) { <span class="pm-sep">|</span> Solo pagos únicos }
+                    </span>
+                </span>
+                <span class="pm-actions">
+                    @if (!card.isDefault && card.chargeable) {
+                    <button type="button" class="pm-link" [disabled]="!!settingDefaultId()"
+                        (click)="onSetDefault(card.id)">
+                        @if (settingDefaultId() === card.id) { Guardando... } @else { Predeterminar }
+                    </button>
                     }
-                    <span class="pay-card-check material-symbols-outlined" aria-hidden="true">check_circle</span>
+                    <button type="button" class="pm-icon-btn" (click)="onListDelete(card.id)"
+                        [attr.aria-label]="'Eliminar tarjeta terminada en ' + card.lastFour" title="Eliminar">
+                        <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                    </button>
                 </span>
-
-                <span class="pay-card-number">•••• •••• •••• {{ card.lastFour }}</span>
-
-                <span class="pay-card-bottom">
-                    <span class="pay-card-holder">
-                        @if (card.holderName) {
-                        <span class="pay-card-caption">Titular</span>
-                        <span class="pay-card-holder-name">{{ card.holderName }}</span>
-                        } @else if (!card.chargeable) {
-                        <span class="pay-card-caption">Solo pagos únicos</span>
-                        }
-                        @if (card.expiration) {
-                        <span class="pay-card-caption">Vence {{ card.expiration }}</span>
-                        }
-                    </span>
-                    <app-card-brand-logo class="pay-card-logo" [issuer]="card.issuer" [onDark]="true"></app-card-brand-logo>
-                </span>
-            </button>
+            </li>
             }
-        </div>
+        </ul>
 
         <p class="card-manager-hint">
             <span class="material-symbols-outlined" aria-hidden="true">info</span>
@@ -93,16 +88,6 @@
                 <span class="material-symbols-outlined" aria-hidden="true">add_card</span>
                 Agregar método de pago
             </button>
-            @if (managedCards().length > 0) {
-            <button type="button" class="m-btn m-btn--tonal" [disabled]="!canSetDefault()" (click)="onSetDefault()">
-                <span class="material-symbols-outlined" aria-hidden="true">star</span>
-                @if (isSettingDefault()) { Guardando... } @else { Establecer como predeterminada }
-            </button>
-            <button type="button" class="m-btn m-btn--text-danger" [disabled]="!managedCardId()" (click)="onListDelete(managedCardId()!)">
-                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-                Eliminar
-            </button>
-            }
         </div>
     </div>
     }

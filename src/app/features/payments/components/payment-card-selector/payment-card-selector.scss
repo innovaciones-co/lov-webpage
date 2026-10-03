@@ -56,166 +56,127 @@
     gap: 16px;
 }
 
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-}
-
-// A saved card drawn as a physical card, tinted by network.
-.pay-card {
-    --card-from: #3b4254;
-    --card-to: #1f2430;
-
-    position: relative;
+// Saved cards as compact rows: small logo box, brand + last digits, actions on the right.
+.pm-list {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 14px;
-    width: 100%;
-    aspect-ratio: 1.586 / 1;
-    padding: 18px 20px;
-    border: none;
-    border-radius: 16px;
-    background:
-        radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.18), transparent 55%),
-        linear-gradient(135deg, var(--card-from), var(--card-to));
-    color: white;
-    text-align: left;
-    font-family: $font-family-base;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.12);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    overflow: hidden;
+    gap: 8px;
+    max-width: 560px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
 
-    &::after {
-        // Soft decorative arc, purely visual.
-        content: '';
-        position: absolute;
-        right: -30%;
-        bottom: -60%;
-        width: 90%;
-        aspect-ratio: 1;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.06);
-        pointer-events: none;
-    }
+.pm-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid $gray-200;
+    border-radius: 12px;
+    background: white;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14), 0 10px 24px rgba(0, 0, 0, 0.16);
+        background: $gray-50;
     }
 
-    &:focus-visible {
-        outline: 3px solid $color-extra-1;
-        outline-offset: 3px;
+    &.is-default {
+        border-color: color-mix(in oklch, $color-extra-1 45%, white);
     }
-
-    &.is-selected {
-        outline: 3px solid $color-extra-1;
-        outline-offset: 3px;
-        transform: translateY(-2px);
-
-        .pay-card-check {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    &--visa { --card-from: #2c5bd8; --card-to: #142067; }
-    &--mastercard { --card-from: #3a3a44; --card-to: #121216; }
-    &--amex { --card-from: #3aa3e8; --card-to: #015fae; }
-    &--diners { --card-from: #3a8fb0; --card-to: #0b4c63; }
 }
 
-.pay-card-top {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+.pm-logo {
+    --brand-logo-height: 16px;
 
-.pay-card-chip {
-    width: 40px;
-    height: 30px;
     flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 32px;
+    border: 1px solid $gray-200;
+    border-radius: 6px;
+    background: white;
 }
 
-.pay-card-chip-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 10px 3px 8px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(4px);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-
-    .material-symbols-outlined {
-        font-size: 15px;
-        font-variation-settings: "FILL" 1;
-    }
-}
-
-.pay-card-check {
-    margin-left: auto;
-    font-size: 26px;
-    font-variation-settings: "FILL" 1;
-    color: white;
-    opacity: 0;
-    transform: scale(0.6);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.pay-card-number {
-    position: relative;
-    z-index: 1;
-    font-family: 'Inter Tight', ui-monospace, monospace;
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    white-space: nowrap;
-}
-
-.pay-card-bottom {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.pay-card-holder {
+.pm-text {
     display: flex;
     flex-direction: column;
     gap: 2px;
     min-width: 0;
+    flex: 1;
 }
 
-.pay-card-caption {
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    opacity: 0.75;
-}
-
-.pay-card-holder-name {
-    font-size: 0.9rem;
+.pm-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.95rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: $text-color;
+}
+
+.pm-subtitle {
+    font-size: 0.82rem;
+    color: $gray-700;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.pay-card-logo {
-    --brand-logo-height: 30px;
+.pm-sep {
+    margin: 0 4px;
+    color: $gray-400;
+}
+
+.pm-actions {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pm-link {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: $color-extra-1;
+    font-family: $font-family-base;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:not(:disabled):hover {
+        background: color-mix(in oklch, $color-extra-1 10%, white);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.pm-icon-btn {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: $gray-700;
+    cursor: pointer;
+
+    .material-symbols-outlined {
+        font-size: 20px;
+    }
+
+    &:hover {
+        background: color-mix(in oklch, $color-danger 10%, white);
+        color: $color-danger;
+    }
 }
 
 .card-manager-hint {
@@ -341,13 +302,5 @@
         //background: transparent;
         padding: 1rem;
         box-shadow: none;
-    }
-
-    .card-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .pay-card {
-        max-width: 380px;
     }
 }
