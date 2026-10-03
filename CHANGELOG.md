@@ -1,3 +1,10 @@
+# [1.51.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.50.0...v1.51.0) (2026-10-03)
+
+
+### Features
+
+* redesign saved cards and billing info in a Material style ([48ae330](https://github.com/innovaciones-co/lov-webpage/commit/48ae330acaf5ba13a5c105a60fa17a2a08ffbf2c))
+
 # [1.50.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.49.0...v1.50.0) (2026-10-02)
 
 
