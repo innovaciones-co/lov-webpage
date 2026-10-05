@@ -1,3 +1,10 @@
+# [1.53.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.52.0...v1.53.0) (2026-10-03)
+
+
+### Features
+
+* **dashboard:** redesign consumption history as a day-grouped movements list ([ad7ca60](https://github.com/innovaciones-co/lov-webpage/commit/ad7ca609504c3310b4e4d84c7126417db7d5f85d))
+
 # [1.52.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.51.0...v1.52.0) (2026-10-03)
 
 
