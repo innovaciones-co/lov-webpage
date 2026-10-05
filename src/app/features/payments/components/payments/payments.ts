@@ -299,7 +299,8 @@ export class Payments implements OnInit {
       paymentMethodType: selectedMethod,
       cardData: selectedMethod == PaymentMethod.CARD ? this.getDefaultCardData() : undefined,
       creditCardId: selectedMethod == PaymentMethod.CARD ? this.paymentService.selectedCreditCard()?.id : undefined,
-      autoRenew: selectedMethod == PaymentMethod.CARD ? this.paymentService.autoRenew() : undefined
+      // "Suscripción recurrente" always renews automatically (the backend enrolls every approved CARD plan purchase).
+      autoRenew: selectedMethod == PaymentMethod.CARD ? true : undefined
     };
   }
 

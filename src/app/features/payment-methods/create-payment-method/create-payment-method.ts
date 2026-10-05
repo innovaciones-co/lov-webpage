@@ -16,8 +16,6 @@ import {
 } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 
-import { PaymentService as CheckoutPaymentService } from '../../payments/services/payment.service';
-import { CheckboxComponent } from '../../../shared/components/form-fields/checkbox/checkbox';
 import { ErrorCard } from '../../../shared/components/error-card/error-card';
 import { InputTextComponent } from '../../../shared/components/form-fields/input-text/input-text';
 import { SelectComponent } from '../../../shared/components/form-fields/select/select';
@@ -39,14 +37,13 @@ type FieldStatusMap = Record<CardField, 'idle' | 'valid' | 'invalid'>;
 
 @Component({
   selector: 'app-create-payment-method',
-  imports: [ReactiveFormsModule, InputTextComponent, SelectComponent, ErrorCard, CheckboxComponent],
+  imports: [ReactiveFormsModule, InputTextComponent, SelectComponent, ErrorCard],
   templateUrl: './create-payment-method.html',
   styleUrl: './create-payment-method.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
   private readonly paymentService = inject(PaymentService);
-  private readonly checkoutPaymentService = inject(CheckoutPaymentService);
   private ft: any;
   private destroyed = false;
   private containerObserver: MutationObserver | null = null;
@@ -117,7 +114,6 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
           Validators.maxLength(20),
         ],
       }),
-      autoRenew: new FormControl(false, { nonNullable: true }),
     })
   );
 
@@ -267,7 +263,7 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
         return;
       }
 
-      const { fullName, email, phone, documentType, documentNumber, autoRenew } = this.form().getRawValue();
+      const { fullName, email, phone, documentType, documentNumber } = this.form().getRawValue();
       const [firstName, ...rest] = fullName.trim().split(/\s+/);
       const lastName = rest.join(' ') || firstName;
 
@@ -285,9 +281,6 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
         .subscribe({
           next: (newPaymentMethodId) => {
             console.debug('OnePay payment method created successfully:', newPaymentMethodId);
-            if (this.showAutoRenewOption()) {
-              this.checkoutPaymentService.setAutoRenew(autoRenew);
-            }
             this.form().reset({ documentType: 'CC' });
             this.fieldStatus.set({ holder: 'idle', number: 'idle', expiration: 'idle', cvv: 'idle' });
             this.paymentMethodCreated.emit(newPaymentMethodId);

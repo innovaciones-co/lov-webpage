@@ -83,11 +83,6 @@
 
         <error-card [message]="submitError()"></error-card>
 
-        @if (showAutoRenewOption()) {
-        <checkbox-field [control]="form().controls.autoRenew">
-            Activar débito automático para la renovación de este plan
-        </checkbox-field>
-        }
 
         <p class="legal-note">
             <span class="material-symbols-outlined">lock</span>
