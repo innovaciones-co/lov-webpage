@@ -3,6 +3,82 @@
 
 .navigations-tabs-container {
 
+    // Segmented pill selector: gray track, the active option is a raised white pill.
+    .segmented {
+        display: flex;
+        width: fit-content;
+        max-width: 100%;
+        margin: 1.5rem auto 1rem;
+        padding: 6px;
+        gap: 4px;
+        border-radius: 999px;
+        background: #f1f2f4;
+        box-shadow: inset 0 0 0 1px #e6e7ea;
+        overflow-x: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .segmented-tab {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 150px;
+        min-height: 44px;
+        padding: 6px 20px;
+        border: none;
+        border-radius: 999px;
+        background: transparent;
+        color: #6b7280;
+        font-family: $font-family-base;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover:not(.active) {
+            color: $text-color;
+        }
+
+        &.active {
+            background: white;
+            color: $text-color;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &:focus-visible {
+            outline: 2px solid $color-extra-1;
+            outline-offset: 2px;
+        }
+    }
+
+    .segmented-tab__title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .segmented-tab__subtitle {
+        font-size: 0.72rem;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    @include mobile {
+        .segmented {
+            margin-inline: 0;
+        }
+
+        .segmented-tab {
+            min-width: 120px;
+            padding: 6px 14px;
+        }
+    }
+
     .tab-dropdown-container {
         position: relative;
         margin: 1rem 0;

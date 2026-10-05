@@ -4,6 +4,7 @@ import { CommonModule, NgComponentOutlet } from '@angular/common';
 export interface Tab {
   id: string;
   title: string;
+  subtitle?: string;
   component: Type<unknown>;
   inputs?: Record<string, unknown>;
   closable?: boolean;
@@ -20,6 +21,8 @@ export class NavigationTabsComponent implements OnInit {
   tabs = input<Tab[]>([]);
   initialActiveTabId = input<string | null>(null);
   isMobile = input<boolean>(false);
+  // 'segmented': centered pill selector (title + optional subtitle) that scrolls sideways on mobile.
+  variant = input<'default' | 'segmented'>('default');
   activeTabId = signal<string | null>(null);
   isDropdownOpen = signal<boolean>(false);
   tabClosed = output<string>();

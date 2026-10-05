@@ -9,7 +9,7 @@
     <div class="container">
       <ul class="cards-list">
         @for (plan of plans(); track $index) {
-        <app-plan-item [plan]="plan" [enableHoverEffect]="true"></app-plan-item>
+        <app-plan-item [plan]="plan" [accentIndex]="$index"></app-plan-item>
         }
       </ul>
     </div>

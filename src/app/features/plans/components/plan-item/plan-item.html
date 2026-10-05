@@ -1,40 +1,44 @@
-<li class="card" [class.hover-enabled]="enableHoverEffect()">
-  <div class="card-body">
-    <h3 class="card-plan">{{plan.name}}</h3>
-    <p class="card-price">{{plan.totalPrice | currency}}</p>
+<li class="plan-card" [attr.data-accent]="accent()" [class.hover-enabled]="enableHoverEffect()">
+  <h3 class="plan-name">{{ plan.name }}</h3>
 
-    <!-- <div class="plan-detailed-pricing">
-      @if(plan.voiceQuantity > 0 || plan.smsQuantity > 0) {
-      <div class="phone-pricing">
-        <span>Telefonía</span>
-        {{plan.totalPrice * (plan.voiceQuantity + plan.smsQuantity) | currency}}
-      </div>
-      }
-      @if(plan.dataQuantity > 0) {
-      <div class="data-pricing">
-        <span>Datos</span>
-        {{plan.totalPrice * plan.dataQuantity | currency}}
-      </div>
-      }
-    </div> -->
+  @if (headline; as head) {
+  <p class="plan-headline" [attr.aria-label]="head.value + ' ' + head.unit">
+    <span class="plan-headline__value">{{ head.value }}</span>
+    <span class="plan-headline__unit">{{ head.unit }}</span>
+  </p>
+  }
 
-    <hr class="divider" />
+  @if (extrasSummary) {
+  <p class="plan-pill">{{ extrasSummary }}</p>
+  }
 
-    <ul class="card-features">
-      @for (feature of orderedFeatures; track $index) {
-      <li>
-        <span class="material-symbols-outlined">{{getMaterialSymbol(feature.measure)}}</span>
-        {{feature.name}} {{feature.description}}
-      </li>
-      }
-      <li>
-        <span class="material-symbols-outlined">calendar_today</span>
-        Vigencia de {{plan.validity}} {{ plan.validity === 1 ? 'día' : 'días' }}
-      </li>
-    </ul>
-  </div>
-  <a class="card-button" [routerLink]="'/pagos'" (click)="addPlanToCart()">
-    Obtener plan
-    <span class="material-symbols-outlined"> arrow_forward </span>
-  </a>
+  <p class="plan-price">
+    {{ plan.totalPrice | currency }}<span class="plan-price__period">{{ periodLabel }}</span>
+  </p>
+
+  <p class="plan-pill">Vigencia de {{ plan.validity }} {{ plan.validity === 1 ? 'día' : 'días' }}</p>
+
+  <div class="plan-spacer"></div>
+
+  <button type="button" class="plan-details-toggle" [attr.aria-expanded]="showDetails()" (click)="toggleDetails()">
+    ¿Qué incluye?
+    <span class="material-symbols-outlined" aria-hidden="true">{{ showDetails() ? 'expand_less' : 'expand_more' }}</span>
+  </button>
+
+  @if (showDetails()) {
+  <ul class="plan-details">
+    @for (feature of orderedFeatures; track $index) {
+    <li>
+      <span class="material-symbols-outlined" aria-hidden="true">{{ getMaterialSymbol(feature.measure) }}</span>
+      {{ feature.name }} {{ feature.description }}
+    </li>
+    }
+    <li>
+      <span class="material-symbols-outlined" aria-hidden="true">calendar_today</span>
+      Vigencia de {{ plan.validity }} {{ plan.validity === 1 ? 'día' : 'días' }}
+    </li>
+  </ul>
+  }
+
+  <a class="plan-cta" [routerLink]="'/pagos'" (click)="addPlanToCart()">Elegir plan</a>
 </li>

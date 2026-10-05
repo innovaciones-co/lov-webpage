@@ -1,5 +1,17 @@
 <div class="navigations-tabs-container" (document:click)="closeDropdown()" (document:keydown)="onKeyDown($event)">
-    @if (isMobile()) {
+    @if (variant() === 'segmented') {
+    <div class="segmented" role="tablist">
+        @for (tab of tabs(); track tab.id) {
+        <button role="tab" class="segmented-tab" [class.active]="isActive(tab)" [attr.aria-selected]="isActive(tab)"
+            (click)="selectTab(tab.id)">
+            <span class="segmented-tab__title">{{ tab.title }}</span>
+            @if (tab.subtitle) {
+            <span class="segmented-tab__subtitle">{{ tab.subtitle }}</span>
+            }
+        </button>
+        }
+    </div>
+    } @else if (isMobile()) {
     <div class="tab-dropdown-container" (click)="$event.stopPropagation()">
         <button class="tab-dropdown-toggle" (click)="toggleDropdown()" [attr.aria-expanded]="isDropdownOpen()">
             <span class="toggle-label">
