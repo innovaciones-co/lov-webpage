@@ -8,8 +8,9 @@
     <app-nav-arrow direction="back" (onClick)="goBack()"></app-nav-arrow>
     <div class="container">
       <ul class="cards-list">
-        @for (plan of plans(); track $index) {
-        <app-plan-item [plan]="plan" [accentIndex]="$index"></app-plan-item>
+        @for (plan of visiblePlans(); track plan.id) {
+        <!-- Same color per plan as on /planes: its position in the full sorted list. -->
+        <app-plan-item [plan]="plan" [accentIndex]="page() * pageSize() + $index"></app-plan-item>
         }
       </ul>
     </div>

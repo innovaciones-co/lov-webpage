@@ -1,7 +1,9 @@
-import { Component, inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { Component, computed, inject, OnInit, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { PlansService } from '../../services/plan.service';
+import { CategoryService } from '../../services/category.service';
+import { sortPlansForDisplay } from '../../utils/sort-plans';
 import { PlanItem } from "../plan-item/plan-item";
 import { NavArrow } from "../../../../shared/components/nav-arrow/nav-arrow";
 
@@ -13,17 +15,25 @@ import { NavArrow } from "../../../../shared/components/nav-arrow/nav-arrow";
 })
 export class PlansIntro implements OnInit, OnDestroy {
   plansService = inject(PlansService);
+  private categoryService = inject(CategoryService);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
-  private currentPageSize: number = 0;
 
-  get plans() {
-    return this.plansService.getPlansSignal();
-  }
+  // The carousel pages through the sorted list on the client (same order as /planes:
+  // monthly plans first, most expensive first), instead of asking the API page by page,
+  // which returned plans in the API's own order.
+  pageSize = signal(1);
+  page = signal(0);
 
-  get pagination() {
-    return this.plansService.getPaginationSignal();
-  }
+  sortedPlans = computed(() =>
+    sortPlansForDisplay(this.plansService.getPlansSignal()(), this.categoryService.getCategoriesSignal()()));
+
+  totalPages = computed(() => Math.max(1, Math.ceil(this.sortedPlans().length / this.pageSize())));
+
+  visiblePlans = computed(() => {
+    const start = this.page() * this.pageSize();
+    return this.sortedPlans().slice(start, start + this.pageSize());
+  });
 
   get loading() {
     return this.plansService.getLoadingSignal();
@@ -44,20 +54,13 @@ export class PlansIntro implements OnInit, OnDestroy {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const newPageSize = this.getPageSize();
-    if (newPageSize !== this.currentPageSize) {
-      this.currentPageSize = newPageSize;
-      this.plansService.getPlans(0, null, newPageSize);
+    if (newPageSize !== this.pageSize()) {
+      // Keep showing roughly the same plans after the layout changes.
+      const firstVisible = this.page() * this.pageSize();
+      this.pageSize.set(newPageSize);
+      this.page.set(Math.floor(firstVisible / newPageSize));
     }
   };
-
-  loadMore() {
-    const currentPage = this.pagination().currentPage + 1;
-    this.plansService.getPlans(currentPage);
-  }
-
-  resetPagination() {
-    this.plansService.resetPagination();
-  }
 
   ngOnDestroy() {
     this.plansService.resetPagination();
@@ -67,43 +70,25 @@ export class PlansIntro implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const pageSize = this.getPageSize();
-    this.currentPageSize = pageSize;
-    this.plansService.getPlans(0, null, pageSize);
+    this.pageSize.set(this.getPageSize());
+    this.plansService.getPlans(0, null, 100);
+    if (this.categoryService.getCategoriesSignal()().length === 0) {
+      this.categoryService.getCategories();
+    }
     if (isPlatformBrowser(this.platformId)) {
       window.addEventListener('resize', this.updatePlansOnResize);
     }
   }
 
-  onCategoryChange(categoryId: number | null) {
-    this.plansService.getPlans(0, categoryId);
-  }
-
-  onPageChange(page: number) {
-    this.plansService.getPlans(page, null, this.currentPageSize);
-  }
-
-  onPageSizeChange(pageSize: number) {
-    this.plansService.getPlans(0, null, pageSize);
-  }
-
-  onReset() {
-    this.resetPagination();
-    this.plansService.getPlans();
-  }
-
   goNext() {
-    const currentPage = this.pagination().currentPage;
-    const totalPages = this.pagination().totalPages;
-    if (currentPage < totalPages - 1) {
-      this.onPageChange(currentPage + 1);
+    if (this.page() < this.totalPages() - 1) {
+      this.page.update(page => page + 1);
     }
   }
 
   goBack() {
-    const currentPage = this.pagination().currentPage;
-    if (currentPage > 0) {
-      this.onPageChange(currentPage - 1);
+    if (this.page() > 0) {
+      this.page.update(page => page - 1);
     }
   }
 
