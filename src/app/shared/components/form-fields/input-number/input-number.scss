@@ -1,5 +1,6 @@
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/form-fields' as *;
 
 label {
     margin-left: 6px;
@@ -44,4 +45,31 @@ input[type="number"] {
     font-size: 13px;
     margin-left: 6px;
     height: 20px;
+}
+
+// Refreshed look for the public site only (.public-site is set on the app's main section
+// outside the login/logged-in pages, which keep the original styles above).
+:host-context(.public-site) {
+  display: block;
+
+  label {
+    @include field-label;
+  }
+
+  input {
+    @include field-control;
+
+    // Hide the browser's tiny spinner arrows: amounts are typed or picked, not nudged.
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  .error {
+    @include field-error;
+  }
 }

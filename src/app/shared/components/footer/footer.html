@@ -1,17 +1,30 @@
 <footer class="footer">
     <div class="footer-container">
-        <div class="heart"></div>
+
+        <div class="footer-brand">
+            <!-- Brand manual: on color backgrounds the logo sits inside a white circular reserve. -->
+            <a class="footer-logo" href="/" aria-label="LOV Mobile, ir al inicio">
+                <img src="logo-lov.png" alt="LOV Mobile" width="100" height="50">
+            </a>
+            <div class="footer-brand__copy">
+                <p class="footer-tagline">El amor nos conecta</p>
+                <p class="footer-brand__text">Telefonía celular que conecta personas, organizaciones y causas sociales.</p>
+            </div>
+        </div>
 
         <div class="footer-grid">
             <!-- Contáctanos -->
             <div class="footer-column">
                 <h3 class="footer-title">Contáctanos</h3>
                 <ul class="footer-links">
-                    <li><a target="_blank" href="tel:+*777">IVR *777</a></li>
-                    <li><a target="_blank" href="tel:+018000413788">018000413788</a></li>
-                    <li><a target="_blank" href="mailto:info@lov.com.co">info@lov.com.co</a></li>
-                    <li><a target="_blank" href="https://wa.me/573330522222" target="_blank" rel="noopener">WhatsApp</a>
-                    </li>
+                    <li><a target="_blank" href="tel:+*777">
+                            <span class="material-symbols-outlined" aria-hidden="true">support_agent</span>IVR *777</a></li>
+                    <li><a target="_blank" href="tel:+018000413788">
+                            <span class="material-symbols-outlined" aria-hidden="true">call</span>018000413788</a></li>
+                    <li><a target="_blank" href="mailto:info@lov.com.co">
+                            <span class="material-symbols-outlined" aria-hidden="true">mail</span>info&#64;lov.com.co</a></li>
+                    <li><a href="https://wa.me/573330522222" target="_blank" rel="noopener">
+                            <span class="material-symbols-outlined" aria-hidden="true">chat</span>WhatsApp</a></li>
                 </ul>
             </div>
 
@@ -19,8 +32,7 @@
             <div class="footer-column">
                 <h3 class="footer-title">Legales</h3>
                 <ul class="footer-links">
-                    <li><a target="_blank" href="/docs/condiciones_servicio_prepago_lov.pdf">Términos y Condiciones</a>
-                    </li>
+                    <li><a target="_blank" href="/docs/condiciones_servicio_prepago_lov.pdf">Términos y Condiciones</a></li>
                     <li><a target="_blank" href="/docs/politicas_de_tratamiento_de_datos_personales_new.pdf">Política de
                             Privacidad</a></li>
                     <li><a target="_blank" href="/docs/habeas_data.pdf">Habeas data</a></li>
@@ -43,24 +55,53 @@
             <!-- Síguenos en -->
             <div class="footer-column">
                 <h3 class="footer-title">Síguenos en</h3>
-                <ul class="footer-links">
-                    <li><a href="https://facebook.com/lovcolombia" target="_blank" rel="noopener">Facebook</a></li>
-                    <li><a href="https://instagram.com/lovcolombia" target="_blank" rel="noopener">Instagram</a></li>
-                    <li><a href="https://linkedin.com/company/lov-telecomunicaciones" target="_blank"
-                            rel="noopener">LinkedIn</a></li>
-                    <li><a href="https://youtube.com/@lovtelecomunicaciones3317" target="_blank"
-                            rel="noopener">YouTube</a></li>
+                <ul class="footer-social">
+                    <li>
+                        <a href="https://facebook.com/lovcolombia" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.9v3h2.6V21h3z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://instagram.com/lovcolombia" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+                                <circle cx="12" cy="12" r="4" />
+                                <circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://linkedin.com/company/lov-telecomunicaciones" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="4" y="9.5" width="3.4" height="10.5" rx="0.6" />
+                                <circle cx="5.7" cy="5.7" r="2" />
+                                <path d="M10 9.5h3.2V11c.5-.9 1.7-1.8 3.4-1.8 3 0 3.6 2 3.6 4.5V20h-3.4v-5.6c0-1.3-.1-2.6-1.7-2.6s-1.8 1.2-1.8 2.5V20H10V9.5z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://youtube.com/@lovtelecomunicaciones3317" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M21.6 7.2a2.6 2.6 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.6 2.6 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.6 2.6 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.6 2.6 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3L10 15z" />
+                            </svg>
+                        </a>
+                    </li>
                 </ul>
+                <p class="footer-social__note">Únete a la comunidad LOV en redes.</p>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <div class="footer-copyright">
-                <p>Hecho con ❤️ por <a href="https://innovaciones.com.co">Innovaciones</a></p>
-            </div>
-            <div class="footer-copyright">
-                <p>&copy; {{ currentYear }} LOV. Todos los derechos reservados.</p>
-            </div>
+            <p class="footer-copyright">&copy; {{ currentYear }} LOV. Todos los derechos reservados.</p>
+            <p class="footer-made">
+                <span class="footer-made__heart" aria-hidden="true">
+                    <svg viewBox="1030 40 975 755"><path d="M1220 230 L1517 527 L1810 230" fill="none" stroke="#066EF1"
+                            stroke-width="370" stroke-linecap="round" stroke-linejoin="miter" /></svg>
+                </span>
+                Hecho con amor en Colombia
+            </p>
         </div>
     </div>
 </footer>

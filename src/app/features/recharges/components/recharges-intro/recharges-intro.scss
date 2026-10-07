@@ -1,68 +1,327 @@
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
 
+// LOV logo colors.
+$lov-blue: #066EF1;
+$lov-red: #FF0000;
+$lov-navy: #052B6C;
+$ink: #052B6C;
+
 #recharges-intro {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background:
+        // Brand manual "destello": a soft light flare at the top of every section.
+        radial-gradient(ellipse at 50% -15%, rgba(0, 160, 255, 0.16), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba($lov-blue, 0.08), transparent 45%),
+        radial-gradient(circle at 60% 100%, rgba($lov-red, 0.05), transparent 45%),
+        #f7f9fd;
 
     @include tablet {
         flex-direction: row;
-        min-height: 500px;
+        min-height: 640px;
     }
+}
 
-    .heart {
-        left: -20px;
-    }
+// ── Photo ──────────────────────────────────────────────────────────────────
 
-    .image-container {
-        flex: 1;
+.image-container {
+    position: relative;
+    flex: 1;
+    display: flex;
 
-        img {
-            width: 100%;
-            max-height: 250px;
-            height: auto;
-            object-fit: scale-down;
-
-            @include tablet {
-                height: 100%;
-                max-height: none;
-            }
-        }
-    }
-
-    .form-container {
-        flex: 0 0 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding-left: 2rem;
-        padding-top: 3rem;
-        padding-right: 2rem;
+    img {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        object-position: center 30%;
 
         @include tablet {
-            padding: 1rem 10% 2rem 5%;
-        }
-
-        .logo {
-            width: 75px;
-            margin-bottom: 1rem;
-
-            @include tablet {
-                width: 100px;
-            }
-        }
-
-        h2 {
-            margin-top: 0;
-            color: $color-primary
+            height: 100%;
         }
     }
 }
 
-.btn-container {
+.image-badge {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px 10px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    color: $ink;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 10px 26px rgba($lov-navy, 0.18);
+
+    @include tablet {
+        left: 28px;
+        bottom: 28px;
+    }
+}
+
+.image-badge__heart {
+    width: 34px;
+}
+
+// ── Form side ──────────────────────────────────────────────────────────────
+
+.form-container {
+    flex: 0 0 50%;
     display: flex;
-    justify-content: right;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2rem 1.25rem 2.5rem;
+
+    @include tablet {
+        padding: 2.5rem 7% 2.5rem 5%;
+    }
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 8px;
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    background: rgba($lov-blue, 0.10);
+    color: $lov-blue;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.eyebrow__heart {
+    width: 16px;
+}
+
+.title {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: $ink;
+}
+
+.title__accent {
+    background: linear-gradient(90deg, $lov-blue, #6C00BB 55%, $lov-red);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.lead {
+    margin: 0 0 0.5rem;
+    max-width: 560px;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: #4a4865;
+
+    strong {
+        color: $lov-red;
+        font-weight: 800;
+    }
+}
+
+// ── Form card ──────────────────────────────────────────────────────────────
+
+.recharge-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 600px;
+    padding: 22px 20px;
+    border-radius: 22px;
+    background: white;
+    box-shadow: 0 1px 2px rgba($ink, 0.04), 0 14px 36px rgba($lov-navy, 0.10);
+
+    @include tablet {
+        padding: 28px 28px 24px;
+    }
+}
+
+.recharge-card__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 0.25rem;
+    padding: 0;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: $ink;
+
+    .material-symbols-outlined {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        background: rgba($lov-blue, 0.10);
+        color: $lov-blue;
+        font-size: 20px;
+    }
+}
+
+.fields-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 14px;
+
+    @include tablet {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.amounts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.amounts__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $ink;
+}
+
+.amounts__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.amount-chip {
+    height: 40px;
+    padding: 0 16px;
+    border: 1.5px solid rgba($lov-navy, 0.14);
+    border-radius: 999px;
+    background: white;
+    color: $ink;
+    font-family: $font-display;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+
+    &:hover:not(.active) {
+        border-color: rgba($lov-blue, 0.5);
+        color: $lov-blue;
+    }
+
+    &:active {
+        transform: scale(0.97);
+    }
+
+    &.active {
+        border-color: transparent;
+        background: linear-gradient(90deg, $lov-blue, #0559C9);
+        color: white;
+        box-shadow: 0 6px 14px rgba($lov-blue, 0.28);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($lov-blue, 0.35);
+        outline-offset: 2px;
+    }
+}
+
+.hint {
+    margin: -0.4rem 0 0;
+    font-size: 0.8rem;
+    color: #6b6987;
+}
+
+.summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(#00A0FF, 0.10);
+    color: #052B6C;
+    font-size: 0.95rem;
+
+    .material-symbols-outlined {
+        font-size: 22px;
+        font-variation-settings: 'FILL' 1;
+    }
+
+    strong {
+        color: $ink;
+    }
+}
+
+.cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 54px;
+    margin-top: 0.25rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(90deg, $lov-blue, #6C00BB 60%, $lov-red);
+    background-size: 160% 100%;
+    color: white;
+    font-family: $font-display;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba($lov-blue, 0.3);
+    transition: background-position 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+
+    .material-symbols-outlined {
+        font-size: 22px;
+        transition: transform 0.2s ease;
+    }
+
+    &:not(:disabled):hover {
+        background-position: 100% 0;
+        transform: translateY(-2px);
+        box-shadow: 0 16px 32px rgba($lov-blue, 0.38);
+
+        .material-symbols-outlined {
+            transform: translateX(4px);
+        }
+    }
+
+    &:disabled {
+        background: #d9dce6;
+        color: #8a8aa0;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($lov-blue, 0.35);
+        outline-offset: 3px;
+    }
+}
+
+.secure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0;
+    font-size: 0.82rem;
+    color: #6b6987;
+
+    .material-symbols-outlined {
+        font-size: 17px;
+        color: #00A0FF;
+    }
 }

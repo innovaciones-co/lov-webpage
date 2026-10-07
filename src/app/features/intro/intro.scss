@@ -1,28 +1,155 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
+// LOV logo colors.
+$lov-blue: #066EF1;
+$lov-red: #FF0000;
+$lov-navy: #052B6C;
+$ink: #052B6C;
 
-.container {
+@keyframes heartbeat {
+    0%, 40%, 100% { transform: scale(1); }
+    10% { transform: scale(1.08); }
+    20% { transform: scale(0.98); }
+    30% { transform: scale(1.05); }
+}
+
+@keyframes ripple {
+    0% { transform: scale(0.55); opacity: 0.6; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes drift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+}
+
+.lovers {
+    position: relative;
+    overflow: hidden;
+    padding: 3rem 1.5rem;
+    background:
+        // Brand manual "destello": a soft light flare at the top of every section.
+        radial-gradient(ellipse at 50% -15%, rgba(0, 160, 255, 0.16), transparent 55%),
+        radial-gradient(circle at 20% 10%, rgba($lov-red, 0.06), transparent 45%),
+        radial-gradient(circle at 80% 90%, rgba($lov-blue, 0.08), transparent 50%),
+        linear-gradient(180deg, #fff 0%, #f5f8ff 100%);
+
+    @include large {
+        padding: 4rem 2rem;
+    }
+}
+
+.lovers-inner {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    padding: 4rem 2rem;
-    max-width: 800px;
+    gap: 1rem;
+    max-width: 820px;
     margin: 0 auto;
-    min-height: 50vh;
-    justify-content: center;
+    text-align: center;
+}
+
+// ── Big beating logo heart ─────────────────────────────────────────────────
+
+.big-heart {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 200px;
+    height: 150px;
+    margin-bottom: 0.5rem;
 
     @include large {
-        padding: 8rem 1rem;
+        width: 240px;
+        height: 175px;
+    }
+}
+
+.big-heart__logo {
+    position: relative;
+    z-index: 1;
+    width: 88%;
+    filter: drop-shadow(0 12px 20px rgba($lov-navy, 0.25));
+    animation: heartbeat 2.4s ease-in-out infinite;
+}
+
+.big-heart__ring {
+    position: absolute;
+    inset: -10%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba($lov-blue, 0.20) 0%, rgba($lov-red, 0.08) 50%, transparent 70%);
+    animation: ripple 2.4s ease-out infinite;
+
+    &--2 {
+        animation-delay: 1.2s;
+    }
+}
+
+// ── Copy ───────────────────────────────────────────────────────────────────
+
+.lovers-title {
+    margin: 0;
+    font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: $ink;
+}
+
+.lovers-title__accent {
+    background: linear-gradient(90deg, $lov-red, #6C00BB 50%, $lov-blue);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.lovers-text {
+    margin: 0;
+    max-width: 680px;
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #4a4865;
+
+    strong {
+        font-weight: 700;
+        color: $lov-blue;
     }
 
-    .description {
-        font-size: 1.4rem;
-        font-weight: 300;
+    @include large {
+        font-size: 1.25rem;
+    }
+}
 
-        strong {
-            font-weight: 600;
-        }
+// ── Floating decorative hearts ─────────────────────────────────────────────
+
+.float-heart {
+    position: absolute;
+    width: var(--size, 28px);
+    opacity: var(--alpha, 0.28);
+    animation: drift var(--speed, 6s) ease-in-out infinite;
+    pointer-events: none;
+
+    &--1 { --size: 34px; --tilt: -14deg; --speed: 6s; top: 18%; left: 10%; }
+    &--2 { --size: 20px; --tilt: 10deg; --speed: 7s; --alpha: 0.22; top: 64%; left: 18%; animation-delay: 1s; }
+    &--3 { --size: 40px; --tilt: 12deg; --speed: 6.5s; top: 20%; right: 11%; animation-delay: 0.5s; }
+    &--4 { --size: 22px; --tilt: -8deg; --speed: 5.5s; --alpha: 0.22; top: 66%; right: 17%; animation-delay: 1.6s; }
+    &--5 { --size: 16px; --tilt: 6deg; --speed: 8s; --alpha: 0.25; top: 42%; left: 4%; animation-delay: 2s; }
+
+    @include mobile {
+        &--2, &--4, &--5 { display: none; }
+        &--1 { top: 6%; left: 6%; }
+        &--3 { top: 8%; right: 6%; }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .big-heart__logo,
+    .big-heart__ring,
+    .float-heart {
+        animation: none;
     }
 }

@@ -6,10 +6,11 @@ import { CategoryService } from '../../services/category.service';
 import { sortPlansForDisplay } from '../../utils/sort-plans';
 import { PlanItem } from "../plan-item/plan-item";
 import { NavArrow } from "../../../../shared/components/nav-arrow/nav-arrow";
+import { LovHeart } from '../../../../shared/components/lov-heart/lov-heart';
 
 @Component({
   selector: 'app-plans-intro',
-  imports: [PlanItem, NavArrow],
+  imports: [PlanItem, NavArrow, LovHeart],
   templateUrl: './plans-intro.html',
   styleUrl: './plans-intro.scss'
 })

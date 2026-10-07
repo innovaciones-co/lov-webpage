@@ -1,5 +1,9 @@
 <div class="parent-container">
-  <h2 class="title">Elige tu plan ahora</h2>
+  <span class="eyebrow">
+    <app-lov-heart class="eyebrow__heart" [withCircle]="false" />
+    Planes LOV
+  </span>
+  <h2 class="title">Elige <span class="title__accent">tu plan</span> ahora</h2>
   @if (loading()) {
   <span class="loading-spinner"></span>
   }

@@ -1,12 +1,27 @@
 <app-promo title="Planes y paquetes que te conectan con causas que verdaderamente importan"
+  titleAccent="causas que verdaderamente importan"
   description="Con todos nuestros planes y paquetes estarás aportando a organizaciones de ayuda humanitaria que están transformando la dura realidad de muchas comunidades en Colombia."
-  image="promo.png" logo="logo-lov.png">
+  image="promo.png" logo="logo-lov.png"
+  [highlights]="[
+    { icon: 'volunteer_activism', text: 'El 20% de tu pago va a ONG aliadas' },
+    { icon: 'diversity_3', text: 'Apoyas comunidades en toda Colombia' },
+    { icon: 'favorite', text: 'Sin pagar nada extra por ayudar' }
+  ]"
+  ctaText="Ver planes" ctaLink="/planes">
 </app-promo>
 <app-get-sim></app-get-sim>
 <app-intro></app-intro>
 <app-plans-intro></app-plans-intro>
 <app-intro-portability></app-intro-portability>
 <app-promo title="Conéctate con la mejor cobertura y los mejores planes"
-  description="Planes flexibles, excelente servicio y una experiencia sin complicaciones, bajo la misma cobetura de TIGO."
-  image="sim-card.jpg" direction="right" fullImage="1200 / 840">
+  titleAccent="la mejor cobertura"
+  eyebrow="Cobertura"
+  description="Planes flexibles, excelente servicio y una experiencia sin complicaciones, bajo la misma cobertura de TIGO."
+  image="sim-card.jpg" direction="right" fullImage="1200 / 840"
+  [highlights]="[
+    { icon: 'cell_tower', text: 'La misma cobertura de la red de TIGO' },
+    { icon: 'tune', text: 'Planes flexibles a tu medida' },
+    { icon: 'support_agent', text: 'Atención sin complicaciones' }
+  ]"
+  ctaText="Elegir mi plan" ctaLink="/planes">
 </app-promo>

@@ -1,0 +1,23 @@
+<header class="ph">
+    <div class="ph__copy">
+        @if (eyebrow()) {
+        <span class="ph__eyebrow">
+            <app-lov-heart class="ph__eyebrow-heart" [withCircle]="false" />
+            {{ eyebrow() }}
+        </span>
+        }
+        <h1 class="ph__title">{{ titleParts().before }}@if (titleParts().accent) {<span class="ph__accent">{{ titleParts().accent }}</span>}{{ titleParts().after }}</h1>
+        <div class="ph__lead">
+            <ng-content />
+        </div>
+    </div>
+
+    @if (icon()) {
+    <div class="ph__art" aria-hidden="true">
+        <span class="ph__glow"></span>
+        <span class="ph__tile material-symbols-outlined">{{ icon() }}</span>
+        <app-lov-heart class="ph__mini ph__mini--1" [withCircle]="false" />
+        <app-lov-heart class="ph__mini ph__mini--2" [withCircle]="false" />
+    </div>
+    }
+</header>

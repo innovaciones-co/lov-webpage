@@ -1,3 +1,5 @@
+@use '../../../../../styles/form-fields' as *;
+
 .switch-container {
     display: flex;
     align-items: center;
@@ -48,4 +50,68 @@
 
 .switch-text {
     user-select: none;
+}
+
+// Refreshed look for the public site only (.public-site is set on the app's main section
+// outside the login/logged-in pages, which keep the original styles above).
+:host-context(.public-site) {
+  .switch-container {
+      display: flex;
+      align-items: center;
+  }
+
+  .switch-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+  }
+
+  .switch-toggle {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 46px;
+      height: 26px;
+      padding: 3px;
+      border: none;
+      border-radius: 999px;
+      background-color: #d5d9e4;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+
+      &:focus-visible {
+          outline: 3px solid rgba($field-blue, 0.35);
+          outline-offset: 2px;
+      }
+
+      &.active {
+          background: linear-gradient(90deg, $field-blue, #0559C9);
+
+          .switch-slider {
+              transform: translateX(20px);
+          }
+      }
+
+      &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+      }
+  }
+
+  .switch-slider {
+      display: block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      transition: transform 0.25s ease;
+  }
+
+  .switch-text {
+      color: $field-ink;
+      font-weight: 500;
+      user-select: none;
+  }
 }

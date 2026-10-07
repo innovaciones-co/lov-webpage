@@ -6,6 +6,7 @@ import { NavigationTabsComponent } from "../../shared/components/navigation-tabs
 import { NewPortabilityComponent } from './components/new-portability/new-portability';
 import { PortabilityStatusComponent } from './components/portability-status/portability-status';
 import { DeviceDetectionService } from '../../core/services/device-detection.service';
+import { PageHeader } from '../../shared/components/page-header/page-header';
 
 interface Tab {
   id: string;
@@ -24,11 +25,9 @@ interface TabTitles {
   templateUrl: './portability.html',
   styleUrls: ['./portability.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
+  imports: [CommonModule,
     ReactiveFormsModule,
-    NavigationTabsComponent
-  ],
+    NavigationTabsComponent, PageHeader],
 })
 export class Portability implements OnInit {
   private route = inject(ActivatedRoute);

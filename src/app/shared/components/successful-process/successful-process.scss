@@ -61,3 +61,120 @@
         }
     }
 }
+
+// ── Refreshed look for the public site only ─────────────────────────────────
+// (.public-site is set outside login and the logged-in area; the PQR confirmation, which
+// lives in the logged-in flow, keeps the original styles above.)
+:host-context(.public-site) {
+    .success-container {
+        position: relative;
+        min-height: auto;
+        max-width: 640px;
+        margin: 2.5rem auto 3rem;
+        padding: 2.5rem 1.75rem 2.25rem;
+        border-radius: 28px;
+        background:
+            radial-gradient(circle at 50% 0%, rgba(#066EF1, 0.12), transparent 55%),
+            radial-gradient(circle at 100% 100%, rgba(#FF0000, 0.06), transparent 45%),
+            #ffffff;
+        box-shadow: 0 1px 2px rgba(#052B6C, 0.04), 0 20px 50px rgba(#052B6C, 0.12);
+
+        @media (max-width: 768px) {
+            margin: 1.5rem 1rem 2rem;
+            padding: 2rem 1.25rem;
+        }
+    }
+
+    .success-image {
+        margin-bottom: 1.25rem;
+
+        img {
+            width: 220px;
+            filter: drop-shadow(0 14px 24px rgba(#052B6C, 0.15));
+        }
+    }
+
+    .success-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        h2 {
+            margin: 0 0 0.25rem;
+            font-size: clamp(1.5rem, 3.5vw, 2rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            background: linear-gradient(90deg, #066EF1, #6C00BB 55%, #FF0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        ::ng-deep p {
+            color: #4a4865;
+            font-size: 1.02rem;
+            line-height: 1.6;
+
+            strong {
+                color: #052B6C;
+            }
+
+            &.timing-info {
+                margin: 0.75rem 0 0.5rem;
+                padding: 14px 16px;
+                border-radius: 16px;
+                background: #f5f8ff;
+                font-size: 0.95rem;
+            }
+        }
+
+        ::ng-deep a.link-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            margin-top: 0.75rem;
+            padding: 0 24px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #066EF1, #0559C9);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 10px 22px rgba(#066EF1, 0.28);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+            &:hover {
+                color: white;
+                text-decoration: none;
+                transform: translateY(-1px);
+                box-shadow: 0 14px 28px rgba(#066EF1, 0.36);
+            }
+        }
+    }
+}
+
+// Action links on the success pages, shown as a row of pill buttons (first one primary).
+:host-context(.public-site) ::ng-deep .success-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 0.75rem;
+
+    a.link-button {
+        margin-top: 0;
+    }
+
+    a.link-button:not(:first-child) {
+        background: white;
+        color: #052B6C;
+        box-shadow: inset 0 0 0 1.5px rgba(#052B6C, 0.15);
+
+        &:hover {
+            color: #066EF1;
+            box-shadow: inset 0 0 0 1.5px rgba(#066EF1, 0.5), 0 8px 18px rgba(#052B6C, 0.08);
+        }
+    }
+}

@@ -1,0 +1,72 @@
+// Shared look for every form field on the site (text, number, select, date, checkbox,
+// radio, OTP). Components @include these so all forms stay consistent.
+
+@use 'variables' as *;
+
+$field-ink: #052B6C;
+$field-blue: #066EF1;
+$field-border: #dfe3ec;
+$field-border-hover: #c3c9d8;
+$field-error: #e5484d;
+$field-radius: 12px;
+$field-height: 48px;
+
+@mixin field-label {
+  display: block;
+  margin: 0 0 6px 2px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $field-ink;
+}
+
+@mixin field-control {
+  width: 100%;
+  height: $field-height;
+  margin: 0;
+  padding: 0 14px;
+  border: 1.5px solid $field-border;
+  border-radius: $field-radius;
+  background: #fff;
+  color: $field-ink;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+  &:hover:not(:focus):not(:disabled) {
+    border-color: $field-border-hover;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $field-blue;
+    box-shadow: 0 0 0 4px rgba($field-blue, 0.14);
+  }
+
+  &::placeholder {
+    color: #a3a7b9;
+    opacity: 1;
+  }
+
+  &:disabled {
+    background: #f4f6fa;
+    color: #9a9db0;
+    cursor: not-allowed;
+  }
+
+  &.invalid {
+    border-color: $field-error;
+    background: rgba($field-error, 0.03);
+
+    &:focus {
+      box-shadow: 0 0 0 4px rgba($field-error, 0.14);
+    }
+  }
+}
+
+@mixin field-error {
+  min-height: 20px;
+  margin: 4px 0 0 2px;
+  color: $field-error;
+  font-size: 0.8rem;
+  font-weight: 500;
+}

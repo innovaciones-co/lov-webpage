@@ -1,5 +1,6 @@
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/form-fields' as ff;
 
 .otp-label {
     display: block;
@@ -91,4 +92,96 @@
         font-size: 14px;
         padding: 0.5rem 0.45rem;
     }
+}
+
+// Refreshed look for the public site only (.public-site is set on the app's main section
+// outside the login/logged-in pages, which keep the original styles above).
+:host-context(.public-site) {
+  .otp-label {
+      @include ff.field-label;
+      text-align: center;
+  }
+
+  .otp-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      margin: 8px 0;
+  }
+
+  .otp-input {
+      width: 50px;
+      height: 58px;
+      padding: 0;
+      text-align: center;
+      font-family: $font-display;
+      font-size: 22px;
+      font-weight: 800;
+      color: ff.$field-ink;
+      border: 1.5px solid ff.$field-border;
+      border-radius: 14px;
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+
+      &:focus {
+          border-color: ff.$field-blue;
+          outline: none;
+          box-shadow: 0 0 0 4px rgba(ff.$field-blue, 0.14);
+          transform: translateY(-2px);
+      }
+
+      &:hover:not(:focus) {
+          border-color: ff.$field-border-hover;
+      }
+
+      &.invalid {
+          border-color: ff.$field-error;
+
+          &:focus {
+              box-shadow: 0 0 0 4px rgba(ff.$field-error, 0.14);
+          }
+      }
+
+      // Remove default input styling
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+
+      &[type="number"] {
+          -moz-appearance: textfield;
+      }
+  }
+
+  .error {
+      @include ff.field-error;
+      text-align: center;
+  }
+
+  // Responsive design for smaller screens
+  @media (max-width: 480px) {
+      .otp-container {
+          gap: 7px;
+      }
+
+      .otp-input {
+          width: 40px;
+          height: 48px;
+          font-size: 18px;
+      }
+  }
+
+  @media (max-width: 360px) {
+      .otp-container {
+          gap: 5px;
+      }
+
+      .otp-input {
+          width: 34px;
+          height: 42px;
+          font-size: 16px;
+      }
+  }
 }

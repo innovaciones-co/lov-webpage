@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { PageHeader } from '../../shared/components/page-header/page-header';
 
 export interface LegalDocument {
   title: string;
@@ -9,7 +10,7 @@ export interface LegalDocument {
 
 @Component({
   selector: 'app-legals',
-  imports: [],
+  imports: [PageHeader],
   templateUrl: './legals.html',
   styleUrls: ['./legals.scss']
 })

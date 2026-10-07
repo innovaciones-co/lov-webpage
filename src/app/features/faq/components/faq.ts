@@ -9,10 +9,11 @@ import { FAQ, FAQCategory } from '../models/faq.models';
 import { DeviceDetectionService } from '../../../core/services/device-detection.service';
 import { ScrollDetectionService } from '../../../core/services/scroll-detection.service';
 import { FaqService } from '../services/faq.service';
+import { PageHeader } from '../../../shared/components/page-header/page-header';
 
 @Component({
   selector: 'app-faq',
-  imports: [CommonModule],
+  imports: [CommonModule, PageHeader],
   templateUrl: './faq.html',
   styleUrl: './faq.scss'
 })

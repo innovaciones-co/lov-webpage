@@ -26,3 +26,6 @@ $shadow-color: rgba(0, 0, 0, 0.1);
 
 $font-family-base: 'Titillium Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
 $font-family-tight: 'Inter Tight', $font-family-base;
+// Rounded display face for headlines on the public site: closest free match to the brand
+// manual's Sofia Pro Soft (licensed; swap in the real webfont here if one becomes available).
+$font-display: 'Nunito', $font-family-base;

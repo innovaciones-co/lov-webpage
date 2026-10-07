@@ -1,13 +1,26 @@
 <div class="container">
 
-    <h1>Elige tu plan ahora</h1>
+    <header class="plans-hero">
+        <span class="plans-eyebrow">
+            <app-lov-heart class="plans-eyebrow__heart" [withCircle]="false" />
+            Planes LOV
+        </span>
 
-    <p>Navega a máxima velocidad, habla sin límites y disfruta de nuestros beneficios. Lo mejor de todo es que, sin
-        importar el
-        plan que elijas, el <strong>20% de tu pago se convierte automáticamente en donaciones reales</strong> para
-        nuestras ONG
-        aliadas. <i>El
-            propósito no es cuestión de precio.</i></p>
+        <h1 class="plans-title">Elige <span class="plans-title__accent">tu plan</span> ahora</h1>
+
+        <p class="plans-lead">
+            Navega a máxima velocidad, habla sin límites y disfruta de nuestros beneficios.
+        </p>
+
+        <div class="plans-donation">
+            <span class="plans-donation__icon material-symbols-outlined" aria-hidden="true">volunteer_activism</span>
+            <p class="plans-donation__text">
+                Sin importar el plan que elijas, el <strong>20% de tu pago</strong> se convierte automáticamente en
+                <strong>donaciones reales</strong> para nuestras ONG aliadas.
+                <span class="plans-donation__tagline">El propósito no es cuestión de precio.</span>
+            </p>
+        </div>
+    </header>
 
     <app-navigation-tabs [tabs]="tabs()" [initialActiveTabId]="activeTabId()"
         [isMobile]="isMobileView()" variant="segmented"></app-navigation-tabs>

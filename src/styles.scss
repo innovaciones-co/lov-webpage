@@ -3,7 +3,7 @@
 @use 'styles/mixins' as *;
 @use "sass:math";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Nunito:wght@600;700;800;900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
 
 .material-symbols-outlined {
     font-variation-settings:
@@ -1151,5 +1151,153 @@ button.link-button {
     .card-payment-modal .modal-content {
         border-radius: 0;
         max-height: 100vh;
+    }
+}
+
+// ── Refreshed look for the public site ─────────────────────────────────────
+// .public-site is set on the app's main section on every page except login and the
+// logged-in area (dashboard, payments, PQR), which keep the original styles above.
+.public-site {
+
+    // Headlines in the brand's rounded display face (see $font-display).
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: $font-display;
+    }
+
+    input,
+    textarea,
+    select {
+        padding: 0.7rem 0.9rem;
+        border: 1.5px solid #dfe3ec;
+        border-radius: 12px;
+        background: #fff;
+        color: #052B6C;
+        font-family: inherit;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+        &:hover:not(:focus):not(:disabled) {
+            border-color: #c3c9d8;
+        }
+
+        &:focus {
+            border-color: #066EF1;
+            box-shadow: 0 0 0 4px rgba(6, 110, 241, 0.14);
+            outline: none;
+        }
+
+        &::placeholder {
+            color: #a3a7b9;
+        }
+
+        &:disabled {
+            background: #f4f6fa;
+            color: #9a9db0;
+        }
+    }
+
+    textarea {
+        min-height: 120px;
+        line-height: 1.5;
+        resize: vertical;
+    }
+
+    // Brand-blue pills (still display:flex like the base .btn, which some layouts rely on).
+    .btn {
+        justify-content: center;
+        gap: 8px;
+        min-height: 46px;
+        padding: 0 24px;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #066EF1, #0559C9);
+        color: white;
+        font-family: $font-display;
+        font-size: 0.98rem;
+        font-weight: 800;
+        letter-spacing: 0.1px;
+        box-shadow: 0 8px 18px rgba(6, 110, 241, 0.25);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+
+        span {
+            margin-right: 0;
+        }
+
+        &:hover {
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(6, 110, 241, 0.32);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &:focus-visible {
+            outline: 3px solid rgba(6, 110, 241, 0.35);
+            outline-offset: 3px;
+        }
+
+        &:disabled {
+            background: #d9dce6;
+            color: #8a8aa0;
+            box-shadow: none;
+            transform: none;
+        }
+
+        &.btn-secondary {
+            background: white;
+            color: #052B6C;
+            box-shadow: inset 0 0 0 1.5px rgba(5, 43, 108, 0.15);
+
+            &:hover {
+                color: #066EF1;
+                box-shadow: inset 0 0 0 1.5px rgba(6, 110, 241, 0.5), 0 8px 18px rgba(5, 43, 108, 0.08);
+            }
+        }
+    }
+
+    .card {
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 2px rgba(29, 26, 58, 0.04), 0 12px 32px rgba(5, 43, 108, 0.08);
+
+        @include tablet {
+            padding: 2rem;
+        }
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        color: #052B6C;
+        border-bottom-color: #edf0f6;
+    }
+
+    .form-grid {
+        gap: 14px;
+    }
+
+    .form-subtitle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 1rem;
+        color: #052B6C;
+        font-size: 1.15rem;
+        font-weight: 800;
+
+        // Small brand accent bar before every form section title.
+        &::before {
+            content: '';
+            flex-shrink: 0;
+            width: 4px;
+            height: 1.1em;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #066EF1, #FF0000);
+        }
     }
 }

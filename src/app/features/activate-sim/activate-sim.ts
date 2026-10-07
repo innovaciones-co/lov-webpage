@@ -2,10 +2,11 @@ import { Component, signal } from '@angular/core';
 import { DocumentValidation, DocumentValidationData } from './components/document-validation/document-validation';
 import { IccidValidationForm, IccidValidationFormData } from "./components/iccid-validation-form/iccid-validation-form";
 import { PersonalInfoForm, PersonalInfoFormData } from './components/personal-info-form/personal-info-form';
+import { PageHeader } from '../../shared/components/page-header/page-header';
 
 @Component({
   selector: 'app-activate-sim',
-  imports: [IccidValidationForm, PersonalInfoForm, DocumentValidation],
+  imports: [IccidValidationForm, PersonalInfoForm, DocumentValidation, PageHeader],
   templateUrl: './activate-sim.html',
   styleUrl: './activate-sim.scss',
 })

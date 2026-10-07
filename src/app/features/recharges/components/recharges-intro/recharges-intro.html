@@ -1,39 +1,75 @@
-<aside id="recharges-intro">
+<section id="recharges-intro">
     <div class="image-container">
-        <img [src]="'recharges.png'" width="500" height="300" priority>
+        <img [src]="'recharges.png'" alt="Dos mujeres sonriendo caminando juntas en un parque" width="500" height="300"
+            priority>
+        <span class="image-badge">
+            <app-lov-heart class="image-badge__heart" />
+            Cada recarga suma a una causa
+        </span>
     </div>
+
     <div class="form-container">
-        <div class="heart"></div>
-        <h2>¡Recarga sonrisas!</h2>
-        <p>Cada vez que recargas tu línea estás reafirmando tu compromiso de ser parte del movimiento que <strong>AMA
-            </strong> ayudar</p>
+        <span class="eyebrow">
+            <app-lov-heart class="eyebrow__heart" [withCircle]="false" />
+            Recargas
+        </span>
 
-        <form [formGroup]="form()" (ngSubmit)="onSubmit()">
-            <div class="card">
-                <h3 class="form-subtitle">Información de la recarga</h3>
-                <div class="form-grid">
-                    <div class="form-row">
-                        <input-text-field [label]="'Número celular'" [placeholder]="'3001234567'"
-                            [control]="form().controls.msisdn" [error]="getFieldErrorMessage('msisdn')"
-                            [autocomplete]="'tel'"></input-text-field>
+        <h1 class="title">¡Recarga <span class="title__accent">sonrisas</span>!</h1>
+        <p class="lead">
+            Cada vez que recargas tu línea estás reafirmando tu compromiso de ser parte del movimiento que
+            <strong>AMA</strong> ayudar.
+        </p>
 
-                        <input-text-field [label]="'Confirmar número celular'" [placeholder]="'3001234567'"
-                            [control]="form().controls.msisdnConfirmation"
-                            [error]="getFieldErrorMessage('msisdnConfirmation')"
-                            [autocomplete]="'tel'"></input-text-field>
-                    </div>
-                    <div class="form-row">
-                        <input-number-field [label]="'Valor a recargar'" [placeholder]="'10000'"
-                            [control]="form().controls.rechargeValue" [step]="1000"
-                            [error]="getFieldErrorMessage('rechargeValue')"></input-number-field>
-                    </div>
+        <form class="recharge-card" [formGroup]="form()" (ngSubmit)="onSubmit()">
+            <h2 class="recharge-card__title">
+                <span class="material-symbols-outlined" aria-hidden="true">phone_iphone</span>
+                Información de la recarga
+            </h2>
+
+            <div class="fields-row">
+                <input-text-field [label]="'Número celular'" [placeholder]="'3001234567'"
+                    [control]="form().controls.msisdn" [error]="getFieldErrorMessage('msisdn')"
+                    [autocomplete]="'tel'"></input-text-field>
+
+                <input-text-field [label]="'Confirmar número celular'" [placeholder]="'3001234567'"
+                    [control]="form().controls.msisdnConfirmation"
+                    [error]="getFieldErrorMessage('msisdnConfirmation')"
+                    [autocomplete]="'tel'"></input-text-field>
+            </div>
+
+            <div class="amounts">
+                <span class="amounts__label">Elige un valor</span>
+                <div class="amounts__chips" role="group" aria-label="Valores rápidos de recarga">
+                    @for (amount of quickAmounts; track amount) {
+                    <button type="button" class="amount-chip" [class.active]="selectedAmount() === amount"
+                        [attr.aria-pressed]="selectedAmount() === amount" (click)="selectAmount(amount)">
+                        {{ formatCop(amount) }}
+                    </button>
+                    }
                 </div>
             </div>
 
-            <div class="btn-container">
-                <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+            <input-number-field [label]="'Otro valor'" [placeholder]="'10000'"
+                [control]="form().controls.rechargeValue" [step]="1000"
+                [error]="getFieldErrorMessage('rechargeValue')"></input-number-field>
+            <p class="hint">Mínimo $5.000, en múltiplos de $1.000.</p>
+
+            @if (summary(); as s) {
+            <div class="summary">
+                <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+                <span>Vas a recargar <strong>{{ formatCop(s.amount) }}</strong> a la línea <strong>{{ s.msisdn }}</strong></span>
             </div>
+            }
+
+            <button class="cta" type="submit" [disabled]="form().invalid">
+                Continuar al pago
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            </button>
+
+            <p class="secure">
+                <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+                Pago seguro · PSE, tarjeta, Nequi o Daviplata
+            </p>
         </form>
     </div>
-
-</aside>
+</section>

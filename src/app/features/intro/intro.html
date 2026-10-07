@@ -1,8 +1,23 @@
-<div class="parent-container">
-    <article class="container">
-        <div class="heart"></div>
-        <p class="description">Todas las personas somos Lovers en potencia.<br>Pero un verdadero Lover es aquel que
-            impulsado por el amor, <strong>busca generar grandes cambios</strong>. Sabe que un pequeño acto, hecho en
-            comunidad, tiene el poder para generar grandes transformaciones.</p>
+<section class="lovers">
+    <!-- Decorative floating logo hearts -->
+    <app-lov-heart class="float-heart float-heart--1" [withCircle]="false" />
+    <app-lov-heart class="float-heart float-heart--2" [withCircle]="false" />
+    <app-lov-heart class="float-heart float-heart--3" [withCircle]="false" />
+    <app-lov-heart class="float-heart float-heart--4" [withCircle]="false" />
+    <app-lov-heart class="float-heart float-heart--5" [withCircle]="false" />
+
+    <article class="lovers-inner">
+        <div class="big-heart" aria-hidden="true">
+            <span class="big-heart__ring"></span>
+            <span class="big-heart__ring big-heart__ring--2"></span>
+            <app-lov-heart class="big-heart__logo" />
+        </div>
+
+        <h2 class="lovers-title">Todas las personas somos <span class="lovers-title__accent">Lovers</span> en potencia.</h2>
+
+        <p class="lovers-text">
+            Pero un verdadero Lover es aquel que, impulsado por el amor, <strong>busca generar grandes cambios</strong>.
+            Sabe que un pequeño acto, hecho en comunidad, tiene el poder para generar grandes transformaciones.
+        </p>
     </article>
-</div>
+</section>

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { LegalDocument } from './legals';
+import { PageHeader } from '../../shared/components/page-header/page-header';
 
 @Component({
 	selector: 'app-promo-history',
+	imports: [PageHeader],
 	templateUrl: './promo-history.html',
 	styleUrls: ['./legals.scss'],
 })

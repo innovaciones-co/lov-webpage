@@ -1,5 +1,6 @@
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
+@use '../../../../../styles/form-fields' as *;
 
 label {
   margin-left: 6px;
@@ -31,4 +32,28 @@ input[type='date'] {
   font-size: 13px;
   margin-left: 6px;
   height: 20px;
+}
+
+// Refreshed look for the public site only (.public-site is set on the app's main section
+// outside the login/logged-in pages, which keep the original styles above).
+:host-context(.public-site) {
+  display: block;
+
+  label {
+    @include field-label;
+  }
+
+  input[type='date'] {
+    @include field-control;
+    cursor: pointer;
+
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+  }
+
+  .error {
+    @include field-error;
+  }
 }

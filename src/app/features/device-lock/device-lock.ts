@@ -2,10 +2,11 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PersonalInfoForm, PersonalInfoFormData } from "./components/personal-info-form/personal-info-form";
 import { IncidentInfoForm, IncidentInfoFormData } from "./components/incident-info-form/incident-info-form";
+import { PageHeader } from '../../shared/components/page-header/page-header';
 
 @Component({
   selector: 'app-device-lock',
-  imports: [CommonModule, PersonalInfoForm, IncidentInfoForm],
+  imports: [CommonModule, PersonalInfoForm, IncidentInfoForm, PageHeader],
   templateUrl: './device-lock.html',
   styleUrl: './device-lock.scss'
 })

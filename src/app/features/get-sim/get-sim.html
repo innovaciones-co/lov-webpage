@@ -1,19 +1,66 @@
-<aside id="get-sim" class="">
-    <div class="container">
+<section id="get-sim">
+    <div class="get-sim-inner">
 
-        <div class="info col-12 col-sm-8 fade-in">
-            <h2>Adquiere tu SIM card fácil y rápido</h2>
-            <p>
-                Al hacer clic serás redirigido al formulario de pago en donde deberás ingresar
-                tus datos de contacto y dirección de envío. Una vez confirmado el pago, recibirás tu
-                SIM card en <strong>1 a 3 días hábiles</strong>. Luego solo
-                actívala o pórtalala y empieza a disfrutar del servicio. ¡Así de fácil!
+        <!-- The real LOV SIM card, floating over a soft brand glow with sparkles. -->
+        <div class="sim-art fade-in">
+            <span class="sim-art__glow" aria-hidden="true"></span>
+            <svg class="sim-art__sparkles" viewBox="0 0 420 340" aria-hidden="true">
+                <path class="sparkle" d="M40 70l5 13 13 5-13 5-5 13-5-13-13-5 13-5z" fill="#FF0000" />
+                <path class="sparkle sparkle--2" d="M380 50l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" fill="#066EF1" />
+                <path class="sparkle sparkle--3" d="M392 262l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#00A0FF" />
+            </svg>
+            <img class="sim-art__img" src="sim-lov.png" width="840" height="537"
+                alt="SIM card LOV con el logo y el mensaje el amor nos conecta" loading="lazy" />
+            <span class="sim-art__shadow" aria-hidden="true"></span>
+        </div>
+
+        <div class="sim-copy fade-in fade-in--delay">
+            <span class="sim-eyebrow">
+                <span class="material-symbols-outlined" aria-hidden="true">sim_card</span>
+                SIM card LOV
+            </span>
+
+            <h2 class="sim-title">Adquiere tu SIM card <span class="sim-title__accent">fácil y rápido</span></h2>
+
+            <p class="sim-lead">
+                Pídela en línea, te llega a la puerta de tu casa y en minutos estás navegando.
             </p>
+
+            <ol class="sim-steps">
+                <li>
+                    <span class="sim-steps__icon material-symbols-outlined" aria-hidden="true">credit_card</span>
+                    <span>
+                        <strong>Paga en línea</strong>
+                        Ingresa tus datos de contacto y dirección de envío.
+                    </span>
+                </li>
+                <li>
+                    <span class="sim-steps__icon material-symbols-outlined" aria-hidden="true">local_shipping</span>
+                    <span>
+                        <strong>Recíbela en 1 a 3 días hábiles</strong>
+                        Te la enviamos una vez confirmado el pago.
+                    </span>
+                </li>
+                <li>
+                    <span class="sim-steps__icon material-symbols-outlined" aria-hidden="true">bolt</span>
+                    <span>
+                        <strong>Actívala o trae tu número</strong>
+                        Y empieza a disfrutar del servicio. ¡Así de fácil!
+                    </span>
+                </li>
+            </ol>
+
+            <div class="sim-actions">
+                <button type="button" class="sim-cta" (click)="purchaseSim()">
+                    Obtener mi SIM
+                    <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                </button>
+                <span class="sim-secure">
+                    <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+                    Pago seguro con OnePay
+                </span>
+            </div>
         </div>
 
-
-        <div class="btn-container col-12 col-sm-4 fade-in fade-in--delay">
-            <button class="btn btn-primary" (click)="purchaseSim()">Obtener SIM</button>
-        </div>
     </div>
-</aside>
+</section>

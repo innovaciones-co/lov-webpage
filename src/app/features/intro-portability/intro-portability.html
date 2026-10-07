@@ -1,47 +1,89 @@
-<div class="parent-container">
-  <div class="container">
-    <h2 class="title">
-      Cámbiate a LOV con tu mismo número y ayuda a quienes más lo necesitan
-    </h2>
+<section class="porta">
+  <div class="porta-inner">
 
-    <ul class="sections-list">
-      <li class="section">
-        <div class="heart"></div>
-        <h3 class="section-title">¿Cómo funciona?</h3>
-        <p class="section-text">
-          Cambia tu número a nuestra red en pocos pasos. Solo necesitas tu cédula, una SIM nueva y
-          seguir el proceso en línea.
+    <header class="porta-header">
+      <div class="porta-header__copy">
+        <span class="porta-eyebrow">
+          <app-lov-heart class="porta-eyebrow__heart" [withCircle]="false" />
+          Portabilidad
+        </span>
+        <h2 class="porta-title">
+          Cámbiate a LOV con <span class="porta-title__accent">tu mismo número</span> y ayuda a quienes más lo
+          necesitan
+        </h2>
+        <p class="porta-lead">
+          Solo necesitas tu cédula y una SIM LOV. Haces todo en línea y en máximo 24 horas ya estás en nuestra red.
         </p>
-        <a [routerLink]="'/portabilidad'" class="link">Iniciar portabilidad</a>
+      </div>
+
+      <div class="porta-actions">
+        <a class="porta-btn porta-btn--primary" [routerLink]="'/portabilidad'">
+          Iniciar portabilidad
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </a>
+        <a class="porta-btn porta-btn--ghost" [routerLink]="'/portabilidad'" [queryParams]="{ tab: 'portability-status' }">
+          <span class="material-symbols-outlined" aria-hidden="true">search</span>
+          Consultar mi solicitud
+        </a>
+      </div>
+    </header>
+
+    <ol class="porta-steps">
+      <li class="porta-step">
+        <div class="porta-step__top">
+          <span class="porta-step__icon material-symbols-outlined" aria-hidden="true">badge</span>
+          <span class="porta-step__number">01</span>
+        </div>
+        <h3 class="porta-step__title">¿Cómo funciona?</h3>
+        <p class="porta-step__text">
+          Cambia tu número a nuestra red en pocos pasos. Solo necesitas tu cédula, una SIM nueva y seguir el proceso
+          en línea.
+        </p>
+        <a class="porta-step__link" [routerLink]="'/portabilidad'">
+          Iniciar portabilidad
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+        </a>
       </li>
 
-      <li class="section">
-        <div class="heart"></div>
-        <h3 class="section-title">¿Cuánto tarda el proceso?</h3>
-        <p class="section-text">
-          Tu número estará activo en nuestra red en máximo 24 horas. Si lo activas después de las 3
-          p.m., el proceso inicia al día siguiente.
+      <li class="porta-step">
+        <div class="porta-step__top">
+          <span class="porta-step__icon material-symbols-outlined" aria-hidden="true">schedule</span>
+          <span class="porta-step__number">02</span>
+        </div>
+        <h3 class="porta-step__title">¿Cuánto tarda el proceso?</h3>
+        <p class="porta-step__text">
+          Tu número estará activo en nuestra red en <strong>máximo 24 horas</strong>. Si lo activas después de las
+          3 p.m., el proceso inicia al día siguiente.
         </p>
       </li>
 
-      <li class="section">
-        <div class="heart"></div>
-        <h3 class="section-title">Activa tu línea y empieza a disfrutar</h3>
-        <p class="section-text">
-          Una vez recibas la confirmación, inserta la nueva SIM en tu celular, reinicia el equipo y
-          empieza a disfrutar de nuestra red.
+      <li class="porta-step">
+        <div class="porta-step__top">
+          <span class="porta-step__icon material-symbols-outlined" aria-hidden="true">sim_card</span>
+          <span class="porta-step__number">03</span>
+        </div>
+        <h3 class="porta-step__title">Activa tu línea y empieza a disfrutar</h3>
+        <p class="porta-step__text">
+          Cuando recibas la confirmación, inserta la nueva SIM en tu celular, reinicia el equipo y disfruta de
+          nuestra red.
         </p>
       </li>
 
-      <li class="section">
-        <div class="heart"></div>
-        <h3 class="section-title">Consulta el estado de tu solicitud</h3>
-        <p class="section-text">
-          Consulta aquí el estado de tu solicitud en tiempo real. Solo ingresa tu número y conoce el
-          progreso.
+      <li class="porta-step">
+        <div class="porta-step__top">
+          <span class="porta-step__icon material-symbols-outlined" aria-hidden="true">travel_explore</span>
+          <span class="porta-step__number">04</span>
+        </div>
+        <h3 class="porta-step__title">Consulta el estado de tu solicitud</h3>
+        <p class="porta-step__text">
+          Revisa en tiempo real cómo va tu solicitud. Solo ingresa tu número y conoce el progreso.
         </p>
-        <a href="#" class="link">Revisar la portabilidad</a>
+        <a class="porta-step__link" [routerLink]="'/portabilidad'" [queryParams]="{ tab: 'portability-status' }">
+          Revisar la portabilidad
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+        </a>
       </li>
-    </ul>
+    </ol>
+
   </div>
-</div>
+</section>

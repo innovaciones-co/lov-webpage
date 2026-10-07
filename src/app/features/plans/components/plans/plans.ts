@@ -3,10 +3,11 @@ import { NavigationTabsComponent } from "../../../../shared/components/navigatio
 import { PlansDashboard } from '../plans-dashboard/plans-dashboard';
 import { CategoryService } from '../../services/category.service';
 import { DeviceDetectionService } from '../../../../core/services/device-detection.service';
+import { LovHeart } from '../../../../shared/components/lov-heart/lov-heart';
 
 @Component({
   selector: 'app-plans',
-  imports: [NavigationTabsComponent],
+  imports: [NavigationTabsComponent, LovHeart],
   templateUrl: './plans.html',
   styleUrl: './plans.scss'
 })

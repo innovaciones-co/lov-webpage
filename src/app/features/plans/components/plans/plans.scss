@@ -1,4 +1,119 @@
+@use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
+
+// LOV logo colors.
+$lov-blue: #066EF1;
+$lov-red: #FF0000;
+$lov-navy: #052B6C;
+$ink: #052B6C;
+
+.plans-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    max-width: 860px;
+    margin: 1.5rem auto 0.5rem;
+    text-align: center;
+}
+
+.plans-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    background: rgba($lov-blue, 0.10);
+    color: $lov-blue;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.plans-eyebrow__heart {
+    width: 16px;
+}
+
+.plans-title {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: $ink;
+}
+
+.plans-title__accent {
+    background: linear-gradient(90deg, $lov-blue, #6C00BB 55%, $lov-red);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.plans-lead {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.55;
+    color: #4a4865;
+}
+
+// The donation promise, set apart as its own card: it's the brand's key message.
+.plans-donation {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 0.4rem;
+    padding: 16px 20px;
+    border-radius: 20px;
+    background:
+        linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(90deg, rgba($lov-blue, 0.45), rgba(#6C00BB, 0.35), rgba($lov-red, 0.45)) border-box;
+    border: 1.5px solid transparent;
+    box-shadow: 0 10px 28px rgba($lov-navy, 0.08);
+    text-align: left;
+}
+
+.plans-donation__icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, $lov-blue, $lov-red);
+    color: white;
+    font-size: 26px;
+}
+
+.plans-donation__text {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: #4a4865;
+
+    strong {
+        color: $ink;
+        font-weight: 700;
+    }
+}
+
+.plans-donation__tagline {
+    display: block;
+    margin-top: 2px;
+    font-style: italic;
+    font-weight: 600;
+    color: $lov-blue;
+}
+
+@include mobile {
+    .plans-donation {
+        flex-direction: column;
+        text-align: center;
+    }
+}
 
 ::ng-deep .navigations-tabs-container {
     display: flex;

@@ -1,5 +1,5 @@
 <app-menu></app-menu>
-<section class="main">
+<section class="main" [class.public-site]="isPublic()">
     <router-outlet />
 </section>
 <app-whatsapp-fab></app-whatsapp-fab>

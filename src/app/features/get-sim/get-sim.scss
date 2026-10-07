@@ -1,6 +1,11 @@
 @use '../../../styles/_variables.scss' as *;
 @use '../../../styles/_mixins.scss' as *;
 
+$brand-coral: #FF0000;
+$brand-purple: #6C00BB;
+$brand-blue: #066EF1;
+$ink: #052B6C;
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -13,65 +18,303 @@
     }
 }
 
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+@keyframes shadowPulse {
+    0%, 100% { transform: scaleX(1); opacity: 0.18; }
+    50% { transform: scaleX(0.86); opacity: 0.1; }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.75); }
+}
+
 #get-sim {
-    background: linear-gradient(135deg, #EE6C68 0%, #3D189D 65%, #0061FF 100%);
-    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 4.5rem 1.5rem;
+    background:
+        // Brand manual "destello": a soft light flare at the top of every section.
+        radial-gradient(ellipse at 50% -15%, rgba(0, 160, 255, 0.16), transparent 55%),
+        radial-gradient(circle at 12% 20%, rgba($brand-coral, 0.10), transparent 40%),
+        radial-gradient(circle at 88% 85%, rgba($brand-blue, 0.10), transparent 45%),
+        #f7f7fb;
+
+    @include large {
+        padding: 6rem 2rem;
+    }
+}
+
+.get-sim-inner {
+    display: grid;
+    grid-template-columns: 1fr;
     align-items: center;
-    padding: 3rem 1.5rem;
+    gap: 2rem;
+    max-width: 1120px;
+    margin: 0 auto;
+
+    @include tablet {
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 3rem;
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.6s ease both;
+
+    &--delay {
+        animation-delay: 0.25s;
+    }
+}
+
+// ── Illustration ───────────────────────────────────────────────────────────
+
+.sim-art {
+    position: relative;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 0.5rem 0.5rem;
+}
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    p {
-        color: $color-primary-light;
+.sim-art__glow {
+    position: absolute;
+    inset: 0 5%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(#066EF1, 0.22) 0%, rgba(#FF0000, 0.08) 50%, transparent 70%);
+}
+
+.sim-art__sparkles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.sim-art__img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    border-radius: 18px;
+    filter: drop-shadow(0 22px 28px rgba(#052B6C, 0.28));
+    animation: float 4.5s ease-in-out infinite;
+
+    @include tablet {
+        max-width: 440px;
     }
+}
 
-    .container {
+.sim-art__shadow {
+    width: 60%;
+    height: 14px;
+    margin-top: 18px;
+    border-radius: 50%;
+    background: rgba(#052B6C, 0.18);
+    filter: blur(4px);
+    animation: shadowPulse 4.5s ease-in-out infinite;
+}
+
+.sparkle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: twinkle 2.6s ease-in-out infinite;
+
+    &--2 { animation-delay: 0.8s; }
+    &--3 { animation-delay: 1.6s; }
+}
+
+// ── Copy ───────────────────────────────────────────────────────────────────
+
+.sim-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.sim-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    background: rgba($brand-purple, 0.10);
+    color: $brand-purple;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+
+    .material-symbols-outlined {
+        font-size: 18px;
+    }
+}
+
+.sim-title {
+    margin: 0;
+    font-size: clamp(1.9rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: $ink;
+}
+
+.sim-title__accent {
+    background: linear-gradient(90deg, $brand-coral, $brand-purple 55%, $brand-blue);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.sim-lead {
+    margin: 0;
+    max-width: 520px;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: #4a4865;
+}
+
+.sim-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 520px;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+
+    li {
         display: flex;
-        flex-direction: column;
-        align-items: start;
-        justify-content: center;
-        gap: 1rem;
-
-        @include tablet {
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-        }
-    }
-
-    .fade-in {
-        animation: fadeInUp 0.6s ease both;
-
-        &--delay {
-            animation-delay: 0.75s;
-        }
-    }
-
-    .info {
-        display: flex;
-        flex-direction: column;
-    }
-
-
-    .btn-container {
-        display: flex;
-        justify-content: center;
         align-items: center;
-        padding: 0;
-        margin: 0;
-    }
-
-    .btn-primary {
-        background-color: $color-primary-light;
-        color: $color-extra-1;
+        gap: 14px;
+        padding: 12px 16px;
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 1px 2px rgba($ink, 0.04), 0 6px 18px rgba($ink, 0.06);
+        color: #4a4865;
+        font-size: 0.9rem;
+        line-height: 1.35;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
 
         &:hover {
-            background-color: #f0f0f0;
-            color: $color-extra-2;
+            transform: translateX(4px);
+            box-shadow: 0 2px 4px rgba($ink, 0.05), 0 10px 26px rgba($ink, 0.10);
         }
+
+        strong {
+            display: block;
+            color: $ink;
+            font-size: 0.98rem;
+        }
+    }
+}
+
+.sim-steps__icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    color: white;
+    font-size: 22px;
+    background: linear-gradient(135deg, $brand-coral, $brand-purple);
+
+    li:nth-child(2) & {
+        background: linear-gradient(135deg, $brand-purple, $brand-blue);
+    }
+
+    li:nth-child(3) & {
+        background: linear-gradient(135deg, $brand-blue, #00A0FF);
+    }
+}
+
+.sim-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 20px;
+    margin-top: 0.75rem;
+}
+
+.sim-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    padding: 0 28px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(90deg, $brand-coral, $brand-purple 55%, $brand-blue);
+    background-size: 160% 100%;
+    background-position: 0% 0%;
+    color: white;
+    font-family: $font-display;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba($brand-purple, 0.32);
+    transition: background-position 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+    .material-symbols-outlined {
+        font-size: 22px;
+        transition: transform 0.2s ease;
+    }
+
+    &:hover {
+        background-position: 100% 0%;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba($brand-purple, 0.4);
+
+        .material-symbols-outlined {
+            transform: translateX(4px);
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($brand-purple, 0.4);
+        outline-offset: 3px;
+    }
+}
+
+.sim-secure {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #6b6987;
+    font-size: 0.85rem;
+
+    .material-symbols-outlined {
+        font-size: 18px;
+        color: #00A0FF;
+    }
+}
+
+@include mobile {
+    .sim-cta {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sim-art__img,
+    .sim-art__shadow,
+    .sparkle,
+    .fade-in {
+        animation: none;
     }
 }

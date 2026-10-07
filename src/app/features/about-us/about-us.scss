@@ -1,88 +1,264 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
-@use '../../../styles/variables' as *;
-@use '../../../styles/mixins' as *;
+// LOV logo colors.
+$lov-blue: #066EF1;
+$lov-red: #FF0000;
+$lov-navy: #052B6C;
+$ink: #052B6C;
+
+@keyframes drift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
 
 #about-us {
+    position: relative;
+    overflow: hidden;
+    padding: 2.5rem 1.25rem 3rem;
+    background:
+        // Brand manual "destello": a soft light flare at the top of every section.
+        radial-gradient(ellipse at 50% -15%, rgba(0, 160, 255, 0.16), transparent 55%),
+        radial-gradient(circle at 0% 0%, rgba($lov-blue, 0.10), transparent 45%),
+        radial-gradient(circle at 100% 100%, rgba($lov-red, 0.07), transparent 45%),
+        #f7f9fd;
+
+    @include large {
+        padding: 4.5rem 2rem;
+    }
+}
+
+.about-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    @include large {
+        grid-template-columns: 1.05fr 1fr;
+        gap: 4rem;
+    }
+}
+
+// ── Video ──────────────────────────────────────────────────────────────────
+
+.video-side {
+    position: relative;
+}
+
+// Gradient-bordered card around the YouTube player.
+.video-frame {
+    padding: 6px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, $lov-blue, #6C00BB 55%, $lov-red);
+    box-shadow: 0 24px 50px rgba($lov-navy, 0.22);
+
+    iframe {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: 0;
+        border-radius: 20px;
+        background: #000;
+    }
+}
+
+.video-caption {
+    position: absolute;
+    left: 50%;
+    bottom: -20px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px 10px 14px;
+    border-radius: 999px;
+    background: white;
+    color: $ink;
+    font-family: $font-display;
+    font-size: 0.95rem;
+    font-weight: 800;
+    white-space: nowrap;
+    box-shadow: 0 10px 26px rgba($lov-navy, 0.16);
+}
+
+.video-caption__heart {
+    width: 36px;
+}
+
+// ── Copy ───────────────────────────────────────────────────────────────────
+
+.copy-side {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-top: 1rem;
 
-    @include tablet {
-        flex-direction: row;
+    @include large {
+        padding-top: 0;
+    }
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    background: rgba($lov-blue, 0.10);
+    color: $lov-blue;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.eyebrow__heart {
+    width: 16px;
+}
+
+.title {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: clamp(2.1rem, 5vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: $ink;
+}
+
+.title__accent {
+    background: linear-gradient(90deg, $lov-blue, #6C00BB 55%, $lov-red);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.lead {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: $ink;
+}
+
+.text {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: #4a4865;
+}
+
+.quote {
+    position: relative;
+    margin: 0.25rem 0;
+    padding: 18px 20px 18px 56px;
+    border-radius: 18px;
+    background: white;
+    color: $ink;
+    font-size: 1.08rem;
+    line-height: 1.55;
+    box-shadow: 0 1px 2px rgba($ink, 0.04), 0 12px 30px rgba($lov-navy, 0.08);
+
+    // Brand stripe on the left edge.
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 14px;
+        bottom: 14px;
+        width: 4px;
+        border-radius: 0 4px 4px 0;
+        background: linear-gradient(180deg, $lov-blue, $lov-red);
     }
 
-    .image-container {
-        flex: 1;
-        display: flex;
+    strong {
+        color: $lov-blue;
+        font-weight: 800;
+    }
+}
+
+.quote__mark {
+    position: absolute;
+    left: 16px;
+    top: 4px;
+    font-family: Georgia, serif;
+    font-size: 3.5rem;
+    line-height: 1;
+    background: linear-gradient(180deg, $lov-blue, $lov-red);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.pillars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        min-height: 360px;
-        padding: 2rem;
-
-        background-position: center;
-        background-size: cover;
-
-        @include tablet {
-            min-height: 500px;
-            padding: 4rem;
-        }
-
-        iframe {
-            display: block;
-            width: 100%;
-            max-width: 720px;
-            aspect-ratio: 16 / 9;
-            border: 0;
-        }
+        gap: 8px;
+        padding: 8px 16px 8px 10px;
+        border-radius: 999px;
+        background: white;
+        color: $ink;
+        font-weight: 700;
+        font-size: 0.92rem;
+        box-shadow: inset 0 0 0 1.5px rgba($lov-navy, 0.08);
     }
 
-    .right-container {
-        flex: 0 0 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 3rem 2rem;
+    .material-symbols-outlined {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba($lov-blue, 0.10);
+        color: $lov-blue;
+        font-size: 18px;
+    }
 
-        @include tablet {
-            padding: 1rem 10% 2rem 5%;
-        }
+    li:nth-child(2) .material-symbols-outlined {
+        background: rgba(#6C00BB, 0.10);
+        color: #6C00BB;
+    }
 
-        .heart {
-            left: -20px;
-        }
+    li:nth-child(3) .material-symbols-outlined {
+        background: rgba($lov-red, 0.08);
+        color: $lov-red;
+    }
+}
 
-        .logo {
-            width: 180px;
-            height: auto;
-            margin-bottom: 1rem;
+// ── Decorative logo hearts ─────────────────────────────────────────────────
 
-            @include tablet {
-                width: 220px;
-            }
-        }
+.deco {
+    position: absolute;
+    opacity: 0.12;
+    pointer-events: none;
+    animation: drift 7s ease-in-out infinite;
 
-        h1 {
-            margin-top: 0;
-            color: $color-primary;
-            font-size: 2rem;
-            font-weight: 600;
+    &--1 { --tilt: -14deg; width: 120px; top: -20px; right: 6%; }
+    &--2 { --tilt: 12deg; width: 80px; bottom: 6%; left: 2%; animation-delay: 1.5s; }
 
-            @include large {
-                font-size: 2.5rem;
-                font-weight: bold;
-            }
-        }
+    @include mobile {
+        &--1 { width: 80px; }
+        &--2 { display: none; }
+    }
+}
 
-        .description {
-            p {
-                font-size: 1.25rem;
-
-                &:last-child {
-                    margin-bottom: 0;
-                }
-            }
-        }
+@media (prefers-reduced-motion: reduce) {
+    .deco {
+        animation: none;
     }
 }

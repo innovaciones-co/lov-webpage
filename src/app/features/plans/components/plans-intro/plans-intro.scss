@@ -6,21 +6,52 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fafafa;
-  padding: 4rem 0;
+  background:
+    radial-gradient(ellipse at 50% -15%, rgba(0, 160, 255, 0.14), transparent 55%),
+    #f7f9fd;
+  padding: 3.5rem 0;
 
   @include large {
-    padding: 7rem 1rem;
+    padding: 5rem 1rem;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.75rem;
+    padding: 6px 14px 6px 10px;
+    border-radius: 999px;
+    background: rgba(#066EF1, 0.10);
+    color: #066EF1;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+
+  .eyebrow__heart {
+    width: 16px;
   }
 
   .title {
+    margin: 0 0 2.5rem;
     text-align: center;
-    font-size: 2rem;
-    margin-bottom: 4rem;
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #052B6C;
 
     @include large {
-      font-size: 2.5rem;
+      margin-bottom: 3rem;
     }
+  }
+
+  .title__accent {
+    background: linear-gradient(90deg, #066EF1, #6C00BB 55%, #FF0000);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   .loading-spinner {

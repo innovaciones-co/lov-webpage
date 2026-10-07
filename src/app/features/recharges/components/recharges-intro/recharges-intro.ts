@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from "@angular/router";
 import { Observable, of } from 'rxjs';
@@ -9,6 +9,7 @@ import { isLovMsisdnValidator } from '../../../../core/validators/isLovMsisdnVal
 import { multipleOf1000Validator } from '../../../../core/validators/multipleOf1000Validator';
 import { InputNumberComponent } from "../../../../shared/components/form-fields/input-number/input-number";
 import { InputTextComponent } from "../../../../shared/components/form-fields/input-text/input-text";
+import { LovHeart } from '../../../../shared/components/lov-heart/lov-heart';
 import { Product } from '../../../payments/models/product.model';
 import { PaymentService } from '../../../payments/services/payment.service';
 import { ProductFactoryService } from '../../../payments/services/product-factory.service';
@@ -17,7 +18,7 @@ import { ProductFactoryService } from '../../../payments/services/product-factor
   selector: 'app-recharges-intro',
   templateUrl: './recharges-intro.html',
   styleUrl: './recharges-intro.scss',
-  imports: [InputTextComponent, ReactiveFormsModule, InputNumberComponent]
+  imports: [InputTextComponent, ReactiveFormsModule, InputNumberComponent, LovHeart]
 })
 export class RechargesIntro {
 
@@ -44,6 +45,30 @@ export class RechargesIntro {
       ])
     })
   );
+
+  // One-tap amounts (all valid: at least $5.000 and multiples of $1.000).
+  readonly quickAmounts = [5000, 10000, 20000, 30000, 50000];
+
+  private formValue = toSignal(this.form().valueChanges, { initialValue: this.form().value });
+  private formStatus = toSignal(this.form().statusChanges, { initialValue: this.form().status });
+
+  selectedAmount = computed(() => Number(this.formValue().rechargeValue) || 0);
+
+  // "Vas a recargar $X a la línea Y", once everything (including the async LOV check) is valid.
+  summary = computed(() => this.formStatus() === 'VALID'
+    ? { msisdn: this.formValue().msisdn ?? '', amount: this.selectedAmount() }
+    : null);
+
+  selectAmount(amount: number): void {
+    const control = this.form().controls.rechargeValue;
+    control.setValue(String(amount));
+    control.markAsDirty();
+    control.markAsTouched();
+  }
+
+  formatCop(value: number): string {
+    return '$' + value.toLocaleString('es-CO');
+  }
 
   constructor() {
     // Re-run msisdnConfirmation's validation whenever msisdn changes, since

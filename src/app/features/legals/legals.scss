@@ -194,20 +194,33 @@
             line-height: 1.4;
         }
 
+        // WhatsApp help button (WhatsApp's own green, so it's instantly recognizable).
         .contact-btn {
-            background: #007bff;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 46px;
+            padding: 0 22px 0 16px;
+            border-radius: 999px;
+            background: #25D366;
             color: white;
+            font-size: 0.95rem;
+            font-weight: 700;
             text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: inline-block;
-            transition: all 0.2s ease;
+            box-shadow: 0 8px 18px rgba(37, 211, 102, 0.32);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+            img {
+                width: 22px;
+                height: 22px;
+            }
 
             &:hover {
-                background: #0056b3;
+                background: #1ebe5b;
+                color: white;
                 text-decoration: none;
+                transform: translateY(-1px);
+                box-shadow: 0 12px 24px rgba(37, 211, 102, 0.4);
             }
         }
     }

@@ -1,6 +1,12 @@
 @use '../../../../styles/variables' as *;
 @use '../../../../styles/mixins' as *;
 
+// LOV logo colors.
+$lov-blue: #066EF1;
+$lov-red: #FF0000;
+$lov-navy: #052B6C;
+$ink: #052B6C;
+
 .promo {
     display: flex;
     flex-direction: column;
@@ -8,7 +14,9 @@
 
     @include tablet {
         flex-direction: row;
-        height: var(--promo-height, 500px);
+        // A minimum, not a fixed height: the text side (highlights + button) can be taller,
+        // and the image stretches with it instead of the content getting cut off.
+        min-height: var(--promo-height, 500px);
     }
 
     // Reverse direction when direction is 'right'
@@ -20,6 +28,7 @@
 
     .image-container {
         flex: 1;
+        display: flex;
 
         img {
             width: 100%;
@@ -36,40 +45,198 @@
         }
     }
 
+    // Images that must never be cropped (fullImage): shown whole as a floating card at their
+    // own ratio, centered on a soft background, instead of stretched to the text's height.
+    &.promo--full .image-container {
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background:
+            radial-gradient(circle at 30% 30%, rgba($lov-blue, 0.10), transparent 60%),
+            radial-gradient(circle at 80% 80%, rgba($lov-red, 0.07), transparent 55%),
+            #f3f6fd;
+
+        @include tablet {
+            padding: 2.5rem;
+        }
+
+        img {
+            height: auto;
+            object-fit: contain !important;
+            border-radius: 20px;
+            box-shadow: 0 18px 40px rgba($lov-navy, 0.18);
+        }
+    }
+
     .text {
+        position: relative;
+        overflow: hidden;
         flex: 0 0 50%;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 4rem 2rem;
+        padding: 3rem 1.75rem;
+        background:
+            radial-gradient(circle at 100% 0%, rgba($lov-blue, 0.08), transparent 45%),
+            radial-gradient(circle at 0% 100%, rgba($lov-red, 0.05), transparent 45%),
+            #fff;
 
         @include tablet {
-            padding: 1rem 10% 2rem 5%;
+            padding: 2.5rem 8% 2.5rem 6%;
         }
+    }
 
-        .logo {
-            width: 75px;
-            margin-bottom: 1rem;
+    .text-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.9rem;
+        max-width: 560px;
+    }
 
-            @include tablet {
-                width: 100px;
-            }
+    // Big faint logo heart bleeding out of the corner.
+    .watermark {
+        position: absolute;
+        right: -60px;
+        bottom: -50px;
+        width: 260px;
+        opacity: 0.07;
+        pointer-events: none;
+    }
+
+    &.reverse .watermark {
+        right: auto;
+        left: -60px;
+    }
+
+    .logo {
+        width: 75px;
+        height: auto;
+        margin-bottom: 0.25rem;
+
+        @include tablet {
+            width: 96px;
         }
+    }
 
-        .title {
-            font-size: 2rem;
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px 6px 10px;
+        border-radius: 999px;
+        background: rgba($lov-blue, 0.10);
+        color: $lov-blue;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+    }
+
+    .eyebrow__heart {
+        width: 16px;
+    }
+
+    .title {
+        margin: 0;
+        font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        color: $ink;
+        text-wrap: balance;
+    }
+
+    .title__accent {
+        background: linear-gradient(90deg, $lov-blue, #6C00BB 55%, $lov-red);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .description {
+        margin: 0;
+        font-size: 1.08rem;
+        line-height: 1.6;
+        color: #4a4865;
+    }
+
+    .highlights {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 0.25rem 0 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.98rem;
             font-weight: 600;
-            margin-top: 0;
-            color: $color-primary;
+            color: $ink;
+        }
+    }
 
-            @include large {
-                font-size: 2.5rem;
-                font-weight: bold;
+    .highlights__icon {
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: rgba($lov-blue, 0.10);
+        color: $lov-blue;
+        font-size: 20px;
+
+        li:nth-child(2) & {
+            background: rgba(#6C00BB, 0.10);
+            color: #6C00BB;
+        }
+
+        li:nth-child(3) & {
+            background: rgba($lov-red, 0.08);
+            color: $lov-red;
+        }
+    }
+
+    .cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 50px;
+        margin-top: 0.5rem;
+        padding: 0 24px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, $lov-blue, #0559C9);
+        color: white;
+        font-family: $font-display;
+        font-size: 0.98rem;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 10px 22px rgba($lov-blue, 0.3);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        .material-symbols-outlined {
+            font-size: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba($lov-blue, 0.38);
+
+            .material-symbols-outlined {
+                transform: translateX(4px);
             }
         }
 
-        .description {
-            font-size: 1.25rem;
+        &:focus-visible {
+            outline: 3px solid rgba($lov-blue, 0.35);
+            outline-offset: 3px;
         }
     }
 }
