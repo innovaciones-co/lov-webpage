@@ -12,7 +12,7 @@ export class GetSim {
 
   purchaseSim() {
     this.document.defaultView?.open(
-      'https://biz.payulatam.com/L0e6ae15B9B4D27',
+      'https://pagos.onepay.la/link/01a0ef44-4202-73fd-9bad-691d7d554cdc',
       '_blank',
     );
   }
