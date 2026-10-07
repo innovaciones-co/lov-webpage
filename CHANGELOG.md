@@ -1,3 +1,10 @@
+# [1.57.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.56.0...v1.57.0) (2026-10-07)
+
+
+### Features
+
+* **web:** redesign the public site following the LOV brand manual ([ff98578](https://github.com/innovaciones-co/lov-webpage/commit/ff9857866b8c6e0f2c3d822a02cd772fc5db4fcb)), closes [#066EF1](https://github.com/innovaciones-co/lov-webpage/issues/066EF1) [#FF0000](https://github.com/innovaciones-co/lov-webpage/issues/FF0000) [#052B6C](https://github.com/innovaciones-co/lov-webpage/issues/052B6C)
+
 # [1.56.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.55.0...v1.56.0) (2026-10-07)
 
 
