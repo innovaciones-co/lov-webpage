@@ -1,3 +1,10 @@
+# [1.56.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.55.0...v1.56.0) (2026-10-07)
+
+
+### Features
+
+* **home:** plans carousel shows monthly plans first, priciest first ([2e5783c](https://github.com/innovaciones-co/lov-webpage/commit/2e5783cdeed49decba0ac6f42e6425334187418d))
+
 # [1.55.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.54.0...v1.55.0) (2026-10-07)
 
 
