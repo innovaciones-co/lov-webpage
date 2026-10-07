@@ -1,3 +1,10 @@
+# [1.55.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.54.0...v1.55.0) (2026-10-07)
+
+
+### Features
+
+* buy-SIM button now opens the OnePay payment link ([8064f69](https://github.com/innovaciones-co/lov-webpage/commit/8064f69fd0c65ec8526fa6e45e82d6d336b612e3))
+
 # [1.54.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.53.0...v1.54.0) (2026-10-05)
 
 
