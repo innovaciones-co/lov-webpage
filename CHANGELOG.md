@@ -1,3 +1,15 @@
+# [1.54.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.53.0...v1.54.0) (2026-10-05)
+
+
+### Bug Fixes
+
+* **checkout:** recurring subscription always renews automatically ([c9d1a65](https://github.com/innovaciones-co/lov-webpage/commit/c9d1a65b6f4c36b12dcc43bac3b8ac72f0314361))
+
+
+### Features
+
+* **plans:** dark plan cards with big headline, monthly plans priciest first ([12759b5](https://github.com/innovaciones-co/lov-webpage/commit/12759b5c86a562140b469c9f734a83fc4297f006))
+
 # [1.53.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.52.0...v1.53.0) (2026-10-03)
 
 
