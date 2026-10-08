@@ -58,22 +58,23 @@ $ink: #052B6C;
     position: relative;
     display: grid;
     place-items: center;
-    width: 200px;
-    height: 150px;
-    margin-bottom: 0.5rem;
+    width: 240px;
+    height: 191px;
+    margin-bottom: 0.25rem;
 
     @include large {
-        width: 240px;
-        height: 175px;
+        width: 300px;
+        height: 239px;
     }
 }
 
+// The GIF animates itself (the logo pieces coming together), so no extra heartbeat here.
 .big-heart__logo {
     position: relative;
     z-index: 1;
-    width: 88%;
-    filter: drop-shadow(0 12px 20px rgba($lov-navy, 0.25));
-    animation: heartbeat 2.4s ease-in-out infinite;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 12px 20px rgba($lov-navy, 0.18));
 }
 
 .big-heart__ring {

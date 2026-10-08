@@ -7,10 +7,12 @@
     <app-lov-heart class="float-heart float-heart--5" [withCircle]="false" />
 
     <article class="lovers-inner">
-        <div class="big-heart" aria-hidden="true">
-            <span class="big-heart__ring"></span>
-            <span class="big-heart__ring big-heart__ring--2"></span>
-            <app-lov-heart class="big-heart__logo" />
+        <div class="big-heart">
+            <span class="big-heart__ring" aria-hidden="true"></span>
+            <span class="big-heart__ring big-heart__ring--2" aria-hidden="true"></span>
+            <!-- Official animated LOV logo (transparent GIF from the brand team). -->
+            <img class="big-heart__logo" src="lov-logo-animado.gif" width="480" height="382"
+                alt="Logo de LOV Mobile" loading="lazy">
         </div>
 
         <h2 class="lovers-title">Todas las personas somos <span class="lovers-title__accent">Lovers</span> en potencia.</h2>
