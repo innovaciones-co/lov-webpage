@@ -1,0 +1,173 @@
+// Mobile full-screen menu panel (app-menu). Kept global, not in menu.scss, so the menu
+// component stays under the 8 kB per-component style budget. Selectors are scoped to app-menu.
+
+@use 'variables' as *;
+@use 'mixins' as *;
+
+$lov-blue: #066EF1;
+$lov-red: #FF0000;
+$lov-navy: #052B6C;
+$h-mobile: 62px;
+$h-tablet: 72px;
+
+app-menu {
+
+    .mobile-panel {
+        position: fixed;
+        top: $h-mobile;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow-y: auto;
+        background:
+            radial-gradient(ellipse at 50% -10%, rgba(0, 160, 255, 0.14), transparent 55%),
+            #f7f9fd;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+
+        @include tablet {
+            top: $h-tablet;
+        }
+
+        @include large {
+            display: none;
+        }
+
+        &.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    }
+
+    .mobile-panel__inner {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 560px;
+        min-height: 100%;
+        margin: 0 auto;
+        padding: 18px 16px 24px;
+    }
+
+    .mobile-tiles {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .mobile-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 16px;
+        border-radius: 18px;
+        font-family: $font-display;
+        font-size: 1.1rem;
+        font-weight: 800;
+        text-decoration: none;
+
+        .material-symbols-outlined {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        &--blue {
+            background: rgba($lov-blue, 0.10);
+            color: $lov-navy;
+
+            .material-symbols-outlined { background: $lov-blue; }
+        }
+
+        &--red {
+            background: rgba($lov-red, 0.07);
+            color: $lov-navy;
+
+            .material-symbols-outlined { background: $lov-red; }
+        }
+
+        &:hover {
+            color: $lov-navy;
+        }
+    }
+
+    .mobile-section {
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba($lov-navy, 0.05), 0 6px 18px rgba($lov-navy, 0.06);
+    }
+
+    .mobile-section__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 54px;
+        padding: 0 16px;
+        border: none;
+        background: transparent;
+        color: $lov-navy;
+        font-family: $font-display;
+        font-size: 1.05rem;
+        font-weight: 800;
+        cursor: pointer;
+
+        .material-symbols-outlined {
+            transition: transform 0.2s ease;
+        }
+
+        .mobile-section.open & .material-symbols-outlined {
+            transform: rotate(180deg);
+        }
+    }
+
+    .mobile-section__links {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 0 8px 10px;
+    }
+
+    .mobile-help {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: rgba(#25D366, 0.10);
+        color: #0f7a3c;
+        font-weight: 700;
+        text-decoration: none;
+
+        &:hover {
+            color: #0f7a3c;
+        }
+
+        img {
+            border-radius: 50%;
+            background: #25D366;
+            padding: 3px;
+        }
+    }
+
+    .mobile-actions {
+        margin-top: auto;
+        padding-top: 6px;
+    }
+
+
+}
+
+// The floating WhatsApp button would cover the panel's account button; the panel has its
+// own WhatsApp link, so hide the floating one while the menu is open.
+body.menu-open app-whatsapp-fab {
+    display: none;
+}

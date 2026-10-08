@@ -2,6 +2,8 @@
 @use 'styles/reset' as *;
 @use 'styles/mixins' as *;
 @use "sass:math";
+// Mobile menu panel (kept out of menu.scss for the component style budget).
+@use 'styles/menu-mobile';
 
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Nunito:wght@600;700;800;900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
 

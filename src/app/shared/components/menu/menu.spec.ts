@@ -45,10 +45,19 @@ describe('Menu', () => {
   });
 
   it('should toggle mobile menu', () => {
-    expect(component.isActive).toBeFalsy();
-    component.onClick();
-    expect(component.isActive).toBeTruthy();
-    component.onClick();
-    expect(component.isActive).toBeFalsy();
+    expect(component.mobileOpen()).toBeFalsy();
+    component.toggleMobileMenu();
+    expect(component.mobileOpen()).toBeTruthy();
+    component.toggleMobileMenu();
+    expect(component.mobileOpen()).toBeFalsy();
+  });
+
+  it('should open one mobile section at a time', () => {
+    component.toggleSection('tramites');
+    expect(component.openSection()).toBe('tramites');
+    component.toggleSection('nosotros');
+    expect(component.openSection()).toBe('nosotros');
+    component.toggleSection('nosotros');
+    expect(component.openSection()).toBeNull();
   });
 });

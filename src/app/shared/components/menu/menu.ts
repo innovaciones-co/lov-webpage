@@ -1,9 +1,22 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, ElementRef, HostListener, inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Component, HostListener, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
 import { User } from '../../../features/authentication/models/auth.models';
 import { AuthService } from '../../../features/authentication/services/auth.service';
+
+interface MenuLink {
+  label: string;
+  description: string;
+  icon: string;
+  route: string;
+}
+
+interface MenuSection {
+  id: 'tramites' | 'nosotros';
+  label: string;
+  links: MenuLink[];
+}
 
 @Component({
   selector: 'app-menu',
@@ -13,119 +26,95 @@ import { AuthService } from '../../../features/authentication/services/auth.serv
   imports: [RouterLink, RouterLinkActive],
 })
 export class Menu implements OnInit {
-  isActive = false;
-  private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
-  currentRoute = '';
+  private document = inject(DOCUMENT);
   private authService = inject(AuthService);
-  user: User | null = null;
-  @ViewChild('navMenu', { static: true }) navMenuRef!: ElementRef<HTMLUListElement>;
 
-  private get isBrowser(): boolean {
-    return isPlatformBrowser(this.platformId);
-  }
+  readonly sections: MenuSection[] = [
+    {
+      id: 'tramites',
+      label: 'Trámites',
+      links: [
+        { label: 'Portabilidad', description: 'Trae tu número a LOV', icon: 'sync_alt', route: '/portabilidad' },
+        { label: 'Activar SIM', description: 'Actívala en segundos', icon: 'sim_card', route: '/activar-sim' },
+        { label: 'Bloqueo de equipo', description: 'En caso de pérdida o robo', icon: 'phonelink_lock', route: '/bloqueo-equipo' },
+        { label: 'PQR', description: 'Peticiones, quejas y reclamos', icon: 'support_agent', route: '/pqr' },
+      ]
+    },
+    {
+      id: 'nosotros',
+      label: 'Nosotros',
+      links: [
+        { label: 'Quiénes somos', description: 'El amor nos conecta', icon: 'favorite', route: '/quienes-somos' },
+        { label: 'Preguntas frecuentes', description: 'Resuelve tus dudas', icon: 'help', route: '/preguntas-frecuentes' },
+        { label: 'Información legal', description: 'Términos y documentos', icon: 'gavel', route: '/legales' },
+        { label: 'Histórico de promociones', description: 'Ofertas anteriores', icon: 'local_offer', route: '/historico-promociones' },
+      ]
+    }
+  ];
+
+  user: User | null = null;
+  currentRoute = signal('');
+  mobileOpen = signal(false);
+  // Expanded section in the mobile panel (accordion).
+  openSection = signal<MenuSection['id'] | null>(null);
+  scrolled = signal(false);
 
   ngOnInit() {
-    this.setupHoverEffects();
-    this.setupRouteListener();
+    this.currentRoute.set(this.router.url);
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.currentRoute.set(event.urlAfterRedirects);
+        this.closeMobileMenu();
+      });
 
     this.authService.user$.subscribe(user => {
       this.user = user;
     });
   }
 
-  private setupHoverEffects() {
-    // Only apply hover effects on non-touch devices and in browser
-    if (this.isBrowser && window.matchMedia('(pointer: fine)').matches) {
-      const navLinks = this.navMenuRef.nativeElement.querySelectorAll<HTMLAnchorElement>('.nav-link');
-      navLinks.forEach(link => {
-        link.addEventListener('mousemove', (e: MouseEvent) => {
-          const rect = link.getBoundingClientRect();
-          const x = ((e.clientX - rect.left) / rect.width) * 100;
-          link.style.setProperty('--hover-x', `${x}%`);
-        });
-        link.addEventListener('mouseleave', () => {
-          link.style.removeProperty('--hover-x');
-        });
-      });
+  @HostListener('window:scroll')
+  onScroll(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.scrolled.set(window.scrollY > 8);
     }
   }
 
-  private setupRouteListener() {
-    // Get initial route
-    this.currentRoute = this.router.url;
-
-    // Listen to route changes
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.currentRoute = event.urlAfterRedirects;
-        // Close mobile menu on route change
-        if (this.isActive) {
-          this.closeMobileMenu();
-        }
-      });
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeMobileMenu();
   }
 
-  onClick() {
-    this.isActive = !this.isActive;
+  isSectionActive(section: MenuSection): boolean {
+    const path = this.currentRoute().split(/[?#]/)[0];
+    return section.links.some(link => path === link.route || path.startsWith(link.route + '/'));
   }
 
-  closeMobileMenu() {
-    this.isActive = false;
-    this.removeActiveFromDropdowns();
+  toggleMobileMenu(): void {
+    this.setMobileOpen(!this.mobileOpen());
   }
 
-  @HostListener('window:resize', ['$event'])
-  onWindowResize(event: Event): void {
-    if (this.isBrowser) {
-      this.removeActiveFromDropdowns();
-    }
+  closeMobileMenu(): void {
+    this.setMobileOpen(false);
+    this.openSection.set(null);
   }
 
-  private removeActiveFromDropdowns(): void {
-    const dropdownItems = this.navMenuRef.nativeElement.querySelectorAll('.nav-item.dropdown');
-    dropdownItems.forEach(item => {
-      item.classList.remove('active');
-    });
-  }
-
-  isDropdownActive(routes: string[]): boolean {
-    if (routes.length === 0 || !this.currentRoute) return false;
-    return routes.some(route => {
-      // Check for exact route match or if current route starts with the target route
-      return this.currentRoute === `/${route}` || this.currentRoute.includes(`/${route}`);
-    });
-  }
-
-  toggleDropdown(event: Event): void {
-    // Only work on small devices (screen width less than 1024px) and in browser
-    if (!this.isBrowser || window.innerWidth >= 1280) {
-      return;
-    }
-
-    const target = event.target as HTMLElement;
-    const dropdownMenu = target.parentElement;
-
-    if (dropdownMenu) {
-      // Remove 'active' class from all siblings of the parent element
-      const parentOfParent = dropdownMenu.parentElement;
-      if (parentOfParent) {
-        const siblings = parentOfParent.children;
-        Array.from(siblings).forEach(sibling => {
-          if (sibling !== dropdownMenu) {
-            sibling.classList.remove('active');
-          }
-        });
-      }
-
-      // Toggle 'active' class on current element
-      dropdownMenu.classList.toggle('active');
-    }
+  toggleSection(id: MenuSection['id']): void {
+    this.openSection.update(current => current === id ? null : id);
   }
 
   logout() {
     this.authService.logout();
+  }
+
+  private setMobileOpen(open: boolean): void {
+    this.mobileOpen.set(open);
+    // Lock the page behind the full-screen mobile panel.
+    if (isPlatformBrowser(this.platformId)) {
+      this.document.body.style.overflow = open ? 'hidden' : '';
+      this.document.body.classList.toggle('menu-open', open);
+    }
   }
 }

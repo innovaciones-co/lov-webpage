@@ -1,315 +1,376 @@
 @use '../../../../styles/variables' as *;
 @use '../../../../styles/mixins' as *;
 
-$menu-background: white;
+// LOV brand manual colors.
+$lov-blue: #066EF1;
+$lov-red: #FF0000;
+$lov-navy: #052B6C;
+$lov-gray: #757A8C;
 
-
+// Same heights as before (app.scss offsets the page content by these).
+$h-mobile: 62px;
+$h-tablet: 72px;
+$h-desktop: 82px;
 
 .header {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    background-color: $menu-background;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    transition: all 0.3s ease;
+    width: 100%;
+    // Solid (no backdrop-filter: it would make the fixed mobile panel position against the header).
+    background: #fff;
+    box-shadow: 0 1px 0 rgba($lov-navy, 0.06);
+    transition: box-shadow 0.25s ease, background-color 0.25s ease;
 
-    .nav-container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        padding: 16px 5vw;
-        position: relative;
+    &.scrolled {
+        background: #fff;
+        box-shadow: 0 8px 28px rgba($lov-navy, 0.10);
+    }
+}
 
-        .logo-container {
-            flex: 0 0 auto;
-            display: flex;
-            align-items: center;
+.nav-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 1200px;
+    height: $h-mobile;
+    margin: 0 auto;
+    padding: 0 1rem;
 
-            .logo {
-                img {
-                    height: 30px;
-                    width: auto;
+    @include tablet {
+        height: $h-tablet;
+        padding: 0 1.5rem;
+    }
 
-                    @include tablet {
-                        height: 40px;
-                    }
+    @include desktop {
+        height: $h-desktop;
+    }
+}
 
-                    @include desktop {
-                        height: 50px;
-                    }
-                }
-            }
+.logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    line-height: 0;
+
+    img {
+        width: auto;
+        height: 34px;
+
+        @include tablet {
+            height: 40px;
         }
 
-        .menu-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 45px;
-            height: 30px;
-
-            span {
-                display: block;
-                height: 3px;
-                background-color: $color-primary;
-                border-radius: 2px;
-                transition: all 0.3s ease;
-            }
-
-            &.active {
-                span {
-                    background-color: $color-primary;
-                    transform-origin: center;
-
-                    &:nth-child(1) {
-                        transform: translateY(14px) rotate(45deg);
-                    }
-
-                    &:nth-child(2) {
-                        opacity: 0;
-                        transform: scaleX(0);
-                    }
-
-                    &:nth-child(3) {
-                        transform: translateY(-13px) rotate(-45deg);
-                    }
-                }
-            }
-
-            @include desktop {
-                display: none;
-            }
-        }
-
-        .main-menu {
-            position: static;
-            transform: none;
-            flex: 1;
-            display: flex;
-            justify-content: end;
-
-            @include desktop {
-                position: absolute;
-                justify-content: center;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-
-        }
-
-        .nav-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: $menu-background;
-            flex-direction: column;
-            align-items: center;
-            display: flex;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.8s ease;
-            max-height: 0;
-            padding: 0;
-
-            &.active {
-                height: 100vh;
-                max-height: 100vh;
-                padding: 30px 10px;
-
-                @include desktop {
-                    height: auto;
-                    max-height: 500px; // Adjust based on content
-                    padding: 0;
-                }
-            }
-
-            .nav-item {
-                width: 100%;
-                max-width: 300px;
-                text-align: center;
-                margin: 5px 0;
-
-                @include tablet {
-                    margin: 0 5px;
-                }
-
-                @include desktop {
-                    width: auto;
-                    max-width: none;
-                    margin: 0 8px;
-                    flex-shrink: 0;
-                }
-
-                .nav-link {
-                    color: $color-primary;
-                    text-decoration: none;
-                    font-size: 18px;
-                    width: 100%;
-                    display: block;
-                    border-radius: 50px;
-                    padding: 10px 20px;
-                    transition: all 0.3s ease, color 0.3s ease, background 0.3s ease;
-                    position: relative;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-
-                    @include desktop {
-                        width: auto;
-                        display: inline-block;
-                        padding: 12px 24px;
-                        font-size: 16px;
-                        white-space: nowrap;
-                        min-width: fit-content;
-                    }
-
-                    // Allow wrapping only if text is too long and space is limited
-                    @media (max-width: 1024px) {
-                        @include desktop {
-                            white-space: normal;
-                            word-break: break-word;
-                            hyphens: auto;
-                            line-height: 1.2;
-                        }
-                    }
-
-                    // Hover effects only for pointer devices (not touch)
-                    @media (pointer: fine) {
-                        &:hover {
-                            background-image: linear-gradient(to right, $color-secondary 0%, color-lighten($color-secondary, 20) var(--hover-x, 51%), $color-secondary 100%);
-                            color: $color-primary-light;
-                        }
-                    }
-
-                    // Active state that works on all devices
-                    &.active {
-                        background-image: linear-gradient(to right, $color-secondary 0%, color-lighten($color-secondary, 20) 50%, $color-secondary 100%);
-                        color: $color-primary-light !important;
-                        font-weight: 600;
-                    }
-
-                    // Touch device active state
-                    @media (pointer: coarse) {
-                        &.active {
-                            background-color: $color-secondary;
-                            color: $color-primary-light !important;
-                        }
-                    }
-                }
-
-
-                &.dropdown {
-                    display: block;
-                    position: relative;
-
-                    .dropdown-menu {
-                        visibility: hidden;
-                        height: 0;
-                        max-height: 0;
-                        transition: all 1s ease-in-out;
-                        opacity: 0;
-                        overflow: hidden;
-                    }
-
-                    &.active>.dropdown-menu {
-                        visibility: visible;
-                        height: auto;
-                        max-height: 500px;
-                        opacity: 1;
-                    }
-
-                    .dropdown-item {
-                        display: block;
-                        padding: 12px 20px;
-                        color: #333;
-                        text-decoration: none;
-                        transition: all 0.2s ease;
-                        position: relative;
-
-                        &::before {
-                            content: '';
-                            position: absolute;
-                            left: 5px;
-                            height: 0;
-                            width: 0px;
-                            top: 50%;
-                            bottom: 50%;
-                            background-color: $color-secondary;
-                            transition: height 0.2s ease-in, top 0.2s ease-in, bottom 0.2s ease-in;
-                        }
-
-                        &:hover {
-                            background-color: #f5f5f5;
-                            color: $color-secondary;
-                            padding-left: 25px;
-
-                            &::before {
-                                height: 100%;
-                                top: 0;
-                                bottom: 0;
-                                width: 3px;
-                            }
-                        }
-                    }
-                }
-
-                @include desktop {
-
-                    /* Dropdown Styles */
-                    &.dropdown {
-                        .dropdown-menu {
-                            position: absolute;
-                            top: 100%;
-                            left: 50%;
-                            transform: translateX(-50%) translateY(20px);
-                            background-color: #fff;
-                            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-                            border-radius: 8px;
-                            min-width: 220px;
-                            width: auto;
-                            max-width: 300px;
-                            padding: 10px 0;
-                            opacity: 0;
-                            visibility: hidden;
-                            transition: all 0.5s ease;
-                            z-index: 100;
-                            white-space: nowrap;
-                            height: auto;
-                            max-height: none;
-                            overflow: visible;
-                        }
-
-                        &:hover>.dropdown-menu {
-                            visibility: visible;
-                            opacity: 1;
-                            transform: translateX(-50%) translateY(5px);
-                        }
-                    }
-                }
-            }
-
-
-            @include desktop {
-                position: static;
-                display: flex;
-                flex-direction: row;
-                max-height: none;
-                height: auto;
-                background: none;
-                overflow: visible;
-                align-items: center;
-                justify-content: center;
-                flex-wrap: nowrap;
-                gap: 0;
-            }
+        @include desktop {
+            height: 48px;
         }
     }
 }
+
+// Keyboard focus ring shared by every control in the menu.
+.nav-link,
+.btn-account,
+.btn-recharge,
+.menu-toggle,
+.mega__item {
+    &:focus-visible {
+        outline: 3px solid rgba($lov-blue, 0.35);
+        outline-offset: 2px;
+    }
+}
+
+// ── Desktop links ──────────────────────────────────────────────────────────
+
+.nav-menu {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include large {
+        display: flex;
+    }
+
+    > li {
+        position: relative;
+    }
+}
+
+.nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    height: 42px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: $lov-navy;
+    font-family: $font-display;
+    font-size: 0.98rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+        color: $lov-blue;
+        background: rgba($lov-blue, 0.06);
+    }
+
+    // Active page: a blue bar under the link (not the old red pill).
+    &::after {
+        content: '';
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 2px;
+        height: 3px;
+        border-radius: 3px;
+        background: $lov-blue;
+        transform: scaleX(0);
+        transition: transform 0.2s ease;
+    }
+
+    &.active {
+        color: $lov-blue;
+
+        &::after {
+            transform: scaleX(1);
+        }
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($lov-blue, 0.35);
+        outline-offset: 2px;
+    }
+}
+
+.nav-link__chevron {
+    font-size: 20px;
+    transition: transform 0.2s ease;
+}
+
+// Hover/focus panel with icon + description per link.
+.mega {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 4px;
+    padding: 10px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba($lov-navy, 0.06), 0 18px 44px rgba($lov-navy, 0.16);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 6px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+
+    // Invisible bridge so the panel doesn't close while the pointer crosses the gap.
+    &::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 0;
+        right: 0;
+        height: 12px;
+    }
+}
+
+.nav-dropdown:hover,
+.nav-dropdown:focus-within {
+    .mega {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, 0);
+    }
+
+    .nav-link__chevron {
+        transform: rotate(180deg);
+    }
+}
+
+.mega__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    color: $lov-navy;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+
+    &:hover,
+    &.active {
+        background: rgba($lov-blue, 0.07);
+        color: $lov-navy;
+
+        .mega__icon {
+            background: $lov-blue;
+            color: #fff;
+        }
+    }
+}
+
+.mega__icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba($lov-blue, 0.10);
+    color: $lov-blue;
+    font-size: 22px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.mega__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.mega__label {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.mega__desc {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: $lov-gray;
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.btn-account,
+.btn-recharge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 42px;
+    padding: 0 16px 0 12px;
+    border-radius: 999px;
+    font-family: $font-display;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    .material-symbols-outlined {
+        font-size: 20px;
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($lov-blue, 0.35);
+        outline-offset: 2px;
+    }
+}
+
+.btn-account {
+    display: none;
+    background: #fff;
+    color: $lov-navy;
+    box-shadow: inset 0 0 0 1.5px rgba($lov-navy, 0.15);
+
+    @include large {
+        display: inline-flex;
+    }
+
+    &:hover,
+    &.active {
+        color: $lov-blue;
+        box-shadow: inset 0 0 0 1.5px rgba($lov-blue, 0.5);
+    }
+
+    &--block {
+        display: inline-flex;
+        width: 100%;
+        height: 50px;
+        background: linear-gradient(90deg, $lov-blue, #0559C9);
+        color: #fff;
+        box-shadow: 0 10px 22px rgba($lov-blue, 0.28);
+
+        &:hover {
+            color: #fff;
+            box-shadow: 0 14px 28px rgba($lov-blue, 0.36);
+        }
+    }
+}
+
+.btn-recharge {
+    background: $lov-red;
+    color: #fff;
+    box-shadow: 0 8px 18px rgba($lov-red, 0.28);
+    height: 38px;
+    padding: 0 14px 0 10px;
+
+    @include tablet {
+        height: 42px;
+        padding: 0 16px 0 12px;
+    }
+
+    &:hover {
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 24px rgba($lov-red, 0.36);
+    }
+}
+
+// ── Hamburger ──────────────────────────────────────────────────────────────
+
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    padding: 0 9px;
+    border: none;
+    border-radius: 12px;
+    background: rgba($lov-blue, 0.08);
+    cursor: pointer;
+
+    @include large {
+        display: none;
+    }
+
+    .bar {
+        display: block;
+        height: 2.5px;
+        border-radius: 2px;
+        background: $lov-navy;
+        transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+
+    &.open {
+        .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+        .bar:nth-child(2) { opacity: 0; }
+        .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($lov-blue, 0.35);
+        outline-offset: 2px;
+    }
+}
+

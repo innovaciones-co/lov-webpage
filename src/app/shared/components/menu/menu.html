@@ -1,102 +1,122 @@
-<nav class="header">
+<nav class="header" [class.scrolled]="scrolled() || mobileOpen()" aria-label="Menú principal">
     <div class="nav-container">
-        <div class="logo-container">
-            <a routerLink="/" class="logo">
-                <img src="logo-lov.png" alt="Logo">
+        <a routerLink="/" class="logo" aria-label="LOV Mobile, ir al inicio" (click)="closeMobileMenu()">
+            <img src="logo-lov.png" alt="LOV Mobile" width="2314" height="1261">
+        </a>
+
+        <!-- Desktop menu -->
+        <ul class="nav-menu">
+            <li>
+                <a routerLink="/planes" class="nav-link" routerLinkActive="active">Planes</a>
+            </li>
+            <li>
+                <a routerLink="/recargas" class="nav-link" routerLinkActive="active">Recargas</a>
+            </li>
+            @for (section of sections; track section.id) {
+            <li class="nav-dropdown">
+                <button type="button" class="nav-link" [class.active]="isSectionActive(section)"
+                    aria-haspopup="true">
+                    {{ section.label }}
+                    <span class="material-symbols-outlined nav-link__chevron" aria-hidden="true">expand_more</span>
+                </button>
+                <div class="mega">
+                    @for (link of section.links; track link.route) {
+                    <a class="mega__item" [routerLink]="link.route" routerLinkActive="active">
+                        <span class="mega__icon material-symbols-outlined" aria-hidden="true">{{ link.icon }}</span>
+                        <span class="mega__text">
+                            <span class="mega__label">{{ link.label }}</span>
+                            <span class="mega__desc">{{ link.description }}</span>
+                        </span>
+                    </a>
+                    }
+                </div>
+            </li>
+            }
+        </ul>
+
+        <div class="nav-actions">
+            @if (user) {
+            <a routerLink="/dashboard" class="btn-account" routerLinkActive="active">
+                <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                Mi cuenta
             </a>
+            }
+            @else {
+            <a routerLink="/ingreso" class="btn-account" routerLinkActive="active">
+                <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                Iniciar sesión
+            </a>
+            }
+            <a routerLink="/recargas" class="btn-recharge">
+                <span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                Recargar
+            </a>
+
+            <button type="button" class="menu-toggle" [class.open]="mobileOpen()" (click)="toggleMobileMenu()"
+                [attr.aria-expanded]="mobileOpen()" aria-controls="mobile-panel"
+                [attr.aria-label]="mobileOpen() ? 'Cerrar menú' : 'Abrir menú'">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
         </div>
+    </div>
 
+    <!-- Mobile full-screen panel -->
+    <div id="mobile-panel" class="mobile-panel" [class.open]="mobileOpen()" [attr.aria-hidden]="!mobileOpen()">
+        <div class="mobile-panel__inner">
+            <div class="mobile-tiles">
+                <a routerLink="/planes" class="mobile-tile mobile-tile--blue" (click)="closeMobileMenu()">
+                    <span class="material-symbols-outlined" aria-hidden="true">smartphone</span>
+                    Planes
+                </a>
+                <a routerLink="/recargas" class="mobile-tile mobile-tile--red" (click)="closeMobileMenu()">
+                    <span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                    Recargas
+                </a>
+            </div>
 
-        <div class="main-menu">
-            <ul #navMenu [className]="isActive ? 'nav-menu active' : 'nav-menu'">
-                <li class="nav-item">
-                    <a routerLink="/" class="nav-link" routerLinkActive="active"
-                        [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Inicio</a>
-                </li>
-                <li class="nav-item dropdown" (click)="toggleDropdown($event)">
-                    <a class="nav-link" [class.active]="isDropdownActive(['planes', 'recargas'])">
-                        Planes y Recargas
+            @for (section of sections; track section.id) {
+            <div class="mobile-section" [class.open]="openSection() === section.id">
+                <button type="button" class="mobile-section__toggle" (click)="toggleSection(section.id)"
+                    [attr.aria-expanded]="openSection() === section.id">
+                    {{ section.label }}
+                    <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+                </button>
+                @if (openSection() === section.id) {
+                <div class="mobile-section__links">
+                    @for (link of section.links; track link.route) {
+                    <a class="mega__item" [routerLink]="link.route" routerLinkActive="active" (click)="closeMobileMenu()">
+                        <span class="mega__icon material-symbols-outlined" aria-hidden="true">{{ link.icon }}</span>
+                        <span class="mega__text">
+                            <span class="mega__label">{{ link.label }}</span>
+                            <span class="mega__desc">{{ link.description }}</span>
+                        </span>
                     </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" routerLink="/planes" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Planes
-                        </a>
-                        <a class="dropdown-item" routerLink="/recargas" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Recargas
-                        </a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown" (click)="toggleDropdown($event)">
-                    <a class="nav-link"
-                        [class.active]="isDropdownActive(['portabilidad', 'activar-sim', 'bloqueo-equipo'])">
-                        Tramites
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" routerLink="/portabilidad" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Portabilidad
-                        </a>
-                        <a class="dropdown-item" routerLink="/activar-sim" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Activar SIM
-                        </a>
-                        <a class="dropdown-item" routerLink="/bloqueo-equipo" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Bloqueo de equipo
-                        </a>
-                        <a class="dropdown-item" routerLink="/pqr" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            PQR
-                        </a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown" (click)="toggleDropdown($event)">
-                    <a class="nav-link"
-                        [class.active]="isDropdownActive(['preguntas-frecuentes', 'legales', 'quienes-somos'])">
-                        Acerca de
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" routerLink="/quienes-somos" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Quienes somos
-                        </a>
-                        <a class="dropdown-item" routerLink="/preguntas-frecuentes" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Preguntas Frecuentes
-                        </a>
-                        <a class="dropdown-item" routerLink="/legales" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Información legal
-                        </a>
-                        <a class="dropdown-item" routerLink="/historico-promociones" routerLinkActive="active"
-                            (click)="closeMobileMenu()">
-                            Histórico de Promociones
-                        </a>
-                    </div>
-                </li>
-
-                <li class="nav-item">
-                    @if (user) {
-                    <a routerLink="/dashboard" class="nav-link" routerLinkActive="active"
-                        [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Mi Cuenta</a>
                     }
-                    @else {
-                    <a routerLink="/ingreso" class="nav-link" routerLinkActive="active"
-                        (click)="closeMobileMenu()">Iniciar
-                        Sesión</a>
-                    }
-                </li>
+                </div>
+                }
+            </div>
+            }
 
-            </ul>
+            <a class="mobile-help" href="https://wa.me/573330522222" target="_blank" rel="noopener">
+                <img src="whatsapp-icon.svg" alt="" width="22" height="22" aria-hidden="true">
+                ¿Necesitas ayuda? Escríbenos por WhatsApp
+            </a>
 
-
-
-            <div class="menu-toggle" [class.active]="isActive" (click)="onClick()">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <div class="mobile-actions">
+                @if (user) {
+                <a routerLink="/dashboard" class="btn-account btn-account--block" (click)="closeMobileMenu()">
+                    <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                    Mi cuenta
+                </a>
+                }
+                @else {
+                <a routerLink="/ingreso" class="btn-account btn-account--block" (click)="closeMobileMenu()">
+                    <span class="material-symbols-outlined" aria-hidden="true">person</span>
+                    Iniciar sesión
+                </a>
+                }
             </div>
         </div>
     </div>
