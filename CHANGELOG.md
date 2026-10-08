@@ -1,3 +1,10 @@
+# [1.58.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.57.0...v1.58.0) (2026-10-08)
+
+
+### Features
+
+* **home:** official animated LOV logo in the Lovers section and new SIM image ([1c0501c](https://github.com/innovaciones-co/lov-webpage/commit/1c0501c3188cf63714315fc5a4cc5ccaa4e5c391))
+
 # [1.57.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.56.0...v1.57.0) (2026-10-07)
 
 
