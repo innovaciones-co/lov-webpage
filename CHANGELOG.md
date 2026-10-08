@@ -1,3 +1,10 @@
+# [1.59.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.58.0...v1.59.0) (2026-10-08)
+
+
+### Features
+
+* **web:** new site menu with direct links, icon dropdowns and a mobile panel ([1d90312](https://github.com/innovaciones-co/lov-webpage/commit/1d9031261a0e4b445b70994eba48813cb80ad450))
+
 # [1.58.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.57.0...v1.58.0) (2026-10-08)
 
 
