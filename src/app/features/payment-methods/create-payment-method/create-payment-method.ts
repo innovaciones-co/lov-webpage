@@ -73,6 +73,7 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
   readonly errorMessages: Record<string, Record<string, string>> = {
     fullName: {
       minlength: 'Ingresa el nombre completo del titular.',
+      pattern: 'El nombre no puede tener números. Escríbelo como aparece en la tarjeta.',
     },
     email: {
       email: 'Ingresa un correo válido.',
@@ -91,7 +92,8 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
     new FormGroup({
       fullName: new FormControl('', {
         nonNullable: true,
-        validators: [Validators.required, Validators.minLength(3)],
+        // No digits: customers have typed the card number here, and it was saved and shown as their name.
+        validators: [Validators.required, Validators.minLength(3), Validators.pattern(/^[^0-9]+$/)],
       }),
       email: new FormControl('', {
         nonNullable: true,
