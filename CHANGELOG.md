@@ -1,3 +1,10 @@
+## [1.59.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.59.0...v1.59.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* reject digits in the card holder name ([c8449cd](https://github.com/innovaciones-co/lov-webpage/commit/c8449cde9097508b422841d2592de487071135b6))
+
 # [1.59.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.58.0...v1.59.0) (2026-10-08)
 
 
