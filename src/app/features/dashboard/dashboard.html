@@ -1,84 +1,68 @@
 <div id="dashboard" class="container">
-    <main class="">
-        <div class="card-title">
-            <h1>Mi Cuenta</h1>
-
-            @if (user) {
-            <button class="btn logout-btn" (click)="logout()">Cerrar sesión</button>
-            }
+    <header class="greeting">
+        <div>
+            <p class="greeting__eyebrow">Mi cuenta</p>
+            <h1 class="greeting__title">Hola{{ firstName() ? ', ' + firstName() : '' }}</h1>
         </div>
-    </main>
-
-    <aside class="">
-        @if (activeSubscriptions().length > 1) {
-        <p class="card-description">Selecciona una línea:</p>
+        @if (user) {
+        <button type="button" class="greeting__logout" (click)="logout()">
+            <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+            Cerrar sesión
+        </button>
         }
-        <div class="subscriptions-list">
-            @if (loading()) {
-            <app-loading></app-loading>
-            }
-            @else {
-            @if (activeSubscriptions().length > 0) {
-            <div class="subscriptions-carousel">
-                <ul #subscriptionsCarousel [class.is-carousel]="activeSubscriptions().length > 3"
-                    (scroll)="onSubscriptionsScroll()">
-                    @for (subscription of activeSubscriptions(); track subscription.msisdn) {
-                    <li class="subscription-item card" (click)="selectSubscription(subscription)"
-                        [class.active]="subscription.id === currentSubscription()?.id">
-                        <div class="subscription-item-details">
-                            <div class="">
-                                <span class="subscription-msisdn">+{{ subscription.msisdn }}</span>
-                                <span class="subscription-name">{{ subscription.tariff.tariffName }}</span>
-                            </div>
-                            <div class="">
-                                <span class="subscription-status">{{ getStateLabel(subscription.state) }}</span>
-                            </div>
-                        </div>
-                        <hr class="divider">
-                        <div class="subscription-item-footer">
-                            <span class="subscription-activation">Act. {{ subscription.activationDate |
-                                date:'shortDate'
-                                }}</span>
-                            <span class="subscription-payment">{{ getSubscriptionType(subscription.paymentType)
-                                }}</span>
-                        </div>
-                    </li>
-                    }
-                </ul>
+    </header>
 
-                @if (activeSubscriptions().length > 3) {
-                <div class="carousel-dots" aria-label="Paginacion de suscripciones">
-                    @for (dot of carouselDots(); track dot) {
-                    <button type="button" class="carousel-dot" [class.active]="dot === carouselPage()"
-                        [attr.aria-current]="dot === carouselPage() ? 'true' : null"
-                        [attr.aria-label]="'Ir a la pagina ' + (dot + 1)" (click)="goToSubscriptionsPage(dot)">
-                    </button>
-                    }
-                </div>
-                }
-            </div>
-            }
-            @else {
-            <p>No tienes suscripciones activas.</p>
-            }}
+    @if (loading() || linesLoading()) {
+    <app-loading></app-loading>
+    } @else if (activeSubscriptions().length > 0) {
+    <app-line-switcher [subscriptions]="activeSubscriptions()" [current]="currentSubscription()"
+        (selected)="selectSubscription($event)"></app-line-switcher>
+    } @else {
+    <p class="empty">No tienes líneas activas.</p>
+    }
 
-        </div>
-    </aside>
-
-    <hr class="divider">
+    <nav class="actions" aria-label="Accesos rápidos">
+        @for (action of quickActions; track action.label) {
+        @if (action.route) {
+        <a class="action" [routerLink]="action.route" [style.--tone]="action.tone">
+            <span class="action__icon material-symbols-outlined" aria-hidden="true">{{ action.icon }}</span>
+            <span class="action__label">{{ action.label }}</span>
+        </a>
+        } @else if (action.href) {
+        <a class="action" [href]="action.href" target="_blank" rel="noopener" [style.--tone]="action.tone">
+            <span class="action__icon material-symbols-outlined" aria-hidden="true">{{ action.icon }}</span>
+            <span class="action__label">{{ action.label }}</span>
+        </a>
+        } @else {
+        <button type="button" class="action" (click)="scrollTo(action.anchor!)" [style.--tone]="action.tone">
+            <span class="action__icon material-symbols-outlined" aria-hidden="true">{{ action.icon }}</span>
+            <span class="action__label">{{ action.label }}</span>
+        </button>
+        }
+        }
+    </nav>
 
     <div class="dashboard-content">
         <div class="left-column">
-            <app-data-usage [accountViews]="accountViews()" [isAccountLoading]="isAccountLoading()"></app-data-usage>
+            <section id="usage" class="block">
+                <app-data-usage [accountViews]="accountViews()" [isAccountLoading]="isAccountLoading()"></app-data-usage>
+            </section>
 
             @if (currentSubscription()?.id) {
-            <app-history [subscriberId]="currentSubscription()!.id"></app-history>
+            <section id="history" class="block">
+                <app-history [subscriberId]="currentSubscription()!.id"></app-history>
+            </section>
             }
 
+            <section id="cards" class="block">
+                <app-payment-card-selector [currentSubscription]="currentSubscription()"
+                    [selectorEnabled]="false"></app-payment-card-selector>
+            </section>
+
             @if (billingInfo) {
-            <div id="billing-info" class="card">
+            <section id="billing-info" class="card block">
                 @for (section of billingSections; track section.title) {
-                <section class="info-section">
+                <div class="info-section">
                     <h3 class="info-section-title">{{ section.title }}</h3>
                     <dl class="info-grid">
                         @for (item of section.items; track item.label) {
@@ -91,21 +75,15 @@
                         </div>
                         }
                     </dl>
-                </section>
+                </div>
                 }
-            </div>
+            </section>
             }
-
-            <app-payment-card-selector [currentSubscription]="currentSubscription()"
-                [selectorEnabled]="false"></app-payment-card-selector>
-
-            <!-- <app-recharge-scheduler [subscription]="currentSubscription()"></app-recharge-scheduler> -->
         </div>
 
-        <div class="right-column">
-            <app-current-plan [accountViews]="accountViews()"
-                [isAccountLoading]="isAccountLoading()"
+        <aside class="right-column">
+            <app-current-plan [accountViews]="accountViews()" [isAccountLoading]="isAccountLoading()"
                 [subscriptionId]="currentSubscription()?.id ?? null"></app-current-plan>
-        </div>
+        </aside>
     </div>
 </div>

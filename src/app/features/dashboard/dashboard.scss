@@ -1,186 +1,175 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
-main>.card-title {
+$navy: #052B6C;
+$blue: #066EF1;
+$gray: #757A8C;
 
+#dashboard {
     display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding-top: 10px;
+    padding-bottom: 40px;
+}
+
+// ── Greeting ───────────────────────────────────────────────────────────────
+
+.greeting {
+    display: flex;
+    align-items: flex-end;
     justify-content: space-between;
-    align-items: start;
-    border-bottom: none;
-
-    h1 {
-        margin: 0;
-        padding: 0;
-    }
+    gap: 12px;
 }
 
-.card-title {
-    color: $color-extra-1;
-    font-size: 1.2rem;
-
-    &.no-border {
-        border-bottom: none;
-        margin-bottom: 5px !important;
-    }
+.greeting__eyebrow {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $blue;
 }
 
-.logout-btn {
+.greeting__title {
+    margin: 2px 0 0;
+    padding: 0;
+    font-family: $font-display;
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: $navy;
+}
+
+.greeting__logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 14px;
+    border: 1.5px solid #E4E8F2;
+    border-radius: 999px;
+    background: #fff;
+    color: $gray;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+
     &:hover {
-        background: $color-secondary-light;
+        color: #D32F2F;
+        border-color: rgba(#D32F2F, 0.4);
     }
 
-    &:active {
-        background: $color-secondary-light;
+    .material-symbols-outlined {
+        font-size: 18px;
     }
-
-    background: $color-secondary;
-    color: white;
-    font-size: 0.6em;
 }
 
-.subscriptions-list {
-    margin-top: 10px;
+.empty {
+    padding: 24px;
+    border-radius: 20px;
+    background: #F5F7FC;
+    color: $gray;
+    text-align: center;
+}
 
-    .subscriptions-carousel {
-        .carousel-dots {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+// ── Quick actions ──────────────────────────────────────────────────────────
 
-            .carousel-dot {
-                width: 8px;
-                height: 8px;
-                border: none;
-                border-radius: 50%;
-                background: $gray-200;
-                cursor: pointer;
-                transition: transform 0.2s ease, background-color 0.2s ease;
+.actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
 
-                &.active {
-                    background: $color-extra-1;
-                    transform: scale(1.2);
-                }
+    @include tablet {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+    }
+}
 
-                &:hover:not(.active) {
-                    background: $color-secondary;
-                }
-            }
-        }
+.action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 96px;
+    padding: 14px 8px;
+    border: 1.5px solid #E9EDF5;
+    border-radius: 18px;
+    background: #fff;
+    color: $navy;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        border-color: color-mix(in srgb, var(--tone) 40%, white);
+        box-shadow: 0 12px 26px rgba($navy, 0.1);
     }
 
-    ul {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        list-style: none;
-        padding: 0;
-
-        &:has(> .subscription-item:only-child) {
-            grid-template-columns: 1fr;
-        }
-
-        &:has(> .subscription-item:first-child:nth-last-child(2)) {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        &.is-carousel {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-
-            &::-webkit-scrollbar {
-                display: none;
-            }
-
-            .subscription-item {
-                flex: 0 0 calc((100% - 20px) / 3);
-                min-width: calc((100% - 20px) / 3);
-                scroll-snap-align: start;
-            }
-        }
-
-        .subscription-item {
-            display: flex;
-            flex-direction: column;
-            padding: 12px 15px;
-            margin-top: 10px;
-            border-radius: 8px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-            &:hover {
-                cursor: pointer;
-                transform: translateY(-4px);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            &.active {
-                background: $color-extra-1;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-
-                span {
-                    color: white;
-
-                    &.subscription-status {
-                        color: $color-extra-1;
-                        background: white;
-                    }
-                }
-
-                .divider {
-                    border-top: 1px solid $gray-200;
-                }
-            }
-
-            span {
-                display: block;
-                font-size: 14px;
-                color: $color-primary;
-
-                &.subscription-msisdn {
-                    font-weight: 600;
-                    font-size: 16px;
-                }
-
-                &.subscription-name {
-                    font-size: 13px;
-                }
-
-                &.subscription-status {
-                    font-weight: 600;
-                    color: #057A55;
-                    background: #057A551F;
-                    padding: 1px 10px;
-                    border-radius: 14px;
-                    margin-left: 8px;
-                }
-
-                &.subscription-activation {
-                    font-size: 12px;
-                }
-
-                &.subscription-payment {
-                    font-size: 12px;
-                }
-            }
-
-            .divider {
-                margin: 6px 0;
-            }
-
-            .subscription-item-details {
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .subscription-item-footer {
-                display: flex;
-                gap: 10px;
-            }
-        }
-
+    &:focus-visible {
+        outline: 3px solid rgba($blue, 0.4);
+        outline-offset: 2px;
     }
+}
+
+.action__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--tone) 12%, white);
+    color: var(--tone);
+    font-size: 24px;
+}
+
+.action__label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+// ── Content ────────────────────────────────────────────────────────────────
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+
+    @include large {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        align-items: start;
+    }
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    order: 2;
+
+    @include large {
+        order: 1;
+    }
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    order: 1;
+
+    @include large {
+        position: sticky;
+        top: 100px;
+        order: 2;
+    }
+}
+
+// Quick actions scroll here; keep the section clear of the fixed header.
+.block {
+    scroll-margin-top: 100px;
 }
 
 #billing-info {
@@ -192,8 +181,8 @@ main>.card-title {
 .info-section-title {
     margin: 0 0 14px;
     font-size: 1.1rem;
-    font-weight: 600;
-    color: $color-extra-1;
+    font-weight: 700;
+    color: $navy;
 }
 
 .info-grid {
@@ -212,13 +201,8 @@ main>.card-title {
     align-items: center;
     gap: 14px;
     padding: 12px 14px;
-    border-radius: 12px;
-    background: $gray-50;
-    transition: background-color 0.15s ease;
-
-    &:hover {
-        background: $gray-100;
-    }
+    border-radius: 14px;
+    background: #F5F7FC;
 }
 
 .info-icon {
@@ -228,8 +212,8 @@ main>.card-title {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: color-mix(in oklch, $color-extra-1 12%, white);
-    color: $color-extra-1;
+    background: rgba($blue, 0.1);
+    color: $blue;
     font-size: 20px;
 }
 
@@ -237,54 +221,18 @@ main>.card-title {
     min-width: 0;
 
     dt {
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.72rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: $gray-700;
+        letter-spacing: 0.06em;
+        color: $gray;
     }
 
     dd {
         margin: 2px 0 0;
         font-size: 0.95rem;
         font-weight: 600;
-        color: $text-color;
+        color: $navy;
         overflow-wrap: anywhere;
     }
-}
-
-.dashboard-content {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-
-    @include large {
-        grid-template-columns: 2fr 1fr;
-    }
-}
-
-.left-column {
-    display: flex;
-    flex-direction: column;
-    order: 2;
-
-    @include large {
-        order: 1;
-    }
-}
-
-.right-column {
-    display: flex;
-    flex-direction: column;
-    order: 1;
-
-    @include large {
-        order: 2;
-    }
-}
-
-.divider {
-    border: none;
-    border-top: 1px solid #eee;
-    margin: 10px 0 25px 0;
 }

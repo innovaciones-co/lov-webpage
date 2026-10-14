@@ -1,0 +1,116 @@
+@if (current(); as line) {
+<section class="line-hero" [style.--line]="lines.color(line)" aria-label="Línea seleccionada">
+    <div class="line-hero__main">
+        <span class="avatar avatar--lg" aria-hidden="true">{{ lines.initials(line) }}</span>
+        <div class="line-hero__text">
+            <span class="line-hero__eyebrow">{{ subscriptions().length > 1 ? 'Estás viendo' : 'Tu línea' }}</span>
+            <span class="status" [class.status--off]="line.state !== 'ACTIVE'">{{ stateLabel(line.state) }}</span>
+            <h2 class="line-hero__title">{{ title(line) }}</h2>
+            <p class="line-hero__meta">
+                @if (lines.nickname(line)) { <span>{{ lines.formatNumber(line.msisdn) }}</span> }
+                <span>{{ line.tariff.tariffName }}</span>
+                <span>{{ line.paymentType === 'PREPAID' ? 'Prepago' : 'Postpago' }}</span>
+            </p>
+        </div>
+    </div>
+    <button type="button" class="line-hero__edit" (click)="openEdit(line)">
+        <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+        Personalizar
+    </button>
+</section>
+
+@if (subscriptions().length > 1) {
+<div class="chips" role="group" aria-label="Cambiar de línea">
+    @for (chip of chips(); track chip.id) {
+    <button type="button" class="chip" [class.chip--active]="chip.id === line.id" [style.--line]="lines.color(chip)"
+        [attr.aria-pressed]="chip.id === line.id" (click)="choose(chip)">
+        <span class="avatar avatar--sm" aria-hidden="true">{{ lines.initials(chip) }}</span>
+        <span class="chip__text">
+            <strong>{{ title(chip) }}</strong>
+            @if (lines.nickname(chip)) { <small>{{ lines.formatNumber(chip.msisdn) }}</small> }
+        </span>
+    </button>
+    }
+    @if (hasMore()) {
+    <button type="button" class="chip chip--more" (click)="showAll.set(true)">
+        <span class="material-symbols-outlined" aria-hidden="true">apps</span>
+        Ver todas ({{ subscriptions().length }})
+    </button>
+    }
+</div>
+}
+}
+
+<app-modal [isOpen]="showAll()" size="md" (closed)="showAll.set(false)">
+    <div class="sheet">
+        <h3 class="sheet__title">Tus líneas</h3>
+        <label class="search">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            <input type="search" placeholder="Busca por nombre o número" [ngModel]="search()"
+                (ngModelChange)="search.set($event)" aria-label="Buscar línea">
+        </label>
+        <ul class="sheet__list">
+            @for (item of filtered(); track item.id) {
+            <li class="row" [style.--line]="lines.color(item)" [class.row--active]="item.id === current()?.id">
+                <button type="button" class="row__pick" (click)="choose(item)">
+                    <span class="avatar" aria-hidden="true">{{ lines.initials(item) }}</span>
+                    <span class="row__text">
+                        <strong>{{ title(item) }}</strong>
+                        <small>{{ lines.nickname(item) ? lines.formatNumber(item.msisdn) + ' · ' : '' }}{{ item.tariff.tariffName }}</small>
+                    </span>
+                    @if (item.id === current()?.id) {
+                    <span class="material-symbols-outlined row__check" aria-label="Seleccionada">check_circle</span>
+                    }
+                </button>
+                <button type="button" class="row__edit" (click)="openEdit(item)" [attr.aria-label]="'Personalizar ' + title(item)">
+                    <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                </button>
+            </li>
+            } @empty {
+            <li class="sheet__empty">No hay líneas que coincidan.</li>
+            }
+        </ul>
+    </div>
+</app-modal>
+
+<app-modal [isOpen]="!!editing()" size="sm" (closed)="editing.set(null)">
+    @if (editing(); as line) {
+    <form class="edit" (ngSubmit)="saveEdit()" [style.--line]="editColor()">
+        <h3 class="sheet__title">Personaliza tu línea</h3>
+        <p class="edit__hint">Ponle un nombre y un color para reconocerla, por ejemplo la línea de un familiar.</p>
+
+        <div class="edit__preview" aria-hidden="true">
+            <span class="avatar avatar--lg">{{ (editName().trim() || line.msisdn.slice(-2)).slice(0, 2).toUpperCase() }}</span>
+            <span class="row__text">
+                <strong>{{ editName().trim() || lines.formatNumber(line.msisdn) }}</strong>
+                <small>{{ lines.formatNumber(line.msisdn) }}</small>
+            </span>
+        </div>
+
+        <label class="edit__label" for="line-name">Nombre</label>
+        <input id="line-name" name="name" class="edit__input" maxlength="30" placeholder="Ej: Mamá, Trabajo, Sofía"
+            [ngModel]="editName()" (ngModelChange)="editName.set($event)" autocomplete="off">
+
+        <span class="edit__label" id="line-color">Color</span>
+        <div class="swatches" role="radiogroup" aria-labelledby="line-color">
+            @for (color of colors; track color) {
+            <button type="button" class="swatch" role="radio" [style.background]="color"
+                [attr.aria-checked]="editColor() === color" [attr.aria-label]="'Color ' + ($index + 1)"
+                (click)="editColor.set(color)">
+                @if (editColor() === color) { <span class="material-symbols-outlined" aria-hidden="true">check</span> }
+            </button>
+            }
+        </div>
+
+        @if (saveError()) { <p class="edit__error" role="alert">{{ saveError() }}</p> }
+
+        <div class="edit__actions">
+            @if (lines.nickname(line)) {
+            <button type="button" class="link" (click)="saveEdit(true)" [disabled]="saving()">Quitar nombre</button>
+            }
+            <button type="button" class="btn-ghost" (click)="editing.set(null)">Cancelar</button>
+            <button type="submit" class="btn-solid" [disabled]="saving()">{{ saving() ? 'Guardando…' : 'Guardar' }}</button>
+        </div>
+    </form>
+    }
+</app-modal>

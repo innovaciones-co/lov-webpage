@@ -1,30 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, ViewChild, computed, effect, inject, input, output, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, computed, effect, inject, input, output } from '@angular/core';
 import { CustomerSubscription } from '../../../../core/models/customer.model';
-import { RadioComponent } from '../../../../shared/components/form-fields/radio/radio';
+import { LineAliasService } from '../../../../core/services/line-alias.service';
 import { ProductType, RechargeProduct } from '../../models/product.model';
 import { PaymentService } from '../../services/payment.service';
 
 @Component({
   selector: 'app-subscription-selector',
-  imports: [ReactiveFormsModule, CommonModule, RadioComponent],
+  imports: [CommonModule],
   templateUrl: './subscription-selector.html',
   styleUrl: './subscription-selector.scss'
 })
 export class SubscriptionSelector {
-  @ViewChild('subscriptionTemplate')
-  set subscriptionTemplate(value: TemplateRef<unknown> | undefined) {
-    this.subscriptionTemplateRef.set(value);
-  }
-
   subscriptions = input<CustomerSubscription[]>([]);
   selectedSubscriptionId = input<number | undefined>();
   private readonly paymentService = inject(PaymentService);
 
-  readonly subscriptionControl = new FormControl<string | null>(null);
+  // Same names and colors the customer gave their lines in Mi cuenta.
+  readonly lines = inject(LineAliasService);
   readonly subscriptionSelected = output<number>();
-  private readonly subscriptionTemplateRef = signal<TemplateRef<unknown> | undefined>(undefined);
 
   private readonly subscriptionByPhone = computed(() => {
     const phoneIndex = new Map<string, number>();
@@ -36,17 +30,9 @@ export class SubscriptionSelector {
     return phoneIndex;
   });
 
-  readonly subscriptionOptions = computed(() => {
-    const template = this.subscriptionTemplateRef();
-
-    return this.subscriptions().map((subscription) => ({
-      value: subscription.id.toString(),
-      template,
-      phone: subscription.msisdn.slice(2, undefined),
-    }));
-  });
-
   constructor() {
+    this.lines.load();
+
     effect(() => {
       const selectedProduct = this.paymentService.selectedProduct();
 
@@ -58,15 +44,6 @@ export class SubscriptionSelector {
         ) {
           this.subscriptionSelected.emit(matchedSubscriptionId);
         }
-      }
-    });
-
-    effect(() => {
-      const selectedId = this.selectedSubscriptionId();
-      const formattedSelectedId = selectedId !== undefined ? selectedId.toString() : null;
-
-      if (this.subscriptionControl.value !== formattedSelectedId) {
-        this.subscriptionControl.setValue(formattedSelectedId, { emitEvent: false });
       }
     });
   }

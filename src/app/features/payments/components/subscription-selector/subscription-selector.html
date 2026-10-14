@@ -1,15 +1,21 @@
 <div class="card">
 	<div class="card-header">
-		<h3 class="form-subtitle">Línea a recargar</h3>
-		<p>Selecciona un número de teléfono</p>
+		<h3 class="form-subtitle">¿Para qué línea es?</h3>
+		<p>Elige una de tus líneas</p>
 	</div>
 
-	<div>
-		<radio-field [options]="subscriptionOptions()" [control]="subscriptionControl"
-			(valueChange)="onSubscriptionChange($event)"></radio-field>
+	<div class="lines" role="radiogroup" aria-label="Línea">
+		@for (line of subscriptions(); track line.id) {
+		<label class="line" [class.line--selected]="line.id === selectedSubscriptionId()" [style.--line]="lines.color(line)">
+			<input type="radio" name="subscription" class="line__input" [value]="line.id"
+				[checked]="line.id === selectedSubscriptionId()" (change)="onSubscriptionChange(line.id.toString())">
+			<span class="line__avatar" aria-hidden="true">{{ lines.initials(line) }}</span>
+			<span class="line__text">
+				<strong>{{ lines.nickname(line) ?? lines.formatNumber(line.msisdn) }}</strong>
+				<small>{{ lines.nickname(line) ? lines.formatNumber(line.msisdn) + ' · ' : '' }}{{ line.tariff.tariffName }}</small>
+			</span>
+			<span class="line__check material-symbols-outlined" aria-hidden="true">check_circle</span>
+		</label>
+		}
 	</div>
 </div>
-
-<ng-template #subscriptionTemplate let-card="card">
-	<p class="option-description">{{ card.phone }}</p>
-</ng-template>

@@ -1,9 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { EMPTY, forkJoin, of, switchMap, tap } from 'rxjs';
 import { SubscriptionAccount } from '../../core/models/account.model';
 import { Customer, CustomerSubscription } from '../../core/models/customer.model';
+import { LineAliasService } from '../../core/services/line-alias.service';
 import { SubscriptionFacadeService } from '../../core/services/subscription-facade.service';
 import { Loading } from "../../shared/components/loading/loading";
 import { User } from '../authentication/models/auth.models';
@@ -11,6 +13,7 @@ import { AuthService } from '../authentication/services/auth.service';
 import { PaymentCardSelector } from "../payments/components/payment-card-selector/payment-card-selector";
 import { DataUsage } from "./components/data-usage/data-usage";
 import { History } from "./components/history/history";
+import { LineSwitcher } from './components/line-switcher/line-switcher';
 import { CurrentPlan } from './current-plan/current-plan';
 
 export interface AccountViewModel {
@@ -38,21 +41,43 @@ interface InfoSection {
   items: { icon: string; label: string; value: string }[];
 }
 
+// A shortcut tile: goes to a page (route), opens a link (href) or scrolls to a section (anchor).
+interface QuickAction {
+  label: string;
+  icon: string;
+  tone: string;
+  route?: string;
+  href?: string;
+  anchor?: string;
+}
+
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Loading, CurrentPlan, DataUsage, History, PaymentCardSelector],
+  imports: [CommonModule, RouterLink, Loading, CurrentPlan, DataUsage, History, PaymentCardSelector, LineSwitcher],
   templateUrl: './dashboard.html',
   styleUrls: [`./dashboard.scss`]
 })
 export class Dashboard implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly subscriptionFacade = inject(SubscriptionFacadeService);
+  private readonly lineAliases = inject(LineAliasService);
+  private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly carouselItemsPerPage = 3;
   user: User | null = null;
   activeSubscriptions = signal<CustomerSubscription[]>([]);
   loading = signal(true);
+  // The lines come after the user, from CYAN: avoids flashing "no lines" meanwhile.
+  linesLoading = signal(true);
+  firstName = signal('');
   billingInfo: BillingInfo | null = null;
+
+  readonly quickActions: QuickAction[] = [
+    { label: 'Recargar', icon: 'bolt', tone: '#FF0000', route: '/recargas' },
+    { label: 'Comprar plan', icon: 'shopping_bag', tone: '#066EF1', route: '/planes' },
+    { label: 'Mi consumo', icon: 'insights', tone: '#6C00BB', anchor: 'history' },
+    { label: 'Mis tarjetas', icon: 'credit_card', tone: '#052B6C', anchor: 'cards' },
+    { label: 'Ayuda', icon: 'support_agent', tone: '#00A0FF', href: 'https://wa.me/573330522222' },
+  ];
 
   // Read-only billing/contact details, shown as information rather than disabled inputs.
   billingSections: InfoSection[] = [];
@@ -63,16 +88,12 @@ export class Dashboard implements OnInit {
   );
   currentSubscription = signal<CustomerSubscription | null>(null);
   isAccountLoading = signal(false);
-  carouselPage = signal(0);
-  carouselDots = computed<number[]>(() => {
-    const totalPages = Math.ceil(this.activeSubscriptions().length / this.carouselItemsPerPage);
-    return totalPages > 1 ? Array.from({ length: totalPages }, (_, index) => index) : [];
-  });
-  @ViewChild('subscriptionsCarousel') private subscriptionsCarousel?: ElementRef<HTMLUListElement>;
 
   submitError = signal<string>('');
 
   ngOnInit() {
+    this.lineAliases.load();
+
     this.authService.user$.pipe(
       tap((user) => {
         this.user = user;
@@ -81,6 +102,7 @@ export class Dashboard implements OnInit {
       switchMap(() => this.authService.getStoredMsisdn()),
       switchMap((storedMsisdn) => {
         if (!storedMsisdn) {
+          this.linesLoading.set(false);
           return EMPTY;
         }
 
@@ -92,6 +114,7 @@ export class Dashboard implements OnInit {
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(({ customerInfo, activeSubscriptions, storedMsisdn }) => {
+      this.linesLoading.set(false);
       if (!customerInfo) {
         return;
       }
@@ -113,71 +136,13 @@ export class Dashboard implements OnInit {
     });
   }
 
-  getSubscriptionType(paymentType: string): string {
-    switch (paymentType) {
-      case 'PREPAID':
-        return 'Prepago';
-      default:
-        return 'Postpago';
-    }
-  }
-
-  getStateLabel(state: string): string {
-    switch (state) {
-      case 'ACTIVE':
-        return 'Activo';
-      case 'INACTIVE':
-        return 'Inactivo';
-      case 'SUSPENDED':
-        return 'Suspendido';
-      default:
-        return state;
-    }
-  }
-
   selectSubscription(subscription: CustomerSubscription): void {
     this.currentSubscription.set(subscription);
     this.fetchAccounts(subscription.customerId, subscription.id.toString());
   }
 
-  onSubscriptionsScroll(): void {
-    const carouselElement = this.subscriptionsCarousel?.nativeElement;
-    if (!carouselElement) {
-      return;
-    }
-
-    const maxPageIndex = Math.max(0, this.carouselDots().length - 1);
-    const maxScrollLeft = carouselElement.scrollWidth - carouselElement.clientWidth;
-
-    if (maxPageIndex === 0 || maxScrollLeft <= 0) {
-      this.carouselPage.set(0);
-      return;
-    }
-
-    const scrollRatio = carouselElement.scrollLeft / maxScrollLeft;
-    const pageFromScroll = Math.round(scrollRatio * maxPageIndex);
-    this.carouselPage.set(Math.min(Math.max(pageFromScroll, 0), maxPageIndex));
-  }
-
-  goToSubscriptionsPage(pageIndex: number): void {
-    const carouselElement = this.subscriptionsCarousel?.nativeElement;
-    if (!carouselElement) {
-      return;
-    }
-
-    const maxPageIndex = Math.max(0, this.carouselDots().length - 1);
-    const targetPage = Math.min(Math.max(pageIndex, 0), maxPageIndex);
-    this.carouselPage.set(targetPage);
-
-    const maxScrollLeft = carouselElement.scrollWidth - carouselElement.clientWidth;
-    const targetScrollLeft = maxPageIndex > 0
-      ? (targetPage / maxPageIndex) * maxScrollLeft
-      : 0;
-
-    carouselElement.scrollTo({
-      left: targetScrollLeft,
-      behavior: 'smooth'
-    });
+  scrollTo(anchor: string): void {
+    this.document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   private setBillingInfo(customerInfo: Omit<Customer, 'subscriptions'>, storedMsisdn: string): void {
@@ -195,6 +160,7 @@ export class Dashboard implements OnInit {
     };
 
     const info = this.billingInfo;
+    this.firstName.set(this.capitalize(info.firstName?.trim().split(/\s+/)[0] ?? ''));
     const fullName = [this.capitalize(info.firstName), this.capitalize(info.lastName)].filter(Boolean).join(' ');
     const location = [this.capitalize(info.city), info.country?.toUpperCase()].filter(Boolean).join(', ');
 
@@ -236,13 +202,6 @@ export class Dashboard implements OnInit {
 
     const firstSubscription = subscriptions[0];
     this.activeSubscriptions.set(subscriptions);
-    this.carouselPage.set(0);
-
-    this.subscriptionsCarousel?.nativeElement.scrollTo({
-      left: 0,
-      behavior: 'auto'
-    });
-
     this.currentSubscription.set(firstSubscription);
     this.fetchAccounts(customerId, firstSubscription.id.toString());
   }

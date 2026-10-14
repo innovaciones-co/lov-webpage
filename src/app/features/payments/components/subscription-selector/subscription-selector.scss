@@ -1,22 +1,102 @@
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins' as *;
 
-.option-title {
-	font-weight: 600;
-	display: block;
-	margin-bottom: 4px;
-	font-size: 1rem;
-	color: $color-primary;
+$navy: #052B6C;
+$gray: #757A8C;
+
+.lines {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 10px;
+
+	@include tablet {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }
 
-.option-description {
-	margin: 4px 0 0 0;
-	font-size: 0.875rem;
+.line {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-height: 64px;
+	padding: 10px 14px;
+	border: 1.5px solid #E4E8F2;
+	border-radius: 16px;
+	background: #fff;
+	cursor: pointer;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+	&:hover {
+		border-color: color-mix(in srgb, var(--line) 50%, white);
+	}
+
+	&--selected {
+		border-color: var(--line);
+		background: color-mix(in srgb, var(--line) 6%, white);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--line) 16%, transparent);
+	}
+
+	&:has(.line__input:focus-visible) {
+		outline: 3px solid rgba(#066EF1, 0.4);
+		outline-offset: 2px;
+	}
+}
+
+// Native radio kept for keyboard and screen readers, drawn by the card instead.
+.line__input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.line__avatar {
+	flex-shrink: 0;
+	display: grid;
+	place-items: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: var(--line);
+	color: #fff;
+	font-family: $font-display;
+	font-size: 0.85rem;
+	font-weight: 800;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.line__text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	line-height: 1.25;
+
+	strong {
+		font-size: 1rem;
+		color: $navy;
+	}
+
+	small {
+		font-size: 0.8rem;
+		color: $gray;
+	}
+}
+
+.line__check {
+	margin-left: auto;
+	color: var(--line);
+	opacity: 0;
+	transform: scale(0.6);
+	transition: opacity 0.15s ease, transform 0.15s ease;
+
+	.line--selected & {
+		opacity: 1;
+		transform: scale(1);
+	}
 }
 
 @include mobile {
 	.card {
-		//background: transparent;
 		padding: 1rem;
 		box-shadow: none;
 	}
