@@ -1,3 +1,10 @@
+# [1.61.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.60.0...v1.61.0) (2026-10-14)
+
+
+### Features
+
+* start payments and recharges on the line viewed in Mi cuenta ([93e9675](https://github.com/innovaciones-co/lov-webpage/commit/93e9675ccca59a747f659403d11980369285281a))
+
 # [1.60.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.59.1...v1.60.0) (2026-10-14)
 
 
