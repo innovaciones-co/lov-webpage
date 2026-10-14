@@ -87,12 +87,8 @@ export class LineAliasService {
     return this.aliases().get(subscription.id)?.color || DEFAULT_COLORS[subscription.id % DEFAULT_COLORS.length];
   }
 
-  /** Two letters for the avatar: the name's initials, or the number's last two digits. */
-  initials(subscription: CustomerSubscription): string {
-    const name = this.nickname(subscription);
-    if (!name) return subscription.msisdn.slice(-2);
-    const words = name.trim().split(/\s+/);
-    return (words.length > 1 ? words[0][0] + words[1][0] : name.slice(0, 2)).toUpperCase();
+  paymentLabel(subscription: CustomerSubscription): string {
+    return subscription.paymentType === 'POSTPAID' ? 'Postpago' : 'Prepago';
   }
 
   /** 573330513509 → 333 051 3509 */

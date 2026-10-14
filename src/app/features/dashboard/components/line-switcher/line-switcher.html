@@ -1,7 +1,7 @@
 @if (current(); as line) {
 <section class="line-hero" [style.--line]="lines.color(line)" aria-label="Línea seleccionada">
     <div class="line-hero__main">
-        <span class="avatar avatar--lg" aria-hidden="true">{{ lines.initials(line) }}</span>
+        <span class="avatar avatar--lg" aria-hidden="true"><span class="material-symbols-outlined">smartphone</span></span>
         <div class="line-hero__text">
             <span class="line-hero__eyebrow">{{ subscriptions().length > 1 ? 'Estás viendo' : 'Tu línea' }}</span>
             <span class="status" [class.status--off]="line.state !== 'ACTIVE'">{{ stateLabel(line.state) }}</span>
@@ -24,7 +24,7 @@
     @for (chip of chips(); track chip.id) {
     <button type="button" class="chip" [class.chip--active]="chip.id === line.id" [style.--line]="lines.color(chip)"
         [attr.aria-pressed]="chip.id === line.id" (click)="choose(chip)">
-        <span class="avatar avatar--sm" aria-hidden="true">{{ lines.initials(chip) }}</span>
+        <span class="avatar avatar--sm" aria-hidden="true"><span class="material-symbols-outlined">smartphone</span></span>
         <span class="chip__text">
             <strong>{{ title(chip) }}</strong>
             @if (lines.nickname(chip)) { <small>{{ lines.formatNumber(chip.msisdn) }}</small> }
@@ -53,10 +53,10 @@
             @for (item of filtered(); track item.id) {
             <li class="row" [style.--line]="lines.color(item)" [class.row--active]="item.id === current()?.id">
                 <button type="button" class="row__pick" (click)="choose(item)">
-                    <span class="avatar" aria-hidden="true">{{ lines.initials(item) }}</span>
+                    <span class="avatar" aria-hidden="true"><span class="material-symbols-outlined">smartphone</span></span>
                     <span class="row__text">
                         <strong>{{ title(item) }}</strong>
-                        <small>{{ lines.nickname(item) ? lines.formatNumber(item.msisdn) + ' · ' : '' }}{{ item.tariff.tariffName }}</small>
+                        <small>{{ lines.nickname(item) ? lines.formatNumber(item.msisdn) + ' · ' : '' }}{{ lines.paymentLabel(item) }} · {{ item.tariff.tariffName }}</small>
                     </span>
                     @if (item.id === current()?.id) {
                     <span class="material-symbols-outlined row__check" aria-label="Seleccionada">check_circle</span>
@@ -80,7 +80,7 @@
         <p class="edit__hint">Ponle un nombre y un color para reconocerla, por ejemplo la línea de un familiar.</p>
 
         <div class="edit__preview" aria-hidden="true">
-            <span class="avatar avatar--lg">{{ (editName().trim() || line.msisdn.slice(-2)).slice(0, 2).toUpperCase() }}</span>
+            <span class="avatar avatar--lg"><span class="material-symbols-outlined">smartphone</span></span>
             <span class="row__text">
                 <strong>{{ editName().trim() || lines.formatNumber(line.msisdn) }}</strong>
                 <small>{{ lines.formatNumber(line.msisdn) }}</small>
