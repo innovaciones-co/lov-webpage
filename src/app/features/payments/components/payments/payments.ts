@@ -6,6 +6,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CustomerSubscription } from '../../../../core/models/customer.model';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
 import { DeviceDetectionService } from '../../../../core/services/device-detection.service';
+import { LineAliasService } from '../../../../core/services/line-alias.service';
 import { SubscriptionFacadeService } from '../../../../core/services/subscription-facade.service';
 import { Modal } from "../../../../shared/components/modal/modal";
 import { AuthService } from '../../../authentication/services/auth.service';
@@ -28,6 +29,7 @@ import { Summary } from "../summary/summary";
 export class Payments implements OnInit {
   private document = inject(DOCUMENT);
   private router = inject(Router);
+  private lineAliases = inject(LineAliasService);
   isLoading = signal(false);
   isErrorModalOpen = signal(false);
   errorMessage = signal('');
@@ -246,7 +248,8 @@ export class Payments implements OnInit {
   }
 
   private resolveSelectedSubscription(subscriptions: CustomerSubscription[]): CustomerSubscription {
-    const currentSubscriptionId = this.currentSubscription()?.id;
+    // Coming from Mi cuenta, start on the line the customer was looking at there.
+    const currentSubscriptionId = this.currentSubscription()?.id ?? this.lineAliases.viewingLineId;
     if (!currentSubscriptionId) {
       return subscriptions[0];
     }

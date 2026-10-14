@@ -4,6 +4,7 @@ import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveForm
 import { Router } from "@angular/router";
 import { Observable, of } from 'rxjs';
 import { MsisdnPipe } from '../../../../core/pipes/msisdn.pipe';
+import { LineAliasService } from '../../../../core/services/line-alias.service';
 import { SubscriptionService } from '../../../../core/services/subscription.service';
 import { isLovMsisdnValidator } from '../../../../core/validators/isLovMsisdnValidator';
 import { multipleOf1000Validator } from '../../../../core/validators/multipleOf1000Validator';
@@ -28,6 +29,7 @@ export class RechargesIntro {
   private subscriptionService = inject(SubscriptionService);
   private msisdnPipe = inject(MsisdnPipe);
   private destroyRef = inject(DestroyRef);
+  private lineAliases = inject(LineAliasService);
 
 
   form = signal(
@@ -71,6 +73,12 @@ export class RechargesIntro {
   }
 
   constructor() {
+    // From Mi cuenta's "Recargar": the line being viewed there, already typed in both fields.
+    const viewing = this.lineAliases.viewingMsisdn;
+    if (viewing) {
+      this.form().patchValue({ msisdn: viewing, msisdnConfirmation: viewing });
+    }
+
     // Re-run msisdnConfirmation's validation whenever msisdn changes, since
     // Angular won't automatically revalidate a sibling control.
     this.form().controls.msisdn.valueChanges

@@ -138,6 +138,7 @@ export class Dashboard implements OnInit {
 
   selectSubscription(subscription: CustomerSubscription): void {
     this.currentSubscription.set(subscription);
+    this.lineAliases.setViewingLine(subscription);
     this.fetchAccounts(subscription.customerId, subscription.id.toString());
   }
 
@@ -200,9 +201,12 @@ export class Dashboard implements OnInit {
       return;
     }
 
-    const firstSubscription = subscriptions[0];
+    // Back on Mi cuenta, reopen the line the customer was last looking at.
+    const viewing = this.lineAliases.viewingLineId;
+    const firstSubscription = subscriptions.find(line => line.id === viewing) ?? subscriptions[0];
     this.activeSubscriptions.set(subscriptions);
     this.currentSubscription.set(firstSubscription);
+    this.lineAliases.setViewingLine(firstSubscription);
     this.fetchAccounts(customerId, firstSubscription.id.toString());
   }
 

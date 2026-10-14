@@ -308,6 +308,12 @@ export class AuthService {
         this.removeItem(this.REFRESH_TOKEN_KEY);
         this.removeItem(this.USER_KEY);
         this.removeItem(this.USER_MSISDN);
+        // The line last viewed in Mi cuenta (LineAliasService): not for whoever signs in next.
+        try {
+            sessionStorage.removeItem('lov.viewingLine');
+        } catch {
+            // Storage blocked: nothing was saved either.
+        }
     }
 
     private getStoredToken(): string | null {
