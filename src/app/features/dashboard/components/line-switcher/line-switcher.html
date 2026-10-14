@@ -9,7 +9,6 @@
             <p class="line-hero__meta">
                 @if (lines.nickname(line)) { <span>{{ lines.formatNumber(line.msisdn) }}</span> }
                 <span>{{ line.tariff.tariffName }}</span>
-                <span>{{ line.paymentType === 'PREPAID' ? 'Prepago' : 'Postpago' }}</span>
             </p>
         </div>
     </div>
@@ -56,7 +55,7 @@
                     <span class="avatar" aria-hidden="true"><span class="material-symbols-outlined">smartphone</span></span>
                     <span class="row__text">
                         <strong>{{ title(item) }}</strong>
-                        <small>{{ lines.nickname(item) ? lines.formatNumber(item.msisdn) + ' · ' : '' }}{{ lines.paymentLabel(item) }} · {{ item.tariff.tariffName }}</small>
+                        <small>{{ lines.nickname(item) ? lines.formatNumber(item.msisdn) + ' · ' : '' }}{{ item.tariff.tariffName }}</small>
                     </span>
                     @if (item.id === current()?.id) {
                     <span class="material-symbols-outlined row__check" aria-label="Seleccionada">check_circle</span>

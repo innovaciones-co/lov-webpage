@@ -87,10 +87,6 @@ export class LineAliasService {
     return this.aliases().get(subscription.id)?.color || DEFAULT_COLORS[subscription.id % DEFAULT_COLORS.length];
   }
 
-  paymentLabel(subscription: CustomerSubscription): string {
-    return subscription.paymentType === 'POSTPAID' ? 'Postpago' : 'Prepago';
-  }
-
   /** 573330513509 → 333 051 3509 */
   formatNumber(msisdn: string): string {
     const local = msisdn.startsWith('57') ? msisdn.slice(2) : msisdn;

@@ -12,7 +12,7 @@
 			<span class="line__avatar" aria-hidden="true"><span class="material-symbols-outlined">smartphone</span></span>
 			<span class="line__text">
 				<strong>{{ lines.nickname(line) ?? lines.formatNumber(line.msisdn) }}</strong>
-				<small>{{ lines.nickname(line) ? lines.formatNumber(line.msisdn) + ' · ' : '' }}{{ lines.paymentLabel(line) }} · {{ line.tariff.tariffName }}</small>
+				<small>{{ lines.nickname(line) ? lines.formatNumber(line.msisdn) + ' · ' : '' }}{{ line.tariff.tariffName }}</small>
 			</span>
 			<span class="line__check material-symbols-outlined" aria-hidden="true">check_circle</span>
 		</label>
