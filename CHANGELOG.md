@@ -1,3 +1,10 @@
+# [1.60.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.59.1...v1.60.0) (2026-10-14)
+
+
+### Features
+
+* redesign Mi cuenta with named, colored lines and quick actions ([0b099ec](https://github.com/innovaciones-co/lov-webpage/commit/0b099ec592441223cdb0847d86edabc13b0fa409))
+
 ## [1.59.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.59.0...v1.59.1) (2026-10-13)
 
 
