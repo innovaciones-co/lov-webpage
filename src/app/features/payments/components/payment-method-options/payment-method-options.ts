@@ -20,6 +20,7 @@ export class PaymentMethodOptions implements AfterViewInit {
   @ViewChild('recurringTemplate') recurringTemplate?: TemplateRef<any>;
   @ViewChild('balanceTemplate') balanceTemplate?: TemplateRef<any>;
   @ViewChild('onePayTemplate') onePayTemplate?: TemplateRef<any>;
+  @ViewChild('nequiTemplate') nequiTemplate?: TemplateRef<any>;
   private viewInitialized = signal(false);
 
   currentSubscription = input<CustomerSubscription | undefined>();
@@ -28,6 +29,7 @@ export class PaymentMethodOptions implements AfterViewInit {
   private allowedPaymentMethods: any[] = [];
 
   readonly paymentMethodControl = new FormControl<PaymentMethod | null>(null);
+  readonly PaymentMethod = PaymentMethod;
   accounts = signal<any[]>([]);
   private remainingPayment = signal<number>(0);
 
@@ -52,8 +54,18 @@ export class PaymentMethodOptions implements AfterViewInit {
   ]);
 
   constructor(
-    private paymentService: PaymentService
+    readonly paymentService: PaymentService
   ) {
+    this.paymentService.checkNequiAvailability();
+
+    // Nequi's request goes to the line being paid for by default; the customer can change it.
+    effect(() => {
+      const msisdn = this.currentSubscription()?.msisdn;
+      if (msisdn && !this.paymentService.nequiPhone()) {
+        this.paymentService.nequiPhone.set(msisdn.startsWith('57') ? msisdn.slice(2) : msisdn);
+      }
+    });
+
 
     effect(() => {
       const product = this.paymentService.selectedProduct();
@@ -90,14 +102,26 @@ export class PaymentMethodOptions implements AfterViewInit {
         return;
       }
 
+      if (selectedMethod === PaymentMethod.NEQUI) {
+        this.disclaimerTitle.set('Aprueba el pago en tu app Nequi');
+        this.disclaimerContent.set('Te llegará una notificación al celular de tu cuenta Nequi. Tienes 10 minutos para aprobarla.');
+        return;
+      }
+
       this.clearDisclaimer();
     });
 
     effect(() => {
+      // Also when the Nequi availability answer arrives.
+      this.paymentService.nequiAvailable();
       if (this.viewInitialized() && this.paymentService.selectedProduct()) {
         this.refreshAllowedPaymentMethods();
       }
     });
+  }
+
+  onNequiPhone(value: string): void {
+    this.paymentService.nequiPhone.set(value.replace(/[^0-9]/g, ''));
   }
 
   ngAfterViewInit(): void {
@@ -138,6 +162,10 @@ export class PaymentMethodOptions implements AfterViewInit {
         }
         break;
 
+    }
+
+    if (this.paymentService.nequiAvailable() && product.totalPrice > 0) {
+      this.allowedPaymentMethods.push({ value: PaymentMethod.NEQUI, template: this.nequiTemplate });
     }
 
     this.paymentMethods.set(this.allowedPaymentMethods);

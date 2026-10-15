@@ -172,6 +172,17 @@ export class Payments implements OnInit {
   }
 
   private handlePaymentResult(paymentData: PaymentInitiationResponse, paymentRequest: OrderPaymentRequest, referenceCode?: string): void {
+    // Nequi: the request is now in the customer's app; the result page waits for the approval.
+    if (paymentRequest.paymentMethodType === PaymentMethod.NEQUI) {
+      if (!paymentData.success) {
+        this.errorMessage.set(paymentData.message || 'Nequi no aceptó la solicitud de pago. Intenta de nuevo.');
+        this.isErrorModalOpen.set(true);
+        return;
+      }
+      void this.router.navigate(['pagos/resultado'], { queryParams: { referenceCode, nequi: 1 } });
+      return;
+    }
+
     if ((paymentRequest.paymentMethodType === PaymentMethod.BALANCE || paymentRequest.paymentMethodType === PaymentMethod.CARD) && paymentData.checkoutUrl === null) {
       console.log('Payment method BALANCE or CARD with no checkout URL detected, skipping checkout form submission');
 
@@ -303,7 +314,8 @@ export class Payments implements OnInit {
       cardData: selectedMethod == PaymentMethod.CARD ? this.getDefaultCardData() : undefined,
       creditCardId: selectedMethod == PaymentMethod.CARD ? this.paymentService.selectedCreditCard()?.id : undefined,
       // "Suscripción recurrente" always renews automatically (the backend enrolls every approved CARD plan purchase).
-      autoRenew: selectedMethod == PaymentMethod.CARD ? true : undefined
+      autoRenew: selectedMethod == PaymentMethod.CARD ? true : undefined,
+      nequiPhone: selectedMethod == PaymentMethod.NEQUI ? this.paymentService.nequiPhone() : undefined
     };
   }
 

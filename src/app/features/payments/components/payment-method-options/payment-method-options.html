@@ -4,6 +4,17 @@
     <div>
         <radio-field [options]="paymentMethods()" [control]="paymentMethodControl"></radio-field>
     </div>
+    @if (selectedPaymentMethod() === PaymentMethod.NEQUI) {
+    <label class="nequi-phone">
+        <span>Celular de tu cuenta Nequi</span>
+        <input type="tel" inputmode="numeric" maxlength="10" placeholder="3001234567" autocomplete="tel-national"
+            [value]="paymentService.nequiPhone()"
+            (input)="onNequiPhone($any($event.target).value)">
+        @if (paymentService.nequiPhone() && !(paymentService.nequiPhone().length === 10 && paymentService.nequiPhone().startsWith('3'))) {
+        <small class="nequi-phone__error">Escribe los 10 dígitos de tu celular, empezando por 3.</small>
+        }
+    </label>
+    }
     @if (disclaimerTitle() || disclaimerContent()) {
     <div class="disclaimer-card">
         @if (disclaimerTitle()) {
@@ -24,6 +35,11 @@
 <ng-template #balanceTemplate>
     <span class="option-title">Pago único con saldo</span>
     <p class="option-description">Saldo actual: ${{ pesoBalance() }} COP</p>
+</ng-template>
+
+<ng-template #nequiTemplate>
+    <span class="option-title">Nequi</span>
+    <p class="option-description">Apruebas el pago desde la app Nequi, sin salir de aquí</p>
 </ng-template>
 
 <ng-template #onePayTemplate>

@@ -1,7 +1,8 @@
 enum PaymentMethod {
     BALANCE = 'BALANCE',
     CARD = 'CARD',
-    WEB_CHECKOUT = 'WEB_CHECKOUT'
+    WEB_CHECKOUT = 'WEB_CHECKOUT',
+    NEQUI = 'NEQUI'
 }
 
 export interface PaymentMethodPayload {

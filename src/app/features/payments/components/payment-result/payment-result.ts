@@ -20,6 +20,8 @@ export class PaymentResultComponent {
     private paymentService = inject(PaymentService);
 
     private readonly referenceCode = this.route.snapshot.queryParams['referenceCode'] as string | null ?? null;
+    // Paid with Nequi: the customer still has to approve the request in their app.
+    readonly isNequi = this.route.snapshot.queryParams['nequi'] === '1';
     private readonly BASE_DELAY = 1000;
     private readonly MAX_POLL_ATTEMPTS = 8;
     private readonly refresh$ = new BehaviorSubject<void>(undefined);

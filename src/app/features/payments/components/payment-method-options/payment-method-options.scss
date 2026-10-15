@@ -64,3 +64,34 @@
         box-shadow: none;
     }
 }
+
+.nequi-phone {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 16px;
+
+    span {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    input {
+        height: 48px;
+        padding: 0 14px;
+        border: 1.5px solid #D5DBE8;
+        border-radius: 12px;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+
+        &:focus {
+            border-color: #066EF1;
+            outline: none;
+        }
+    }
+}
+
+.nequi-phone__error {
+    color: #D32F2F;
+    font-size: 0.8rem;
+}

@@ -36,6 +36,8 @@
           Tu pago se ha procesado exitosamente
           } @else if (isFailureStatus(orderData.paymentStatus)) {
           Tu pago ha sido cancelado
+          } @else if (isProcessingStatus(orderData.paymentStatus) && isNequi) {
+          Abre tu app Nequi y aprueba la notificación de pago. Esta página se actualiza sola.
           } @else if (isProcessingStatus(orderData.paymentStatus)) {
           Tu pago está siendo procesado
           } @else if (orderData.paymentStatus === 'REFUNDED') {

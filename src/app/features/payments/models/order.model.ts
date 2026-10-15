@@ -94,6 +94,8 @@ export interface OrderPaymentRequest {
     creditCardId?: number;
     // Opt-in to schedule automatic plan renewal (OnePay-backed) after this payment succeeds.
     autoRenew?: boolean;
+    // NEQUI: the customer's Nequi account number that receives the payment request.
+    nequiPhone?: string;
 }
 
 export interface CardData {

@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { computed, inject, Injectable, OnDestroy, Signal, signal } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Observable, Subject, throwError, timer } from "rxjs";
+import { Observable, of, Subject, throwError, timer } from "rxjs";
 import { catchError, map, retry, share, switchMap, takeUntil, takeWhile } from "rxjs/operators";
 import { environment } from "../../../../environments/environment";
 import { Plan } from "../../plans/models/plan.model";
@@ -24,6 +24,10 @@ export class PaymentService implements OnDestroy {
     // Opt-in from the inline "add card" form during a CARD-method purchase: schedules an
     // AutoRenewPlan on the backend after a successful payment (see OrderPaymentRequest).
     autoRenew = signal<boolean>(false);
+    // Nequi: only offered to the customers the backend allows while it's being tested.
+    nequiAvailable = signal<boolean>(false);
+    nequiPhone = signal<string>('');
+    private nequiChecked = false;
 
     private _formValid = signal<boolean>(false);
     private httpClient = inject(HttpClient);
@@ -39,8 +43,18 @@ export class PaymentService implements OnDestroy {
         return this._formValid()
             && this.selectedProduct() !== undefined
             && selectedMethod != null
-            && (selectedMethod !== PaymentMethod.CARD || this.selectedCreditCard() != null);
+            && (selectedMethod !== PaymentMethod.CARD || this.selectedCreditCard() != null)
+            && (selectedMethod !== PaymentMethod.NEQUI || /^3[0-9]{9}$/.test(this.nequiPhone()));
     });
+
+    /** Asks the backend once per session whether this customer can pay with Nequi. */
+    checkNequiAvailability(): void {
+        if (this.nequiChecked) return;
+        this.nequiChecked = true;
+        this.httpClient.get<{ enabled: boolean }>(`${environment.apiUrl}/nequi/availability`).pipe(
+            catchError(() => of({ enabled: false }))
+        ).subscribe(result => this.nequiAvailable.set(result.enabled));
+    }
 
     setFormValidityStatus(isValid: boolean) {
         this._formValid.set(isValid);
