@@ -1,3 +1,10 @@
+# [1.62.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.61.0...v1.62.0) (2026-10-15)
+
+
+### Features
+
+* pay with Nequi at checkout (allow-listed test customers only) ([0b1b891](https://github.com/innovaciones-co/lov-webpage/commit/0b1b891a85bf3b936bf68d082ab4a16baa9df1ba))
+
 # [1.61.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.60.0...v1.61.0) (2026-10-14)
 
 
