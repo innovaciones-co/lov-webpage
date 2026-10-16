@@ -1,3 +1,10 @@
+## [1.62.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.62.1...v1.62.2) (2026-10-16)
+
+
+### Bug Fixes
+
+* Nequi requests last 45 minutes, as Nequi defines ([6cd8e1a](https://github.com/innovaciones-co/lov-webpage/commit/6cd8e1a08d7f16d790e13d3de3a4b49c8fb5b21e))
+
 ## [1.62.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.62.0...v1.62.1) (2026-10-16)
 
 
