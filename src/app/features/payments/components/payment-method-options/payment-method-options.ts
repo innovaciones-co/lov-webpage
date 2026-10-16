@@ -104,7 +104,7 @@ export class PaymentMethodOptions implements AfterViewInit {
 
       if (selectedMethod === PaymentMethod.NEQUI) {
         this.disclaimerTitle.set('Aprueba el pago en tu app Nequi');
-        this.disclaimerContent.set('Te llegará una notificación al celular de tu cuenta Nequi. Tienes 10 minutos para aprobarla.');
+        this.disclaimerContent.set('Te llegará una notificación al celular de tu cuenta Nequi. Tienes 45 minutos para aprobarla.');
         return;
       }
 
