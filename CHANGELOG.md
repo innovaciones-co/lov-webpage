@@ -1,3 +1,10 @@
+## [1.62.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.62.2...v1.62.3) (2026-10-16)
+
+
+### Bug Fixes
+
+* keep modals light so their text is readable in dark mode ([3556178](https://github.com/innovaciones-co/lov-webpage/commit/355617891ef0540c7cab6bb74d2adb584012fef2))
+
 ## [1.62.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.62.1...v1.62.2) (2026-10-16)
 
 
