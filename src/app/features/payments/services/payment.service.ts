@@ -27,7 +27,6 @@ export class PaymentService implements OnDestroy {
     // Nequi: only offered to the customers the backend allows while it's being tested.
     nequiAvailable = signal<boolean>(false);
     nequiPhone = signal<string>('');
-    private nequiChecked = false;
 
     private _formValid = signal<boolean>(false);
     private httpClient = inject(HttpClient);
@@ -47,10 +46,8 @@ export class PaymentService implements OnDestroy {
             && (selectedMethod !== PaymentMethod.NEQUI || /^3[0-9]{9}$/.test(this.nequiPhone()));
     });
 
-    /** Asks the backend once per session whether this customer can pay with Nequi. */
+    /** Asks the backend, on every visit to checkout, whether this customer can pay with Nequi. */
     checkNequiAvailability(): void {
-        if (this.nequiChecked) return;
-        this.nequiChecked = true;
         this.httpClient.get<{ enabled: boolean }>(`${environment.apiUrl}/nequi/availability`).pipe(
             catchError(() => of({ enabled: false }))
         ).subscribe(result => this.nequiAvailable.set(result.enabled));
