@@ -1,3 +1,10 @@
+## [1.62.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.62.0...v1.62.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* re-check Nequi availability on every checkout visit ([eb4413a](https://github.com/innovaciones-co/lov-webpage/commit/eb4413a504b136ed710fb9d8dd7bae87840846e1))
+
 # [1.62.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.61.0...v1.62.0) (2026-10-15)
 
 
