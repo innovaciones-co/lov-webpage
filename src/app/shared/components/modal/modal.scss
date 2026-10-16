@@ -160,24 +160,5 @@
     }
 }
 
-// Modo oscuro
-@media (prefers-color-scheme: dark) {
-    .modal-content {
-        background-color: #1f2937;
-        color: #f9fafb;
-    }
-
-    .modal-header,
-    .modal-footer {
-        background-color: #111827;
-        border-color: #374151;
-    }
-
-    .modal-title {
-        color: #f9fafb;
-    }
-
-    .modal-body {
-        color: #e5e7eb;
-    }
-}
+// No dark mode: the rest of the site is always light, so a dark modal left the projected
+// content (dark text) unreadable on systems set to dark mode.
