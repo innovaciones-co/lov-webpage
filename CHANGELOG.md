@@ -1,3 +1,10 @@
+# [1.63.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.62.3...v1.63.0) (2026-10-21)
+
+
+### Features
+
+* Nequi-branded screen while the customer approves the payment ([77d34c3](https://github.com/innovaciones-co/lov-webpage/commit/77d34c3947e20654d13152661daefd6e7c3109a1))
+
 ## [1.62.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.62.2...v1.62.3) (2026-10-16)
 
 
