@@ -1,0 +1,49 @@
+<section class="nequi" aria-live="polite">
+    <div class="nequi__content">
+        <img class="nequi__logo" src="nequi-logo.png" alt="Nequi" width="105" height="32">
+
+        <p class="nequi__eyebrow">Pago con Nequi</p>
+        <h1 class="nequi__title">Aprueba el pago en tu app Nequi</h1>
+        <p class="nequi__amount">{{ amountText() }}</p>
+        @if (maskedPhone()) {
+        <p class="nequi__phone">Enviamos la solicitud al celular <strong>{{ maskedPhone() }}</strong></p>
+        }
+
+        <ol class="nequi__steps">
+            <li><span>1</span><p>Abre la app Nequi en tu celular.</p></li>
+            <li><span>2</span><p>Toca la notificación de pago de <strong>LOV Mobile</strong>.</p></li>
+            <li><span>3</span><p>Revisa el valor y acepta el pago.</p></li>
+        </ol>
+
+        @if (remainingText()) {
+        <div class="nequi__timer" [class.nequi__timer--over]="expired()">
+            <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+            @if (expired()) {
+            El tiempo para aprobar terminó. Estamos confirmando con Nequi.
+            } @else {
+            Tienes <strong>{{ remainingText() }}</strong> para aprobarlo
+            }
+        </div>
+        }
+
+        <p class="nequi__note">
+            <span class="nequi__spinner" aria-hidden="true"></span>
+            Esta página se actualiza sola cuando apruebes. No la cierres.
+        </p>
+    </div>
+
+    <!-- A phone receiving the payment request, as decoration. -->
+    <div class="phone" aria-hidden="true">
+        <div class="phone__screen">
+            <div class="phone__notch"></div>
+            <div class="phone__push">
+                <img src="nequi-simbolo.png" alt="" width="28" height="28">
+                <div>
+                    <strong>LOV Mobile te cobra</strong>
+                    <span>{{ amountText() }}</span>
+                </div>
+            </div>
+            <div class="phone__accept">Aceptar</div>
+        </div>
+    </div>
+</section>

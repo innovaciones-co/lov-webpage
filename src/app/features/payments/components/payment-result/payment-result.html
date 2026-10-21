@@ -17,6 +17,10 @@
   <div class="order-result-state">
     @if (order$ | async; as orderData) {
 
+    @if (isNequi && isProcessingStatus(orderData.paymentStatus)) {
+    <app-nequi-waiting [amount]="orderData.amount" [phone]="$any(orderData.paymentDetails?.['nequiPhone'])"
+        [createdAt]="orderData.dateCreated ?? null"></app-nequi-waiting>
+    } @else {
     <div class="order-status-header">
       <div class="status-icon" [class]="getStatusColorClass(orderData.paymentStatus)">
         @if (isSuccessStatus(orderData.paymentStatus)) {
@@ -48,6 +52,7 @@
         </p>
       </div>
     </div>
+    }
 
     <div class="order-details">
       <h3>Detalles del pedido</h3>

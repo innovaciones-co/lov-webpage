@@ -136,4 +136,7 @@ export interface OrderResponse {
     billingCountry: string;
     billingCity: string;
     billingAddress: string;
+    dateCreated?: string;
+    // Method-specific data, e.g. nequiPhone for a Nequi payment.
+    paymentDetails?: Record<string, unknown> | null;
 }

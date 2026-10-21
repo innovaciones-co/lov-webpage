@@ -6,10 +6,11 @@ import { OrderResponse, PaymentStatus } from '../../models/order.model';
 import { PaymentService } from '../../services/payment.service';
 import { Loading } from "../../../../shared/components/loading/loading";
 import { MsisdnPipe } from "../../../../core/pipes/msisdn.pipe";
+import { NequiWaiting } from "../nequi-waiting/nequi-waiting";
 
 @Component({
     selector: 'app-payment-result',
-    imports: [CurrencyPipe, AsyncPipe, Loading, MsisdnPipe],
+    imports: [CurrencyPipe, AsyncPipe, Loading, MsisdnPipe, NequiWaiting],
     templateUrl: './payment-result.html',
     styleUrl: './payment-result.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
