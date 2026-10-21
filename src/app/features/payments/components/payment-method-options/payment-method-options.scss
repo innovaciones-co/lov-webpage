@@ -17,7 +17,8 @@
 .option-title--logo {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    // Nequi brand manual: clear space around the symbol about the height of its N.
+    gap: 12px;
 
     img {
         flex-shrink: 0;
