@@ -1,3 +1,10 @@
+# [1.64.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.63.0...v1.64.0) (2026-10-22)
+
+
+### Features
+
+* clearer SIM activation step with a locked serial prefix ([0371f24](https://github.com/innovaciones-co/lov-webpage/commit/0371f24a16ce39f536f336e9c6ecb040b4317706))
+
 # [1.63.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.62.3...v1.63.0) (2026-10-21)
 
 
