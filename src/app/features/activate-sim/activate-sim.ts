@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { DocumentValidation, DocumentValidationData } from './components/document-validation/document-validation';
 import { IccidValidationForm, IccidValidationFormData } from "./components/iccid-validation-form/iccid-validation-form";
 import { PersonalInfoForm, PersonalInfoFormData } from './components/personal-info-form/personal-info-form';
@@ -18,6 +18,13 @@ export class ActivateSim {
 
   showDocumentValidationForm = signal(false);
   showPersonalInfoForm = signal(false);
+
+  readonly steps = [
+    { n: 1, label: 'Tu SIM' },
+    { n: 2, label: 'Tu documento' },
+    { n: 3, label: 'Tus datos' },
+  ];
+  readonly currentStep = computed(() => this.showPersonalInfoForm() ? 3 : this.showDocumentValidationForm() ? 2 : 1);
 
   onIccidValidationFormSubmit(data: IccidValidationFormData): void {
     this.iccidData.set(data);

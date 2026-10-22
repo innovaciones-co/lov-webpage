@@ -1,3 +1,64 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// Progress across the three steps.
+.steps {
+    display: flex;
+    gap: 8px;
+    margin: 1.25rem 0 0.5rem;
+    padding: 0;
+    list-style: none;
+}
+
+.steps__item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: #EEF2FA;
+    color: #757A8C;
+    font-weight: 700;
+
+    &--current {
+        background: linear-gradient(90deg, #066EF1, #052B6C);
+        color: #fff;
+        box-shadow: 0 10px 22px rgba(#066EF1, 0.25);
+    }
+
+    &--done {
+        background: #E3F6EC;
+        color: #0E8A4E;
+    }
+}
+
+.steps__dot {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    color: #052B6C;
+    font-size: 0.85rem;
+    font-weight: 800;
+
+    .material-symbols-outlined {
+        font-size: 18px;
+        color: #0E8A4E;
+    }
+}
+
+.steps__label {
+    font-size: 0.92rem;
+
+    @media (max-width: 380px) {
+        display: none;
+    }
+}
+
 .stepper-container {
     margin: 1rem 0;
 }

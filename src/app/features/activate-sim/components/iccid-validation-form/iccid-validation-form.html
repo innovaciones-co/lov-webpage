@@ -1,29 +1,80 @@
-<form [formGroup]="form()" (ngSubmit)="onSubmit()">
-    <div class="card">
-        <h3 class="form-subtitle">Ingresa el serial de la SIM LOV</h3>
-        <div class="form-grid">
-            <div class="form-row">
-                <input-text-field [label]="'Completa los últimos 6 dígitos del serial'"
-                    [placeholder]="'8957777200231XXXXXX'" [control]="form().controls.iccid"
-                    [error]="getFieldErrorMessage('iccid')"></input-text-field>
+<form class="sim-step" [formGroup]="form()" (ngSubmit)="onSubmit()" [class.sim-step--done]="hideButton()">
+    <div class="sim-step__fields">
+        <p class="sim-step__eyebrow">Paso 1</p>
+        <h3 class="sim-step__title">Datos de tu SIM LOV</h3>
+        <p class="sim-step__hint">Los encuentras en la tarjeta plástica donde venía tu SIM.</p>
 
-                <input-text-field [label]="'Código PUK (Ubícalo en la parte posterior de tu tarjeta SIM)'"
-                    [placeholder]="'Número de 8 dígitos'" [control]="form().controls.puk"
-                    [error]="getFieldErrorMessage('puk')"></input-text-field>
-            </div>
-        </div>
+        <label class="field" for="iccid-suffix">
+            <span class="field__label"><span class="field__tag">A</span> Serial de la SIM</span>
+            <span class="serial" [class.serial--error]="showError('suffix')">
+                <span class="serial__prefix" title="Esta parte es igual en todas las SIM LOV">
+                    <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+                    {{ prefix }}
+                </span>
+                <input id="iccid-suffix" class="serial__input" type="text" inputmode="numeric"
+                    autocomplete="off" placeholder="______" [attr.maxlength]="suffixLength + prefix.length"
+                    [value]="form().controls.suffix.value" (input)="onDigits('suffix', $any($event.target), suffixLength)"
+                    (blur)="form().controls.suffix.markAsTouched()" [disabled]="hideButton()"
+                    aria-describedby="iccid-help">
+            </span>
+            <span class="field__help" id="iccid-help">
+                @if (showError('suffix')) {
+                <span class="field__error">Escribe los {{ suffixLength }} dígitos que van después de {{ prefix }}.</span>
+                } @else {
+                <span>Escribe solo los <strong>últimos {{ suffixLength }} dígitos</strong> del serial</span>
+                <span class="count">{{ suffixCount() }} de {{ suffixLength }}</span>
+                }
+            </span>
+        </label>
+
+        <label class="field" for="puk">
+            <span class="field__label"><span class="field__tag">B</span> Código PUK</span>
+            <input id="puk" class="field__input" [class.field__input--error]="showError('puk')" type="text"
+                inputmode="numeric" autocomplete="off" placeholder="8 dígitos" [attr.maxlength]="pukLength"
+                [value]="form().controls.puk.value" (input)="onDigits('puk', $any($event.target), pukLength)"
+                (blur)="form().controls.puk.markAsTouched()" [disabled]="hideButton()" aria-describedby="puk-help">
+            <span class="field__help" id="puk-help">
+                @if (showError('puk')) {
+                <span class="field__error">El PUK tiene {{ pukLength }} dígitos.</span>
+                } @else {
+                <span>Está en la parte de atrás de la tarjeta plástica</span>
+                <span class="count">{{ pukCount() }} de {{ pukLength }}</span>
+                }
+            </span>
+        </label>
 
         <error-card [message]="validationError()"></error-card>
 
-    </div>
-    @if (!hideButton()) {
-    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
-        @if (isLoading()) {
-        <span class="loading-spinner"></span>
-        Validando...
+        @if (!hideButton()) {
+        <button class="btn sim-step__submit" type="submit" [disabled]="isLoading()">
+            @if (isLoading()) {
+            <span class="loading-spinner"></span>
+            Validando tu SIM...
+            } @else {
+            Validar mi SIM
+            }
+        </button>
         } @else {
-        Continuar
+        <p class="sim-step__ok">
+            <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+            SIM validada
+        </p>
         }
-    </button>
-    }
+    </div>
+
+    <!-- Where to find each number on the SIM card holder. -->
+    <div class="card-guide" aria-hidden="true">
+        <div class="sim-card">
+            <span class="sim-card__brand">LOV</span>
+            <span class="sim-card__chip"></span>
+            <span class="sim-card__marker sim-card__marker--a">A</span>
+            <span class="sim-card__barcode"></span>
+            <span class="sim-card__serial">{{ prefix }}<b>######</b></span>
+        </div>
+        <div class="sim-card sim-card--back">
+            <span class="sim-card__side">Parte de atrás</span>
+            <span class="sim-card__marker sim-card__marker--b">B</span>
+            <span class="sim-card__puk">PUK <b>########</b></span>
+        </div>
+    </div>
 </form>

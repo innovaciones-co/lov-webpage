@@ -2,6 +2,19 @@
     <app-page-header eyebrow="Activación" title="Activa tu SIM en segundos" accent="en segundos" icon="sim_card">
         Solo necesitarás tus datos personales y el número de tu SIM.
     </app-page-header>
+    <ol class="steps" aria-label="Pasos para activar tu SIM">
+        @for (step of steps; track step.n) {
+        <li class="steps__item" [class.steps__item--current]="step.n === currentStep()"
+            [class.steps__item--done]="step.n < currentStep()" [attr.aria-current]="step.n === currentStep() ? 'step' : null">
+            <span class="steps__dot">
+                @if (step.n < currentStep()) { <span class="material-symbols-outlined" aria-hidden="true">check</span> }
+                @else { {{ step.n }} }
+            </span>
+            <span class="steps__label">{{ step.label }}</span>
+        </li>
+        }
+    </ol>
+
     <div class="stepper-container">
         <!-- Step Content -->
         <div class="step-content-container">
