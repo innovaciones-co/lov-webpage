@@ -1,3 +1,10 @@
+## [1.65.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.65.0...v1.65.1) (2026-10-25)
+
+
+### Bug Fixes
+
+* improve mobile telemedicine call contrast ([68bf040](https://github.com/innovaciones-co/lov-webpage/commit/68bf0408935135a5bc4a9201fca4e182f9d4c5c4))
+
 # [1.65.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.64.0...v1.65.0) (2026-10-25)
 
 
