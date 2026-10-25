@@ -1,3 +1,10 @@
+# [1.66.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.65.1...v1.66.0) (2026-10-25)
+
+
+### Features
+
+* refine telemedicine typography and layout ([287a721](https://github.com/innovaciones-co/lov-webpage/commit/287a72147faec6ae10518077b1b4682edbabc01c))
+
 ## [1.65.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.65.0...v1.65.1) (2026-10-25)
 
 
