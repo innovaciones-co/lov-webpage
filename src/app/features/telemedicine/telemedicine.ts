@@ -1,0 +1,28 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { TelemedicineSeo } from './telemedicine-seo';
+
+@Component({
+  selector: 'app-telemedicine',
+  imports: [NgOptimizedImage, RouterLink],
+  templateUrl: './telemedicine.html',
+  styleUrl: './telemedicine.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TelemedicineSeo],
+})
+export class Telemedicine {
+  constructor() {
+    inject(TelemedicineSeo).setPage('/telemedicina', 'LOV te acompaña en salud | Telemedicina',
+      'Telemedicina general 24/7 y pediátrica programada para ti y hasta dos familiares elegibles, sin costo adicional con tu paquete mensual LOV activo. Llama a AXA.');
+  }
+  readonly phone = 'tel:+576016462811';
+  readonly faqs = [
+    { question: '¿Quiénes pueden usar este beneficio?', answer: 'El titular de una línea LOV con paquete mensual activo y hasta dos familiares elegibles: cónyuge o compañero permanente, hijos o padres, conforme al condicionado. La atención pediátrica aplica a hijos del titular menores de 15 años.' },
+    { question: '¿Tiene algún costo adicional?', answer: 'Las asistencias incluidas no tienen costo adicional para usuarios elegibles con paquete mensual LOV activo. Los servicios externos o adicionales que no estén cubiertos son responsabilidad del usuario.' },
+    { question: '¿Puedo solicitar la asistencia desde cualquier ciudad?', answer: 'Sí. El ámbito territorial del programa es Colombia. AXA valida la elegibilidad y coordina la atención de acuerdo con las condiciones del servicio.' },
+    { question: '¿Necesito internet para recibir la orientación?', answer: 'La asistencia se coordina por teléfono. Cuando corresponda una videollamada, necesitarás un dispositivo con cámara y conexión a internet. AXA te indicará cómo acceder.' },
+    { question: '¿Qué pasa si mi paquete mensual está vencido?', answer: 'Debes renovar y mantener activo tu paquete mensual LOV para acceder al beneficio. AXA valida la vigencia y las condiciones antes de coordinar la asistencia.' },
+    { question: '¿Este servicio atiende urgencias vitales?', answer: 'No. La telemedicina no reemplaza la atención de urgencias ni la atención presencial que requieras. Ante una urgencia vital, acude de inmediato a los servicios de emergencia.' },
+  ];
+}

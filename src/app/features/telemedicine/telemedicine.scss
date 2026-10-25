@@ -1,0 +1,97 @@
+:host { display: block; }
+.telemedicine { color: #052b6c; background: #fff; }
+.wrap { width: min(1200px, calc(100% - 48px)); margin-inline: auto; }
+.section { padding-block: 80px; }
+.eyebrow { display: block; font-size: .76rem; font-weight: 800; letter-spacing: .14em; color: #0062d6; margin-bottom: 14px; }
+h1, h2, h3 { color: #052b6c; font-family: 'Nunito', sans-serif; }
+h1 { font-size: clamp(2.35rem, 4.6vw, 4.2rem); line-height: 1.06; letter-spacing: -.04em; max-width: 750px; margin: 0 0 18px; }
+h1 span, h2 span { color: #066ef1; }
+h2 { font-size: clamp(1.9rem, 3vw, 2.8rem); line-height: 1.14; letter-spacing: -.03em; margin-bottom: 18px; }
+h3 { font-size: 1.55rem; font-weight: 800; }
+p { color: #4c5f78; line-height: 1.65; }
+a { text-underline-offset: 4px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #066ef1; outline-offset: 5px; }
+.hero { padding-top: 54px; background: #f4f8ff; }
+.hero-intro { display: grid; grid-template-columns: 1fr 300px; align-items: center; gap: 60px; padding-bottom: 34px; }
+.lead { max-width: 670px; font-size: 1.15rem; margin: 0; }
+.hero-action { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.call-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 17px 25px; border-radius: 50px; background: #066ef1; color: white; text-decoration: none; font-weight: 800; font-size: 1.05rem; box-shadow: 0 8px 20px #066ef126; transition: background .2s, transform .2s; }
+.call-button:hover { background: #052b6c; }
+.hero-action .call-button { width: 100%; }
+.phone-number { color: #052b6c; font-size: 1.55rem; font-weight: 800; text-decoration: none; }
+.text-link { color: #0062d6; font-weight: 700; font-size: .95rem; }
+.campaign-image { display: block; overflow: hidden; border-radius: 24px; }
+.campaign-image img { display: block; width: 100%; height: auto; }
+.benefit-strip { display: flex; justify-content: space-between; gap: 20px; padding: 25px 0; font-weight: 700; font-size: .94rem; }
+.benefit-strip > span { display: flex; align-items: center; gap: 9px; }
+.section-intro { max-width: 680px; }
+.service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 32px; }
+.service-card { display: flex; flex-direction: column; padding: 32px; border: 1px solid #dce7f7; border-radius: 24px; background: #f9fbff; }
+.service-card.pediatric { background: #fffbfc; border-color: #f1e1e7; }
+.card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 26px; }
+.service-icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 18px; background: #e6efff; color: #066ef1; font-size: 32px; }
+.pediatric .service-icon { color: #c9193c; background: #ffe9ef; }
+.badge { padding: 7px 12px; border-radius: 30px; background: white; border: 1px solid #dce7f7; color: #052b6c; font-weight: 700; font-size: .8rem; }
+.service-card ul { padding-left: 20px; color: #4c5f78; line-height: 1.6; margin: 0 0 28px; }
+.service-card li { margin-bottom: 10px; }
+.service-link { display: flex; justify-content: space-between; margin-top: auto; border-top: 1px solid #dce7f7; padding-top: 19px; color: #0062d6; text-decoration: none; font-weight: 800; }
+.emergency-note { display: flex; gap: 13px; margin-top: 24px; padding: 20px 24px; border-radius: 16px; background: #f4f6f9; }
+.emergency-note > span { flex-shrink: 0; color: #052b6c; margin-top: 3px; }
+.emergency-note p { font-size: .92rem; margin: 0; }
+.how-it-works { background: #f4f8ff; }
+.steps-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.steps-heading h2 { max-width: 550px; }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; list-style: none; padding: 25px 0 0; margin: 0; }
+.step-number { display: block; font-family: 'Nunito', sans-serif; color: #066ef1; font-weight: 900; font-size: 2.8rem; padding-bottom: 16px; border-bottom: 2px solid #d7e5fb; margin-bottom: 21px; }
+.steps h3 { font-size: 1.2rem; }
+.steps p { font-size: .95rem; margin-bottom: 0; }
+.steps a { color: #0062d6; }
+.faq { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; }
+.faq details { border-bottom: 1px solid #dde5f0; padding-block: 19px; }
+.faq details:first-child { border-top: 1px solid #dde5f0; }
+.faq summary { display: flex; justify-content: space-between; gap: 15px; list-style: none; cursor: pointer; font-weight: 700; font-size: 1.08rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary span { color: #066ef1; flex-shrink: 0; }
+.faq details[open] summary span { transform: rotate(45deg); }
+.faq details p { padding-top: 14px; margin: 0; font-size: .97rem; }
+.closing { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; padding: 42px; border-radius: 28px; background: #052b6c; }
+.closing h2, .closing p, .closing .eyebrow { color: white; }
+.closing h2 { font-size: clamp(1.8rem, 2.6vw, 2.4rem); }
+.closing p { margin: 0; }
+.closing .eyebrow { color: #a8d6ff; }
+.closing-action { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+.closing-action > a:last-child { color: white; font-size: .92rem; text-align: center; }
+.legal-note { padding-block: 24px 40px; font-size: .82rem; }
+.legal-note a { color: #0062d6; }
+.mobile-call { display: none; }
+@media (max-width: 850px) {
+  .hero-intro { grid-template-columns: 1fr; gap: 24px; }
+  .hero-action { align-items: flex-start; }
+  .hero-action .call-button { width: auto; min-width: 250px; }
+  .benefit-strip { flex-wrap: wrap; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .faq { grid-template-columns: 1fr; gap: 28px; }
+  .closing { grid-template-columns: 1fr; }
+  .closing-action { align-items: flex-start; }
+}
+@media (max-width: 600px) {
+  .wrap { width: calc(100% - 36px); }
+  .section { padding-block: 48px; }
+  .hero { padding-top: 32px; }
+  .hero-intro { padding-bottom: 26px; }
+  .lead { font-size: 1.03rem; }
+  .campaign-image { border-radius: 14px; }
+  .benefit-strip { flex-direction: column; gap: 13px; padding-block: 22px; font-size: .87rem; }
+  .service-grid { grid-template-columns: 1fr; gap: 18px; }
+  .service-card { padding: 25px; }
+  .steps-heading { flex-direction: column; align-items: flex-start; gap: 5px; }
+  .steps { gap: 24px 20px; }
+  .step-number { font-size: 2.2rem; }
+  .steps h3 { font-size: 1.05rem; }
+  .emergency-note { padding: 18px; }
+  .closing { padding: 28px 23px; border-radius: 22px; gap: 20px; }
+  .closing .call-button { font-size: .94rem; padding-inline: 18px; }
+  .legal-note { padding-bottom: 110px; }
+  .mobile-call { display: flex; position: fixed; bottom: max(12px, env(safe-area-inset-bottom)); left: 12px; right: 94px; z-index: 999; align-items: center; justify-content: space-between; gap: 8px; padding: 13px 18px; border-radius: 18px; color: white; background: #066ef1; box-shadow: 0 6px 25px #052b6c40; font-weight: 800; text-decoration: none; }
+  .mobile-call small { display: block; font-size: .8rem; font-weight: 600; }
+}

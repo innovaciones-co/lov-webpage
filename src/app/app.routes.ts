@@ -24,6 +24,16 @@ import { RechargesIntro } from './features/recharges/components/recharges-intro/
 
 export const routes: Routes = [
     {
+        path: 'telemedicina',
+        title: 'Telemedicina para ti y tu familia | LOV Mobile',
+        loadComponent: () => import('./features/telemedicine/telemedicine').then(m => m.Telemedicine)
+    },
+    {
+        path: 'telemedicina/terminos-y-condiciones',
+        title: 'Términos de telemedicina LOV–AXA | LOV Mobile',
+        loadComponent: () => import('./features/telemedicine/telemedicine-terms').then(m => m.TelemedicineTerms)
+    },
+    {
         path: '',
         component: Home
     },
