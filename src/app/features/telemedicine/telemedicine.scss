@@ -15,7 +15,7 @@ a:focus-visible, summary:focus-visible { outline: 3px solid #066ef1; outline-off
 .hero-intro { display: grid; grid-template-columns: 1fr 300px; align-items: center; gap: 60px; padding-bottom: 34px; }
 .lead { max-width: 670px; font-size: 1.15rem; margin: 0; }
 .hero-action { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.call-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 17px 25px; border-radius: 50px; background: #066ef1; color: white; text-decoration: none; font-weight: 800; font-size: 1.05rem; box-shadow: 0 8px 20px #066ef126; transition: background .2s, transform .2s; }
+.call-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 17px 25px; border-radius: 50px; background: #066ef1; color: white; text-decoration: none; font-weight: 800; font-size: 1.05rem; box-shadow: 0 8px 20px #066ef126; }
 .call-button:hover { background: #052b6c; }
 .hero-action .call-button { width: 100%; }
 .phone-number { color: #052b6c; font-size: 1.55rem; font-weight: 800; text-decoration: none; }
@@ -93,5 +93,5 @@ a:focus-visible, summary:focus-visible { outline: 3px solid #066ef1; outline-off
   .closing .call-button { font-size: .94rem; padding-inline: 18px; }
   .legal-note { padding-bottom: 110px; }
   .mobile-call { display: flex; position: fixed; bottom: max(12px, env(safe-area-inset-bottom)); left: 12px; right: 94px; z-index: 999; align-items: center; justify-content: space-between; gap: 8px; padding: 13px 18px; border-radius: 18px; color: white; background: #066ef1; box-shadow: 0 6px 25px #052b6c40; font-weight: 800; text-decoration: none; }
-  .mobile-call small { display: block; font-size: .8rem; font-weight: 600; }
+  .mobile-call small { display: block; color: white; font-size: .8rem; font-weight: 600; }
 }
