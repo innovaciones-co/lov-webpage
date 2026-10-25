@@ -1,3 +1,10 @@
+# [1.65.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.64.0...v1.65.0) (2026-10-25)
+
+
+### Features
+
+* add LOV telemedicine landing page ([beded17](https://github.com/innovaciones-co/lov-webpage/commit/beded17391eba5a872e1e687f194cbc29ec08e6a))
+
 # [1.64.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.63.0...v1.64.0) (2026-10-22)
 
 
