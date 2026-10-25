@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TelemedicineSeo } from './telemedicine-seo';
+import { LovHeart } from '../../shared/components/lov-heart/lov-heart';
 
 @Component({
   selector: 'app-telemedicine',
-  imports: [NgOptimizedImage, RouterLink],
+  imports: [NgOptimizedImage, RouterLink, LovHeart],
   templateUrl: './telemedicine.html',
   styleUrl: './telemedicine.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

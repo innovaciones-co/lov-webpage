@@ -47,7 +47,6 @@ export class Menu implements OnInit {
       label: 'Nosotros',
       links: [
         { label: 'Quiénes somos', description: 'El amor nos conecta', icon: 'favorite', route: '/quienes-somos' },
-        { label: 'Telemedicina', description: 'LOV te acompaña en salud', icon: 'health_and_safety', route: '/telemedicina' },
         { label: 'Preguntas frecuentes', description: 'Resuelve tus dudas', icon: 'help', route: '/preguntas-frecuentes' },
         { label: 'Información legal', description: 'Términos y documentos', icon: 'gavel', route: '/legales' },
         { label: 'Histórico de promociones', description: 'Ofertas anteriores', icon: 'local_offer', route: '/historico-promociones' },
