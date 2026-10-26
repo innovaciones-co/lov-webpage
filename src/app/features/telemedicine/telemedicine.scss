@@ -36,9 +36,8 @@ a:focus-visible, summary:focus-visible { outline: 3px solid #066ef1; outline-off
 .service-icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 18px; background: #e6efff; color: #066ef1; font-size: 32px; }
 .pediatric .service-icon { color: #c9193c; background: #ffe9ef; }
 .badge { padding: 7px 12px; border-radius: 30px; background: white; color: #52647b; font-weight: 500; font-size: .77rem; }
-.service-card ul { padding-left: 20px; color: #4c5f78; line-height: 1.6; margin: 0 0 28px; }
+.service-card ul { padding-left: 20px; color: #4c5f78; line-height: 1.6; margin: 0; }
 .service-card li { margin-bottom: 10px; }
-.service-link { display: flex; justify-content: space-between; margin-top: auto; border-top: 1px solid #e1e9f5; padding-top: 19px; color: #0660cf; text-decoration: none; font-weight: 600; font-size: .95rem; }
 .emergency-note { display: flex; gap: 13px; margin-top: 24px; padding: 20px 24px; border-radius: 16px; background: #f4f6f9; }
 .emergency-note > span { flex-shrink: 0; color: #052b6c; margin-top: 3px; }
 .emergency-note p { font-size: .92rem; margin: 0; }

@@ -34,17 +34,15 @@
         <h3>Telemedicina general</h3>
         <p>Orientación con un médico general para síntomas comunes e inquietudes de salud, sin salir de donde estás.</p>
         <ul><li>Disponible las 24 horas, los 365 días del año.</li><li>Hasta 20 minutos por asistencia.</li><li>Atención telefónica y videollamada cuando corresponda, conforme a las condiciones.</li></ul>
-        <a class="service-link" [href]="phone" data-telemedicine-cta="general">Solicitar orientación <span aria-hidden="true">↗</span></a>
       </article>
       <article class="service-card pediatric">
         <div class="card-heading"><span class="service-icon material-symbols-outlined" aria-hidden="true">child_care</span><span class="badge">Atención programada</span></div>
         <h3>Telemedicina pediátrica</h3>
         <p>Orientación para hijos del titular menores de 15 años, ante síntomas leves y situaciones que no sean urgencias vitales.</p>
         <ul><li>Solicitudes de 8:00 a. m. a 4:00 p. m.</li><li>Programa con 24 horas de anticipación.</li><li>Atención anticipada sujeta a disponibilidad.</li></ul>
-        <a class="service-link" [href]="phone" data-telemedicine-cta="pediatrics">Programar la asistencia <span aria-hidden="true">↗</span></a>
       </article>
     </div>
-    <aside class="emergency-note"><span class="material-symbols-outlined" aria-hidden="true">info</span><p><strong>Para orientarte y acompañarte.</strong> Este beneficio no reemplaza los servicios de urgencias. Ante una urgencia vital, acude de inmediato a los servicios de emergencia y atención presencial.</p></aside>
+    <aside class="emergency-note"><span class="material-symbols-outlined" aria-hidden="true">info</span><p>Estos beneficios no reemplazan los servicios de urgencias. Ante una urgencia vital, acude de inmediato a los servicios de emergencia y atención presencial.</p></aside>
   </section>
 
   <section class="how-it-works section" aria-labelledby="steps-title">
@@ -63,7 +61,10 @@
     <div><span class="eyebrow">RESOLVAMOS TUS DUDAS</span><h2 id="faq-title">Lo que necesitas <span>saber.</span></h2><p>Tu tranquilidad empieza con información clara.</p><a class="text-link" routerLink="/telemedicina/terminos-y-condiciones">Ver las condiciones completas <span aria-hidden="true">↗</span></a></div>
     <div class="faq-list">
       @for (faq of faqs; track faq.question) {
-        <details><summary>{{ faq.question }}<span class="material-symbols-outlined" aria-hidden="true">add</span></summary><p>{{ faq.answer }}</p></details>
+        <details>
+          <summary>{{ faq.question }}<span class="material-symbols-outlined" aria-hidden="true">add</span></summary>
+          <p>{{ faq.answer }}@if (faq.highlight) {<strong>{{ faq.highlight }}</strong>{{ faq.continuation }}}</p>
+        </details>
       }
     </div>
   </section>

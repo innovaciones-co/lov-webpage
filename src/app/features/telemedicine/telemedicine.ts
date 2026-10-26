@@ -18,9 +18,9 @@ export class Telemedicine {
       'Telemedicina general 24/7 y pediátrica programada para ti y hasta dos familiares elegibles, sin costo adicional con tu paquete mensual LOV activo. Llama a AXA.');
   }
   readonly phone = 'tel:+576016462811';
-  readonly faqs = [
-    { question: '¿Quiénes pueden usar este beneficio?', answer: 'El titular de una línea LOV con paquete mensual activo y hasta dos familiares elegibles: cónyuge o compañero permanente, hijos o padres, conforme al condicionado. La atención pediátrica aplica a hijos del titular menores de 15 años.' },
-    { question: '¿Tiene algún costo adicional?', answer: 'Las asistencias incluidas no tienen costo adicional para usuarios elegibles con paquete mensual LOV activo. Los servicios externos o adicionales que no estén cubiertos son responsabilidad del usuario.' },
+  readonly faqs: { question: string; answer: string; highlight?: string; continuation?: string }[] = [
+    { question: '¿Quiénes pueden usar este beneficio?', answer: 'El titular de una línea LOV ', highlight: 'con paquete mensual activo', continuation: ' y hasta dos familiares elegibles: cónyuge o compañero permanente, hijos o padres, conforme al condicionado. La atención pediátrica aplica a hijos del titular menores de 15 años.' },
+    { question: '¿Tiene algún costo adicional?', answer: 'Las asistencias incluidas no tienen costo adicional. Los servicios externos o adicionales que no estén cubiertos son responsabilidad del usuario.' },
     { question: '¿Puedo solicitar la asistencia desde cualquier ciudad?', answer: 'Sí. El ámbito territorial del programa es Colombia. AXA valida la elegibilidad y coordina la atención de acuerdo con las condiciones del servicio.' },
     { question: '¿Necesito internet para recibir la orientación?', answer: 'La asistencia se coordina por teléfono. Cuando corresponda una videollamada, necesitarás un dispositivo con cámara y conexión a internet. AXA te indicará cómo acceder.' },
     { question: '¿Qué pasa si mi paquete mensual está vencido?', answer: 'Debes renovar y mantener activo tu paquete mensual LOV para acceder al beneficio. AXA valida la vigencia y las condiciones antes de coordinar la asistencia.' },
