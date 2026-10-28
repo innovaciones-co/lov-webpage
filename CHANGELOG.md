@@ -1,3 +1,10 @@
+## [1.67.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.67.1...v1.67.2) (2026-10-28)
+
+
+### Bug Fixes
+
+* load all dashboard lines from authenticated customer ([bd0af88](https://github.com/innovaciones-co/lov-webpage/commit/bd0af88d5fface8f05cd9ad819c5c72a444b5627))
+
 ## [1.67.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.67.0...v1.67.1) (2026-10-28)
 
 
