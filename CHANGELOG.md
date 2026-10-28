@@ -1,3 +1,15 @@
+# [1.67.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.66.1...v1.67.0) (2026-10-28)
+
+
+### Bug Fixes
+
+* support password reset email links ([c3184b3](https://github.com/innovaciones-co/lov-webpage/commit/c3184b375351865e586c9ca49c197da35d2eda91))
+
+
+### Features
+
+* manage payment cards for each line ([00659ad](https://github.com/innovaciones-co/lov-webpage/commit/00659ad10d97cb57bab50fd5d3a7a3fd294184b7))
+
 ## [1.66.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.66.0...v1.66.1) (2026-10-26)
 
 
