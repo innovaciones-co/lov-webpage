@@ -1,3 +1,10 @@
+## [1.67.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.67.0...v1.67.1) (2026-10-28)
+
+
+### Bug Fixes
+
+* serve password recovery routes and preserve reset tokens ([4cd648f](https://github.com/innovaciones-co/lov-webpage/commit/4cd648f3c07f715de17eeefb54022e370a9eac6d))
+
 # [1.67.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.66.1...v1.67.0) (2026-10-28)
 
 
