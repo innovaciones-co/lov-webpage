@@ -2,7 +2,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { EMPTY, forkJoin, of, switchMap, tap } from 'rxjs';
+import { EMPTY, switchMap, tap } from 'rxjs';
 import { SubscriptionAccount } from '../../core/models/account.model';
 import { Customer, CustomerSubscription } from '../../core/models/customer.model';
 import { LineAliasService } from '../../core/services/line-alias.service';
@@ -98,29 +98,29 @@ export class Dashboard implements OnInit {
       tap((user) => {
         this.user = user;
         this.loading.set(false);
+        this.linesLoading.set(true);
+        this.activeSubscriptions.set([]);
+        this.currentSubscription.set(null);
+        this.accounts.set([]);
       }),
-      switchMap(() => this.authService.getStoredMsisdn()),
-      switchMap((storedMsisdn) => {
-        if (!storedMsisdn) {
+      switchMap((user) => {
+        if (!user?.customerId) {
           this.linesLoading.set(false);
           return EMPTY;
         }
-
-        return forkJoin({
-          customerInfo: this.subscriptionFacade.getCustomerInfo(storedMsisdn),
-          activeSubscriptions: this.subscriptionFacade.getActiveSubscriptions(storedMsisdn),
-          storedMsisdn: of(storedMsisdn)
-        });
+        return this.subscriptionFacade.getCustomerWithSubscriptionsByCustomerId(user.customerId);
       }),
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(({ customerInfo, activeSubscriptions, storedMsisdn }) => {
+    ).subscribe((response) => {
       this.linesLoading.set(false);
+      const customerInfo = response?.payload;
       if (!customerInfo) {
         return;
       }
 
-      this.setBillingInfo(customerInfo, storedMsisdn);
-      this.setInitialSubscription(customerInfo.id.toString(), activeSubscriptions);
+      const subscriptions = customerInfo.subscriptions ?? [];
+      this.setBillingInfo(customerInfo, subscriptions[0]?.msisdn ?? '');
+      this.setInitialSubscription(customerInfo.id.toString(), subscriptions);
     });
   }
 
@@ -203,11 +203,13 @@ export class Dashboard implements OnInit {
 
     // Back on Mi cuenta, reopen the line the customer was last looking at.
     const viewing = this.lineAliases.viewingLineId;
-    const firstSubscription = subscriptions.find(line => line.id === viewing) ?? subscriptions[0];
+    const firstSubscription = subscriptions.find(line => line.id === viewing)
+      ?? subscriptions.find(line => line.state === 'ACTIVE')
+      ?? subscriptions[0];
     this.activeSubscriptions.set(subscriptions);
     this.currentSubscription.set(firstSubscription);
     this.lineAliases.setViewingLine(firstSubscription);
-    this.fetchAccounts(customerId, firstSubscription.id.toString());
+    this.fetchAccounts(firstSubscription.customerId || customerId, firstSubscription.id.toString());
   }
 
   private groupAndNormalizeAccounts(data: SubscriptionAccount[]): AccountViewModel[] {

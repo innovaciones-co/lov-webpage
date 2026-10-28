@@ -12,6 +12,13 @@ import { SubscriptionService } from './subscription.service';
 export class SubscriptionFacadeService {
     private readonly subscriptionService = inject(SubscriptionService);
 
+    /** Account views must use the signed-in customer, not a previously stored line. */
+    getCustomerWithSubscriptionsByCustomerId(customerId: number): Observable<ApiResponse<CustomerSubscriptionResponse> | null> {
+        return this.subscriptionService.getSubscriptions(customerId).pipe(
+            catchError(() => of(null))
+        );
+    }
+
     /**
      * Get complete customer and subscription information by MSISDN
      */
