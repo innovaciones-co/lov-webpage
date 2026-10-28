@@ -30,6 +30,7 @@ export class ResetPassword implements OnInit, OnDestroy {
     token: string | null = null;
 
     ngOnInit() {
+        this.initializeForm();
         this.token = this.route.snapshot.queryParams['token'];
 
         if (!this.token) {
@@ -43,7 +44,6 @@ export class ResetPassword implements OnInit, OnDestroy {
             return;
         }
 
-        this.initializeForm();
     }
 
     ngOnDestroy() {

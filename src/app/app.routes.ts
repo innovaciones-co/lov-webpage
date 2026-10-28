@@ -76,6 +76,11 @@ export const routes: Routes = [
         canActivate: [guestGuard]
     },
     {
+        path: 'reset-password',
+        redirectTo: 'restablecer-contraseña',
+        pathMatch: 'full'
+    },
+    {
         path: 'restablecer-contraseña',
         component: ResetPassword,
         canActivate: [guestGuard]
