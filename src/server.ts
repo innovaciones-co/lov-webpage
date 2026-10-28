@@ -12,6 +12,15 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+// Preserve recovery tokens when opening links sent by older backend versions.
+// Angular's server-side route redirect does not retain these query parameters.
+app.get('/reset-password', (req, res) => {
+  const queryStart = req.originalUrl.indexOf('?');
+  const query = queryStart >= 0 ? req.originalUrl.slice(queryStart) : '';
+  res.setHeader('Cache-Control', 'no-store');
+  res.redirect(302, `/restablecer-contrase%C3%B1a${query}`);
+});
+
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
