@@ -89,21 +89,34 @@ export class RechargeScheduler {
   );
 
   constructor() {
-    effect(() => {
+    effect((onCleanup) => {
       this.refreshCreditCards();
+      const subscriberId = this.subscription()?.id;
+      this.creditCards.set([]);
+      this.form().controls.paymentMethod.reset('');
+      this.isModalOpen.set(false);
+      this.isSubmitting.set(false);
+      this.isDisabling.set(false);
+      this.isDisableConfirmationModalOpen.set(false);
+      this.submitError.set('');
+      this.disableError.set('');
+      if (subscriberId == null) return;
       console.debug('Fetching credit cards');
       this.loadingCreditCards.set(true);
-      this.dashboardService.getCreditCards().subscribe({
+      const request = this.dashboardService.getCreditCards(subscriberId).subscribe({
         next: (response) => {
           this.creditCards.set(response);
           this.dashboardService.setCreditCardsData(response);
           this.loadingCreditCards.set(false);
+          const preferred = response.find(card => card.defaultMethod) ?? response[0];
+          if (preferred) this.form().controls.paymentMethod.setValue(preferred.id.toString());
         },
         error: (error) => {
           console.error('Error fetching credit cards:', error);
           this.loadingCreditCards.set(false);
         }
       });
+      onCleanup(() => request.unsubscribe());
     });
 
     effect(() => {
@@ -119,13 +132,15 @@ export class RechargeScheduler {
     });
 
     // Effect to fetch saved recharge
-    effect(() => {
+    effect((onCleanup) => {
       this.refreshRechargeData(); // Dependency para disparar el effect
       const subscriptionId = this.subscriptionId();
+      this.savedRecharge.set(null);
+      this.form().get('autoRecharge')?.setValue(false, { emitEvent: false });
       if (subscriptionId) {
         console.debug('Fetching saved recharge for subscription ID:', subscriptionId);
         this.loadingSavedRecharge.set(true);
-        this.dashboardService.getSavedRecharge(subscriptionId.toString()).subscribe({
+        const request = this.dashboardService.getSavedRecharge(subscriptionId.toString()).subscribe({
           next: (response) => {
             const payloadData = response.payload || response;
             console.log('Saved recharge data to set:', payloadData);
@@ -141,6 +156,7 @@ export class RechargeScheduler {
             this.loadingSavedRecharge.set(false);
           }
         });
+        onCleanup(() => request.unsubscribe());
       }
     });
   }
@@ -157,7 +173,8 @@ export class RechargeScheduler {
   }
 
   onSubmit(): void {
-    if (!this.form().valid) return;
+    const subscriberId = this.subscriptionId();
+    if (!this.form().valid || subscriberId == null) return;
 
     this.isSubmitting.set(true);
     this.submitError.set('');
@@ -184,8 +201,9 @@ export class RechargeScheduler {
         rechargeData.frequency = '';
     }
 
-    this.dashboardService.submitRecharge(this.subscriptionId()?.toString() || '', rechargeData).subscribe({
+    this.dashboardService.submitRecharge(subscriberId.toString(), rechargeData).subscribe({
       next: (response) => {
+        if (this.subscriptionId() !== subscriberId) return;
         console.debug('Recharge submitted successfully:', response);
         this.isSubmitting.set(false);
         this.form().reset();
@@ -193,6 +211,7 @@ export class RechargeScheduler {
         this.refreshRechargeData.update(val => val + 1);
       },
       error: (error) => {
+        if (this.subscriptionId() !== subscriberId) return;
         console.error('Error submitting recharge:', error);
         this.isSubmitting.set(false);
         const errorMessage = error?.error?.message || 'Error al procesar la recarga. Por favor, intenta de nuevo más tarde.';
@@ -236,10 +255,13 @@ export class RechargeScheduler {
   }
 
   onConfirmDisable(): void {
+    const subscriberId = this.subscriptionId();
+    if (subscriberId == null) return;
     this.isDisabling.set(true);
     this.disableError.set('');
-    this.dashboardService.deleteScheduledRecharge(this.subscriptionId()?.toString() || '').subscribe({
+    this.dashboardService.deleteScheduledRecharge(subscriberId.toString()).subscribe({
       next: (response) => {
+        if (this.subscriptionId() !== subscriberId) return;
         this.isDisableConfirmationModalOpen.set(false);
         this.form().get('autoRecharge')?.setValue(false, { emitEvent: false });
         this.isDisabling.set(false);
@@ -248,6 +270,7 @@ export class RechargeScheduler {
         this.refreshRechargeData.update(val => val + 1);
       },
       error: (error) => {
+        if (this.subscriptionId() !== subscriberId) return;
         console.error('Error deleting scheduled recharge:', error);
         this.isDisabling.set(false);
         const errorMessage = error?.error?.message || 'Error al desactivar la recarga automática. Por favor, intenta de nuevo más tarde.';

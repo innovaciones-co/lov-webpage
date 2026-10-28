@@ -88,6 +88,7 @@
                 <div class="info-section">
                     <p>Ingresa los datos de tu tarjeta.</p>
                     <app-create-payment-method [customerId]="subscription()?.customerId!"
+                        [subscriberId]="subscription()!.id"
                         (paymentMethodCreated)="onPaymentMethodSuccess()"></app-create-payment-method>
                 </div>
             </div>

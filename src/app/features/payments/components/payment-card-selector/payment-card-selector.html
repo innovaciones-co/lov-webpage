@@ -6,12 +6,12 @@
     }
     @else {
     <h3 class="form-subtitle">Tarjetas de pago</h3>
-    <p>Estas son tus tarjetas guardadas:</p>
+    <p>Tarjetas de la línea {{ currentSubscription()?.msisdn }}:</p>
     }
     @if (selectorEnabled() && !loadingCreditCards() && paymentCards().length === 0) {
     <!-- No saved cards yet during a purchase: show the card form right here instead of
          requiring an extra click to open a modal first. -->
-    <app-create-payment-method [customerId]="currentSubscription()?.customerId!" [showAutoRenewOption]="true"
+    <app-create-payment-method [customerId]="currentSubscription()?.customerId!" [subscriberId]="currentSubscription()!.id" [showAutoRenewOption]="true"
         (paymentMethodCreated)="onPaymentMethodSuccess($event)"></app-create-payment-method>
     }
     @else {
@@ -38,7 +38,7 @@
                     <span class="pm-title">
                         {{ capitalizeFirstLetter(card.issuer) }}
                         @if (card.isDefault) {
-                        <span class="default-chip">Predeterminada</span>
+                        <span class="default-chip">Predeterminada de esta línea</span>
                         }
                     </span>
                     <span class="pm-subtitle">
@@ -66,13 +66,13 @@
 
         <p class="card-manager-hint">
             <span class="material-symbols-outlined" aria-hidden="true">info</span>
-            Tu tarjeta predeterminada es la que usamos para tus pagos automáticos (renovación de plan y recarga automática).
+            La tarjeta predeterminada se usa para los pagos automáticos de esta línea. Cambiarla no afecta tus otras líneas.
         </p>
         }
         @else {
         <div class="card-empty">
             <span class="material-symbols-outlined" aria-hidden="true">credit_card_off</span>
-            <p>Aún no tienes tarjetas guardadas.</p>
+            <p>Aún no tienes tarjetas guardadas para esta línea.</p>
         </div>
         }
 
@@ -109,6 +109,7 @@
                      is a global singleton: the second call resets the first's mounted
                      iframes and leaves it stuck mid-tokenization. -->
                 <app-create-payment-method [customerId]="currentSubscription()?.customerId!"
+                    [subscriberId]="currentSubscription()!.id"
                     [showAutoRenewOption]="selectorEnabled()"
                     (paymentMethodCreated)="onPaymentMethodSuccess($event)"></app-create-payment-method>
                 }
@@ -131,6 +132,9 @@
                     }
                     ?
                 </p>
+                @if (pendingDeleteCard() && !pendingDeleteCard()?.subscriberId) {
+                <p>Esta tarjeta se guardó antes de la configuración por línea. Eliminarla la retira de todas las líneas que la utilizan.</p>
+                }
             </div>
             <div class="action">
                 <button type="button" class="btn btn-secondary" (click)="onCancelDeleteModal()"

@@ -44,6 +44,7 @@ export class PaymentCardSelector {
   refreshCreditCards = signal(0);
   isVisible = signal(false);
   private cardTemplateRef = signal<TemplateRef<any> | undefined>(undefined);
+  private loadedLineId: number | null = null;
 
   // Card management (dashboard view): the card currently being made default, if any.
   settingDefaultId = signal<string | null>(null);
@@ -112,21 +113,32 @@ export class PaymentCardSelector {
   constructor() {
     effect(() => {
       const selectedMethod = this.checkoutPaymentService.paymentMethod();
-      if (!this.selectorEnabled() || selectedMethod == PaymentMethod.CARD) {
+      if (this.currentSubscription() && (!this.selectorEnabled() || selectedMethod == PaymentMethod.CARD)) {
         this.isVisible.set(true);
       } else {
         this.isVisible.set(false);
       }
     });
 
-    effect(() => {
+    effect((onCleanup) => {
       if (!this.isVisible()) {
         this.checkoutPaymentService.setSelectedCreditCard(undefined);
         return;
       }
 
       this.refreshCreditCards();
-      this.fetchCreditCards();
+      const lineId = this.currentSubscription()?.id;
+      if (lineId == null) return;
+      if (this.loadedLineId !== lineId) {
+        this.loadedLineId = lineId;
+        this.paymentCardControl.reset(null);
+        this.isModalOpen.set(false);
+        this.isDeleteConfirmationModalOpen.set(false);
+        this.settingDefaultId.set(null);
+        this.cardActionError.set(null);
+      }
+      const request = this.fetchCreditCards(lineId);
+      onCleanup(() => request.unsubscribe());
     });
 
     effect(() => {
@@ -147,10 +159,12 @@ export class PaymentCardSelector {
 
   }
 
-  private fetchCreditCards(): void {
+  private fetchCreditCards(subscriberId: number) {
     console.debug('Fetching credit cards');
     this.loadingCreditCards.set(true);
-    this.dashboardService.getCreditCards().subscribe({
+    this.creditCards.set([]);
+    this.checkoutPaymentService.setSelectedCreditCard(undefined);
+    return this.dashboardService.getCreditCards(subscriberId).subscribe({
       next: (response) => {
         this.creditCards.set(response);
         this.dashboardService.setCreditCardsData(response);
@@ -158,8 +172,9 @@ export class PaymentCardSelector {
 
         const defaultCard = response.find(card => card.defaultMethod) ?? response[0];
         // Checkout: preselect the default card so the customer can pay without picking one.
-        if (this.selectorEnabled() && !this.paymentCardControl.value && defaultCard) {
-          this.paymentCardControl.setValue(defaultCard.id.toString());
+        if (this.selectorEnabled()) {
+          const selected = response.find(card => card.id.toString() === this.paymentCardControl.value) ?? defaultCard;
+          this.paymentCardControl.setValue(selected?.id.toString() ?? null);
         }
       },
       error: (error) => {
@@ -180,18 +195,21 @@ export class PaymentCardSelector {
   }
 
   onSetDefault(cardId: string): void {
-    if (!cardId || this.settingDefaultId()) {
+    const subscriberId = this.currentSubscription()?.id;
+    if (!cardId || this.settingDefaultId() || subscriberId == null) {
       return;
     }
 
     this.settingDefaultId.set(cardId);
     this.cardActionError.set(null);
-    this.paymentMethodsService.setDefaultPaymentMethod(cardId).subscribe({
+    this.paymentMethodsService.setDefaultPaymentMethod(cardId, subscriberId).subscribe({
       next: () => {
+        if (this.currentSubscription()?.id !== subscriberId) return;
         this.creditCards.update(cards => cards.map(card => ({ ...card, defaultMethod: card.id.toString() === cardId })));
         this.settingDefaultId.set(null);
       },
       error: (error) => {
+        if (this.currentSubscription()?.id !== subscriberId) return;
         console.error('Error setting default payment method:', error);
         this.cardActionError.set(error?.error?.message || 'No pudimos cambiar tu tarjeta predeterminada. Intenta de nuevo.');
         this.settingDefaultId.set(null);
@@ -210,6 +228,7 @@ export class PaymentCardSelector {
 
   onConfirmDeleteCard(): void {
     const cardId = this.pendingDeleteCardId();
+    const subscriberId = this.currentSubscription()?.id;
     if (!cardId || this.isDeletingCard()) {
       return;
     }
@@ -218,6 +237,10 @@ export class PaymentCardSelector {
 
     this.paymentMethodsService.deletePaymentMethod(cardId).subscribe({
       next: () => {
+        if (this.currentSubscription()?.id !== subscriberId) {
+          this.isDeletingCard.set(false);
+          return;
+        }
         this.creditCards.update(cards => cards.filter(card => card.id.toString() !== cardId));
 
         if (this.paymentCardControl.value === cardId.toString()) {
@@ -230,6 +253,10 @@ export class PaymentCardSelector {
         this.refreshCreditCards.update(val => val + 1);
       },
       error: (error) => {
+        if (this.currentSubscription()?.id !== subscriberId) {
+          this.isDeletingCard.set(false);
+          return;
+        }
         console.error('Error deleting payment method:', error);
         // e.g. the backend refuses to delete the only card paying for an active recurring charge.
         this.cardActionError.set(error?.error?.message || 'No pudimos eliminar la tarjeta. Intenta de nuevo.');

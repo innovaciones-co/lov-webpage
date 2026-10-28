@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "include": [
+    "src/app/features/payments/components/payment-card-selector/payment-card-selector.spec.ts",
+    "src/app/features/dashboard/services/line-payment-api.spec.ts",
+    "src/**/*.d.ts"
+  ]
+}

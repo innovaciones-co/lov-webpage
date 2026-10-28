@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, map } from "rxjs";
 import { environment } from "../../../../environments/environment";
 import { PaymentMethodPayload } from "../../payments/models/payment-method.model";
 import { Plan } from "../../plans/models/plan.model";
@@ -22,13 +22,13 @@ export class DashboardService {
         this.apiUrl = environment.apiUrl;
     }
 
-    getCreditCards(): Observable<PaymentMethodPayload[]> {
+    getCreditCards(subscriberId: number): Observable<PaymentMethodPayload[]> {
         console.debug('Fetching credit cards');
         this.loading.set(true);
 
         const url = `${this.apiUrl}/paymentMethods`;
 
-        return this.http.get<PaymentMethodPayload[]>(url);
+        return this.http.get<PaymentMethodPayload[]>(url, { params: { subscriberId } });
     }
 
     getCurrentPlan(subscriptionId: string): Observable<Plan | null> {
@@ -63,18 +63,21 @@ export class DashboardService {
         console.debug('Fetching saved recharge information');
         this.loading.set(true);
 
-        const url = `${this.gatewayUrl}/api/subscriptions/${subscriptionId}/autoTopup/scheduled/info`;
-
-        return this.http.get(url);
+        const url = `${this.apiUrl}/paymentMethods/schedule`;
+        return this.http.get<{ amount: number; dayOfMonth?: number; intervalDays?: number } | null>(url, {
+            params: { subscriberId: subscriptionId }
+        }).pipe(map(schedule => ({ autoTopup: schedule ? {
+            topupAmount: schedule.amount * 100,
+            schedule: { dayOfMonth: schedule.dayOfMonth, frequency: schedule.dayOfMonth ? 'Mensual' : `Cada ${schedule.intervalDays} días` }
+        } : null })));
     }
 
     deleteScheduledRecharge(subscriptionId: string): Observable<any> {
         console.debug('Deleting scheduled recharge');
         this.loading.set(true);
 
-        const url = `${this.gatewayUrl}/api/subscriptions/${subscriptionId}/autoTopup`;
-
-        return this.http.delete(url);
+        const url = `${this.apiUrl}/paymentMethods/schedule`;
+        return this.http.delete(url, { params: { subscriberId: subscriptionId } });
     }
 
     getLoadingSignal() {

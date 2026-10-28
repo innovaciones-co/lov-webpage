@@ -74,18 +74,18 @@ export class PaymentService {
     return this.http.post(url, paymentMethodData);
   }
 
-  createOnePayPaymentMethod(dto: OnePayCardTokenRequest): Observable<number> {
+  createOnePayPaymentMethod(dto: OnePayCardTokenRequest, subscriberId: number): Observable<number> {
     console.debug('Creating OnePay payment method');
 
     const url = `${this.apiUrl}/paymentMethods/onepay`;
 
-    return this.http.post<number>(url, dto);
+    return this.http.post<number>(url, dto, { params: { subscriberId } });
   }
 
-  setDefaultPaymentMethod(paymentMethodId: string): Observable<void> {
+  setDefaultPaymentMethod(paymentMethodId: string, subscriberId: number): Observable<void> {
     const url = `${this.apiUrl}/paymentMethods/${paymentMethodId}/default`;
 
-    return this.http.put<void>(url, {});
+    return this.http.put<void>(url, {}, { params: { subscriberId } });
   }
 
   deletePaymentMethod(paymentMethodId: string): Observable<any> {

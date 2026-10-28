@@ -49,6 +49,7 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
   private containerObserver: MutationObserver | null = null;
 
   readonly customerId = input.required<string>();
+  readonly subscriberId = input.required<number>();
   // Shown when this form is used inline during a plan purchase with "Suscripción
   // recurrente" — lets the customer opt into automatic plan renewal for the new card.
   readonly showAutoRenewOption = input(false);
@@ -256,7 +257,12 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
     try {
       // Tokenizes the raw card data client-side. It never reaches our backend — only the
       // resulting temporary cardToken does.
+      const subscriberId = this.subscriberId();
       const tokenization = await FTCaptures.tokenize(CAPTURES_SERVICE_ID);
+      if (this.destroyed || this.subscriberId() !== subscriberId) {
+        this.isLoading.set(false);
+        return;
+      }
       const cardToken = tokenization?.number;
 
       if (!cardToken) {
@@ -278,7 +284,7 @@ export class CreatePaymentMethod implements AfterViewInit, OnDestroy {
           phone: phone.trim(),
           documentType,
           documentNumber: documentNumber.trim(),
-        })
+        }, subscriberId)
         .pipe(finalize(() => this.isLoading.set(false)))
         .subscribe({
           next: (newPaymentMethodId) => {
