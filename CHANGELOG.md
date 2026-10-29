@@ -1,3 +1,10 @@
+# [1.70.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.69.0...v1.70.0) (2026-10-29)
+
+
+### Features
+
+* one-column checkout with the summary and pay button at the end ([9d571c7](https://github.com/innovaciones-co/lov-webpage/commit/9d571c7695b63f919b0cf4e0f5631448c2f66440))
+
 # [1.69.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.68.0...v1.69.0) (2026-10-29)
 
 
