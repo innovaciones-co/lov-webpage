@@ -87,6 +87,24 @@ export class Dashboard implements OnInit {
     this.groupAndNormalizeAccounts(this.accounts())
   );
   currentSubscription = signal<CustomerSubscription | null>(null);
+
+  /**
+   * When the line's plan expires: the date its resources (data, minutes, SMS) share, the most
+   * repeated one, so a bundle bought apart doesn't move it. The peso balance has its own expiry.
+   */
+  planExpiry = computed<string | null>(() => {
+    const counts = new Map<string, { n: number; date: string }>();
+    for (const account of this.accounts()) {
+      if (!account.expiryDate || account.name === 'Pesos') continue;
+      const day = account.expiryDate.slice(0, 10);
+      const entry = counts.get(day) ?? { n: 0, date: account.expiryDate };
+      entry.n++;
+      counts.set(day, entry);
+    }
+    let best: { n: number; date: string } | null = null;
+    for (const entry of counts.values()) if (!best || entry.n > best.n) best = entry;
+    return best?.date ?? null;
+  });
   isAccountLoading = signal(false);
 
   submitError = signal<string>('');
@@ -135,6 +153,8 @@ export class Dashboard implements OnInit {
 
   fetchAccounts(customerId: string, subscriptionId: string) {
     this.isAccountLoading.set(true);
+    // Cleared first so the previous line's expiry doesn't show while this one loads.
+    this.accounts.set([]);
     this.subscriptionFacade.getAccountsForSubscription(customerId, subscriptionId).subscribe(accounts => {
       this.accounts.set(accounts);
       this.isAccountLoading.set(false);

@@ -19,6 +19,19 @@ export class LineSwitcher {
 
   subscriptions = input<CustomerSubscription[]>([]);
   current = input<CustomerSubscription | null>(null);
+  // When the selected line's plan expires (ISO date), if known.
+  expiresAt = input<string | null>(null);
+
+  readonly expiry = computed(() => {
+    const at = this.expiresAt();
+    const date = at ? new Date(at) : null;
+    if (!date || Number.isNaN(date.getTime())) return null;
+    const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    const days = Math.round((startOfDay(date) - startOfDay(new Date())) / 86_400_000);
+    const day = date.toLocaleDateString('es-CO', { day: 'numeric', month: 'long' });
+    const text = days < 0 ? `Venció el ${day}` : days === 0 ? 'Vence hoy' : days === 1 ? 'Vence mañana' : `Vence el ${day} · en ${days} días`;
+    return { text, soon: days <= 2 };
+  });
   selected = output<CustomerSubscription>();
 
   showAll = signal(false);

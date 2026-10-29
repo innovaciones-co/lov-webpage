@@ -16,7 +16,7 @@
     <app-loading></app-loading>
     } @else if (activeSubscriptions().length > 0) {
     <app-line-switcher [subscriptions]="activeSubscriptions()" [current]="currentSubscription()"
-        (selected)="selectSubscription($event)"></app-line-switcher>
+        [expiresAt]="planExpiry()" (selected)="selectSubscription($event)"></app-line-switcher>
     } @else {
     <p class="empty">No tienes líneas activas.</p>
     }

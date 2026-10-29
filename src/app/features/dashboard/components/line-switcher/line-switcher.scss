@@ -108,6 +108,28 @@ $gray: #757A8C;
     color: rgba(255, 255, 255, 0.85);
 }
 
+.expiry {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 10px 0 0;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    .material-symbols-outlined {
+        font-size: 18px;
+    }
+
+    // About to expire: stands out so the customer renews in time.
+    &--soon {
+        background: #FFB400;
+        color: #052B6C;
+    }
+}
+
 .status {
     display: inline-block;
     margin-left: 8px;

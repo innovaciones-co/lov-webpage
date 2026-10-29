@@ -10,6 +10,12 @@
                 @if (lines.nickname(line)) { <span>{{ lines.formatNumber(line.msisdn) }}</span> }
                 <span>{{ line.tariff.tariffName }}</span>
             </p>
+            @if (expiry(); as exp) {
+            <p class="expiry" [class.expiry--soon]="exp.soon">
+                <span class="material-symbols-outlined" aria-hidden="true">event</span>
+                {{ exp.text }}
+            </p>
+            }
         </div>
     </div>
     <button type="button" class="line-hero__edit" (click)="openEdit(line)">
