@@ -38,6 +38,8 @@ export class Payments implements OnInit {
   currentSubscription = signal<CustomerSubscription | undefined>(undefined);
   mobileStep = signal(1);
   requiresCardStep = computed(() => this.paymentService.paymentMethod() === PaymentMethod.CARD);
+  // What is being bought, for the strip at the top and the pay button.
+  product = computed(() => this.paymentService.selectedProduct());
   totalMobileSteps = computed(() => this.requiresCardStep() ? 4 : 3);
   mobileStepTitle = computed(() => {
     switch (this.mobileStep()) {

@@ -12,16 +12,98 @@
     }
 }
 
-#cart-container {
-    @include tablet {
-        position: sticky;
-        top: 6rem;
+.checkout {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+// What is being bought, always visible on top.
+.buying {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #EAF2FF, #FFF0F3);
+    color: #052B6C;
+
+    .material-symbols-outlined {
+        color: #066EF1;
     }
 }
 
-#summary {
-    max-width: 1600px;
-    margin: 0 auto;
+.buying__price {
+    margin-left: auto;
+    font-size: 1.1rem;
+}
+
+// Summary and pay button at the end, after the data.
+.pay {
+    margin-top: 16px;
+    padding: 24px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #052B6C, #0A3F97);
+    box-shadow: 0 18px 40px rgba(#052B6C, 0.22);
+}
+
+.pay__title {
+    margin: 0 0 14px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.pay__summary ::ng-deep .product-details ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 18px;
+}
+
+.pay__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 60px;
+    margin-top: 18px;
+    border: none;
+    border-radius: 999px;
+    background: #FF0000;
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(#FF0000, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 30px rgba(#FF0000, 0.42);
+    }
+
+    &:disabled {
+        background: #8E9BB8;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+}
+
+.pay__amount {
+    padding: 2px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.pay__hint {
+    margin: 10px 0 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .button-section {
