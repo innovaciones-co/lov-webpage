@@ -2,7 +2,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { EMPTY, switchMap, tap } from 'rxjs';
+import { EMPTY, switchMap, tap, forkJoin } from 'rxjs';
 import { SubscriptionAccount } from '../../core/models/account.model';
 import { Customer, CustomerSubscription } from '../../core/models/customer.model';
 import { LineAliasService } from '../../core/services/line-alias.service';
@@ -108,17 +108,22 @@ export class Dashboard implements OnInit {
           this.linesLoading.set(false);
           return EMPTY;
         }
-        return this.subscriptionFacade.getCustomerWithSubscriptionsByCustomerId(user.customerId);
+        // The account may group several CYAN customers (one per SIM): their lines come from
+        // /me/lines; the signed-in customer's own data still fills the billing details.
+        return forkJoin({
+          response: this.subscriptionFacade.getCustomerWithSubscriptionsByCustomerId(user.customerId),
+          accountLines: this.subscriptionFacade.getAccountLines()
+        });
       }),
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe((response) => {
+    ).subscribe(({ response, accountLines }) => {
       this.linesLoading.set(false);
       const customerInfo = response?.payload;
       if (!customerInfo) {
         return;
       }
 
-      const subscriptions = customerInfo.subscriptions ?? [];
+      const subscriptions = accountLines?.length ? accountLines : customerInfo.subscriptions ?? [];
       this.setBillingInfo(customerInfo, subscriptions[0]?.msisdn ?? '');
       this.setInitialSubscription(customerInfo.id.toString(), subscriptions);
     });

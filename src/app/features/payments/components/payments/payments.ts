@@ -241,7 +241,8 @@ export class Payments implements OnInit {
    * @returns Observable with MSISDN and subscriber ID
    */
   private getActiveSubscription(msisdn: string): Observable<{ msisdn: string; subscriberId: number }> {
-    return this.subscriptionFacadeService.getActiveSubscriptions(msisdn).pipe(
+    // Every active line of the account (all its CYAN customers), not only this one's customer.
+    return this.subscriptionFacadeService.getMyLines(msisdn).pipe(
       switchMap(subscriptions => {
         if (subscriptions.length === 0) {
           return throwError(() => new Error(`No active subscriptions found for MSISDN: ${msisdn}`));

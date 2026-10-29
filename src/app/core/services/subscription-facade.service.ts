@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
 
 import { SubscriptionAccount } from '../models/account.model';
 import { ApiResponse } from '../models/api-response.model';
@@ -11,6 +14,30 @@ import { SubscriptionService } from './subscription.service';
 })
 export class SubscriptionFacadeService {
     private readonly subscriptionService = inject(SubscriptionService);
+    private readonly http = inject(HttpClient);
+
+    /**
+     * Every line of the signed-in account, in any state, from all the CYAN customers it groups
+     * (CYAN creates one customer per SIM). Null when signed out or if the request fails.
+     */
+    getAccountLines(): Observable<CustomerSubscription[] | null> {
+        return this.http.get<CustomerSubscription[]>(`${environment.apiUrl}/me/lines`).pipe(
+            catchError(() => of(null))
+        );
+    }
+
+    /**
+     * Active lines of the signed-in account (see getAccountLines), the line [msisdn] first.
+     * Falls back to that line's own customer when signed out or when the account lookup fails.
+     */
+    getMyLines(msisdn: string): Observable<CustomerSubscription[]> {
+        const local = msisdn.slice(-10);
+        return this.getAccountLines().pipe(
+            map(lines => (lines ?? []).filter(line => line.state === 'ACTIVE')),
+            map(lines => [...lines].sort((a, b) => Number(b.msisdn.endsWith(local)) - Number(a.msisdn.endsWith(local)))),
+            switchMap(lines => lines.length ? of(lines) : this.getActiveSubscriptions(msisdn))
+        );
+    }
 
     /** Account views must use the signed-in customer, not a previously stored line. */
     getCustomerWithSubscriptionsByCustomerId(customerId: number): Observable<ApiResponse<CustomerSubscriptionResponse> | null> {

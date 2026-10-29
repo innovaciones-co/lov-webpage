@@ -26,9 +26,10 @@ describe('Dashboard account lines', () => {
   beforeEach(() => {
     users = new BehaviorSubject<User | null>(user(42));
     auth = { user$: users, getStoredMsisdn: jasmine.createSpy().and.returnValue(of('stale-other-line')) };
-    facade = jasmine.createSpyObj('SubscriptionFacadeService', ['getCustomerWithSubscriptionsByCustomerId', 'getAccountsForSubscription']);
+    facade = jasmine.createSpyObj('SubscriptionFacadeService', ['getCustomerWithSubscriptionsByCustomerId', 'getAccountsForSubscription', 'getAccountLines']);
     facade.getCustomerWithSubscriptionsByCustomerId.and.returnValue(of({ payload: customer() } as any));
     facade.getAccountsForSubscription.and.returnValue(of([]));
+    facade.getAccountLines.and.returnValue(of(null));
     TestBed.configureTestingModule({
       imports: [Dashboard], providers: [
         { provide: AuthService, useValue: auth },
@@ -45,6 +46,14 @@ describe('Dashboard account lines', () => {
     expect(auth.getStoredMsisdn).not.toHaveBeenCalled();
     expect(fixture.componentInstance.activeSubscriptions()).toEqual(lines);
     expect(fixture.componentInstance.currentSubscription()?.id).toBe(2);
+  });
+
+  it('shows the lines of every CYAN customer grouped under the account', () => {
+    const linked = { id: 9, customerId: '77', msisdn: '573009999999', state: 'ACTIVE' } as CustomerSubscription;
+    facade.getAccountLines.and.returnValue(of([...lines, linked]));
+    const fixture = TestBed.createComponent(Dashboard);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeSubscriptions()).toEqual([...lines, linked]);
   });
 
   it('clears the list when there is no authenticated customer', () => {
