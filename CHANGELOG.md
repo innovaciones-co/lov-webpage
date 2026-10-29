@@ -1,3 +1,10 @@
+# [1.69.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.68.0...v1.69.0) (2026-10-29)
+
+
+### Features
+
+* show when the selected line's plan expires in Mi cuenta ([f8c3dab](https://github.com/innovaciones-co/lov-webpage/commit/f8c3dab0f09fc2b935421d01f44fc23215af0098))
+
 # [1.68.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.67.2...v1.68.0) (2026-10-29)
 
 
