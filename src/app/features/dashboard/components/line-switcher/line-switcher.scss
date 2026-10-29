@@ -109,6 +109,8 @@ $gray: #757A8C;
 }
 
 .expiry {
+    // Explicit: the global paragraph color would make it dark on the dark card.
+    color: #fff;
     display: inline-flex;
     align-items: center;
     gap: 6px;
