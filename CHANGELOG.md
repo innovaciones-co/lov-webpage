@@ -1,3 +1,10 @@
+# [1.71.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.70.1...v1.71.0) (2026-10-29)
+
+
+### Features
+
+* show the line being paid for in the checkout summary ([22b3531](https://github.com/innovaciones-co/lov-webpage/commit/22b353111e2c74c9d4a34fff3d4e2d81dd4491eb))
+
 ## [1.70.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.70.0...v1.70.1) (2026-10-29)
 
 
