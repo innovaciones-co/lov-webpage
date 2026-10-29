@@ -1,3 +1,10 @@
+# [1.68.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.67.2...v1.68.0) (2026-10-29)
+
+
+### Features
+
+* Mi cuenta and checkout show every line grouped under the account ([7f7b03d](https://github.com/innovaciones-co/lov-webpage/commit/7f7b03de0edbe1916dd199ccb61b540c8eef7791))
+
 ## [1.67.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.67.1...v1.67.2) (2026-10-28)
 
 
