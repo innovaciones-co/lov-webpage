@@ -1,3 +1,10 @@
+## [1.70.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.70.0...v1.70.1) (2026-10-29)
+
+
+### Bug Fixes
+
+* plan expiry text readable on the dark line card ([6f92c00](https://github.com/innovaciones-co/lov-webpage/commit/6f92c00f8fa160fc63c00de94af6f5e56eb6b7ff))
+
 # [1.70.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.69.0...v1.70.0) (2026-10-29)
 
 
