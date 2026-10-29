@@ -63,6 +63,13 @@
 
     <section class="pay" aria-label="Resumen y pago">
         <h2 class="pay__title">Resumen de tu compra</h2>
+        @if (payingLine(); as line) {
+        <p class="pay__line">
+            <span class="material-symbols-outlined" aria-hidden="true">smartphone</span>
+            Para la línea
+            <strong>{{ line.name ? line.name + ' · ' + line.number : line.number }}</strong>
+        </p>
+        }
         <app-summary class="pay__summary"></app-summary>
         <button class="pay__button" [disabled]="!canContinue() || isLoading()" (click)="onContinue()">
             @if (isLoading()) {

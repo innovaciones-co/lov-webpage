@@ -40,6 +40,12 @@ export class Payments implements OnInit {
   requiresCardStep = computed(() => this.paymentService.paymentMethod() === PaymentMethod.CARD);
   // What is being bought, for the strip at the top and the pay button.
   product = computed(() => this.paymentService.selectedProduct());
+  // The line being paid for, by the name the customer gave it if any, to confirm before paying.
+  payingLine = computed(() => {
+    const line = this.currentSubscription();
+    if (!line) return null;
+    return { name: this.lineAliases.nickname(line), number: this.lineAliases.formatNumber(line.msisdn) };
+  });
   totalMobileSteps = computed(() => this.requiresCardStep() ? 4 : 3);
   mobileStepTitle = computed(() => {
     switch (this.mobileStep()) {
