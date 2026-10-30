@@ -1,0 +1,45 @@
+.telemedicine-campaign {
+  width: min(1440px, calc(100% - 48px));
+  margin: 28px auto 40px;
+  overflow: hidden;
+  border: 1px solid #e2ecf9;
+  border-radius: 24px;
+  box-shadow: 0 12px 40px #052b6c0d;
+  background: #fff;
+
+  &__art { position: relative; }
+  &__destination, picture, img { display: block; width: 100%; }
+  img { height: auto; }
+  &__destination:focus-visible { outline: 3px solid #066ef1; outline-offset: -4px; }
+
+  // Match the telephone target to the number in each supplied campaign artwork.
+  // Keep this a sibling of the landing link so links never nest.
+  &__call {
+    position: absolute;
+    left: 61.8%; top: 78.5%; width: 30.4%; height: 10.8%; min-height: 44px;
+    border-radius: 999px;
+    &:hover, &:focus-visible { outline: 3px solid #052b6c; outline-offset: 3px; }
+  }
+
+  &__caption {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 16px 24px; font-size: .9rem; color: #52647b;
+    a { color: #0660cf; font-weight: 600; text-underline-offset: 4px; white-space: nowrap; }
+    a:focus-visible { outline: 3px solid #066ef1; outline-offset: 4px; }
+  }
+}
+
+@media (max-width: 700px) {
+  .telemedicine-campaign {
+    width: calc(100% - 32px); margin-block: 16px 28px; border-radius: 18px;
+    &__call { left: 7.4%; top: 76.5%; width: 41.7%; height: 6.7%; }
+    &__caption { padding: 14px 16px; font-size: .8rem; }
+  }
+}
+
+@media (max-width: 420px) {
+  .telemedicine-campaign {
+    &__call { left: 7%; top: calc(69.8% - 6px); width: 49%; height: 7.5%; }
+    &__caption { align-items: flex-start; span { max-width: 180px; } }
+  }
+}
