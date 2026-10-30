@@ -3,10 +3,25 @@
         <p class="success-description">Tu SIM LOV está activa y lista para usarse.</p>
         @switch(msisdnState()) {
         @case ('loading') {
-        <p><em class="loading">Obteniendo número<span class="dots"></span></em></p>
+        <div class="number-wait" role="status" aria-live="polite">
+            <span class="number-wait__spinner" aria-hidden="true"></span>
+            <div>
+                <p class="number-wait__title">Estamos asignando tu número LOV<span class="dots"></span></p>
+                <p class="number-wait__text">Puede tardar uno o dos minutos. No cierres esta página.</p>
+            </div>
+        </div>
         }
         @case ('success') {
-        <p class="phone-number">Número LOV: <em>{{ msisdn() }}</em></p>
+        <p class="phone-number" aria-live="polite">Número LOV: <em>{{ msisdn() }}</em></p>
+        }
+        @case ('slow') {
+        <div class="number-wait number-wait--slow" role="status">
+            <span class="material-symbols-outlined" aria-hidden="true">sms</span>
+            <div>
+                <p class="number-wait__title">Tu número estará listo en unos minutos</p>
+                <p class="number-wait__text">Vuelve a esta página o entra a Mi cuenta en unos minutos para verlo.</p>
+            </div>
+        </div>
         }
         }
         <p class="activation-info">En breve recibirás un mensaje de confirmación. ¡En tus manos tienes ahora el poder

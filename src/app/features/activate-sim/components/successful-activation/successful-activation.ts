@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isPlatformBrowser } from '@angular/common';
 import { SuccessfulProcessComponent } from '../../../../shared/components/successful-process/successful-process';
 import { ActivateSimService } from '../../services/activate-sim.service';
-import { retry, timer } from 'rxjs';
+import { filter, map, repeat, retry, take, timeout, timer } from 'rxjs';
 
 @Component({
   selector: 'app-successful-activation',
@@ -20,11 +20,16 @@ export class SuccessfulActivation {
   private readonly MAX_ATTEMPTS = 4; // Total de intentos (1 inicial + 3 reintentos)
   private readonly RETRY_DELAYS = this.generateRetryDelays();
   private readonly MAX_RETRIES = this.RETRY_DELAYS.length;
+  // Right after activating, CYAN still shows a temporary number for a while: ask again until
+  // the line has its own, for up to WAIT_LIMIT.
+  private readonly POLL_EVERY = 5000;
+  private readonly WAIT_LIMIT = 4 * 60 * 1000;
 
   icon = '/email.png';
   title = '¡Tu SIM ha sido activada exitosamente!';
 
-  msisdnState = signal<'idle' | 'loading' | 'success' | 'error'>('idle');
+  // 'slow': the number wasn't ready in time (or couldn't be read); it'll arrive by SMS.
+  msisdnState = signal<'idle' | 'loading' | 'success' | 'slow'>('idle');
   msisdn = signal<string | null>(null);
 
   constructor() {
@@ -55,28 +60,30 @@ export class SuccessfulActivation {
             return timer(this.RETRY_DELAYS[retryCount]);
           }
         }),
+        map((response) => this.finalNumber(response?.payload?.subscriptions?.[0]?.msisdn)),
+        repeat({ delay: this.POLL_EVERY }),
+        filter((number): number is string => !!number),
+        take(1),
+        timeout({ first: this.WAIT_LIMIT }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: (response) => this.handleSuccess(response),
-        error: (error) => this.handleError(error)
+        next: (number) => {
+          this.msisdn.set(number);
+          this.msisdnState.set('success');
+        },
+        error: () => {
+          this.msisdn.set(null);
+          this.msisdnState.set('slow');
+        }
       });
   }
 
-  private handleSuccess(response: any): void {
-    if (response?.payload?.subscriptions?.[0]?.msisdn) {
-      const msisdnValue = response.payload.subscriptions[0].msisdn;
-      const formattedMsisdn = msisdnValue.startsWith('57')
-        ? msisdnValue.substring(2)
-        : msisdnValue;
-
-      this.msisdn.set(formattedMsisdn);
-      this.msisdnState.set('success');
-    }
-  }
-
-  private handleError(error: any): void {
-    this.msisdnState.set('error');
-    this.msisdn.set(null);
+  /** The line's number without 57, or null while it's still the temporary one (like 39960020574). */
+  private finalNumber(msisdn: unknown): string | null {
+    if (typeof msisdn !== 'string') return null;
+    const number = msisdn.startsWith('57') ? msisdn.substring(2) : msisdn;
+    // A Colombian mobile number: 10 digits starting with 3. The temporary ones start with 399.
+    return /^3[0-9]{9}$/.test(number) && !number.startsWith('399') ? number : null;
   }
 }
