@@ -1,3 +1,10 @@
+## [1.72.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.72.0...v1.72.1) (2026-10-30)
+
+
+### Bug Fixes
+
+* refresh telemedicine campaign artwork and copy ([1bc78d3](https://github.com/innovaciones-co/lov-webpage/commit/1bc78d3da1911d4d4d86c396eee28970d910e103))
+
 # [1.72.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.71.0...v1.72.0) (2026-10-30)
 
 
