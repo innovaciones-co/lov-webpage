@@ -19,7 +19,7 @@ export class TelemedicineSeo implements OnDestroy {
       { property: 'og:description', content: description },
       { property: 'og:url', content: `https://lov.com.co${path}` },
       { property: 'og:type', content: 'website' },
-      { property: 'og:image', content: 'https://lov.com.co/telemedicina/banner-web.png' },
+      { property: 'og:image', content: 'https://lov.com.co/telemedicina/campana-social-v2.png' },
     ];
     for (const tag of tags) {
       const selector = 'name' in tag ? `name="${tag.name}"` : `property="${tag.property}"`;

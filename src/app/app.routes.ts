@@ -25,7 +25,7 @@ import { RechargesIntro } from './features/recharges/components/recharges-intro/
 export const routes: Routes = [
     {
         path: 'telemedicina',
-        title: 'Telemedicina para ti y tu familia | LOV Mobile',
+        title: 'Salud al alcance de tu mano | Telemedicina LOV',
         loadComponent: () => import('./features/telemedicine/telemedicine').then(m => m.Telemedicine)
     },
     {

@@ -4,8 +4,8 @@
       <div class="hero-intro">
         <div>
           <span class="eyebrow hero-label"><app-lov-heart [withCircle]="false" /> LOV TE ACOMPAÑA</span>
-          <h1 id="telemedicine-title">Más cerca de ti.<br><span>También en salud.</span></h1>
-          <p class="lead">Telemedicina para ti y hasta dos familiares elegibles, <strong>sin costo adicional</strong> con tu paquete mensual LOV activo.</p>
+          <h1 id="telemedicine-title">Salud al alcance<br><span>de tu mano.</span></h1>
+          <p class="lead">Telemedicina para ti y hasta dos familiares elegibles, <strong>sin costo adicional</strong> con tu plan mensual LOV activo.</p>
         </div>
         <div class="hero-action">
           <a class="call-button" [href]="phone" data-telemedicine-cta="hero"><span class="material-symbols-outlined" aria-hidden="true">call</span> Llamar a AXA <span aria-hidden="true">↗</span></a>
@@ -14,10 +14,14 @@
         </div>
       </div>
       <a class="campaign-image" [href]="phone" aria-label="Solicitar telemedicina a AXA: llamar al (601) 646 2811" data-telemedicine-cta="banner">
-        <img ngSrc="telemedicina/banner-web.png" width="1672" height="941" priority alt="Campaña LOV te acompaña en salud: telemedicina general y pediátrica para el titular y hasta dos familiares elegibles con paquete mensual activo.">
+        <picture>
+          <source media="(max-width: 420px)" srcset="telemedicina/campana-movil-v2.webp" width="1080" height="1350">
+          <source media="(max-width: 700px)" srcset="telemedicina/campana-cuadrada-v2.webp" width="1080" height="1080">
+          <img src="telemedicina/campana-web-v2.webp" width="1920" height="873" loading="eager" fetchpriority="high" decoding="async" alt="Tu plan mensual LOV ahora incluye telemedicina general y pediátrica para ti y hasta dos familiares elegibles. Línea de asistencia: (601) 646 2811. Aplican términos y condiciones.">
+        </picture>
       </a>
       <div class="benefit-strip" aria-label="Condiciones principales">
-        <span><span class="material-symbols-outlined" aria-hidden="true">verified</span> Paquete mensual LOV activo</span>
+        <span><span class="material-symbols-outlined" aria-hidden="true">verified</span> Plan mensual LOV activo</span>
         <span><span class="material-symbols-outlined" aria-hidden="true">family_restroom</span> Tú + hasta 2 familiares elegibles</span>
         <span><span class="material-symbols-outlined" aria-hidden="true">location_on</span> Disponible en Colombia</span>
       </div>
@@ -51,7 +55,7 @@
       <ol class="steps">
         <li><span class="step-number" aria-hidden="true">01</span><h3>Llama a AXA</h3><p>Marca <a [href]="phone">(601) 646 2811</a> para solicitar la asistencia que necesitas.</p></li>
         <li><span class="step-number" aria-hidden="true">02</span><h3>Identifícate como LOV</h3><p>Ten listos tu nombre, documento, número LOV, teléfono de contacto y tipo de ayuda requerida.</p></li>
-        <li><span class="step-number" aria-hidden="true">03</span><h3>Valida tu beneficio</h3><p>AXA confirma la vigencia de tu paquete mensual y coordina con un profesional de su red.</p></li>
+        <li><span class="step-number" aria-hidden="true">03</span><h3>Valida tu beneficio</h3><p>AXA confirma la vigencia de tu plan mensual y coordina con un profesional de su red.</p></li>
         <li><span class="step-number" aria-hidden="true">04</span><h3>Recibe orientación</h3><p>El proveedor te llama o te envía un enlace de videollamada cuando corresponda.</p></li>
       </ol>
     </div>
@@ -70,9 +74,9 @@
   </section>
 
   <section class="closing wrap" aria-labelledby="closing-title">
-    <div><span class="eyebrow">CERCA DE TI Y DE TU FAMILIA</span><h2 id="closing-title">Guarda este número.<br>Cuenta con este beneficio.</h2><p>Solicita tu asistencia con tu paquete mensual LOV activo.</p></div>
-    <div class="closing-action"><a class="call-button" [href]="phone" data-telemedicine-cta="closing"><span class="material-symbols-outlined" aria-hidden="true">call</span> Llamar al (601) 646 2811</a><a routerLink="/planes">¿Aún no tienes paquete mensual? Conoce los planes <span aria-hidden="true">↗</span></a></div>
+    <div><span class="eyebrow">CERCA DE TI Y DE TU FAMILIA</span><h2 id="closing-title">Guarda este número.<br>Cuenta con este beneficio.</h2><p>Solicita tu asistencia con tu plan mensual LOV activo.</p></div>
+    <div class="closing-action"><a class="call-button" [href]="phone" data-telemedicine-cta="closing"><span class="material-symbols-outlined" aria-hidden="true">call</span> Llamar al (601) 646 2811</a><a routerLink="/planes">¿Aún no tienes plan mensual? Conoce los planes <span aria-hidden="true">↗</span></a></div>
   </section>
-  <p class="legal-note wrap">Servicio coordinado por AXA Asistencia Colombia S.A. para el titular y hasta dos familiares elegibles, sujeto a validación y a las condiciones del programa. Disponible en Colombia durante la vigencia de un paquete mensual LOV activo. <a routerLink="/telemedicina/terminos-y-condiciones">Aplican términos, condiciones y exclusiones.</a></p>
+  <p class="legal-note wrap">Servicio coordinado por AXA Asistencia Colombia S.A. para el titular y hasta dos familiares elegibles, sujeto a validación y a las condiciones del programa. Disponible en Colombia durante la vigencia de un plan mensual LOV activo. <a routerLink="/telemedicina/terminos-y-condiciones">Aplican términos, condiciones y exclusiones.</a></p>
   <a class="mobile-call" [href]="phone" data-telemedicine-cta="mobile"><span class="material-symbols-outlined" aria-hidden="true">call</span><span>Llamar a AXA <small>(601) 646 2811</small></span><span aria-hidden="true">↗</span></a>
 </main>
