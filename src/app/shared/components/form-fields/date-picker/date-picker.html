@@ -1,9 +1,19 @@
 <label [attr.for]="id()">{{ label() }}</label>
+@if (typed()) {
+<input #dateInput [id]="id()" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="DD/MM/AAAA"
+  [value]="text()" [disabled]="control().disabled" [attr.aria-label]="label() + ' (día, mes y año)'" (input)="onType($event)"
+  (blur)="onBlur()" [class.invalid]="impossible() || (control().invalid && control().touched)" />
+}
+@else {
 <input #dateInput [id]="id()" type="date" [formControl]="control()" [attr.aria-label]="label()" (blur)="onBlur()" (click)="onContainerClick()"
   [class.invalid]="control().invalid && control().touched" />
-@if (control().invalid && control().touched) {
+}
+@if (impossible()) {
+<div class="error">Esa fecha no existe, revísala.</div>
+}
+@else if (control().invalid && control().touched) {
 <div class="error">{{ error() }}</div>
 }
 @else {
-<div class="error"></div>
+<div class="error">@if (typed()) {<span class="hint">Escribe solo los números, por ejemplo 26022013.</span>}</div>
 }

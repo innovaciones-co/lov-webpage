@@ -6,7 +6,8 @@ label {
   margin-left: 6px;
 }
 
-input[type='date'] {
+input[type='date'],
+input[type='text'] {
   width: 100%;
   margin-top: 5px;
   border-radius: 6px;
@@ -34,6 +35,15 @@ input[type='date'] {
   height: 20px;
 }
 
+.hint {
+  color: $gray-400;
+}
+
+input[type='text'] {
+  cursor: text;
+  letter-spacing: 0.06em;
+}
+
 // Refreshed look for the public site only (.public-site is set on the app's main section
 // outside the login/logged-in pages, which keep the original styles above).
 :host-context(.public-site) {
@@ -53,7 +63,16 @@ input[type='date'] {
     }
   }
 
+  input[type='text'] {
+    @include field-control;
+    letter-spacing: 0.06em;
+  }
+
   .error {
     @include field-error;
+  }
+
+  .hint {
+    color: #757A8C;
   }
 }

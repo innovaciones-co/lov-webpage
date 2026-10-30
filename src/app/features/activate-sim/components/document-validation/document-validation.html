@@ -12,7 +12,7 @@
                     [error]="getFieldErrorMessage('documentType')"></select-field>
             </div>
             <div class="form-row">
-                <date-picker-field [label]="'Fecha de expedición'"
+                <date-picker-field [label]="'Fecha de expedición'" [typed]="true"
                     [placeholder]="'Ingresa la fecha de expedición de tu documento de identidad.'"
                     [control]="form().controls.documentIssueDate"
                     [error]="getFieldErrorMessage('documentIssueDate')"></date-picker-field>
