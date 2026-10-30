@@ -1,3 +1,15 @@
+# [1.72.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.71.0...v1.72.0) (2026-10-30)
+
+
+### Bug Fixes
+
+* wait for the line's own number after activating a SIM instead of showing the temporary one ([30ae7f9](https://github.com/innovaciones-co/lov-webpage/commit/30ae7f92a72101374a1075cbde52d7df0459ba60))
+
+
+### Features
+
+* type the document issue date as DD/MM/AAAA instead of picking it from a calendar ([95c529d](https://github.com/innovaciones-co/lov-webpage/commit/95c529d728eba26d072610825470b8d83c2a60f1))
+
 # [1.71.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.70.1...v1.71.0) (2026-10-29)
 
 
