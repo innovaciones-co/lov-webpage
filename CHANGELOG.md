@@ -1,3 +1,10 @@
+# [1.73.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.72.1...v1.73.0) (2026-10-30)
+
+
+### Features
+
+* add telemedicine banner and call action to homepage ([9780c4a](https://github.com/innovaciones-co/lov-webpage/commit/9780c4aef2721ea5dd88387a26394a0997586498))
+
 ## [1.72.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.72.0...v1.72.1) (2026-10-30)
 
 
