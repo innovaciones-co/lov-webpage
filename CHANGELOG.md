@@ -1,3 +1,10 @@
+## [1.73.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.73.0...v1.73.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* telemedicine web banner with "Telemedicina" spelled right ([9379a0c](https://github.com/innovaciones-co/lov-webpage/commit/9379a0ca3b53ddb7ae0de32d11357e682424007b))
+
 # [1.73.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.72.1...v1.73.0) (2026-10-30)
 
 
