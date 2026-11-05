@@ -5,29 +5,35 @@
         <p class="flow-step__hint">La portabilidad trae tu número de siempre a esta SIM LOV, que ya debe estar activa.</p>
 
         <label class="flow-field" for="lov-number">
-            <span class="flow-field__label"><span class="flow-tag">A</span> Número de tu SIM LOV</span>
-            <span class="flow-affix" [class.flow-affix--error]="showError('lovNumber')">
-                <span class="flow-affix__prefix" title="Indicativo de Colombia">
+            <span class="flow-field__label">
+                <span class="flow-tag flow-tag--blue"><span class="material-symbols-outlined" aria-hidden="true">smartphone</span></span>
+                Tu número LOV
+            </span>
+            <span class="flow-affix" [class.flow-affix--error]="showError('lovSuffix')">
+                <span class="flow-affix__prefix" title="Todos los números LOV empiezan por {{ lovPrefix }}">
                     <span class="material-symbols-outlined" aria-hidden="true">lock</span>
-                    +57
+                    <strong class="lov-prefix">{{ lovPrefix }}</strong>
                 </span>
                 <input id="lov-number" class="flow-affix__input flow-affix__input--digits" type="text" inputmode="numeric"
-                    autocomplete="tel-national" placeholder="3__ ___ ____" [attr.maxlength]="numberLength + 3"
-                    [value]="form().controls.lovNumber.value" (input)="onDigits('lovNumber', $any($event.target), numberLength)"
-                    (blur)="form().controls.lovNumber.markAsTouched()" aria-describedby="lov-number-help">
+                    autocomplete="off" placeholder="_______" [attr.maxlength]="lovSuffixLength + 5"
+                    [value]="form().controls.lovSuffix.value" (input)="onDigits('lovSuffix', $any($event.target), lovSuffixLength)"
+                    (blur)="form().controls.lovSuffix.markAsTouched()" aria-describedby="lov-number-help">
             </span>
             <span class="flow-help" id="lov-number-help">
-                @if (showError('lovNumber')) {
-                <span class="flow-error">Escribe los {{ numberLength }} dígitos del número LOV; empieza por 3.</span>
+                @if (showError('lovSuffix')) {
+                <span class="flow-error">Escribe los {{ lovSuffixLength }} dígitos que van después de {{ lovPrefix }}.</span>
                 } @else {
-                <span>El que te dimos al activar la SIM, no el que vas a traer</span>
-                <span class="flow-count">{{ numberCount() }} de {{ numberLength }}</span>
+                <span>Escribe solo los <strong>{{ lovSuffixLength }} dígitos</strong> después de {{ lovPrefix }}</span>
+                <span class="flow-count">{{ lovSuffixCount() }} de {{ lovSuffixLength }}</span>
                 }
             </span>
         </label>
 
         <label class="flow-field" for="iccid-digits">
-            <span class="flow-field__label"><span class="flow-tag">B</span> Últimos {{ iccidDigitsLength }} dígitos del código de barras</span>
+            <span class="flow-field__label">
+                <span class="flow-tag"><span class="material-symbols-outlined" aria-hidden="true">barcode</span></span>
+                Últimos {{ iccidDigitsLength }} dígitos del código de barras
+            </span>
             <input id="iccid-digits" class="flow-input flow-input--digits" [class.flow-input--error]="showError('iccidDigits')"
                 type="text" inputmode="numeric" autocomplete="off" placeholder="{{ iccidDigitsLength }} dígitos"
                 [attr.maxlength]="iccidDigitsLength" [value]="form().controls.iccidDigits.value"
@@ -53,20 +59,16 @@
         </button>
     </div>
 
-    <!-- Where to find each number. -->
+    <!-- Where to find the barcode digits on the SIM card holder. -->
     <div class="card-guide" aria-hidden="true">
-        <div class="number-pill">
-            <span class="material-symbols-outlined">smartphone</span>
-            <span>Tu número LOV<br><b>3·· ··· ····</b></span>
-            <span class="marker marker--a">A</span>
-        </div>
         <div class="sim-card">
             <span class="sim-card__brand">LOV</span>
             <span class="sim-card__chip"></span>
             <span class="sim-card__barcode"></span>
             <span class="sim-card__serial">{{ serialStart }}<b>#####</b></span>
-            <span class="marker marker--b">B</span>
+            <span class="marker"><span class="material-symbols-outlined">barcode</span></span>
         </div>
+        <p class="card-guide__caption">Los últimos 5 dígitos, en la tarjeta donde venía tu SIM</p>
     </div>
 </form>
 
