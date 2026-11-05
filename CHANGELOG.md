@@ -1,3 +1,10 @@
+# [1.75.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.74.0...v1.75.0) (2026-11-05)
+
+
+### Features
+
+* two-column checkout with the purchase summary and pay button floating on the right ([feb532b](https://github.com/innovaciones-co/lov-webpage/commit/feb532bdc0a367b71634d31a9e569be0e1e7726c))
+
 # [1.74.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.73.1...v1.74.0) (2026-11-05)
 
 
