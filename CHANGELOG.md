@@ -1,3 +1,10 @@
+# [1.76.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.75.1...v1.76.0) (2026-11-05)
+
+
+### Features
+
+* port-in date defaults to the soonest (tomorrow), with another date optional ([5ca869c](https://github.com/innovaciones-co/lov-webpage/commit/5ca869cbba0910736add4843470ea43b65213c22))
+
 ## [1.75.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.75.0...v1.75.1) (2026-11-05)
 
 
