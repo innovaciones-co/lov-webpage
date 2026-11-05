@@ -16,8 +16,6 @@ import { PaymentResultComponent } from './features/payments/components/payment-r
 import { Payments } from './features/payments/components/payments/payments';
 import { PurchaseSummary } from './features/payments/components/purchase-summary/purchase-summary';
 import { Plans } from './features/plans/components/plans/plans';
-import { SuccessfulPortability } from './features/portability/components/successful-portability/successful-portability';
-import { Portability } from './features/portability/portability';
 import { PqrConfirmation } from './features/pqr/componets/pqr-confirmation/pqr-confirmation';
 import { Pqr } from './features/pqr/pqr';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
@@ -59,11 +57,12 @@ export const routes: Routes = [
     },
     {
         path: 'portabilidad',
-        component: Portability
+        // Loaded on demand: keeps the multi-step form out of the initial bundle.
+        loadComponent: () => import('./features/portability/portability').then(m => m.Portability)
     },
     {
         path: 'portabilidad/exitoso',
-        component: SuccessfulPortability
+        loadComponent: () => import('./features/portability/components/successful-portability/successful-portability').then(m => m.SuccessfulPortability)
     },
     {
         path: 'ingreso',

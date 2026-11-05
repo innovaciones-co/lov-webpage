@@ -1,27 +1,40 @@
 <div class="stepper-container">
-    <!-- Step Content -->
+    <ol class="flow-steps" aria-label="Progreso de tu portabilidad">
+        @for (step of steps; track step; let i = $index) {
+        <li class="flow-steps__item" [class.flow-steps__item--done]="i < currentStepIndex()"
+            [class.flow-steps__item--current]="i === currentStepIndex()"
+            [attr.aria-current]="i === currentStepIndex() ? 'step' : null">{{ step }}</li>
+        }
+    </ol>
+
+    @if (currentStepIndex() > 0) {
+    <button type="button" class="flow-back" (click)="previousStep()">
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        Atrás
+    </button>
+    }
+
     <div class="step-content-container">
         @switch (currentStepIndex()) {
         @case (0) {
         <div class="form-wrapper">
-            <app-portability-information-form
+            <app-portability-information-form [initial]="portabilityData()"
                 (formSubmit)="onPortabilityInformationSubmit($event)"></app-portability-information-form>
         </div>
         }
         @case (1) {
         <div class="form-wrapper">
             @if (portabilityData()) {
-            <app-donor-information-form [portabilityData]="portabilityData()!"
+            <app-donor-information-form [portabilityData]="portabilityData()!" [initial]="donorData()"
                 (formSubmit)="onDonorInformationSubmit($event)"></app-donor-information-form>
             }
         </div>
         }
         @case (2) {
         <div class="form-wrapper">
-            <app-customer-information-form
-                [donorData]="donorData()!"
-                [portabilityData]="portabilityData()!"
-                (formSubmit)="onCustomerInformationSubmit($event)"></app-customer-information-form>
+            <app-customer-information-form [donorData]="donorData()!" [portabilityData]="portabilityData()!"
+                [initial]="customerDraft()" (draftChange)="onCustomerDraftChange($event)"
+                (formSubmit)="onCustomerInformationSubmit()"></app-customer-information-form>
         </div>
         }
         }

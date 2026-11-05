@@ -1,9 +1,8 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { combineLatest, debounceTime, filter } from 'rxjs';
 import { ErrorCard } from "../../../../shared/components/error-card/error-card";
-import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
-import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
 import { Modal } from '../../../../shared/components/modal/modal';
 import { PortabilityService } from '../../services/portability.service';
 import { PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
@@ -11,16 +10,17 @@ import { PortabilityInformationData } from '../portability-information-form/port
 export interface DonorInformationData {
   donorNumber: string;
   donorOperator: string;
+  donorOperatorCode?: string;
   donorPlan: string;
 }
+
+type NumberField = 'donorNumber' | 'donorNumberConfirm';
 
 @Component({
   selector: 'app-donor-information-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    InputTextComponent,
-    SelectComponent,
     Modal,
     ErrorCard
   ],
@@ -31,21 +31,24 @@ export class DonorInformationFormComponent {
   private portabilityService = inject(PortabilityService);
 
   portabilityData = input.required<PortabilityInformationData>();
+  // What the customer already entered, when they come back to this step.
+  initial = input<DonorInformationData | null>(null);
   formSubmit = output<DonorInformationData>();
 
   showModal = signal(false);
   isLoading = signal(false);
+  isLookingUp = signal(false);
   validationError = signal<string>('');
 
   // Error messages map
   errorMessages: Record<string, Record<string, string>> = {
     donorNumber: {
-      pattern: 'El número debe tener 10 dígitos numéricos',
-      operatorNotDetected: 'No se pudo detectar el operador de este número'
+      pattern: 'Escribe los 10 dígitos; empieza por 3',
+      operatorNotDetected: 'No pudimos detectar el operador de este número. Revísalo.'
     },
     donorNumberConfirm: {
-      pattern: 'El número debe tener 10 dígitos numéricos',
-      mismatch: 'El número del número a portar no coincide'
+      pattern: 'Escribe los 10 dígitos; empieza por 3',
+      mismatch: 'No coincide con el número de arriba'
     }
   };
 
@@ -65,13 +68,19 @@ export class DonorInformationFormComponent {
 
   form = signal(
     new FormGroup({
-      donorNumber: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
-      donorNumberConfirm: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$'), this.matchValidator('donorNumber')]),
+      donorNumber: new FormControl('', [Validators.required, Validators.pattern('^3[0-9]{9}$')]),
+      donorNumberConfirm: new FormControl('', [Validators.required, Validators.pattern('^3[0-9]{9}$'), this.matchValidator('donorNumber')]),
       donorOperator: new FormControl('', Validators.required),
       donorOperatorCode: new FormControl('', Validators.required),
       donorPlan: new FormControl('', Validators.required),
     })
   );
+
+  private readonly values = toSignal(this.form().valueChanges, { initialValue: this.form().value });
+  readonly numbersMatch = computed(() => {
+    const { donorNumber, donorNumberConfirm } = this.values();
+    return !!donorNumber && donorNumber.length === 10 && donorNumber === donorNumberConfirm;
+  });
 
   constructor() {
     const donorNumberControl = this.form().get('donorNumber');
@@ -105,16 +114,42 @@ export class DonorInformationFormComponent {
         }
       });
     }
+
+    effect(() => {
+      const initial = this.initial();
+      if (!initial) return;
+      this.form().patchValue({
+        donorNumber: initial.donorNumber,
+        donorNumberConfirm: initial.donorNumber,
+        donorPlan: initial.donorPlan,
+      });
+    });
   }
 
   planOptions = signal([
-    { label: 'Pospago', value: 'POSTPAID' },
     { label: 'Prepago', value: 'PREPAID' },
+    { label: 'Pospago', value: 'POSTPAID' },
   ]);
 
-  private async lookupDonorOperator(donorNumber: string): Promise<void> {
-    console.debug(`Looking up donor operator for number: ${donorNumber}`);
+  count(field: NumberField): number {
+    return (this.values()[field] ?? '').length;
+  }
 
+  // Digits only, cut to 10, as the customer types or pastes (a pasted 57 is dropped).
+  onDigits(field: NumberField, input: HTMLInputElement): void {
+    let digits = input.value.replace(/[^0-9]/g, '');
+    if (digits.length > 10 && digits.startsWith('57')) digits = digits.slice(2);
+    digits = digits.slice(0, 10);
+    input.value = digits;
+    this.form().controls[field].setValue(digits);
+  }
+
+  showError(field: NumberField): boolean {
+    const control = this.form().controls[field];
+    return control.invalid && control.touched;
+  }
+
+  private async lookupDonorOperator(donorNumber: string): Promise<void> {
     // Clear any previous operator detection errors
     const donorNumberControl = this.form().get('donorNumber');
     const donorOperatorControl = this.form().get('donorOperator');
@@ -126,13 +161,14 @@ export class DonorInformationFormComponent {
       donorNumberControl.setErrors(hasOtherErrors ? otherErrors : null);
     }
 
+    this.isLookingUp.set(true);
     const lookupResult = await this.portabilityService.lookupByMsisdn(donorNumber);
+    this.isLookingUp.set(false);
 
     if (lookupResult && lookupResult.operatorCode) {
       donorOperatorCodeControl?.setValue(lookupResult.operatorCode);
       donorOperatorControl?.setValue(lookupResult.operatorName);
     } else {
-      console.log('Donor operator could not be detected.');
       // Set error on the donor number field to show in the input
       donorNumberControl?.setErrors({
         ...donorNumberControl?.errors,
@@ -151,7 +187,6 @@ export class DonorInformationFormComponent {
     if (!control?.errors || !control.touched) return '';
 
     const firstError = Object.keys(control.errors)[0];
-    console.log(`First error for field ${fieldName}:`, firstError);
 
     if (firstError === 'required') return 'Este campo es obligatorio';
 
@@ -169,7 +204,8 @@ export class DonorInformationFormComponent {
     this.isLoading.set(true);
 
     try {
-      const formData = this.form().value as DonorInformationData;
+      // getRawValue: the operator field is disabled (detected, not typed) but is part of the data.
+      const formData = this.form().getRawValue() as DonorInformationData;
       const lovNumber = this.portabilityData().lovNumber;
       await this.portabilityService.nipRequest(formData, lovNumber);
 

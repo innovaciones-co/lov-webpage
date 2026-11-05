@@ -1,31 +1,89 @@
-<form [formGroup]="form()" (ngSubmit)="onSubmit()">
-    <div class="card">
-        <h3 class="form-subtitle">Información de Portabilidad</h3>
-        <div class="form-grid">
-            <div class="form-row">
-                <input-text-field [label]="'Número a portar'" [placeholder]="'3001234567'"
-                    [control]="form().controls.donorNumber"
-                    [error]="getFieldErrorMessage('donorNumber')"></input-text-field>
+<form class="flow-step" [formGroup]="form()" (ngSubmit)="onSubmit()">
+    <div>
+        <p class="flow-step__eyebrow">Paso 2 de 3</p>
+        <h3 class="flow-step__title">El número que quieres traer</h3>
+        <p class="flow-step__hint">Es tu número de siempre, el que hoy tienes con otro operador.</p>
 
-                <input-text-field [label]="'Confirmar número a portar'" [placeholder]="'3001234567'"
-                    [control]="form().controls.donorNumberConfirm"
-                    [error]="getFieldErrorMessage('donorNumberConfirm')"></input-text-field>
-            </div>
-            <div class="form-row">
-                <input-text-field [label]="'Operador movil anterior'" [placeholder]="'Tu operador actual.'"
-                    [control]="form().controls.donorOperator"
-                    [error]="getFieldErrorMessage('donorOperator')"></input-text-field>
+        <div class="flow-grid">
+            <label class="flow-field" for="donor-number">
+                <span class="flow-field__label">Número a traer</span>
+                <span class="flow-affix" [class.flow-affix--error]="showError('donorNumber')">
+                    <span class="flow-affix__prefix">+57</span>
+                    <input id="donor-number" class="flow-affix__input flow-affix__input--digits" type="text"
+                        inputmode="numeric" autocomplete="tel-national" placeholder="3__ ___ ____" maxlength="13"
+                        [value]="form().controls.donorNumber.value" (input)="onDigits('donorNumber', $any($event.target))"
+                        (blur)="form().controls.donorNumber.markAsTouched()">
+                </span>
+                <span class="flow-help">
+                    @if (showError('donorNumber')) {
+                    <span class="flow-error">{{ getFieldErrorMessage('donorNumber') }}</span>
+                    } @else {
+                    <span>10 dígitos, empieza por 3</span>
+                    <span class="flow-count">{{ count('donorNumber') }} de 10</span>
+                    }
+                </span>
+            </label>
 
-                <select-field [label]="'Tipo de plan de tu operador anterior'"
-                    [placeholder]="'Ingresa el plan actual de el número que deseas portar a Lov.'"
-                    [options]="planOptions()" [control]="form().controls.donorPlan"
-                    [error]="getFieldErrorMessage('donorPlan')"></select-field>
+            <label class="flow-field" for="donor-number-confirm">
+                <span class="flow-field__label">Escríbelo otra vez</span>
+                <span class="flow-affix" [class.flow-affix--error]="showError('donorNumberConfirm')">
+                    <span class="flow-affix__prefix">+57</span>
+                    <input id="donor-number-confirm" class="flow-affix__input flow-affix__input--digits" type="text"
+                        inputmode="numeric" autocomplete="off" placeholder="3__ ___ ____" maxlength="13"
+                        [value]="form().controls.donorNumberConfirm.value"
+                        (input)="onDigits('donorNumberConfirm', $any($event.target))"
+                        (blur)="form().controls.donorNumberConfirm.markAsTouched()">
+                </span>
+                <span class="flow-help">
+                    @if (showError('donorNumberConfirm')) {
+                    <span class="flow-error">{{ getFieldErrorMessage('donorNumberConfirm') }}</span>
+                    } @else if (numbersMatch()) {
+                    <span class="flow-ok"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Coinciden</span>
+                    } @else {
+                    <span>Para evitar errores al digitar</span>
+                    }
+                </span>
+            </label>
+        </div>
+
+        <div class="flow-field">
+            <span class="flow-field__label">Operador actual</span>
+            <p class="operator" aria-live="polite">
+                @if (isLookingUp()) {
+                <span class="loading-spinner"></span> Buscando el operador de tu número...
+                } @else if (form().controls.donorOperator.value) {
+                <span class="material-symbols-outlined" aria-hidden="true">cell_tower</span>
+                <strong>{{ form().controls.donorOperator.value }}</strong>
+                <span class="flow-ok"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Detectado</span>
+                } @else {
+                <span class="material-symbols-outlined" aria-hidden="true">cell_tower</span>
+                Lo detectamos solos al escribir tu número.
+                }
+            </p>
+        </div>
+
+        <div class="flow-field" role="radiogroup" aria-labelledby="donor-plan-label">
+            <span class="flow-field__label" id="donor-plan-label">¿Ese número es prepago o pospago?</span>
+            <div class="flow-chips">
+                @for (option of planOptions(); track option.value) {
+                <button type="button" class="flow-chip" role="radio"
+                    [attr.aria-checked]="form().controls.donorPlan.value === option.value"
+                    (click)="form().controls.donorPlan.setValue(option.value)">{{ option.label }}</button>
+                }
             </div>
         </div>
-        <error-card [message]="validationError()"></error-card>
-    </div>
 
-    <button class="btn" type="submit" [disabled]="form().invalid">Continuar</button>
+        <error-card [message]="validationError()"></error-card>
+
+        <button class="btn flow-submit" type="submit" [disabled]="form().invalid || isLoading()">
+            @if (isLoading()) {
+            <span class="loading-spinner"></span>
+            Enviando el código NIP...
+            } @else {
+            Continuar
+            }
+        </button>
+    </div>
 </form>
 
 <app-modal [isOpen]="showModal()" [size]="'md'" [closable]="false" (closed)="onCancelModal()">
@@ -36,7 +94,7 @@
             <p>Para que podamos completar tu proceso de portabilidad de manera correcta y sin inconvenientes, verifica
                 que:</p>
             <ul>
-                <li>La SIM de tu operador actual esté insertada en un teléfono encendido..</li>
+                <li>La SIM de tu operador actual esté insertada en un teléfono encendido.</li>
                 <li>Te llegará un mensaje de texto con el código NIP para autorizar la portabilidad.</li>
             </ul>
             <p>Esto nos permitirá validar tu número correctamente y evitar posibles retrasos en el proceso.</p>
@@ -44,6 +102,6 @@
     </div>
     <div class="modal-actions">
         <button type="button" class="btn btn-secondary" (click)="onCancelModal()">Cancelar</button>
-        <button type="button" class="btn" (click)="onContinueModal()">Entiendo</button>
+        <button type="button" class="btn" [disabled]="isLoading()" (click)="onContinueModal()">Entiendo</button>
     </div>
 </app-modal>

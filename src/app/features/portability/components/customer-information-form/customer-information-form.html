@@ -1,58 +1,113 @@
 <form [formGroup]="form()" (ngSubmit)="onSubmit()">
-    <div class="card">
-        <h3 class="form-subtitle">Solicitar portabilidad</h3>
-        <div class="form-grid">
-            <div class="form-row">
-                <input-text-field [label]="'NIP'" [placeholder]="'12345'" [control]="form().controls.nip"
-                    [error]="getFieldErrorMessage('nip')"></input-text-field>
+    <section class="flow-step">
+        <div>
+            <p class="flow-step__eyebrow">Paso 3 de 3</p>
+            <h3 class="flow-step__title">Autoriza tu portabilidad</h3>
+            <p class="flow-step__hint">
+                Te enviamos un código NIP por SMS al
+                <strong>{{ donorNumber() }}</strong>. Tenlo a la mano.
+            </p>
 
-                <date-picker-field [label]="'Fecha de portabilidad'"
-                    [placeholder]="'Ingresa la fecha en la que deseas que se active la portabilidad.'"
-                    [control]="form().controls.portinDate"
-                    [error]="getFieldErrorMessage('portinDate')"></date-picker-field>
+            <div class="flow-grid">
+                <label class="flow-field" for="nip">
+                    <span class="flow-field__label"><span class="material-symbols-outlined" aria-hidden="true">sms</span> Código NIP</span>
+                    <input id="nip" class="flow-input flow-input--digits" [class.flow-input--error]="showError('nip')" type="text"
+                        inputmode="numeric" autocomplete="one-time-code" placeholder="5 dígitos" maxlength="5"
+                        [value]="form().controls.nip.value" (input)="onDigits('nip', $any($event.target), 5)"
+                        (blur)="form().controls.nip.markAsTouched()">
+                    <span class="flow-help">
+                        @if (showError('nip')) {
+                        <span class="flow-error">El NIP tiene 5 dígitos.</span>
+                        } @else {
+                        <span>Llega en unos minutos</span>
+                        <span class="flow-count">{{ count('nip') }} de 5</span>
+                        }
+                    </span>
+                </label>
+
+                <div class="flow-field">
+                    <date-picker-field [label]="'¿Qué día quieres tu número en LOV?'"
+                        [control]="form().controls.portinDate"
+                        [error]="getFieldErrorMessage('portinDate')"></date-picker-field>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="card">
-        <h3 class="form-subtitle">Información personal</h3>
-        <div class="form-grid">
-            <div class="form-row">
-                <input-text-field [label]="'Nombre completo'" [placeholder]="''" [control]="form().controls.fullName"
-                    [error]="getFieldErrorMessage('fullName')"></input-text-field>
+    </section>
 
-                <input-text-field [label]="'Documento'" [placeholder]="'1234567890'"
-                    [control]="form().controls.documentID"
-                    [error]="getFieldErrorMessage('documentID')"></input-text-field>
-            </div>
-            <div class="form-row">
-                <select-field [label]="'Tipo de documento'" [placeholder]="''" [options]="documentType()"
-                    [control]="form().controls.documentType"
-                    [error]="getFieldErrorMessage('documentType')"></select-field>
+    <section class="flow-step">
+        <div>
+            <h3 class="flow-step__title">Tus datos</h3>
+            <p class="flow-note">
+                <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+                <span>Los traemos de tu SIM LOV. Si algo no está bien, corrígelo aquí: deben ser los mismos con los que
+                    tienes el número en tu operador actual. Lo que escribas se guarda mientras terminas.</span>
+            </p>
 
-                <date-picker-field [label]="'Fecha de expedición'" [typed]="true"
-                    [placeholder]="'Ingresa la fecha de expedición de tu documento de identidad.'"
-                    [control]="form().controls.documentIssueDate"
-                    [error]="getFieldErrorMessage('documentIssueDate')"></date-picker-field>
+            <label class="flow-field" for="full-name">
+                <span class="flow-field__label">Nombre completo</span>
+                <input id="full-name" class="flow-input" [class.flow-input--error]="showError('fullName')" type="text"
+                    autocomplete="name" placeholder="Como aparece en tu documento" formControlName="fullName">
+                @if (showError('fullName')) {
+                <span class="flow-help"><span class="flow-error">Escribe tu nombre completo.</span></span>
+                }
+            </label>
+
+            <div class="flow-field" role="radiogroup" aria-labelledby="document-type-label">
+                <span class="flow-field__label" id="document-type-label">Tipo de documento</span>
+                <div class="flow-chips">
+                    @for (option of documentType(); track option.value) {
+                    <button type="button" class="flow-chip" role="radio"
+                        [attr.aria-checked]="form().controls.documentType.value === option.value"
+                        (click)="form().controls.documentType.setValue(option.value)">{{ option.label }}</button>
+                    }
+                </div>
             </div>
-            <div class="form-row">
-                <input-text-field [label]="'Dirección'" [placeholder]="'Cra 00 #00-00'"
-                    [control]="form().controls.address" [error]="getFieldErrorMessage('address')"></input-text-field>
+
+            <div class="flow-grid">
+                <label class="flow-field" for="document-id">
+                    <span class="flow-field__label">Número de documento</span>
+                    <input id="document-id" class="flow-input flow-input--digits" [class.flow-input--error]="showError('documentID')"
+                        type="text" inputmode="numeric" autocomplete="off" placeholder="Sin puntos" maxlength="15"
+                        [value]="form().controls.documentID.value" (input)="onDigits('documentID', $any($event.target), 15)"
+                        (blur)="form().controls.documentID.markAsTouched()">
+                    @if (showError('documentID')) {
+                    <span class="flow-help"><span class="flow-error">Entre 7 y 15 dígitos, sin puntos.</span></span>
+                    }
+                </label>
+
+                <div class="flow-field">
+                    <date-picker-field [label]="'Fecha de expedición'" [typed]="true"
+                        [control]="form().controls.documentIssueDate"
+                        [error]="getFieldErrorMessage('documentIssueDate')"></date-picker-field>
+                </div>
             </div>
+
+            <label class="flow-field" for="address">
+                <span class="flow-field__label">Dirección</span>
+                <input id="address" class="flow-input" [class.flow-input--error]="showError('address')" type="text"
+                    autocomplete="street-address" placeholder="Cra 00 # 00-00" formControlName="address">
+                @if (showError('address')) {
+                <span class="flow-help"><span class="flow-error">Escribe tu dirección.</span></span>
+                }
+            </label>
+
             <checkbox-field [control]="form().controls.terms" [error]="getFieldErrorMessage('terms')">
                 He leído y acepto los <a href="/docs/condiciones_servicio_prepago_lov.pdf" target="_blank"
                     class="link-button">Términos y Condiciones</a>, así como la <a
                     href="/docs/politicas_de_tratamiento_de_datos_personales_new.pdf" target="_blank"
                     class="link-button">Política de Tratamiento de Datos Personales</a>.
             </checkbox-field>
+
+            <error-card [message]="submitError()"></error-card>
+
+            <button class="btn flow-submit" type="submit" [disabled]="isLoading()">
+                @if (isLoading()) {
+                <span class="loading-spinner"></span>
+                Enviando tu solicitud...
+                } @else {
+                Solicitar portabilidad
+                }
+            </button>
         </div>
-        <error-card [message]="submitError()"></error-card>
-    </div>
-    <button class="btn" type="submit" [disabled]="form().invalid || isLoading()">
-        @if (isLoading()) {
-        <span class="loading-spinner"></span>
-        Enviando...
-        } @else {
-        Solicitar portabilidad
-        }
-    </button>
+    </section>
 </form>

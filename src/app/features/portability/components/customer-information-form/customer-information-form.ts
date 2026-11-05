@@ -1,11 +1,10 @@
-import { Component, signal, output, inject, input, effect } from '@angular/core';
+import { Component, signal, output, inject, input, effect, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PortabilityService } from '../../services/portability.service';
 import { CheckboxComponent } from '../../../../shared/components/form-fields/checkbox/checkbox';
 import { DatePickerComponent } from '../../../../shared/components/form-fields/date-picker/date-picker';
-import { InputTextComponent } from '../../../../shared/components/form-fields/input-text/input-text';
-import { SelectComponent } from "../../../../shared/components/form-fields/select/select";
 import { ErrorCard } from "../../../../shared/components/error-card/error-card";
 
 export interface CustomerInformationData {
@@ -18,12 +17,12 @@ export interface CustomerInformationData {
   address: string;
 }
 
+type DigitsField = 'nip' | 'documentID';
+
 @Component({
   selector: 'app-customer-information-form',
   imports: [
     ReactiveFormsModule,
-    InputTextComponent,
-    SelectComponent,
     DatePickerComponent,
     CheckboxComponent,
     ErrorCard
@@ -37,9 +36,18 @@ export class CustomerInformationFormComponent {
 
   donorData = input.required<any>();
   portabilityData = input.required<any>();
+  // What the customer already typed or corrected (saved draft): wins over CYAN's data.
+  initial = input<Partial<CustomerInformationData> | null>(null);
+  // Every change, so the page keeps it if the customer goes back or reloads.
+  draftChange = output<Partial<CustomerInformationData>>();
 
   isLoading = signal(false);
   submitError = signal<string>('');
+
+  readonly donorNumber = computed(() => {
+    const number: string = this.donorData()?.donorNumber ?? '';
+    return number.length === 10 ? `${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}` : number;
+  });
 
   // Error messages map (only specific validations, required is automatic)
   errorMessages: Record<string, Record<string, string>> = {
@@ -47,13 +55,16 @@ export class CustomerInformationFormComponent {
       pattern: 'El NIP debe tener el formato correcto'
     },
     portinDate: {
-      futureDate: 'La fecha debe ser posterior a hoy'
+      futureDate: 'Elige un día a partir de mañana'
     },
     documentIssueDate: {
       pastDate: 'La fecha debe ser anterior a hoy'
     },
     documentID: {
       pattern: 'El documento debe tener el formato correcto'
+    },
+    terms: {
+      required: 'Debes aceptar para continuar'
     }
   };
 
@@ -106,39 +117,58 @@ export class CustomerInformationFormComponent {
     })
   );
 
+  private readonly values = toSignal(this.form().valueChanges, { initialValue: this.form().value });
+
   documentType = signal([
     { label: 'Cédula', value: 'ID' },
-    { label: 'Cédula de extranjeria', value: 'foreignID' },
+    { label: 'Cédula de extranjería', value: 'foreignID' },
   ]);
 
   formSubmit = output<CustomerInformationData>();
 
+  private prefilled = false;
+
   constructor() {
-    // Auto-fill form fields from portability data if available
+    // Fill once: with what the customer already typed, else with their data in CYAN. Always editable.
     effect(() => {
-      const portabilityData = this.portabilityData();
+      const draft = this.initial();
+      const customer = this.portabilityData()?.payload;
+      if (this.prefilled) return;
+      this.prefilled = true;
 
-      if (portabilityData?.payload) {
-        const { document, address, givenName, familyName } = portabilityData.payload;
-
-        if (document?.id) {
-          this.form().get('documentID')?.setValue(document.id);
-        }
-
-        if (document?.type) {
-          this.form().get('documentType')?.setValue(document.type);
-        }
-
-        if (address?.line1) {
-          this.form().get('address')?.setValue(address.line1);
-        }
-
-        if (givenName && familyName) {
-          const fullName = `${givenName} ${familyName}`;
-          this.form().get('fullName')?.setValue(fullName);
-        }
+      if (draft) {
+        this.form().patchValue(draft);
+      } else if (customer) {
+        const { document, address, givenName, familyName } = customer;
+        this.form().patchValue({
+          documentID: document?.id ?? '',
+          documentType: document?.type ?? '',
+          address: address?.line1 ?? '',
+          fullName: [givenName, familyName].filter(Boolean).join(' '),
+        });
       }
     });
+
+    this.form().valueChanges.subscribe(() => {
+      const { terms, ...data } = this.form().getRawValue();
+      this.draftChange.emit(data as Partial<CustomerInformationData>);
+    });
+  }
+
+  count(field: DigitsField): number {
+    return (this.values()[field] ?? '').length;
+  }
+
+  // Digits only, cut to the field's length, as the customer types or pastes.
+  onDigits(field: DigitsField, input: HTMLInputElement, max: number): void {
+    const digits = input.value.replace(/[^0-9]/g, '').slice(0, max);
+    input.value = digits;
+    this.form().controls[field].setValue(digits);
+  }
+
+  showError(field: keyof CustomerInformationData): boolean {
+    const control = this.form().controls[field];
+    return control.invalid && control.touched;
   }
 
   // Get error message for a specific field
@@ -148,28 +178,28 @@ export class CustomerInformationFormComponent {
 
     const firstError = Object.keys(control.errors)[0];
 
-    // Validators.required automatically shows 'Este campo es obligatorio'
+    // Use field-specific message when there is one
+    const specific = this.errorMessages[fieldName]?.[firstError];
+    if (specific) return specific;
     if (firstError === 'required') return 'Este campo es obligatorio';
-
-    // Use field-specific message for any non-required error
-    return this.errorMessages[fieldName]?.[firstError] || 'Error de validación';
+    return 'Error de validación';
   }
 
   async onSubmit(): Promise<void> {
+    this.form().markAllAsTouched();
     if (!this.form().valid) return;
 
     this.isLoading.set(true);
     this.submitError.set('');
+    const data = this.form().value as CustomerInformationData;
 
     try {
-      await this.portabilityService.submitPortability(
-        this.form().value as CustomerInformationData,
-        this.donorData(),
-        this.portabilityData()
-      );
+      await this.portabilityService.submitPortability(data, this.donorData(), this.portabilityData());
+      // So they can check it later with the number they're bringing and their document.
+      this.portabilityService.recordPortability(data, this.donorData(), this.portabilityData());
 
-      this.formSubmit.emit(this.form().value as CustomerInformationData);
-      await this.router.navigate(['/portability/successful']);
+      this.formSubmit.emit(data);
+      await this.router.navigate(['/portabilidad/exitoso']);
     } catch (error: any) {
       const errorMessage = error?.error?.message ||
         'Error al procesar la solicitud de portabilidad. Por favor, inténtelo de nuevo más tarde o contacte con soporte para más información.';

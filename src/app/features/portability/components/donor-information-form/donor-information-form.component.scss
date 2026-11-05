@@ -1,10 +1,23 @@
-@use '../../../../../styles/variables' as *;
+// The form uses the global flow-* styles (styles/_flow-form.scss).
+.operator {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-height: 54px;
+    margin: 0;
+    padding: 0 16px;
+    border: 2px dashed #C9D6EE;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.7);
+    color: #757A8C;
 
+    strong {
+        color: #052B6C;
+        font-size: 1.05rem;
+    }
 
-form {
-
-    .btn {
-        display: block;
-        margin-left: auto;
+    .material-symbols-outlined {
+        color: #066EF1;
     }
 }

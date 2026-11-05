@@ -57,10 +57,10 @@ export class PortabilityService {
 
       const response = await firstValueFrom(this.http.get<ApiResponse<SubscriptionResponse>>(url));
 
-      // Check if any subscription's ICCID ends with the provided ICCID
-      const isValid = response?.payload?.subscriptions?.some(subscription =>
-        subscription.iccid?.endsWith(iccid)
-      ) || false;
+      // The SIM of the line typed must end with those digits (the customer may have other lines).
+      const subscriptions = response?.payload?.subscriptions ?? [];
+      const line = subscriptions.find(subscription => subscription.msisdn?.endsWith(msisdn));
+      const isValid = (line ? [line] : subscriptions).some(subscription => subscription.iccid?.endsWith(iccid));
 
       this.simValidationResult.set(isValid);
 
@@ -102,6 +102,41 @@ export class PortabilityService {
     return this.http.get(url);
   }
 
+  /**
+   * Status of a port-in found by the number being brought (or the LOV number) and the
+   * customer's document: the website's own API checks the document before asking CYAN.
+   */
+  checkPortabilityStatus(number: string, documentId: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/portabilities/status`, { number, documentId });
+  }
+
+  /**
+   * The LOV line the number is brought to: the one typed in step 1. CYAN returns all the
+   * customer's lines, and the first isn't always that one.
+   */
+  private lovSubscription(portabilityData: any): any {
+    const subscriptions: any[] = portabilityData?.payload?.subscriptions ?? [];
+    const lovNumber: string = portabilityData?.lovNumber ?? '';
+    return subscriptions.find(subscription => lovNumber && subscription.msisdn?.endsWith(lovNumber)) ?? subscriptions[0];
+  }
+
+  /** Records a port-in just requested, so it can be checked later by number and document. Best effort. */
+  recordPortability(customerData: any, donorData: any, portabilityData: any): void {
+    const body = {
+      lovMsisdn: portabilityData?.lovNumber,
+      subscriptionId: this.lovSubscription(portabilityData)?.id,
+      donorMsisdn: donorData?.donorNumber,
+      donorOperator: donorData?.donorOperator,
+      documentType: customerData?.documentType,
+      documentId: customerData?.documentID,
+      fullName: customerData?.fullName,
+      portingDate: customerData?.portinDate,
+    };
+    this.http.post(`${environment.apiUrl}/portabilities`, body).subscribe({
+      error: (error) => console.error('Could not record the port-in request:', error)
+    });
+  }
+
   async nipRequest(data: { donorNumber: string; donorOperator: string; donorPlan: string }, lovNumber: string): Promise<any> {
     try {
       console.debug('Submitting NIP request with data:', data, 'and LOV number:', lovNumber);
@@ -124,7 +159,7 @@ export class PortabilityService {
   ): Promise<any> {
     try {
       console.debug('Submitting portability request...');
-      const subscriptionId = portabilityData.payload?.subscriptions?.[0]?.id;
+      const subscriptionId = this.lovSubscription(portabilityData)?.id;
 
       const payload = {
         authCode: customerData.nip,

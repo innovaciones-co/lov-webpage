@@ -1,26 +1,73 @@
-<form [formGroup]="form()" (ngSubmit)="onSubmit()">
-    <div class="card">
-        <h3 class="form-subtitle">Ingresa tú número LOV</h3>
-        <div class="form-grid">
-            <div class="form-row">
-                <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'300123467'"
-                    [control]="form().controls.lovNumber" [error]="getFieldErrorMessage('lovNumber')"
-                    [autocomplete]="'tel'"></input-text-field>
+<form class="flow-step flow-step--guide" [formGroup]="form()" (ngSubmit)="onSubmit()">
+    <div>
+        <p class="flow-step__eyebrow">Paso 1 de 3</p>
+        <h3 class="flow-step__title">Tu SIM LOV activa</h3>
+        <p class="flow-step__hint">La portabilidad trae tu número de siempre a esta SIM LOV, que ya debe estar activa.</p>
 
-                <input-text-field [label]="'Últimos 5 números del código de barras de tu SIM'" [placeholder]="'12345'"
-                    [control]="form().controls.iccidDigits" [error]="getFieldErrorMessage('iccidDigits')"
-                    [autocomplete]="'on'"></input-text-field>
-            </div>
+        <label class="flow-field" for="lov-number">
+            <span class="flow-field__label"><span class="flow-tag">A</span> Número de tu SIM LOV</span>
+            <span class="flow-affix" [class.flow-affix--error]="showError('lovNumber')">
+                <span class="flow-affix__prefix" title="Indicativo de Colombia">
+                    <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+                    +57
+                </span>
+                <input id="lov-number" class="flow-affix__input flow-affix__input--digits" type="text" inputmode="numeric"
+                    autocomplete="tel-national" placeholder="3__ ___ ____" [attr.maxlength]="numberLength + 3"
+                    [value]="form().controls.lovNumber.value" (input)="onDigits('lovNumber', $any($event.target), numberLength)"
+                    (blur)="form().controls.lovNumber.markAsTouched()" aria-describedby="lov-number-help">
+            </span>
+            <span class="flow-help" id="lov-number-help">
+                @if (showError('lovNumber')) {
+                <span class="flow-error">Escribe los {{ numberLength }} dígitos del número LOV; empieza por 3.</span>
+                } @else {
+                <span>El que te dimos al activar la SIM, no el que vas a traer</span>
+                <span class="flow-count">{{ numberCount() }} de {{ numberLength }}</span>
+                }
+            </span>
+        </label>
+
+        <label class="flow-field" for="iccid-digits">
+            <span class="flow-field__label"><span class="flow-tag">B</span> Últimos {{ iccidDigitsLength }} dígitos del código de barras</span>
+            <input id="iccid-digits" class="flow-input flow-input--digits" [class.flow-input--error]="showError('iccidDigits')"
+                type="text" inputmode="numeric" autocomplete="off" placeholder="{{ iccidDigitsLength }} dígitos"
+                [attr.maxlength]="iccidDigitsLength" [value]="form().controls.iccidDigits.value"
+                (input)="onDigits('iccidDigits', $any($event.target), iccidDigitsLength)"
+                (blur)="form().controls.iccidDigits.markAsTouched()" aria-describedby="iccid-digits-help">
+            <span class="flow-help" id="iccid-digits-help">
+                @if (showError('iccidDigits')) {
+                <span class="flow-error">Escribe los últimos {{ iccidDigitsLength }} dígitos del serial.</span>
+                } @else {
+                <span>Están al final del número debajo del código de barras</span>
+                <span class="flow-count">{{ iccidDigitsCount() }} de {{ iccidDigitsLength }}</span>
+                }
+            </span>
+        </label>
+
+        <button class="btn flow-submit" type="submit" [disabled]="isLoading()">
+            @if (isLoading()) {
+            <span class="loading-spinner"></span>
+            Validando tu SIM...
+            } @else {
+            Continuar
+            }
+        </button>
+    </div>
+
+    <!-- Where to find each number. -->
+    <div class="card-guide" aria-hidden="true">
+        <div class="number-pill">
+            <span class="material-symbols-outlined">smartphone</span>
+            <span>Tu número LOV<br><b>3·· ··· ····</b></span>
+            <span class="marker marker--a">A</span>
+        </div>
+        <div class="sim-card">
+            <span class="sim-card__brand">LOV</span>
+            <span class="sim-card__chip"></span>
+            <span class="sim-card__barcode"></span>
+            <span class="sim-card__serial">{{ serialStart }}<b>#####</b></span>
+            <span class="marker marker--b">B</span>
         </div>
     </div>
-    <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
-        @if (isLoading()) {
-        <span class="loading-spinner"></span>
-        Validando...
-        } @else {
-        Continuar
-        }
-    </button>
 </form>
 
 <app-modal [isOpen]="simInvalidModalOpen()" [size]="'md'" [closable]="false" (closed)="onCancelModal()">

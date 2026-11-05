@@ -1,38 +1,74 @@
 <div class="portability-status-container">
-    <div class="form-wrapper">
-        <form [formGroup]="form()" (ngSubmit)="onSubmit()">
-            <div class="card">
-                <h3 class="form-subtitle">Ingresa tú número LOV</h3>
-                <div class="form-grid">
-                    <input-text-field [label]="'Número de la SIM LOV'" [placeholder]="'3001234567'"
-                        [control]="form().controls.lovNumber"
-                        [error]="getFieldErrorMessage('lovNumber')"></input-text-field>
-                </div>
-                <error-card [message]="validationError()"></error-card>
+    <form class="flow-step" [formGroup]="form()" (ngSubmit)="onSubmit()">
+        <div>
+            <h3 class="flow-step__title">Consulta tu portabilidad</h3>
+            <p class="flow-step__hint">Con el número que estás trayendo a LOV y tu número de documento.</p>
+
+            <div class="flow-grid">
+                <label class="flow-field" for="status-number">
+                    <span class="flow-field__label"><span class="material-symbols-outlined" aria-hidden="true">smartphone</span> Número que estás trayendo</span>
+                    <span class="flow-affix" [class.flow-affix--error]="showError('number')">
+                        <span class="flow-affix__prefix">+57</span>
+                        <input id="status-number" class="flow-affix__input flow-affix__input--digits" type="text"
+                            inputmode="numeric" autocomplete="tel-national" placeholder="3__ ___ ____" maxlength="13"
+                            [value]="form().controls.number.value" (input)="onDigits('number', $any($event.target), 10)"
+                            (blur)="form().controls.number.markAsTouched()">
+                    </span>
+                    <span class="flow-help">
+                        @if (showError('number')) {
+                        <span class="flow-error">Escribe los 10 dígitos; empieza por 3.</span>
+                        } @else {
+                        <span>También sirve tu número LOV</span>
+                        <span class="flow-count">{{ count('number') }} de 10</span>
+                        }
+                    </span>
+                </label>
+
+                <label class="flow-field" for="status-document">
+                    <span class="flow-field__label"><span class="material-symbols-outlined" aria-hidden="true">badge</span> Número de cédula</span>
+                    <input id="status-document" class="flow-input flow-input--digits" [class.flow-input--error]="showError('documentId')"
+                        type="text" inputmode="numeric" autocomplete="off" placeholder="Sin puntos" maxlength="15"
+                        [value]="form().controls.documentId.value" (input)="onDigits('documentId', $any($event.target), 15)"
+                        (blur)="form().controls.documentId.markAsTouched()">
+                    <span class="flow-help">
+                        @if (showError('documentId')) {
+                        <span class="flow-error">Entre 5 y 15 dígitos, sin puntos.</span>
+                        } @else {
+                        <span>El mismo con el que pediste la portabilidad</span>
+                        }
+                    </span>
+                </label>
             </div>
 
-            @if (hasSearched() && !isLoading() && !validationError()) {
-            @let display = statusDisplay();
-            @if (display) {
-            <div class="card">
-                <div class="status-card__state">
-                    <!-- <div class="status-card__state" [ngClass]="display.cssClass"> -->
-                    <h3 class="status-title form-subtitle">Estado de la portabilidad</h3>
-                    <p> Estado: <em><b>{{ display.status }}</b></em></p>
-                    <p [innerHTML]="display.message"></p>
-                </div>
-            </div>
-            }
-            }
+            <error-card [message]="validationError()"></error-card>
 
-            <button class="btn" type="submit" [disabled]="isLoading() || form().invalid">
+            <button class="btn flow-submit" type="submit" [disabled]="isLoading()">
                 @if (isLoading()) {
                 <span class="loading-spinner"></span>
-                Validando...
+                Consultando...
                 } @else {
                 Consultar
                 }
             </button>
-        </form>
-    </div>
+        </div>
+    </form>
+
+    @if (hasSearched() && !isLoading() && !validationError()) {
+    @let display = statusDisplay();
+    @if (display) {
+    <section class="result" [ngClass]="'result--' + display.tone" aria-live="polite">
+        <span class="result__icon material-symbols-outlined" aria-hidden="true">{{ display.icon }}</span>
+        <div>
+            <p class="result__eyebrow">Estado de tu portabilidad</p>
+            <h3 class="result__status">{{ display.status }}</h3>
+            @if (display.message) {
+            <p class="result__message" [innerHTML]="display.message"></p>
+            }
+            @if (display.date) {
+            <p class="result__message">Fecha programada: <strong>{{ display.date | date: 'd MMM y' }}</strong></p>
+            }
+        </div>
+    </section>
+    }
+    }
 </div>
