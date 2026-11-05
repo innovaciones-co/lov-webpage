@@ -1,3 +1,10 @@
+## [1.75.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.75.0...v1.75.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* port-in step 1 shows the LOV number's 333 fixed and drops the number illustration ([6b78372](https://github.com/innovaciones-co/lov-webpage/commit/6b7837275da66e10929325bcb4c40f2df271cf13))
+
 # [1.75.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.74.0...v1.75.0) (2026-11-05)
 
 
