@@ -1,3 +1,10 @@
+# [1.74.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.73.1...v1.74.0) (2026-11-05)
+
+
+### Features
+
+* guided, self-service port-in with saved progress and status by number and document ([1ab0a64](https://github.com/innovaciones-co/lov-webpage/commit/1ab0a64065af92dd738b7669eb52921383804873))
+
 ## [1.73.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.73.0...v1.73.1) (2026-10-31)
 
 
