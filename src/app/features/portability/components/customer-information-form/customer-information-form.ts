@@ -19,6 +19,16 @@ export interface CustomerInformationData {
 
 type DigitsField = 'nip' | 'documentID';
 
+/** Tomorrow, as the form's YYYY-MM-DD value and a short label ("mañana, vie 6 nov"). */
+function soonestPortinDate(): { iso: string; label: string } {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  const iso = [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+  const day = date.toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric', month: 'short' })
+    .replace(/[.,]/g, '').replace(' de ', ' ');
+  return { iso, label: `mañana, ${day}` };
+}
+
 @Component({
   selector: 'app-customer-information-form',
   imports: [
@@ -128,6 +138,10 @@ export class CustomerInformationFormComponent {
 
   private prefilled = false;
 
+  // The earliest porting date the form accepts: tomorrow.
+  readonly soonest = soonestPortinDate();
+  portinChoice = signal<'soonest' | 'other'>('soonest');
+
   constructor() {
     // Fill once: with what the customer already typed, else with their data in CYAN. Always editable.
     effect(() => {
@@ -147,12 +161,25 @@ export class CustomerInformationFormComponent {
           fullName: [givenName, familyName].filter(Boolean).join(' '),
         });
       }
+
+      // A date the customer picked earlier stays; none, or one already past, becomes the soonest.
+      const date = this.form().controls.portinDate;
+      if (date.value && date.valid && date.value !== this.soonest.iso) {
+        this.portinChoice.set('other');
+      } else {
+        this.chooseSoonest();
+      }
     });
 
     this.form().valueChanges.subscribe(() => {
       const { terms, ...data } = this.form().getRawValue();
       this.draftChange.emit(data as Partial<CustomerInformationData>);
     });
+  }
+
+  chooseSoonest(): void {
+    this.portinChoice.set('soonest');
+    this.form().controls.portinDate.setValue(this.soonest.iso);
   }
 
   count(field: DigitsField): number {

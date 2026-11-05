@@ -8,7 +8,7 @@
                 <strong>{{ donorNumber() }}</strong>. Tenlo a la mano.
             </p>
 
-            <div class="flow-grid">
+            <div>
                 <label class="flow-field" for="nip">
                     <span class="flow-field__label"><span class="material-symbols-outlined" aria-hidden="true">sms</span> Código NIP</span>
                     <input id="nip" class="flow-input flow-input--digits" [class.flow-input--error]="showError('nip')" type="text"
@@ -25,10 +25,30 @@
                     </span>
                 </label>
 
-                <div class="flow-field">
-                    <date-picker-field [label]="'¿Qué día quieres tu número en LOV?'"
-                        [control]="form().controls.portinDate"
-                        [error]="getFieldErrorMessage('portinDate')"></date-picker-field>
+                <!-- Most customers want it as soon as possible: that's chosen already; a date is optional. -->
+                <div class="flow-field" role="radiogroup" aria-labelledby="portin-date-label">
+                    <span class="flow-field__label" id="portin-date-label">
+                        <span class="material-symbols-outlined" aria-hidden="true">event</span>
+                        ¿Cuándo quieres tu número en LOV?
+                    </span>
+                    <div class="flow-chips">
+                        <button type="button" class="flow-chip" role="radio" [attr.aria-checked]="portinChoice() === 'soonest'"
+                            (click)="chooseSoonest()">
+                            <span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+                            Lo antes posible · {{ soonest.label }}
+                        </button>
+                        <button type="button" class="flow-chip" role="radio" [attr.aria-checked]="portinChoice() === 'other'"
+                            (click)="portinChoice.set('other')">
+                            <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+                            Otra fecha
+                        </button>
+                    </div>
+                    @if (portinChoice() === 'other') {
+                    <div class="portin-date">
+                        <date-picker-field [label]="'Elige el día'" [control]="form().controls.portinDate"
+                            [error]="getFieldErrorMessage('portinDate')"></date-picker-field>
+                    </div>
+                    }
                 </div>
             </div>
         </div>
