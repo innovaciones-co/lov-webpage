@@ -40,6 +40,8 @@ export class Payments implements OnInit {
   requiresCardStep = computed(() => this.paymentService.paymentMethod() === PaymentMethod.CARD);
   // What is being bought, for the strip at the top and the pay button.
   product = computed(() => this.paymentService.selectedProduct());
+  // What the floating summary lists: name, price, what it includes and its validity.
+  summaryView = computed(() => this.product()?.getSummaryView() ?? null);
   // The line being paid for, by the name the customer gave it if any, to confirm before paying.
   payingLine = computed(() => {
     const line = this.currentSubscription();

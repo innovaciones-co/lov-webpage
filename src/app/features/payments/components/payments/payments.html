@@ -44,46 +44,67 @@
 
 <!-- Desktop Layout -->
 @else {
-<!-- One column: what you buy on top, the data in order, and the summary with the pay button at the end. -->
+<!-- Two columns: the data on the left, and the summary with the pay button floating on the right while scrolling. -->
 <div id="summary" class="checkout">
-    @if (product(); as item) {
-    <div class="buying">
-        <span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span>
-        <span>Estás comprando <strong>{{ item.name }}</strong></span>
-        <strong class="buying__price">{{ item.getDisplayPrice() }}</strong>
+    <div class="checkout__main">
+        <app-subscription-selector [subscriptions]="customerSubscriptions()"
+            [selectedSubscriptionId]="currentSubscription()?.id"
+            (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
+        <app-billing-info></app-billing-info>
+        <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
+        <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
     </div>
-    }
 
-    <app-subscription-selector [subscriptions]="customerSubscriptions()"
-        [selectedSubscriptionId]="currentSubscription()?.id"
-        (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
-    <app-billing-info></app-billing-info>
-    <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
-    <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
+    <aside class="pay" aria-label="Resumen y pago">
+        <h2 class="pay__title">Resumen de compra</h2>
 
-    <section class="pay" aria-label="Resumen y pago">
-        <h2 class="pay__title">Resumen de tu compra</h2>
-        @if (payingLine(); as line) {
-        <p class="pay__line">
-            <span class="material-symbols-outlined" aria-hidden="true">smartphone</span>
-            Para la línea
-            <strong>{{ line.name ? line.name + ' · ' + line.number : line.number }}</strong>
-        </p>
+        @if (summaryView(); as summary) {
+        <div class="pay__row">
+            <span>{{ summary.title }}</span>
+            <strong>{{ summary.price }}</strong>
+        </div>
+        @if (summary.details.length || summary.subtitle) {
+        <ul class="pay__includes">
+            @for (detail of summary.details; track $index) {
+            <li>{{ detail.name }} {{ detail.description }}</li>
+            }
+            @if (summary.subtitle) {
+            <li>{{ summary.subtitle }}</li>
+            }
+        </ul>
         }
-        <app-summary class="pay__summary"></app-summary>
+        } @else {
+        <p class="pay__empty">No hay producto seleccionado.</p>
+        }
+
+        @if (payingLine(); as line) {
+        <div class="pay__row pay__row--line">
+            <span><span class="material-symbols-outlined" aria-hidden="true">smartphone</span> Para la línea</span>
+            <strong>{{ line.name ? line.name + ' · ' + line.number : line.number }}</strong>
+        </div>
+        }
+
+        <div class="pay__total">
+            <span>Total</span>
+            <strong>{{ summaryView()?.price ?? '—' }}</strong>
+        </div>
+
         <button class="pay__button" [disabled]="!canContinue() || isLoading()" (click)="onContinue()">
             @if (isLoading()) {
             <span class="loading-spinner"></span>
             Procesando...
             } @else {
-            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
-            Ir a pagar @if (product(); as item) { <span class="pay__amount">{{ item.getDisplayPrice() }}</span> }
+            Pagar y finalizar
             }
         </button>
         @if (!canContinue() && !isLoading()) {
-        <p class="pay__hint">Completa los datos de arriba para continuar.</p>
+        <p class="pay__hint">Completa los datos de la izquierda para continuar.</p>
         }
-    </section>
+        <p class="pay__secure">
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+            Pago seguro
+        </p>
+    </aside>
 </div>
 }
 

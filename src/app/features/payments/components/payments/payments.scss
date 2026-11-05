@@ -12,72 +12,122 @@
     }
 }
 
+// The data on the left; the summary and pay button float on the right while scrolling.
 .checkout {
+    display: grid;
+    gap: 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+
+    @include large {
+        grid-template-columns: minmax(0, 1fr) 360px;
+        align-items: start;
+    }
+}
+
+.checkout__main {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    max-width: 860px;
-    margin: 0 auto;
+    min-width: 0;
 }
 
-// What is being bought, always visible on top.
-.buying {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    padding: 14px 18px;
-    border-radius: 16px;
-    background: linear-gradient(90deg, #EAF2FF, #FFF0F3);
+.pay {
+    padding: 24px;
+    border: 1px solid #E4E8F2;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(#052B6C, 0.08);
     color: #052B6C;
 
-    .material-symbols-outlined {
-        color: #066EF1;
+    @include large {
+        position: sticky;
+        // Below the site's header.
+        top: 100px;
     }
-}
 
-.buying__price {
-    margin-left: auto;
-    font-size: 1.1rem;
-}
-
-// Summary and pay button at the end, after the data.
-.pay {
-    margin-top: 16px;
-    padding: 24px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, #052B6C, #0A3F97);
-    box-shadow: 0 18px 40px rgba(#052B6C, 0.22);
+    p {
+        margin: 0;
+    }
 }
 
 .pay__title {
-    margin: 0 0 14px;
-    font-size: 1.3rem;
+    margin: 0 0 18px;
+    font-size: 1.25rem;
     font-weight: 800;
-    color: #fff;
+    color: #052B6C;
 }
 
-.pay__line {
-    // Explicit: the global paragraph color would make it dark on the dark block.
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 0 14px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.14);
-    font-size: 0.95rem;
+.pay__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 0.98rem;
 
-    .material-symbols-outlined {
-        font-size: 20px;
+    strong {
+        white-space: nowrap;
+    }
+
+    &--line {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid #EEF1F7;
+
+        span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #757A8C;
+        }
+
+        strong {
+            white-space: normal;
+            text-align: right;
+        }
+
+        .material-symbols-outlined {
+            font-size: 18px;
+            color: #066EF1;
+        }
     }
 }
 
-.pay__summary ::ng-deep .product-details ul {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px 18px;
+.pay__includes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: #F1F5FD;
+        color: #4A5068;
+        font-size: 0.8rem;
+    }
+}
+
+.pay__empty {
+    color: #757A8C;
+}
+
+.pay__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 18px 0;
+    padding-top: 16px;
+    border-top: 1px solid #E4E8F2;
+    font-size: 1.15rem;
+    font-weight: 800;
+
+    strong {
+        font-size: 1.5rem;
+    }
 }
 
 .pay__button {
@@ -86,41 +136,46 @@
     justify-content: center;
     gap: 10px;
     width: 100%;
-    height: 60px;
-    margin-top: 18px;
+    height: 54px;
     border: none;
-    border-radius: 999px;
-    background: #FF0000;
+    border-radius: 12px;
+    background: #066EF1;
     color: #fff;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 12px 26px rgba(#FF0000, 0.35);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
 
     &:hover:not(:disabled) {
-        transform: translateY(-1px);
-        box-shadow: 0 16px 30px rgba(#FF0000, 0.42);
+        background: #0558C2;
+        box-shadow: 0 10px 22px rgba(#066EF1, 0.3);
     }
 
     &:disabled {
-        background: #8E9BB8;
-        box-shadow: none;
+        background: #B7C2D8;
         cursor: not-allowed;
     }
 }
 
-.pay__amount {
-    padding: 2px 12px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.2);
+.pay__hint {
+    margin-top: 10px !important;
+    text-align: center;
+    font-size: 0.88rem;
+    color: #757A8C;
 }
 
-.pay__hint {
-    margin: 10px 0 0;
-    text-align: center;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
+.pay__secure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 12px !important;
+    font-size: 0.82rem;
+    color: #757A8C;
+
+    .material-symbols-outlined {
+        font-size: 16px;
+    }
 }
 
 .button-section {

@@ -8,11 +8,21 @@
     padding: 0;
 }
 
+html {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+// No sideways scroll, but without making the body a scroll container (overflow: hidden
+// would), which stops anything from sticking while the page scrolls (position: sticky).
+body {
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
 html,
 body {
     min-height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
     font-family: $font-family-base;
     background: none;
     color: $text-color;
