@@ -94,7 +94,8 @@
             <span class="loading-spinner"></span>
             Procesando...
             } @else {
-            Pagar y finalizar
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+            Pagar {{ summaryView()?.price ?? '' }}
             }
         </button>
         @if (!canContinue() && !isLoading()) {
