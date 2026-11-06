@@ -1,3 +1,10 @@
+## [1.76.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.76.0...v1.76.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* usage history reloads for the line chosen in Mi cuenta ([66b632d](https://github.com/innovaciones-co/lov-webpage/commit/66b632dd8bea3bd9e1a8a1fd7f049a02c13f6f78))
+
 # [1.76.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.75.1...v1.76.0) (2026-11-05)
 
 
