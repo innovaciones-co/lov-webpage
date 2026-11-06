@@ -1,5 +1,5 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
+import { forkJoin, map, Observable, of, Subscription, switchMap } from 'rxjs';
 import { Paginator } from '../../../../core/models/paginator.model';
 import { DatetimePipe } from "../../../../core/pipes/datetime.pipe";
 import { Loading } from "../../../../shared/components/loading/loading";
@@ -25,6 +25,7 @@ interface HistoryDayGroup {
 export class History {
   subscriberId = input.required<number>();
   private readonly pageSize = 10;
+  private request?: Subscription;
 
   private readonly typeIconMap: Record<string, string> = {
     DATA: 'language',
@@ -368,7 +369,9 @@ export class History {
   private fetchHistory(): void {
     const { startDate, endDate } = this.getCurrentDateRange();
 
-    this.historyService
+    // Only the latest request counts: after switching lines, the previous line's answer is dropped.
+    this.request?.unsubscribe();
+    this.request = this.historyService
       .getHistory(this.subscriberId(), this.pageSize, this.currentPage(), startDate, endDate)
       .subscribe({
         next: (history) => {
@@ -385,6 +388,18 @@ export class History {
     const { startDate, endDate } = this.getDateRange(1);
     this.customStartDate.set(this.toDateInputValue(startDate));
     this.customEndDate.set(this.toDateInputValue(endDate));
-    this.fetchHistory();
+  }
+
+  constructor() {
+    // The history of the line being viewed: loads first, and again from page 1 when the
+    // customer switches lines (this component stays, only its subscriberId changes).
+    effect(() => {
+      this.subscriberId();
+      untracked(() => {
+        this.currentPage.set(0);
+        this.fetchHistory();
+      });
+    });
+    inject(DestroyRef).onDestroy(() => this.request?.unsubscribe());
   }
 }
