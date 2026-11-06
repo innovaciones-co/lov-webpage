@@ -1,3 +1,10 @@
+## [1.76.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.76.1...v1.76.2) (2026-11-06)
+
+
+### Bug Fixes
+
+* clearer pay button with a lock and the amount, in the body font ([9b15d13](https://github.com/innovaciones-co/lov-webpage/commit/9b15d13a09eec47e80be8358185c3871aa96dbab))
+
 ## [1.76.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.76.0...v1.76.1) (2026-11-06)
 
 
