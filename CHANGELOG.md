@@ -1,3 +1,10 @@
+# [1.80.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.79.1...v1.80.0) (2026-11-09)
+
+
+### Features
+
+* connectivity journey with the campaign's own steps, and a short "Quiero conectarme" form ([bba3276](https://github.com/innovaciones-co/lov-webpage/commit/bba3276784465f534f54ed4e5dd585f0460e6d3e))
+
 ## [1.79.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.79.0...v1.79.1) (2026-11-09)
 
 
