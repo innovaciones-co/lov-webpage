@@ -1,3 +1,10 @@
+# [1.81.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.80.0...v1.81.0) (2026-11-09)
+
+
+### Features
+
+* the connectivity form's button reads "Quiero sumarme a la causa" ([2bf0642](https://github.com/innovaciones-co/lov-webpage/commit/2bf06427283d8054d04f295e76ed193bb94e46a3))
+
 # [1.80.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.79.1...v1.80.0) (2026-11-09)
 
 
