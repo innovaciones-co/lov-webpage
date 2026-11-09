@@ -10,7 +10,7 @@ const CAMPAIGN = 'manantial';
 
 // Shown next to the checkbox and saved with the sign-up, word for word.
 const CONSENT: Record<LeadType, string> = {
-  COMMUNITY: 'Autorizo a Iglesia Manantial a registrar mis datos para inscribirme en la comunidad de esta causa y enviarme información sobre el proyecto. LOV Mobile aloja este formulario; este registro no lo autoriza a ofrecerme servicios.',
+  COMMUNITY: 'Autorizo a Iglesia Manantial a registrar mis datos para inscribirme en la comunidad de esta causa y enviarme información sobre el proyecto, según su política de tratamiento de datos.',
   LOV_INFO: 'Autorizo a Iglesia Manantial y a LOV Mobile a usar mis datos exclusivamente para atender esta solicitud de información, según la Política de Tratamiento de Datos de LOV.',
 };
 
