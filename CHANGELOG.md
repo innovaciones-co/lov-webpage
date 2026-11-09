@@ -1,3 +1,10 @@
+## [1.77.6](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.5...v1.77.6) (2026-11-09)
+
+
+### Bug Fixes
+
+* the temple goal tied to LOV is the full $4.000 millones (100%), with no 70/30 split ([3262e6b](https://github.com/innovaciones-co/lov-webpage/commit/3262e6b07603d94e61320301e2f22ab73c1fcf66))
+
 ## [1.77.5](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.4...v1.77.5) (2026-11-09)
 
 
