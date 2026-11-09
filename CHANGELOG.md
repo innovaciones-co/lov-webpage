@@ -1,3 +1,10 @@
+## [1.77.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.1...v1.77.2) (2026-11-09)
+
+
+### Bug Fixes
+
+* campaign stats read as one big figure, tighter sections, and a QR code instead of a SIM ([17829de](https://github.com/innovaciones-co/lov-webpage/commit/17829debd221b13f4bf8bdeb428aedd35d038ecf))
+
 ## [1.77.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.0...v1.77.1) (2026-11-09)
 
 
