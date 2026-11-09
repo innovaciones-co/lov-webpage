@@ -4,7 +4,7 @@ import { Meta, MetaDefinition, Title } from '@angular/platform-browser';
 
 // The server caches files in public/ for a year, so browsers would keep an old cj.css:
 // bump the version whenever cj.css changes.
-const STYLESHEET_VERSION = '2026-11-09.2';
+const STYLESHEET_VERSION = '2026-11-09.4';
 const STYLESHEET = `/construimos-juntos/cj.css?v=${STYLESHEET_VERSION}`;
 const FONTS = 'https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Mrs+Saint+Delafield&display=swap';
 

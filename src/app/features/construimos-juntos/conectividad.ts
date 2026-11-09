@@ -29,11 +29,13 @@ export class CjConectividad {
     { title: 'El aporte se reporta' },
   ];
 
+  // Where the visitor is in the journey: step 3 (index 2), highlighted.
+  readonly journeyHere = 2;
   readonly journey = [
-    { title: 'Solicitas información', text: 'Nos cuentas si te interesa una línea nueva, traer tu número o una asesoría.' },
-    { title: 'LOV te explica la oferta', text: 'Precio, vigencia, cobertura, requisitos y soporte, con todo claro.' },
-    { title: 'Decides si continúas', text: 'Solo con tu aceptación empieza la afiliación o la portabilidad.' },
-    { title: 'Recibes tu código QR', text: 'Lo escaneas y tu línea queda conectada con propósito.' },
+    { title: 'Ya conoces el proyecto de construcción de nuestro templo.' },
+    { title: 'Ya conoces a LOV y cómo, en alianza, vamos a lograr la construcción de nuestro templo.' },
+    { title: 'Estás aquí porque deseas apoyar y ser parte de la solución.' },
+    { title: 'Recibe el código QR para conectarte.' },
   ];
 
   // Mobile market, as La República published it (CRC data, Q3 2026): lines, yearly change %, share %.

@@ -160,11 +160,9 @@
                 <h2 class="cj-h2 cj-reveal" cjReveal data-delay="1">Así sería <span class="cj-script">tu recorrido</span></h2>
                 <div class="cj-journey" style="grid-template-columns: 1fr; margin-top: 34px">
                     @for (step of journey; track step.title; let i = $index) {
-                    <article class="cj-step cj-reveal" [class.cj-step--here]="i === 0" cjReveal [attr.data-delay]="i + 1">
-                        @if (i === 0) { <span class="cj-step__badge">Empieza aquí</span> }
+                    <article class="cj-step cj-step--line cj-reveal" [class.cj-step--here]="i === journeyHere" cjReveal [attr.data-delay]="i + 1">
                         <span class="cj-step__n">0{{ i + 1 }}</span>
                         <h3>{{ step.title }}</h3>
-                        <p>{{ step.text }}</p>
                     </article>
                     }
                 </div>
@@ -177,17 +175,10 @@
 
     <section id="unirme" class="cj-section cj-section--cream cj-grain">
         <div class="cj-wrap">
-            <div class="cj-form-card cj-reveal" cjReveal>
+            <div class="cj-form-card cj-form-card--short cj-reveal" cjReveal>
                 <div>
-                    <p class="cj-eyebrow">Solicitud de información</p>
-                    <h2 class="cj-h2">¿Quieres conocer cómo <span class="cj-script">unirte a LOV?</span></h2>
-                    <p class="cj-lead">Déjanos tus datos y el equipo te orientará sobre la oferta móvil y las opciones de
-                        participación en la causa.</p>
-                    <ul class="cj-points">
-                        <li><span class="material-symbols-outlined" aria-hidden="true">touch_app</span>La solicitud es voluntaria y no activa ningún servicio.</li>
-                        <li><span class="material-symbols-outlined" aria-hidden="true">swap_horiz</span>Si quieres traer tu número, la portabilidad se hace solo después de conocer las condiciones y confirmar.</li>
-                        <li><span class="material-symbols-outlined" aria-hidden="true">handshake</span>El aporte al templo dependerá de los términos aprobados entre LOV y Manantial.</li>
-                    </ul>
+                    <p class="cj-eyebrow">Conéctate con propósito</p>
+                    <h2 class="cj-h2">Quiero ser parte de la construcción <span class="cj-script">de mi templo</span></h2>
                 </div>
                 <cj-lead-form type="LOV_INFO"></cj-lead-form>
             </div>

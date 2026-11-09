@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 type LeadType = 'COMMUNITY' | 'LOV_INFO';
-type Interest = 'NEW_LINE' | 'PORTABILITY' | 'ADVICE';
 
 const CAMPAIGN = 'manantial';
 
@@ -43,6 +42,7 @@ const CONSENT: Record<LeadType, string> = {
         @if (showErrors() && !nameOk()) { <small class="cj-error">Escribe tu nombre completo.</small> }
       </label>
 
+      @if (asksEmail()) {
       <label class="cj-field">
         <span>Correo electrónico</span>
         <input class="cj-input" [class.cj-invalid]="showErrors() && !emailOk()" type="email" inputmode="email"
@@ -50,6 +50,7 @@ const CONSENT: Record<LeadType, string> = {
           (input)="email.set($any($event.target).value)">
         @if (showErrors() && !emailOk()) { <small class="cj-error">Escribe un correo válido, por ejemplo nombre&#64;gmail.com.</small> }
       </label>
+      }
 
       <label class="cj-field">
         <span>{{ type() === 'COMMUNITY' ? 'Celular' : 'Celular de contacto' }}</span>
@@ -60,21 +61,6 @@ const CONSENT: Record<LeadType, string> = {
         </span>
         @if (showErrors() && !phoneOk()) { <small class="cj-error">Escribe un celular de 10 dígitos que empiece por 3.</small> }
       </label>
-
-      @if (type() === 'LOV_INFO') {
-      <div class="cj-field" role="radiogroup" aria-label="¿Qué quieres explorar?">
-        <span>¿Qué quieres explorar?</span>
-        <div class="cj-chips">
-          @for (option of interests; track option.value) {
-          <button type="button" class="cj-chip" role="radio" [attr.aria-checked]="interest() === option.value"
-            (click)="interest.set(option.value)">
-            <span class="material-symbols-outlined" aria-hidden="true">{{ option.icon }}</span>{{ option.label }}
-          </button>
-          }
-        </div>
-        @if (showErrors() && !interest()) { <small class="cj-error">Elige una opción.</small> }
-      </div>
-      }
 
       <label class="cj-consent">
         <input type="checkbox" [checked]="consent()" (change)="consent.set($any($event.target).checked)">
@@ -95,14 +81,14 @@ const CONSENT: Record<LeadType, string> = {
         } @else if (type() === 'COMMUNITY') {
         Inscribirme a la comunidad <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
         } @else {
-        Quiero que me contacten <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        Quiero conectarme <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
         }
       </button>
       <p class="cj-small">
         @if (type() === 'COMMUNITY') {
         Inscribirte expresa tu interés en la causa: no activa ningún servicio ni te compromete a una compra.
         } @else {
-        Solicitar información no activa una línea ni inicia una portabilidad.
+        Te contactaremos para explicarte cómo conectarte. Nada se activa sin tu aceptación.
         }
       </p>
     </form>
@@ -113,17 +99,12 @@ export class CjLeadForm {
   private readonly http = inject(HttpClient);
 
   readonly type = input.required<LeadType>();
-
-  readonly interests: { value: Interest; label: string; icon: string }[] = [
-    { value: 'NEW_LINE', label: 'Una línea nueva', icon: 'sim_card' },
-    { value: 'PORTABILITY', label: 'Traer mi número', icon: 'swap_horiz' },
-    { value: 'ADVICE', label: 'Asesoría antes de decidir', icon: 'support_agent' },
-  ];
+  // The community sign-up asks for the email; joining LOV stays short: name and phone.
+  readonly asksEmail = computed(() => this.type() === 'COMMUNITY');
 
   readonly name = signal('');
   readonly email = signal('');
   readonly phone = signal('');
-  readonly interest = signal<Interest | null>(null);
   readonly consent = signal(false);
   readonly state = signal<'idle' | 'sending' | 'done' | 'error'>('idle');
   readonly error = signal('');
@@ -151,17 +132,16 @@ export class CjLeadForm {
   submit(event: Event): void {
     event.preventDefault();
     this.showErrors.set(true);
-    const isLov = this.type() === 'LOV_INFO';
-    if (!this.nameOk() || !this.emailOk() || !this.phoneOk() || !this.consent() || (isLov && !this.interest())) return;
+    const asksEmail = this.asksEmail();
+    if (!this.nameOk() || (asksEmail && !this.emailOk()) || !this.phoneOk() || !this.consent()) return;
 
     this.state.set('sending');
     this.http.post(`${environment.apiUrl}/campaignLeads`, {
       campaign: CAMPAIGN,
       type: this.type(),
       fullName: this.name().trim(),
-      email: this.email().trim().toLowerCase(),
+      email: asksEmail ? this.email().trim().toLowerCase() : null,
       phone: this.phone(),
-      interest: isLov ? this.interest() : null,
       consent: true,
       consentText: this.consentText(),
     }).subscribe({

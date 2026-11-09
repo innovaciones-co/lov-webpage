@@ -341,3 +341,12 @@ html.cj-js .cj-hero .cj-reveal[data-delay='4'] { animation-delay: .6s; }
 .is-lov .cj-growth i { background: linear-gradient(90deg, var(--cj-navy), #2F6BD0); }
 .cj-growth.is-down b { color: #B42318; }
 .cj-market .cj-source a { color: var(--cj-navy); font-weight: 700; }
+
+/* Journey steps as one line: number beside the sentence. */
+.cj .cj-step--line { display: flex; align-items: center; gap: 20px; padding: 22px 24px; }
+.cj .cj-step--line .cj-step__n { flex-shrink: 0; font-size: 2.2rem; }
+.cj .cj-step--line h3 { margin: 0; font-size: 1.08rem; line-height: 1.45; }
+
+/* Short form card: just the title beside the fields. */
+.cj-form-card--short { align-items: center; }
+.cj-form-card--short .cj-h2 { font-size: clamp(2rem, 4.4vw, 3.2rem); }
