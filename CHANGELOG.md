@@ -1,3 +1,10 @@
+## [1.77.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.2...v1.77.3) (2026-11-09)
+
+
+### Bug Fixes
+
+* the community sign-up consent names only Iglesia Manantial ([1741107](https://github.com/innovaciones-co/lov-webpage/commit/174110745f0bdaa1b9735240560e7e1ed17ec3b8))
+
 ## [1.77.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.1...v1.77.2) (2026-11-09)
 
 
