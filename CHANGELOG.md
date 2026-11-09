@@ -1,3 +1,10 @@
+## [1.77.7](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.6...v1.77.7) (2026-11-09)
+
+
+### Bug Fixes
+
+* connectivity landing without the disclaimer note, a "Primero infórmate" heading and tighter spacing ([4e77ed3](https://github.com/innovaciones-co/lov-webpage/commit/4e77ed309cb1bea1f909cad7bbe0ee7a2f8b6634))
+
 ## [1.77.6](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.5...v1.77.6) (2026-11-09)
 
 
