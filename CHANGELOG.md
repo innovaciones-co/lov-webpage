@@ -1,3 +1,10 @@
+## [1.77.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.0...v1.77.1) (2026-11-09)
+
+
+### Bug Fixes
+
+* on phones the hero cards sit under the photo instead of covering it ([1ea5e01](https://github.com/innovaciones-co/lov-webpage/commit/1ea5e0104221977531973eea4dbf63742e2fffae))
+
 # [1.77.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.76.2...v1.77.0) (2026-11-09)
 
 
