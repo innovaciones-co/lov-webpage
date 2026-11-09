@@ -302,8 +302,6 @@
 .cj-footer__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
 .cj-footer__brand { display: flex; align-items: center; gap: 18px; }
 .cj-footer__brand img { height: 46px; width: auto; }
-.cj-footer__ally { display: flex; align-items: center; gap: 12px; }
-.cj-footer__ally img { height: 30px; width: auto; padding: 6px 10px; border-radius: 10px; background: #fff; box-sizing: content-box; }
 .cj-footer__script { font-family: var(--cj-script); font-size: 2.2rem; color: var(--cj-gold-soft); line-height: 1; }
 .cj-footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; padding-top: 24px; font-size: 0.78rem; line-height: 1.6; }
 .cj-footer__bottom a { color: rgba(255, 255, 255, 0.75); }

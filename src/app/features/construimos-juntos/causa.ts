@@ -1,5 +1,4 @@
 import { afterNextRender, Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { CjFooter, CjHeader } from './cj-chrome';
 import { CjLeadForm } from './cj-lead-form';
 import { CjCount, CjReveal } from './cj-motion';
@@ -8,7 +7,7 @@ import { CjPage } from './cj-page';
 /** Landing 1 of "Construimos juntos": the new temple's cause and the community sign-up. */
 @Component({
   selector: 'app-cj-causa',
-  imports: [RouterLink, CjHeader, CjFooter, CjLeadForm, CjReveal, CjCount],
+  imports: [CjHeader, CjFooter, CjLeadForm, CjReveal, CjCount],
   providers: [CjPage],
   templateUrl: './causa.html'
 })

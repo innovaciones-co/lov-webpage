@@ -45,17 +45,12 @@ export class CjHeader {
             <img src="/construimos-juntos/manantial-logo-blanco.png" alt="Iglesia Manantial" width="138" height="46">
             <span class="cj-footer__script">Construimos juntos</span>
           </div>
-          <div class="cj-footer__ally">
-            <span>En alianza con</span>
-            <img src="/logo-lov.png" alt="LOV Mobile" height="30">
-          </div>
         </div>
         <div class="cj-footer__bottom">
           <span>Una causa de Iglesia Manantial · Proyecto nuevo templo. Cifras de referencia sujetas a confirmación.</span>
           <span>
             <a routerLink="/construimos-juntos">La causa</a> ·
-            <a routerLink="/construimos-juntos/conectividad">Conectividad con propósito</a> ·
-            <a href="/docs/politicas_de_tratamiento_de_datos_personales_new.pdf" target="_blank" rel="noopener">Tratamiento de datos</a>
+            <a routerLink="/construimos-juntos/conectividad">Conectividad con propósito</a>
           </span>
         </div>
       </div>
