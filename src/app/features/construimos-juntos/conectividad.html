@@ -62,10 +62,9 @@
             <h2 class="cj-h2 cj-reveal" cjReveal data-delay="1">Primero infórmate <span class="cj-script">y después decide.</span></h2>
             <div class="cj-journey cj-journey--3" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))">
                 @for (item of how; track item.title; let i = $index) {
-                <article class="cj-step cj-reveal" cjReveal [attr.data-delay]="i + 1">
+                <article class="cj-step cj-step--title cj-reveal" cjReveal [attr.data-delay]="i + 1">
                     <span class="cj-step__n">0{{ i + 1 }}</span>
                     <h3>{{ item.title }}</h3>
-                    <p>{{ item.text }}</p>
                 </article>
                 }
             </div>
@@ -76,8 +75,8 @@
         <div class="cj-wrap cj-center">
             <p class="cj-eyebrow cj-eyebrow--light cj-reveal" cjReveal>Planes mensuales</p>
             <h2 class="cj-h2 cj-reveal" cjReveal data-delay="1">Conéctate <span class="cj-script">a tu manera</span></h2>
-            <p class="cj-lead cj-reveal" cjReveal data-delay="2">Datos, llamadas a todo destino nacional y telemedicina,
-                en todos los planes.</p>
+            <p class="cj-lead cj-reveal" cjReveal data-delay="2">Datos, llamadas a todo destino nacional y telemedicina con
+                AXA, en todos los planes.</p>
             <div class="cj-plans" style="text-align: left">
                 @for (plan of plans; track plan.gb; let i = $index) {
                 <article class="cj-plan cj-reveal" [class.cj-plan--star]="plan.star" cjReveal [attr.data-delay]="i + 1">
@@ -87,10 +86,15 @@
                     <ul>
                         <li>Datos {{ plan.unit ? plan.gb + ' ' + plan.unit : 'ilimitados' }}</li>
                         <li>Llamadas nacionales (LDN)</li>
-                        <li>Telemedicina incluida</li>
+                        <li>Telemedicina con AXA</li>
                     </ul>
                 </article>
                 }
+            </div>
+            <div class="cj-axa cj-reveal" cjReveal>
+                <img src="/construimos-juntos/axa-logo.png" alt="AXA" width="56" height="56">
+                <p><strong>Telemedicina con AXA incluida en tu plan.</strong> Medicina general y pediátrica para ti y hasta
+                    dos familiares elegibles. Línea de atención <a href="tel:+576016462811">(601) 646 2811</a>.</p>
             </div>
             <p class="cj-caption" style="color: rgba(255,255,255,.5)">Precios de referencia. Te confirmamos condiciones,
                 vigencia y cobertura antes de que decidas.</p>

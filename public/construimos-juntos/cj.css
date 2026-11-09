@@ -307,3 +307,15 @@ html.cj-js .cj-hero .cj-reveal[data-delay='4'] { animation-delay: .6s; }
   html.cj-js .cj-reveal { opacity: 1; transform: none; }
 }
 .cj :focus-visible { outline: 3px solid var(--cj-gold-soft); outline-offset: 3px; }
+
+/* Title-only steps: a solid number beside a bold title. */
+.cj .cj-step--title { display: flex; align-items: center; gap: 18px; padding: 24px 26px; }
+.cj .cj-step--title .cj-step__n { flex-shrink: 0; font-size: 2.4rem; color: var(--cj-gold); -webkit-text-stroke: 0; }
+.cj .cj-step--title h3 { margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--cj-ink); }
+
+/* Telemedicine with AXA, under the plans. */
+.cj-axa { display: flex; align-items: center; gap: 18px; max-width: 760px; margin: 22px auto 0; padding: 18px 22px; border: 1px solid rgba(224, 189, 124, 0.35); border-radius: 20px; background: rgba(255, 255, 255, 0.05); text-align: left; }
+.cj-axa img { flex-shrink: 0; width: 56px; height: 56px; border-radius: 10px; }
+.cj-axa p { font-size: 0.95rem; line-height: 1.55; color: rgba(255, 255, 255, 0.78); }
+.cj-axa strong { color: #fff; }
+.cj-axa a { color: var(--cj-gold-soft); font-weight: 700; white-space: nowrap; }

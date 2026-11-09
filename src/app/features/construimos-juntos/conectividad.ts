@@ -24,9 +24,9 @@ export class CjConectividad {
   ];
 
   readonly how = [
-    { title: 'La comunidad conoce', text: 'Manantial explica la causa, el monto estimado y el escenario financiero con información aprobada.' },
-    { title: 'Cada persona decide', text: 'Quien quiera solicita información para unirse a LOV. La afiliación y el uso del servicio son voluntarios.' },
-    { title: 'El aporte se reporta', text: 'El convenio define la fórmula del aporte, su base de cálculo, su periodicidad y cómo se rinden cuentas.' },
+    { title: 'La comunidad conoce' },
+    { title: 'Cada persona decide' },
+    { title: 'El aporte se reporta' },
   ];
 
   readonly journey = [
