@@ -1,3 +1,10 @@
+# [1.77.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.76.2...v1.77.0) (2026-11-09)
+
+
+### Features
+
+* "Construimos juntos" landings for the Iglesia Manantial campaign ([0b0bbd7](https://github.com/innovaciones-co/lov-webpage/commit/0b0bbd715b1144f0ef62df2d1eb4f775cb0ed62f))
+
 ## [1.76.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.76.1...v1.76.2) (2026-11-06)
 
 
