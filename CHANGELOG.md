@@ -1,3 +1,10 @@
+## [1.79.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.79.0...v1.79.1) (2026-11-09)
+
+
+### Bug Fixes
+
+* campaign forms ask for the email, and their stylesheet is versioned so browsers get updates ([0fdddb4](https://github.com/innovaciones-co/lov-webpage/commit/0fdddb4397f30799ee52689f74553d4279676697))
+
 # [1.79.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.78.0...v1.79.0) (2026-11-09)
 
 
