@@ -128,7 +128,15 @@
 .cj-float .material-symbols-outlined { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: #F3ECDD; color: var(--cj-gold); }
 @keyframes cj-bob { 50% { transform: translateY(-8px); } }
 .cj-hero__visual { position: relative; padding: 10px; }
-@media (max-width: 979px) { .cj-float--a { left: 6px; } .cj-float--b { right: 6px; } }
+/* Phones and tablets: the two cards sit under the photo, side by side, instead of covering it. */
+@media (max-width: 979px) {
+  .cj-hero__visual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0; }
+  .cj-photo-card { grid-column: 1 / -1; transform: none; }
+  .cj-float { position: static; padding: 12px 14px; gap: 10px; animation: none; }
+  .cj-float strong { font-size: 1.1rem; }
+  .cj-float small { display: block; line-height: 1.3; }
+  .cj-float .material-symbols-outlined { flex-shrink: 0; width: 36px; height: 36px; }
+}
 
 /* Values ticker, as on Manantial's site. */
 .cj-ticker { position: absolute; left: 0; right: 0; bottom: 0; border-top: 1px solid rgba(255, 255, 255, 0.12); background: rgba(10, 17, 32, 0.55); overflow: hidden; }
