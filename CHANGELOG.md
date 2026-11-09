@@ -1,3 +1,10 @@
+## [1.77.4](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.3...v1.77.4) (2026-11-09)
+
+
+### Bug Fixes
+
+* drop the model band from the cause page and the LOV ally and data policy links from the footer ([6cbfd14](https://github.com/innovaciones-co/lov-webpage/commit/6cbfd1491ad7826a01f94c4f138c9fd260a9636c))
+
 ## [1.77.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.2...v1.77.3) (2026-11-09)
 
 
