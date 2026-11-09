@@ -81,7 +81,7 @@ const CONSENT: Record<LeadType, string> = {
         } @else if (type() === 'COMMUNITY') {
         Inscribirme a la comunidad <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
         } @else {
-        Quiero conectarme <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        Quiero sumarme a la causa <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
         }
       </button>
       <p class="cj-small">
