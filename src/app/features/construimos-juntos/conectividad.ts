@@ -33,7 +33,7 @@ export class CjConectividad {
     { title: 'Solicitas información', text: 'Nos cuentas si te interesa una línea nueva, traer tu número o una asesoría.' },
     { title: 'LOV te explica la oferta', text: 'Precio, vigencia, cobertura, requisitos y soporte, con todo claro.' },
     { title: 'Decides si continúas', text: 'Solo con tu aceptación empieza la afiliación o la portabilidad.' },
-    { title: 'Recibes tu SIM y tu QR', text: 'En los puntos de Manantial, listo para conectarte con propósito.' },
+    { title: 'Recibes tu código QR', text: 'Lo escaneas y tu línea queda conectada con propósito.' },
   ];
 
   constructor() {

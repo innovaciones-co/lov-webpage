@@ -25,7 +25,7 @@ export class CjCausa {
     { title: 'Inscríbete a la comunidad', text: 'Recibe la información del proyecto de primera mano.' },
     { title: 'Conoce la solución', text: 'Cómo tu celular puede aportar a construir el templo.' },
     { title: 'Forma parte activa', text: 'Solicita información para unirte a LOV, sin compromiso.' },
-    { title: 'Recibe tu SIM', text: 'Tu SIM y tu código QR para conectarte con propósito.' },
+    { title: 'Recibe tu código QR', text: 'Escanéalo y conecta tu línea con propósito.' },
   ];
 
   constructor() {
