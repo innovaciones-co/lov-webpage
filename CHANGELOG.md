@@ -1,3 +1,10 @@
+## [1.77.5](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.4...v1.77.5) (2026-11-09)
+
+
+### Bug Fixes
+
+* connectivity landing without the floating cards or the join buttons in its hero and header ([a00c592](https://github.com/innovaciones-co/lov-webpage/commit/a00c592ab50728b1ebc03e1a003718303277f3a2))
+
 ## [1.77.4](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.3...v1.77.4) (2026-11-09)
 
 
