@@ -319,3 +319,25 @@ html.cj-js .cj-hero .cj-reveal[data-delay='4'] { animation-delay: .6s; }
 .cj-axa p { font-size: 0.95rem; line-height: 1.55; color: rgba(255, 255, 255, 0.78); }
 .cj-axa strong { color: #fff; }
 .cj-axa a { color: var(--cj-gold-soft); font-weight: 700; white-space: nowrap; }
+
+/* Market table (La República's figures). */
+.cj-market { margin-top: 44px; padding: clamp(22px, 4vw, 34px); border-radius: 28px; background: #fff; box-shadow: var(--cj-shadow); }
+.cj-market__head h3 { font-size: clamp(1.3rem, 2.6vw, 1.7rem); font-weight: 800; letter-spacing: -0.02em; }
+.cj-market__head p { margin-top: 6px; color: var(--cj-muted); }
+.cj-market__scroll { margin-top: 20px; overflow-x: auto; }
+.cj-market table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 0.95rem; }
+.cj-market th, .cj-market td { padding: 13px 14px; text-align: left; border-bottom: 1px solid var(--cj-line); white-space: nowrap; }
+.cj-market thead th { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cj-muted); }
+.cj-market tbody th { font-weight: 700; }
+.cj-market td:nth-child(2), .cj-market td:nth-child(4) { font-variant-numeric: tabular-nums; }
+.cj-market thead th:nth-child(3) { width: 40%; }
+.cj-market tr.is-lov { background: linear-gradient(90deg, rgba(13, 68, 148, 0.1), rgba(13, 68, 148, 0.02)); }
+.cj-market tr.is-lov th, .cj-market tr.is-lov td { color: var(--cj-navy); font-weight: 800; border-bottom: none; }
+.cj-market tr.is-lov th:first-child { border-radius: 14px 0 0 14px; }
+.cj-market tr.is-lov td:last-child { border-radius: 0 14px 14px 0; }
+.cj-growth { display: flex; align-items: center; gap: 10px; }
+.cj-growth i { display: block; height: 10px; border-radius: 999px; background: #C9D3E6; }
+.cj-growth b { font-weight: 700; font-variant-numeric: tabular-nums; }
+.is-lov .cj-growth i { background: linear-gradient(90deg, var(--cj-navy), #2F6BD0); }
+.cj-growth.is-down b { color: #B42318; }
+.cj-market .cj-source a { color: var(--cj-navy); font-weight: 700; }

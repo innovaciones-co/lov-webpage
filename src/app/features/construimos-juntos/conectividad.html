@@ -108,19 +108,47 @@
                 <h2 class="cj-h2">LOV, aliado <span class="cj-script">del modelo</span></h2>
                 <p class="cj-lead">LOV es un operador de telefonía móvil en Colombia. El caso de negocio propone conectar su
                     servicio móvil con la financiación del nuevo templo, e invitar a quienes lo deseen a participar.</p>
-                <div class="cj-facts">
-                    <div class="cj-fact"><strong><span [cjCount]="196060">196.060</span></strong><span>líneas</span></div>
-                    <div class="cj-fact"><strong>+149,8%</strong><span>crecimiento anual</span></div>
-                    <div class="cj-fact"><strong>0,21%</strong><span>del mercado</span></div>
-                </div>
-                <p class="cj-source">Cifras citadas por La República en su radiografía del mercado de telecomunicaciones
-                    (15 de octubre de 2026). La nota no se refiere a este acuerdo.</p>
                 <a class="cj-link" href="https://lov.com.co" target="_blank" rel="noopener">Conocer más sobre LOV
                     <span class="material-symbols-outlined" aria-hidden="true">north_east</span></a>
             </div>
             <div class="cj-media cj-reveal" cjReveal data-delay="2">
                 <video src="/construimos-juntos/lov.mp4" poster="/construimos-juntos/lov-video.jpg" controls preload="none"
                     playsinline aria-label="Video de LOV Mobile"></video>
+            </div>
+        </div>
+
+        <!-- The market as La República reported it (its figures, in this page's design, with the source). -->
+        <div class="cj-wrap">
+            <div class="cj-market cj-reveal" cjReveal>
+                <div class="cj-market__head">
+                    <h3>El operador que más crece en Colombia</h3>
+                    <p>Líneas registradas en el tercer trimestre de 2026 y su variación anual.</p>
+                </div>
+                <div class="cj-market__scroll">
+                    <table>
+                        <thead>
+                            <tr><th>Operador</th><th>Líneas</th><th>Variación anual</th><th>Participación</th></tr>
+                        </thead>
+                        <tbody>
+                            @for (row of market; track row.name) {
+                            <tr [class.is-lov]="row.lov">
+                                <th scope="row">{{ row.name }}</th>
+                                <td>{{ row.lines }}</td>
+                                <td>
+                                    <span class="cj-growth" [class.is-down]="row.growth < 0">
+                                        <i [style.width.%]="growthWidth(row.growth)"></i>
+                                        <b>{{ row.growth > 0 ? '+' : '' }}{{ format(row.growth) }}%</b>
+                                    </span>
+                                </td>
+                                <td>{{ format(row.share) }}%</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <p class="cj-source">Fuente: La República, con datos de la CRC (corte del tercer trimestre de 2026).
+                    <a href="https://www.larepublica.co/empresas/asi-se-mueve-el-mercado-de-las-telecomunicaciones-con-la-integracion-de-tigo-y-movistar-4503303"
+                        target="_blank" rel="noopener">Ver el artículo</a>. La nota no se refiere a este acuerdo.</p>
             </div>
         </div>
     </section>
