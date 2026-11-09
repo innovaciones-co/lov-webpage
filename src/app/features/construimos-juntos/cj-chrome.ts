@@ -16,7 +16,9 @@ import { CjPage } from './cj-page';
           <a routerLink="/construimos-juntos" [class.is-active]="active() === 'causa'">La causa</a>
           <a routerLink="/construimos-juntos/conectividad" [class.is-active]="active() === 'conectividad'">Conectividad con propósito</a>
         </nav>
+        @if (ctaLabel()) {
         <a class="cj-btn cj-btn--gold" [href]="'#' + ctaTarget()" (click)="page.scrollTo(ctaTarget(), $event)">{{ ctaLabel() }}</a>
+        }
       </div>
     </header>
   `
@@ -24,6 +26,7 @@ import { CjPage } from './cj-page';
 export class CjHeader {
   readonly page = inject(CjPage);
   readonly active = input.required<'causa' | 'conectividad'>();
+  // Empty: no button in the header.
   readonly ctaLabel = input('Inscribirme');
   readonly ctaTarget = input('registro');
   readonly solid = signal(false);
