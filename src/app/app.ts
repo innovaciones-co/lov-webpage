@@ -15,6 +15,15 @@ function isPublicPath(url: string): boolean {
   return !PRIVATE_PATHS.some(prefix => path.startsWith(decodeURIComponent(prefix)));
 }
 
+// Partner campaign landings with their own brand: shown without LOV's menu, footer or
+// WhatsApp button, and not linked from the rest of the site.
+const STANDALONE_PATHS = ['/construimos-juntos'];
+
+function isStandalonePath(url: string): boolean {
+  const path = url.split(/[?#]/)[0];
+  return STANDALONE_PATHS.some(prefix => path === prefix || path.startsWith(prefix + '/'));
+}
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Menu, Footer, WhatsappFab],
@@ -32,5 +41,13 @@ export class App {
       map(event => isPublicPath(event.urlAfterRedirects))
     ),
     { initialValue: isPublicPath(this.router.url) }
+  );
+
+  protected readonly isStandalone = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map(event => isStandalonePath(event.urlAfterRedirects))
+    ),
+    { initialValue: isStandalonePath(this.router.url) }
   );
 }

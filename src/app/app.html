@@ -1,6 +1,10 @@
+@if (isStandalone()) {
+<router-outlet />
+} @else {
 <app-menu></app-menu>
 <section class="main" [class.public-site]="isPublic()">
     <router-outlet />
 </section>
 <app-whatsapp-fab></app-whatsapp-fab>
 <app-footer></app-footer>
+}

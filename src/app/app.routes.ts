@@ -21,6 +21,16 @@ import { Pqr } from './features/pqr/pqr';
 import { RechargesIntro } from './features/recharges/components/recharges-intro/recharges-intro';
 
 export const routes: Routes = [
+    // "Construimos juntos" with Iglesia Manantial: its own look, no LOV menu or footer (see
+    // STANDALONE_PATHS in app.ts), not linked from the rest of the site.
+    {
+        path: 'construimos-juntos',
+        loadComponent: () => import('./features/construimos-juntos/causa').then(m => m.CjCausa)
+    },
+    {
+        path: 'construimos-juntos/conectividad',
+        loadComponent: () => import('./features/construimos-juntos/conectividad').then(m => m.CjConectividad)
+    },
     {
         path: 'telemedicina',
         title: 'Salud al alcance de tu mano | Telemedicina LOV',
