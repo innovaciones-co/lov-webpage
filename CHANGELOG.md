@@ -1,3 +1,10 @@
+# [1.78.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.7...v1.78.0) (2026-11-09)
+
+
+### Features
+
+* connectivity landing shows telemedicine with AXA, and title-only "how it works" steps ([b7655a7](https://github.com/innovaciones-co/lov-webpage/commit/b7655a7c5daceaace2d84a4fd8893ee29d3ad90e))
+
 ## [1.77.7](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.6...v1.77.7) (2026-11-09)
 
 
