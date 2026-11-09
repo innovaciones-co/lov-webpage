@@ -1,3 +1,10 @@
+# [1.79.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.78.0...v1.79.0) (2026-11-09)
+
+
+### Features
+
+* connectivity landing shows the mobile market table La República published, with LOV highlighted ([991403a](https://github.com/innovaciones-co/lov-webpage/commit/991403a1da4a8c9b8a19fed74648b5e3a01f5195))
+
 # [1.78.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.77.7...v1.78.0) (2026-11-09)
 
 
