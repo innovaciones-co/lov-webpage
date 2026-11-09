@@ -44,6 +44,14 @@ const CONSENT: Record<LeadType, string> = {
       </label>
 
       <label class="cj-field">
+        <span>Correo electrónico</span>
+        <input class="cj-input" [class.cj-invalid]="showErrors() && !emailOk()" type="email" inputmode="email"
+          autocomplete="email" placeholder="tucorreo@ejemplo.com" maxlength="120" [value]="email()"
+          (input)="email.set($any($event.target).value)">
+        @if (showErrors() && !emailOk()) { <small class="cj-error">Escribe un correo válido, por ejemplo nombre&#64;gmail.com.</small> }
+      </label>
+
+      <label class="cj-field">
         <span>{{ type() === 'COMMUNITY' ? 'Celular' : 'Celular de contacto' }}</span>
         <span class="cj-affix" [class.cj-invalid]="showErrors() && !phoneOk()">
           <b>+57</b>
@@ -113,6 +121,7 @@ export class CjLeadForm {
   ];
 
   readonly name = signal('');
+  readonly email = signal('');
   readonly phone = signal('');
   readonly interest = signal<Interest | null>(null);
   readonly consent = signal(false);
@@ -123,6 +132,7 @@ export class CjLeadForm {
   readonly consentText = computed(() => CONSENT[this.type()]);
   readonly nameOk = computed(() => this.name().trim().length >= 3);
   readonly phoneOk = computed(() => /^3\d{9}$/.test(this.phone()));
+  readonly emailOk = computed(() => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.email().trim()));
   readonly firstName = computed(() => this.name().trim().split(/\s+/)[0] ?? '');
   readonly phoneLabel = computed(() => {
     const p = this.phone();
@@ -142,13 +152,14 @@ export class CjLeadForm {
     event.preventDefault();
     this.showErrors.set(true);
     const isLov = this.type() === 'LOV_INFO';
-    if (!this.nameOk() || !this.phoneOk() || !this.consent() || (isLov && !this.interest())) return;
+    if (!this.nameOk() || !this.emailOk() || !this.phoneOk() || !this.consent() || (isLov && !this.interest())) return;
 
     this.state.set('sending');
     this.http.post(`${environment.apiUrl}/campaignLeads`, {
       campaign: CAMPAIGN,
       type: this.type(),
       fullName: this.name().trim(),
+      email: this.email().trim().toLowerCase(),
       phone: this.phone(),
       interest: isLov ? this.interest() : null,
       consent: true,
