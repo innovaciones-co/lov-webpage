@@ -14,6 +14,8 @@ import { PaymentService } from '../../services/payment.service';
 export class SubscriptionSelector {
   subscriptions = input<CustomerSubscription[]>([]);
   selectedSubscriptionId = input<number | undefined>();
+  // A recharge for a number that isn't one of these lines; it shows first, chosen.
+  otherNumber = input<string | null>(null);
   private readonly paymentService = inject(PaymentService);
 
   // Same names and colors the customer gave their lines in Mi cuenta.

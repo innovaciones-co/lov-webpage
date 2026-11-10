@@ -1,14 +1,26 @@
 <div class="card">
 	<div class="card-header">
 		<h3 class="form-subtitle">¿Para qué línea es?</h3>
-		<p>Elige una de tus líneas</p>
+		<p>{{ otherNumber() ? 'La recarga va al número que escribiste. Si prefieres, elige una de tus líneas.' : 'Elige una de tus líneas' }}</p>
 	</div>
 
 	<div class="lines" role="radiogroup" aria-label="Línea">
+		<!-- A recharge for someone else: the number typed in Recargas, chosen. -->
+		@if (otherNumber(); as other) {
+		<label class="line line--selected">
+			<input type="radio" name="subscription" class="line__input" value="other" checked>
+			<span class="line__avatar" aria-hidden="true"><span class="material-symbols-outlined">person</span></span>
+			<span class="line__text">
+				<strong>Otro número</strong>
+				<small>{{ lines.formatNumber(other) }} · Recarga</small>
+			</span>
+			<span class="line__check material-symbols-outlined" aria-hidden="true">check_circle</span>
+		</label>
+		}
 		@for (line of subscriptions(); track line.id) {
-		<label class="line" [class.line--selected]="line.id === selectedSubscriptionId()" [style.--line]="lines.color(line)">
+		<label class="line" [class.line--selected]="!otherNumber() && line.id === selectedSubscriptionId()" [style.--line]="lines.color(line)">
 			<input type="radio" name="subscription" class="line__input" [value]="line.id"
-				[checked]="line.id === selectedSubscriptionId()" (change)="onSubscriptionChange(line.id.toString())">
+				[checked]="!otherNumber() && line.id === selectedSubscriptionId()" (change)="onSubscriptionChange(line.id.toString())">
 			<span class="line__avatar" aria-hidden="true"><span class="material-symbols-outlined">smartphone</span></span>
 			<span class="line__text">
 				<strong>{{ lines.nickname(line) ?? lines.formatNumber(line.msisdn) }}</strong>

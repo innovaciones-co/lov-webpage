@@ -14,7 +14,7 @@
     @if (isMobileStep(1)) {
     <app-summary class="summary-section"></app-summary>
     <app-subscription-selector [subscriptions]="customerSubscriptions()"
-        [selectedSubscriptionId]="currentSubscription()?.id"
+        [selectedSubscriptionId]="currentSubscription()?.id" [otherNumber]="otherTopupNumber()"
         (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
     }
 
@@ -48,7 +48,7 @@
 <div id="summary" class="checkout">
     <div class="checkout__main">
         <app-subscription-selector [subscriptions]="customerSubscriptions()"
-            [selectedSubscriptionId]="currentSubscription()?.id"
+            [selectedSubscriptionId]="currentSubscription()?.id" [otherNumber]="otherTopupNumber()"
             (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
         <app-billing-info></app-billing-info>
         <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>

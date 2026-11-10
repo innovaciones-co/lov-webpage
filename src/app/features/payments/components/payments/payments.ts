@@ -12,7 +12,7 @@ import { Modal } from "../../../../shared/components/modal/modal";
 import { AuthService } from '../../../authentication/services/auth.service';
 import { OrderPaymentRequest, PaymentInitiationResponse } from '../../models/order.model';
 import PaymentMethod, { PaymentMethodPayload } from '../../models/payment-method.model';
-import { PlanProduct } from '../../models/product.model';
+import { PlanProduct, ProductType } from '../../models/product.model';
 import { PaymentService } from '../../services/payment.service';
 import { BillingInfoComponent } from "../billing-info/billing-info";
 import { PaymentCardSelector } from "../payment-card-selector/payment-card-selector";
@@ -42,8 +42,21 @@ export class Payments implements OnInit {
   product = computed(() => this.paymentService.selectedProduct());
   // What the floating summary lists: name, price, what it includes and its validity.
   summaryView = computed(() => this.product()?.getSummaryView() ?? null);
+  // A top-up is for the number typed in Recargas, which may be someone else's line.
+  topupNumber = computed(() => {
+    const product = this.product();
+    return product?.getProductType() === ProductType.TOPUP ? product.id : null;
+  });
+  // That number when it isn't one of the signed-in customer's lines: the recharge goes there, not to theirs.
+  otherTopupNumber = computed(() => {
+    const target = this.topupNumber();
+    if (!target) return null;
+    return this.customerSubscriptions().some(line => line.msisdn.endsWith(target)) ? null : target;
+  });
   // The line being paid for, by the name the customer gave it if any, to confirm before paying.
   payingLine = computed(() => {
+    const other = this.otherTopupNumber();
+    if (other) return { name: 'Otro número', number: this.lineAliases.formatNumber(other) };
     const line = this.currentSubscription();
     if (!line) return null;
     return { name: this.lineAliases.nickname(line), number: this.lineAliases.formatNumber(line.msisdn) };
@@ -137,8 +150,7 @@ export class Payments implements OnInit {
 
       this.processBillingInfo()
         .pipe(
-          switchMap(() => this.getMsisdn()),
-          switchMap(msisdn => this.getActiveSubscription(msisdn)),
+          switchMap(() => this.resolveOrderLine()),
           switchMap(({ msisdn, subscriberId }) =>
             this.checkPlanAvailability(subscriberId).pipe(map(() => ({ msisdn, subscriberId })))
           ),
@@ -265,6 +277,33 @@ export class Payments implements OnInit {
 
         const subscriberId = selectedSubscription.id;
         return of({ msisdn, subscriberId });
+      })
+    );
+  }
+
+  /**
+   * The line the order is for. A top-up goes to the number typed in Recargas (one of the customer's
+   * lines or anybody else's LOV line), never to whichever line is signed in; everything else goes
+   * to the line chosen here.
+   */
+  private resolveOrderLine(): Observable<{ msisdn: string; subscriberId: number }> {
+    const target = this.topupNumber();
+    if (!target) {
+      return this.getMsisdn().pipe(switchMap(msisdn => this.getActiveSubscription(msisdn)));
+    }
+
+    const own = this.customerSubscriptions().find(line => line.msisdn.endsWith(target));
+    if (own) {
+      return of({ msisdn: own.msisdn, subscriberId: own.id });
+    }
+
+    // Its customer may have other lines (one CYAN customer per SIM): take exactly this number's.
+    return this.subscriptionFacadeService.getActiveSubscriptions(this.msisdnPipe.transform(target)).pipe(
+      switchMap(lines => {
+        const line = lines.find(candidate => candidate.msisdn.endsWith(target));
+        return line
+          ? of({ msisdn: line.msisdn, subscriberId: line.id })
+          : throwError(() => new Error('Topup number has no active line'));
       })
     );
   }
@@ -397,6 +436,7 @@ export class Payments implements OnInit {
   }
 
   private readonly errorMap: Record<string, string> = {
+    'topup number has no active line': 'El número a recargar no tiene una línea LOV activa. Revísalo e intenta de nuevo.',
     'does not currently offer': 'Este paquete no está disponible para tu línea en este momento. Por favor elige otro.',
     'error to find the credit card token with identifier': 'No pudimos procesar tu tarjeta de crédito; por favor, agrega nuevamente la tarjeta e intenta de nuevo.',
     'card data not found': 'No se pudieron obtener los datos de tu tarjeta. Por favor bórrala y agrégala nuevamente.',
