@@ -1,3 +1,10 @@
+## [1.81.4](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.3...v1.81.4) (2026-11-11)
+
+
+### Bug Fixes
+
+* signed out, checkout shows only the typed number's line, not its owner's other lines ([9024bc7](https://github.com/innovaciones-co/lov-webpage/commit/9024bc7aa2301c4917fe8a6b57fcbe8934753b75))
+
 ## [1.81.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.2...v1.81.3) (2026-11-11)
 
 
