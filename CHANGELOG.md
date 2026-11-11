@@ -1,3 +1,10 @@
+## [1.81.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.2...v1.81.3) (2026-11-11)
+
+
+### Bug Fixes
+
+* a recharge doesn't look up the customer's lines at checkout ([7c76109](https://github.com/innovaciones-co/lov-webpage/commit/7c761091e9e8a8fbfb77d97dad0cb19d92c0b2fb))
+
 ## [1.81.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.1...v1.81.2) (2026-11-11)
 
 
