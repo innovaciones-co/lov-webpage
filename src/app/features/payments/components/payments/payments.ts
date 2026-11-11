@@ -57,7 +57,10 @@ export class Payments implements OnInit {
   payingLine = computed(() => {
     const other = this.otherTopupNumber();
     if (other) return { name: 'Otro número', number: this.lineAliases.formatNumber(other) };
-    const line = this.currentSubscription();
+    const target = this.topupNumber();
+    const line = target
+      ? this.customerSubscriptions().find(own => own.msisdn.endsWith(target))
+      : this.currentSubscription();
     if (!line) return null;
     return { name: this.lineAliases.nickname(line), number: this.lineAliases.formatNumber(line.msisdn) };
   });
@@ -309,6 +312,13 @@ export class Payments implements OnInit {
   }
 
   private resolveSelectedSubscription(subscriptions: CustomerSubscription[]): CustomerSubscription {
+    // A recharge for one of the customer's own lines: the line typed in Recargas.
+    const target = this.topupNumber();
+    const typed = target ? subscriptions.find(subscription => subscription.msisdn.endsWith(target)) : undefined;
+    if (typed) {
+      return typed;
+    }
+
     // Coming from Mi cuenta, start on the line the customer was looking at there.
     const currentSubscriptionId = this.currentSubscription()?.id ?? this.lineAliases.viewingLineId;
     if (!currentSubscriptionId) {

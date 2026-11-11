@@ -1,26 +1,23 @@
 <div class="card">
 	<div class="card-header">
 		<h3 class="form-subtitle">¿Para qué línea es?</h3>
-		<p>{{ otherNumber() ? 'La recarga va al número que escribiste. Si prefieres, elige una de tus líneas.' : 'Elige una de tus líneas' }}</p>
+		<p>Elige una de tus líneas</p>
 	</div>
 
+	<!-- Many lines: a search box instead of a wall of cards. -->
+	@if (many() && !collapsed()) {
+	<label class="lines-search">
+		<span class="material-symbols-outlined" aria-hidden="true">search</span>
+		<input type="search" inputmode="search" placeholder="Busca por número o nombre" aria-label="Buscar línea"
+			[value]="query()" (input)="query.set($any($event.target).value)">
+	</label>
+	}
+
 	<div class="lines" role="radiogroup" aria-label="Línea">
-		<!-- A recharge for someone else: the number typed in Recargas, chosen. -->
-		@if (otherNumber(); as other) {
-		<label class="line line--selected">
-			<input type="radio" name="subscription" class="line__input" value="other" checked>
-			<span class="line__avatar" aria-hidden="true"><span class="material-symbols-outlined">person</span></span>
-			<span class="line__text">
-				<strong>Otro número</strong>
-				<small>{{ lines.formatNumber(other) }} · Recarga</small>
-			</span>
-			<span class="line__check material-symbols-outlined" aria-hidden="true">check_circle</span>
-		</label>
-		}
-		@for (line of subscriptions(); track line.id) {
-		<label class="line" [class.line--selected]="!otherNumber() && line.id === selectedSubscriptionId()" [style.--line]="lines.color(line)">
+		@for (line of shownLines(); track line.id) {
+		<label class="line" [class.line--selected]="line.id === selectedSubscriptionId()" [style.--line]="lines.color(line)">
 			<input type="radio" name="subscription" class="line__input" [value]="line.id"
-				[checked]="!otherNumber() && line.id === selectedSubscriptionId()" (change)="onSubscriptionChange(line.id.toString())">
+				[checked]="line.id === selectedSubscriptionId()" (change)="onSubscriptionChange(line.id.toString())">
 			<span class="line__avatar" aria-hidden="true"><span class="material-symbols-outlined">smartphone</span></span>
 			<span class="line__text">
 				<strong>{{ lines.nickname(line) ?? lines.formatNumber(line.msisdn) }}</strong>
@@ -30,4 +27,20 @@
 		</label>
 		}
 	</div>
+
+	@if (many() && !collapsed() && query() && shownLines().length === 0) {
+	<p class="lines-empty">Ninguna de tus líneas coincide con “{{ query() }}”.</p>
+	}
+
+	@if (collapsed()) {
+	<button type="button" class="lines-toggle" (click)="expanded.set(true)">
+		<span class="material-symbols-outlined" aria-hidden="true">swap_horiz</span>
+		Cambiar línea · tienes {{ subscriptions().length }}
+	</button>
+	} @else if (many() && canCollapse()) {
+	<button type="button" class="lines-toggle" (click)="collapse()">
+		<span class="material-symbols-outlined" aria-hidden="true">expand_less</span>
+		Ver solo la elegida
+	</button>
+	}
 </div>

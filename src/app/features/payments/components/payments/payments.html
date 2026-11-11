@@ -13,9 +13,12 @@
 
     @if (isMobileStep(1)) {
     <app-summary class="summary-section"></app-summary>
+    <!-- A recharge already names its number in Recargas: no line to choose. -->
+    @if (!topupNumber()) {
     <app-subscription-selector [subscriptions]="customerSubscriptions()"
-        [selectedSubscriptionId]="currentSubscription()?.id" [otherNumber]="otherTopupNumber()"
+        [selectedSubscriptionId]="currentSubscription()?.id"
         (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
+    }
     }
 
     @if (isMobileStep(2)) {
@@ -47,9 +50,12 @@
 <!-- Two columns: the data on the left, and the summary with the pay button floating on the right while scrolling. -->
 <div id="summary" class="checkout">
     <div class="checkout__main">
+        <!-- A recharge already names its number in Recargas: no line to choose. -->
+        @if (!topupNumber()) {
         <app-subscription-selector [subscriptions]="customerSubscriptions()"
-            [selectedSubscriptionId]="currentSubscription()?.id" [otherNumber]="otherTopupNumber()"
+            [selectedSubscriptionId]="currentSubscription()?.id"
             (subscriptionSelected)="onSubscriptionSelected($event)"></app-subscription-selector>
+        }
         <app-billing-info></app-billing-info>
         <app-payment-method-options [currentSubscription]="currentSubscription()"></app-payment-method-options>
         <app-payment-card-selector [currentSubscription]="currentSubscription()"></app-payment-card-selector>
