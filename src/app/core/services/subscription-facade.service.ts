@@ -28,14 +28,17 @@ export class SubscriptionFacadeService {
 
     /**
      * Active lines of the signed-in account (see getAccountLines), the line [msisdn] first.
-     * Falls back to that line's own customer when signed out or when the account lookup fails.
+     * Signed out (or when the account lookup fails) only that number's own line: a visitor must not
+     * see the other lines of whoever owns the number they typed.
      */
     getMyLines(msisdn: string): Observable<CustomerSubscription[]> {
         const local = msisdn.slice(-10);
         return this.getAccountLines().pipe(
             map(lines => (lines ?? []).filter(line => line.state === 'ACTIVE')),
             map(lines => [...lines].sort((a, b) => Number(b.msisdn.endsWith(local)) - Number(a.msisdn.endsWith(local)))),
-            switchMap(lines => lines.length ? of(lines) : this.getActiveSubscriptions(msisdn))
+            switchMap(lines => lines.length ? of(lines) : this.getActiveSubscriptions(msisdn).pipe(
+                map(own => own.filter(line => line.msisdn.endsWith(local)))
+            ))
         );
     }
 
