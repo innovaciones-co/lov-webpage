@@ -47,20 +47,11 @@ export class Payments implements OnInit {
     const product = this.product();
     return product?.getProductType() === ProductType.TOPUP ? product.id : null;
   });
-  // That number when it isn't one of the signed-in customer's lines: the recharge goes there, not to theirs.
-  otherTopupNumber = computed(() => {
-    const target = this.topupNumber();
-    if (!target) return null;
-    return this.customerSubscriptions().some(line => line.msisdn.endsWith(target)) ? null : target;
-  });
   // The line being paid for, by the name the customer gave it if any, to confirm before paying.
   payingLine = computed(() => {
-    const other = this.otherTopupNumber();
-    if (other) return { name: 'Otro número', number: this.lineAliases.formatNumber(other) };
     const target = this.topupNumber();
-    const line = target
-      ? this.customerSubscriptions().find(own => own.msisdn.endsWith(target))
-      : this.currentSubscription();
+    if (target) return { name: null, number: this.lineAliases.formatNumber(target) };
+    const line = this.currentSubscription();
     if (!line) return null;
     return { name: this.lineAliases.nickname(line), number: this.lineAliases.formatNumber(line.msisdn) };
   });
@@ -106,6 +97,11 @@ export class Payments implements OnInit {
   }
 
   ngOnInit(): void {
+    // A recharge already has its number: nothing about the customer's lines to look up.
+    if (this.topupNumber()) {
+      return;
+    }
+
     this.getMsisdn()
       .pipe(
         switchMap(msisdn => this.getActiveSubscription(msisdn)),
@@ -295,12 +291,8 @@ export class Payments implements OnInit {
       return this.getMsisdn().pipe(switchMap(msisdn => this.getActiveSubscription(msisdn)));
     }
 
-    const own = this.customerSubscriptions().find(line => line.msisdn.endsWith(target));
-    if (own) {
-      return of({ msisdn: own.msisdn, subscriberId: own.id });
-    }
-
-    // Its customer may have other lines (one CYAN customer per SIM): take exactly this number's.
+    // Only that number is looked up, when paying. Its customer may have other lines (one CYAN
+    // customer per SIM): take exactly this number's.
     return this.subscriptionFacadeService.getActiveSubscriptions(this.msisdnPipe.transform(target)).pipe(
       switchMap(lines => {
         const line = lines.find(candidate => candidate.msisdn.endsWith(target));
@@ -312,13 +304,6 @@ export class Payments implements OnInit {
   }
 
   private resolveSelectedSubscription(subscriptions: CustomerSubscription[]): CustomerSubscription {
-    // A recharge for one of the customer's own lines: the line typed in Recargas.
-    const target = this.topupNumber();
-    const typed = target ? subscriptions.find(subscription => subscription.msisdn.endsWith(target)) : undefined;
-    if (typed) {
-      return typed;
-    }
-
     // Coming from Mi cuenta, start on the line the customer was looking at there.
     const currentSubscriptionId = this.currentSubscription()?.id ?? this.lineAliases.viewingLineId;
     if (!currentSubscriptionId) {
