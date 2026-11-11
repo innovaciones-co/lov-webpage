@@ -1,3 +1,10 @@
+## [1.81.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.1...v1.81.2) (2026-11-11)
+
+
+### Bug Fixes
+
+* a recharge skips choosing a line, and many lines collapse with a search ([44fcc5b](https://github.com/innovaciones-co/lov-webpage/commit/44fcc5b2b7095df858ece50bc8d58a1efade0ade))
+
 ## [1.81.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.0...v1.81.1) (2026-11-10)
 
 
