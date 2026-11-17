@@ -1,0 +1,272 @@
+@use '../../../../styles/variables' as *;
+
+$lov-blue: #066EF1;
+$lov-navy: #052B6C;
+
+:host {
+    font-family: $font-display;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+}
+
+.pwa-install {
+    position: fixed;
+    z-index: 1100; // above the WhatsApp button
+    left: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px 20px 18px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 18px 50px rgba(5, 43, 108, 0.28), 0 2px 8px rgba(5, 43, 108, 0.08);
+    color: $lov-navy;
+    animation: rise 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+
+    // A thin brand stripe on top, in the logo's colors.
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0 24px auto;
+        height: 4px;
+        border-radius: 0 0 4px 4px;
+        background: linear-gradient(90deg, $lov-blue 0 62%, #FF0000 62% 100%);
+    }
+
+    @media (min-width: 768px) {
+        left: 24px;
+        right: auto;
+        bottom: 24px;
+        width: 380px;
+    }
+}
+
+.pwa-install__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: #F2F5FA;
+    color: #5A6B85;
+
+    .material-symbols-outlined {
+        font-size: 20px;
+    }
+}
+
+.pwa-install__head {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding-right: 28px;
+
+    img {
+        flex-shrink: 0;
+        border-radius: 14px;
+        box-shadow: 0 4px 14px rgba(6, 110, 241, 0.22);
+    }
+
+    h2 {
+        margin: 0 0 4px;
+        font-size: 1.15rem;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        color: #4A5B78;
+    }
+}
+
+.pwa-install__perks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 8px 4px;
+        border-radius: 14px;
+        background: #EEF5FF;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1.2;
+        text-align: center;
+        color: $lov-blue;
+    }
+
+    .material-symbols-outlined {
+        font-size: 22px;
+    }
+}
+
+.pwa-install__steps {
+    display: grid;
+    gap: 10px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9rem;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+}
+
+.pwa-install__num {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: $lov-blue;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.pwa-install__inline {
+    vertical-align: -5px;
+    font-size: 20px;
+    color: $lov-blue;
+}
+
+.pwa-install__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.pwa-install__later {
+    padding: 0 16px;
+    min-height: 46px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #5A6B85;
+    font-weight: 700;
+}
+
+.pwa-install__go {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 1;
+    max-width: 220px;
+    min-height: 46px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 999px;
+    background: $lov-blue;
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 6px 18px rgba(6, 110, 241, 0.35);
+    transition: transform 0.15s ease, background 0.15s ease;
+
+    &:hover {
+        background: #0559C4;
+    }
+
+    &:active {
+        transform: scale(0.97);
+    }
+
+    .material-symbols-outlined {
+        font-size: 20px;
+    }
+}
+
+.pwa-update {
+    position: fixed;
+    z-index: 1200;
+    left: 50%;
+    top: calc(12px + env(safe-area-inset-top));
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: max-content;
+    max-width: calc(100% - 32px);
+    padding: 8px 8px 8px 14px;
+    border-radius: 999px;
+    background: $lov-navy;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(5, 43, 108, 0.35);
+    animation: drop 0.35s ease;
+
+    p {
+        margin: 0;
+        font-size: 0.875rem;
+        font-weight: 700;
+    }
+
+    .material-symbols-outlined {
+        font-size: 20px;
+        color: #7FB4FF;
+    }
+
+    button {
+        padding: 8px 14px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: $lov-navy;
+        font-size: 0.85rem;
+        font-weight: 800;
+    }
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes drop {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .pwa-install,
+    .pwa-update {
+        animation: none;
+    }
+}

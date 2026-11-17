@@ -8,3 +8,5 @@
 <app-whatsapp-fab></app-whatsapp-fab>
 <app-footer></app-footer>
 }
+<app-pwa-prompt [offerInstall]="isPublic() && !isStandalone()" />
+

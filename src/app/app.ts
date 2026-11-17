@@ -5,6 +5,7 @@ import { filter, map } from 'rxjs';
 import { Footer } from "./shared/components/footer/footer";
 import { Menu } from './shared/components/menu/menu';
 import { WhatsappFab } from "./features/whatsapp-fab/whatsapp-fab";
+import { PwaPrompt } from './shared/components/pwa-prompt/pwa-prompt';
 
 // Login and the logged-in area keep their original look; every other page gets the refreshed
 // public-site styles (see the .public-site block in styles.scss and the form-field components).
@@ -26,7 +27,7 @@ function isStandalonePath(url: string): boolean {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Menu, Footer, WhatsappFab],
+  imports: [RouterOutlet, Menu, Footer, WhatsappFab, PwaPrompt],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

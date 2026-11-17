@@ -5,8 +5,22 @@
   <meta charset="utf-8" />
   <title>LOV Mobile</title>
   <base href="/" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Recarga, compra tu plan y administra tus líneas LOV Mobile desde tu celular." />
+
+  <!-- Installable app (PWA): manifest, colors and icons. -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#066EF1" />
+  <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48x48.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <!-- iPhone: icon and full-screen look when added to the home screen. -->
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="LOV" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
@@ -16,6 +30,7 @@
   <!-- OnePay "Elements" SDK: captures raw card data client-side so it never reaches our backend. -->
   <script src="https://cdn.firstoken.co/captures/js/2.2/sdk.js"
     integrity="sha256-IzmJZo/gWd+To2rEV/ZC9+fXZZgHfw5E0jZECyq9ipY=" crossorigin="anonymous"></script>
+  <noscript>Activa JavaScript para usar LOV Mobile.</noscript>
 </body>
 
 </html>

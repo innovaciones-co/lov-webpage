@@ -1,0 +1,55 @@
+@if (updateReady()) {
+<div class="pwa-update" role="status">
+    <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+    <p>Hay una versión nueva de LOV</p>
+    <button type="button" (click)="reload()">Actualizar</button>
+</div>
+}
+
+@if (offerInstall() && installMode(); as mode) {
+<aside class="pwa-install" role="dialog" aria-labelledby="pwa-install-title">
+    <button type="button" class="pwa-install__close" (click)="dismiss()" aria-label="Cerrar">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+    </button>
+
+    <div class="pwa-install__head">
+        <img src="icons/icon-192x192.png" alt="" width="56" height="56">
+        <div>
+            <h2 id="pwa-install-title">Lleva LOV en tu celular</h2>
+            <p>Recarga, compra tu plan y mira tu saldo en segundos, como una app.</p>
+        </div>
+    </div>
+
+    @if (mode === 'native') {
+    <ul class="pwa-install__perks">
+        <li><span class="material-symbols-outlined" aria-hidden="true">bolt</span>Abre al instante</li>
+        <li><span class="material-symbols-outlined" aria-hidden="true">home_app_logo</span>En tu inicio</li>
+        <li><span class="material-symbols-outlined" aria-hidden="true">download_done</span>Pesa casi nada</li>
+    </ul>
+    <div class="pwa-install__actions">
+        <button type="button" class="pwa-install__later" (click)="dismiss()">Ahora no</button>
+        <button type="button" class="pwa-install__go" (click)="install()">
+            <span class="material-symbols-outlined" aria-hidden="true">install_mobile</span>
+            Instalar app
+        </button>
+    </div>
+    } @else {
+    <ol class="pwa-install__steps">
+        <li>
+            <span class="pwa-install__num">1</span>
+            <span>Toca <strong>Compartir</strong>
+                <span class="material-symbols-outlined pwa-install__inline" aria-hidden="true">ios_share</span>
+                abajo en Safari</span>
+        </li>
+        <li>
+            <span class="pwa-install__num">2</span>
+            <span>Elige <strong>Agregar a inicio</strong>
+                <span class="material-symbols-outlined pwa-install__inline" aria-hidden="true">add_box</span></span>
+        </li>
+    </ol>
+    <div class="pwa-install__actions">
+        <button type="button" class="pwa-install__go" (click)="dismiss()">Entendido</button>
+    </div>
+    }
+</aside>
+}
