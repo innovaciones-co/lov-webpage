@@ -1,3 +1,10 @@
+## [1.83.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.1...v1.83.2) (2026-11-17)
+
+
+### Bug Fixes
+
+* **pwa:** install steps for every iPhone browser ([5d6ac75](https://github.com/innovaciones-co/lov-webpage/commit/5d6ac75ae837a1af2b8dc04e2e4cf05ebc190b59))
+
 ## [1.83.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.0...v1.83.1) (2026-11-17)
 
 
