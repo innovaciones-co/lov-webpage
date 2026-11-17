@@ -1,3 +1,10 @@
+## [1.83.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.0...v1.83.1) (2026-11-17)
+
+
+### Bug Fixes
+
+* **build:** lock file that npm 10 (the Docker image's) accepts ([4d1068c](https://github.com/innovaciones-co/lov-webpage/commit/4d1068cf267c715b0139de44a9f7ed59f28c94dd))
+
 # [1.83.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.82.0...v1.83.0) (2026-11-17)
 
 
