@@ -1,3 +1,10 @@
+# [1.83.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.82.0...v1.83.0) (2026-11-17)
+
+
+### Features
+
+* LOV is an installable app (PWA) ([79a880b](https://github.com/innovaciones-co/lov-webpage/commit/79a880b4b70cef37897aa5be66e2bd53e4ca4b78))
+
 # [1.82.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.5...v1.82.0) (2026-11-17)
 
 
