@@ -1,3 +1,10 @@
+## [1.81.5](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.4...v1.81.5) (2026-11-17)
+
+
+### Bug Fixes
+
+* OnePay option no longer lists Nequi (Nequi has its own option) ([7316958](https://github.com/innovaciones-co/lov-webpage/commit/7316958f825a8a2be620510d9f33c6cffce513f6))
+
 ## [1.81.4](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.3...v1.81.4) (2026-11-11)
 
 
