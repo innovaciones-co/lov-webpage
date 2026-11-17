@@ -1,3 +1,10 @@
+# [1.82.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.5...v1.82.0) (2026-11-17)
+
+
+### Features
+
+* opt-in to renew the plan with Nequi at checkout (allow-listed testers only) ([9a50d0d](https://github.com/innovaciones-co/lov-webpage/commit/9a50d0d9821b594ad85f29db395a269f4017bd34))
+
 ## [1.81.5](https://github.com/innovaciones-co/lov-webpage/compare/v1.81.4...v1.81.5) (2026-11-17)
 
 
