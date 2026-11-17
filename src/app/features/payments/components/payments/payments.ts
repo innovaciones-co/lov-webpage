@@ -359,7 +359,9 @@ export class Payments implements OnInit {
       cardData: selectedMethod == PaymentMethod.CARD ? this.getDefaultCardData() : undefined,
       creditCardId: selectedMethod == PaymentMethod.CARD ? this.paymentService.selectedCreditCard()?.id : undefined,
       // "Suscripción recurrente" always renews automatically (the backend enrolls every approved CARD plan purchase).
-      autoRenew: selectedMethod == PaymentMethod.CARD ? true : undefined,
+      // Nequi: only when the customer ticked "Renovar automáticamente con Nequi".
+      autoRenew: selectedMethod == PaymentMethod.CARD ? true
+        : selectedMethod == PaymentMethod.NEQUI && this.paymentService.nequiAutoRenew() ? true : undefined,
       nequiPhone: selectedMethod == PaymentMethod.NEQUI ? this.paymentService.nequiPhone() : undefined
     };
   }

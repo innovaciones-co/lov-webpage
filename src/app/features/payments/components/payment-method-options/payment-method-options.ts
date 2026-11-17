@@ -38,6 +38,10 @@ export class PaymentMethodOptions implements AfterViewInit {
 
   selectedPaymentMethod = toSignal(this.paymentMethodControl.valueChanges, { initialValue: null });
 
+  // Only a plan renews; the backend decides who can (signed-in, allow-listed customers).
+  readonly canRenewWithNequi = computed(() =>
+    this.paymentService.nequiSubscriptionsAvailable() && this.paymentService.selectedProduct() instanceof PlanProduct);
+
   pesoBalance = computed(() => {
     const currencyAccount = this.accounts().find(account => account.name === 'Pesos');
     if (!currencyAccount || !currencyAccount.unit?.relation) {

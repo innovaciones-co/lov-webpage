@@ -14,6 +14,16 @@
         <small class="nequi-phone__error">Escribe los 10 dígitos de tu celular, empezando por 3.</small>
         }
     </label>
+    @if (canRenewWithNequi()) {
+    <label class="nequi-renew">
+        <input type="checkbox" [checked]="paymentService.nequiAutoRenew()"
+            (change)="paymentService.nequiAutoRenew.set($any($event.target).checked)">
+        <span>
+            <strong>Renovar mi plan automáticamente con Nequi</strong>
+            <small>Después de este pago te llegará otra notificación para autorizar la renovación. Cada mes se cobra el valor del plan de tu cuenta Nequi, sin que tengas que aprobarlo. Puedes cancelarla cuando quieras.</small>
+        </span>
+    </label>
+    }
     }
     @if (disclaimerTitle() || disclaimerContent()) {
     <div class="disclaimer-card">

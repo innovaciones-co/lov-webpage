@@ -27,6 +27,9 @@ export class PaymentService implements OnDestroy {
     // Nequi: only offered to the customers the backend allows while it's being tested.
     nequiAvailable = signal<boolean>(false);
     nequiPhone = signal<string>('');
+    // Plan auto-renewal with a Nequi subscription: offered only to the customers the backend allows.
+    nequiSubscriptionsAvailable = signal<boolean>(false);
+    nequiAutoRenew = signal<boolean>(false);
 
     private _formValid = signal<boolean>(false);
     private httpClient = inject(HttpClient);
@@ -48,9 +51,12 @@ export class PaymentService implements OnDestroy {
 
     /** Asks the backend, on every visit to checkout, whether this customer can pay with Nequi. */
     checkNequiAvailability(): void {
-        this.httpClient.get<{ enabled: boolean }>(`${environment.apiUrl}/nequi/availability`).pipe(
-            catchError(() => of({ enabled: false }))
-        ).subscribe(result => this.nequiAvailable.set(result.enabled));
+        this.httpClient.get<{ enabled: boolean; subscriptions?: boolean }>(`${environment.apiUrl}/nequi/availability`).pipe(
+            catchError(() => of({ enabled: false, subscriptions: false }))
+        ).subscribe(result => {
+            this.nequiAvailable.set(result.enabled);
+            this.nequiSubscriptionsAvailable.set(!!result.subscriptions);
+        });
     }
 
     setFormValidityStatus(isValid: boolean) {
@@ -75,6 +81,7 @@ export class PaymentService implements OnDestroy {
         this.selectedProduct.set(undefined);
         this.selectedCreditCard.set(undefined);
         this.autoRenew.set(false);
+        this.nequiAutoRenew.set(false);
         this.removeSelectedProductFromStorage();
     }
 

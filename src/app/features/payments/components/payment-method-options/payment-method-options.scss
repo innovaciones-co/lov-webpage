@@ -106,3 +106,43 @@
     color: #D32F2F;
     font-size: 0.8rem;
 }
+
+.nequi-renew {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border: 1.5px solid #D5DBE8;
+    border-radius: 12px;
+    cursor: pointer;
+
+    &:has(input:checked) {
+        border-color: #066EF1;
+        background: #F2F7FE;
+    }
+
+    input {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+        accent-color: #066EF1;
+    }
+
+    span {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    strong {
+        font-size: 0.95rem;
+    }
+
+    small {
+        font-size: 0.8rem;
+        line-height: 1.45;
+        color: #4A5568;
+    }
+}
