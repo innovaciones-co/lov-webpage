@@ -33,18 +33,43 @@
             Instalar app
         </button>
     </div>
+    } @else if (mode === 'ios-inapp') {
+    <ol class="pwa-install__steps">
+        <li>
+            <span class="pwa-install__num">1</span>
+            <span>Toca el menú
+                <span class="material-symbols-outlined pwa-install__inline" aria-hidden="true">more_horiz</span>
+                y elige <strong>Abrir en el navegador</strong> (Safari)</span>
+        </li>
+        <li>
+            <span class="pwa-install__num">2</span>
+            <span>Allá te mostramos cómo agregar LOV a tu inicio</span>
+        </li>
+    </ol>
     } @else {
     <ol class="pwa-install__steps">
         <li>
             <span class="pwa-install__num">1</span>
+            @if (mode === 'ios-safari') {
+            <span>Toca <strong>Compartir</strong>
+                <span class="material-symbols-outlined pwa-install__inline" aria-hidden="true">ios_share</span>.
+                Si no lo ves, está dentro del menú
+                <span class="material-symbols-outlined pwa-install__inline" aria-hidden="true">more_horiz</span></span>
+            } @else {
             <span>Toca <strong>Compartir</strong>
                 <span class="material-symbols-outlined pwa-install__inline" aria-hidden="true">ios_share</span>
-                abajo en Safari</span>
+                junto a la dirección de la página o en el menú del navegador</span>
+            }
         </li>
         <li>
             <span class="pwa-install__num">2</span>
             <span>Elige <strong>Agregar a inicio</strong>
-                <span class="material-symbols-outlined pwa-install__inline" aria-hidden="true">add_box</span></span>
+                <span class="material-symbols-outlined pwa-install__inline" aria-hidden="true">add_box</span>
+                (desliza hacia abajo si no aparece)</span>
+        </li>
+        <li>
+            <span class="pwa-install__num">3</span>
+            <span>Toca <strong>Agregar</strong>. Si ves <strong>Abrir como app web</strong>, déjalo activo</span>
         </li>
     </ol>
     <div class="pwa-install__actions">

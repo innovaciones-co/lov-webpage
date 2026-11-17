@@ -10,7 +10,9 @@ interface InstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-const DISMISSED_KEY = 'lov.pwa.installDismissedAt';
+type InstallMode = 'native' | 'ios-safari' | 'ios-browser' | 'ios-inapp';
+
+const DISMISSED_KEY ='lov.pwa.installDismissedAt';
 // After "Ahora no", don't ask again for two weeks.
 const DISMISS_FOR_MS = 14 * 24 * 60 * 60 * 1000;
 // Let the visitor see the page before offering the app.
@@ -30,7 +32,12 @@ export class PwaPrompt {
   /** Only public pages offer the install; the update notice shows everywhere. */
   readonly offerInstall = input(true);
 
-  protected readonly installMode = signal<'native' | 'ios' | null>(null);
+  /**
+   * native: the browser's own install dialog. iPhone has none, so it shows the steps for the
+   * browser in use: Safari, another browser (Chrome, Edge, Firefox), or an app's built-in
+   * browser (Instagram, Facebook...), which can't install at all and must open Safari.
+   */
+  protected readonly installMode = signal<InstallMode | null>(null);
   protected readonly updateReady = signal(false);
 
   private deferredPrompt: InstallPromptEvent | null = null;
@@ -65,8 +72,9 @@ export class PwaPrompt {
       window.removeEventListener('appinstalled', onInstalled);
     });
 
-    if (this.isIosSafari()) {
-      const timer = setTimeout(() => this.installMode.set('ios'), SHOW_AFTER_MS);
+    const iosMode = this.iosMode();
+    if (iosMode) {
+      const timer = setTimeout(() => this.installMode.set(iosMode), SHOW_AFTER_MS);
       destroyRef.onDestroy(() => clearTimeout(timer));
     }
   }
@@ -95,13 +103,15 @@ export class PwaPrompt {
       || (navigator as Navigator & { standalone?: boolean }).standalone === true;
   }
 
-  // iPhone/iPad in Safari: the only iOS browser that can add a web app to the home screen
-  // with its icon and full-screen look. iPadOS reports itself as a Mac with touch.
-  private isIosSafari(): boolean {
+  // Since iOS 16.4 any iPhone browser can add a web app to the home screen from its Share menu;
+  // apps' built-in browsers can't. iPadOS reports itself as a Mac with touch.
+  private iosMode(): InstallMode | null {
     const ua = navigator.userAgent;
     const ios = /iphone|ipad|ipod/i.test(ua) || (/macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
-    const otherBrowser = /crios|fxios|edgios|opios|gsa\//i.test(ua);
-    return ios && /safari/i.test(ua) && !otherBrowser;
+    if (!ios) return null;
+    if (/fban|fbav|instagram|linkedinapp|musical_ly|tiktok|snapchat|line\/|gsa\//i.test(ua)) return 'ios-inapp';
+    if (/crios|fxios|edgios|opios/i.test(ua)) return 'ios-browser';
+    return 'ios-safari';
   }
 
   private recentlyDismissed(): boolean {
