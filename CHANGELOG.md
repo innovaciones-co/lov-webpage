@@ -1,3 +1,10 @@
+## [1.83.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.2...v1.83.3) (2026-11-18)
+
+
+### Bug Fixes
+
+* **nequi:** offer auto-renewal only for plans, not bundles ([55444e0](https://github.com/innovaciones-co/lov-webpage/commit/55444e0aa1ffbe41b280fccdcafd63b63131501e))
+
 ## [1.83.2](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.1...v1.83.2) (2026-11-17)
 
 
