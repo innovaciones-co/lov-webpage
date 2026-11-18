@@ -361,7 +361,8 @@ export class Payments implements OnInit {
       // "Suscripción recurrente" always renews automatically (the backend enrolls every approved CARD plan purchase).
       // Nequi: only when the customer ticked "Renovar automáticamente con Nequi".
       autoRenew: selectedMethod == PaymentMethod.CARD ? true
-        : selectedMethod == PaymentMethod.NEQUI && this.paymentService.nequiAutoRenew() ? true : undefined,
+        : selectedMethod == PaymentMethod.NEQUI && this.paymentService.nequiAutoRenew()
+          && this.paymentService.selectedProduct()?.productType === ProductType.PLAN ? true : undefined,
       nequiPhone: selectedMethod == PaymentMethod.NEQUI ? this.paymentService.nequiPhone() : undefined
     };
   }
