@@ -73,7 +73,7 @@ export class HttpErrorMapper implements IErrorMapper {
 
     private createServerError(): AuthError {
         return {
-            message: 'Error interno del servidor. Por favor intenta nuevamente más tarde.',
+            message: 'No pudimos completar tu solicitud. Intenta de nuevo en unos minutos y, si sigue pasando, escríbenos por WhatsApp.',
             code: AuthErrorCode.SERVER_ERROR,
             timestamp: new Date(),
             context: 'server'
@@ -82,7 +82,8 @@ export class HttpErrorMapper implements IErrorMapper {
 
     private createGenericError(status: number, error: any): AuthError {
         return {
-            message: error?.error?.message || 'Ha ocurrido un error. Por favor intenta nuevamente.',
+            message: (status < 500 && this.customerFacing(error?.error?.message))
+                || 'Ha ocurrido un error. Por favor intenta nuevamente.',
             code: error?.error?.code || AuthErrorCode.HTTP_ERROR,
             statusCode: status,
             originalError: error,
@@ -110,7 +111,16 @@ export class HttpErrorMapper implements IErrorMapper {
             return 'El código OTP es inválido. Por favor intenta nuevamente.';
         }
 
-        return error.error?.message || null;
+        // A server failure's own text is technical (SQL, Java): never show it to the customer.
+        if (status >= 500) return null;
+        return this.customerFacing(error.error?.message);
+    }
+
+    /** The server's message, only when it's written for people: not SQL, stack traces or English internals. */
+    private customerFacing(message: unknown): string | null {
+        if (typeof message !== 'string' || !message.trim() || message.length > 400) return null;
+        const technical = /sql|constraint|statement|exception|violates|null value|insert into|select |relation |java\.|org\.|could not|failed|error:/i;
+        return technical.test(message) ? null : message;
     }
 }
 
