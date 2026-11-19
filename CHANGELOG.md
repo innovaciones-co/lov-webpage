@@ -1,3 +1,10 @@
+## [1.83.4](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.3...v1.83.4) (2026-11-19)
+
+
+### Bug Fixes
+
+* **login:** never show the server's technical error text to the customer ([96bb368](https://github.com/innovaciones-co/lov-webpage/commit/96bb368c7bf31ca8361259e3d2cbf6745593da67))
+
 ## [1.83.3](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.2...v1.83.3) (2026-11-18)
 
 
