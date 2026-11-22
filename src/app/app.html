@@ -7,6 +7,9 @@
 </section>
 <app-whatsapp-fab></app-whatsapp-fab>
 <app-footer></app-footer>
+<!-- Always rendered (server and browser alike, so hydration matches); its styles only show it
+     inside the installed app on phones. -->
+<app-tab-bar></app-tab-bar>
 }
 <app-pwa-prompt [offerInstall]="isPublic() && !isStandalone()" />
 

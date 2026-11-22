@@ -1,0 +1,54 @@
+<div class="app-sheet-backdrop" [class.open]="sheetOpen()" (click)="closeSheet()" aria-hidden="true"></div>
+
+<section id="app-tramites-sheet" class="app-sheet" [class.open]="sheetOpen()" role="dialog" aria-modal="true"
+    aria-labelledby="app-sheet-title" [attr.aria-hidden]="!sheetOpen()" [attr.inert]="sheetOpen() ? null : ''">
+    <span class="app-sheet__handle" aria-hidden="true"></span>
+
+    <h2 id="app-sheet-title" class="app-sheet__title">Trámites</h2>
+    <div class="app-sheet__grid">
+        @for (link of tramites; track link.route) {
+        <a class="app-sheet__tile" [routerLink]="link.route">
+            <span class="app-sheet__icon material-symbols-outlined" aria-hidden="true">{{ link.icon }}</span>
+            <span class="app-sheet__label">{{ link.label }}</span>
+            <span class="app-sheet__desc">{{ link.description }}</span>
+        </a>
+        }
+    </div>
+
+    <h2 class="app-sheet__title">Ayuda</h2>
+    <div class="app-sheet__list">
+        <a class="app-sheet__row app-sheet__row--whatsapp" [href]="whatsapp" target="_blank" rel="noopener">
+            <img src="whatsapp-icon.svg" alt="" width="24" height="24" aria-hidden="true">
+            <span><strong>Escríbenos por WhatsApp</strong><small>Te ayudamos con lo que necesites</small></span>
+            <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+        </a>
+        @for (link of help; track link.route) {
+        <a class="app-sheet__row" [routerLink]="link.route">
+            <span class="material-symbols-outlined app-sheet__row-icon" aria-hidden="true">{{ link.icon }}</span>
+            <span><strong>{{ link.label }}</strong><small>{{ link.description }}</small></span>
+            <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+        </a>
+        }
+    </div>
+</section>
+
+<nav class="tab-bar" aria-label="Navegación de la app" [style.--tab]="bubbleAt()"
+    [class.tab-bar--idle]="active() < 0">
+    <span class="tab-bar__surface" aria-hidden="true"></span>
+    <span class="tab-bar__bubble" aria-hidden="true"></span>
+    @for (tab of tabs(); track tab.label; let i = $index) {
+    @if (tab.route) {
+    <a class="tab" [class.tab--active]="active() === i" [routerLink]="tab.route"
+        [attr.aria-current]="active() === i ? 'page' : null">
+        <span class="tab__icon material-symbols-outlined" aria-hidden="true">{{ tab.icon }}</span>
+        <span class="tab__label">{{ tab.label }}</span>
+    </a>
+    } @else {
+    <button type="button" class="tab" [class.tab--active]="active() === i" (click)="toggleSheet()"
+        aria-controls="app-tramites-sheet" [attr.aria-expanded]="sheetOpen()">
+        <span class="tab__icon material-symbols-outlined" aria-hidden="true">{{ sheetOpen() ? 'close' : tab.icon }}</span>
+        <span class="tab__label">{{ tab.label }}</span>
+    </button>
+    }
+    }
+</nav>

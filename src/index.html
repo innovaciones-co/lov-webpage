@@ -20,6 +20,21 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="LOV" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <!-- Opened as the installed app: mark <html> before the first paint so the app layout (bottom tab
+       bar, no footer) never flashes the website layout. "?pwa=1" previews it in a normal browser
+       for the rest of the tab's session; "?pwa=0" turns the preview off. -->
+  <script>
+    (function () {
+      try {
+        var preview = /[?&]pwa=([01])\b/.exec(location.search);
+        if (preview) sessionStorage.setItem('lov-pwa-preview', preview[1]);
+        var installed = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+        if (installed || sessionStorage.getItem('lov-pwa-preview') === '1') {
+          document.documentElement.classList.add('is-pwa');
+        }
+      } catch (e) { }
+    })();
+  </script>
 
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
