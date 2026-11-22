@@ -1,3 +1,10 @@
+# [1.84.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.4...v1.84.0) (2026-11-22)
+
+
+### Features
+
+* **pwa:** the installed app on phones gets a bottom tab bar with a Trámites sheet, and no footer or hamburger menu ([a437671](https://github.com/innovaciones-co/lov-webpage/commit/a437671d029d86e89185c2b8331168ab4ca7f3f1))
+
 ## [1.83.4](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.3...v1.83.4) (2026-11-19)
 
 
