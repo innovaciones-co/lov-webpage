@@ -1,3 +1,10 @@
+# [1.85.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.84.0...v1.85.0) (2026-11-25)
+
+
+### Features
+
+* **portability:** "Inicia una portabilidad" after activating a SIM starts with its LOV number and serial filled in ([dd5fc7b](https://github.com/innovaciones-co/lov-webpage/commit/dd5fc7b310caba00678605d0a8dc877d8803d675))
+
 # [1.84.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.83.4...v1.84.0) (2026-11-22)
 
 
