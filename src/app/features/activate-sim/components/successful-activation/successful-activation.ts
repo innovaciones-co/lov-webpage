@@ -1,4 +1,5 @@
-import { Component, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isPlatformBrowser } from '@angular/common';
 import { SuccessfulProcessComponent } from '../../../../shared/components/successful-process/successful-process';
@@ -7,7 +8,7 @@ import { filter, map, repeat, retry, take, timeout, timer } from 'rxjs';
 
 @Component({
   selector: 'app-successful-activation',
-  imports: [SuccessfulProcessComponent],
+  imports: [SuccessfulProcessComponent, RouterLink],
   templateUrl: './successful-activation.html',
   styleUrl: './successful-activation.scss'
 })
@@ -31,11 +32,20 @@ export class SuccessfulActivation {
   // 'slow': the number wasn't ready in time (or couldn't be read); it'll arrive by SMS.
   msisdnState = signal<'idle' | 'loading' | 'success' | 'slow'>('idle');
   msisdn = signal<string | null>(null);
+  private iccid = signal<string | null>(null);
+
+  /** Router state for "Inicia una portabilidad": the port-in's first step comes filled in. */
+  readonly portabilityStart = computed(() => ({
+    lovNumber: this.msisdn() ?? undefined,
+    // The step asks for the serial's last digits, the same ones a pasted whole serial keeps.
+    iccidDigits: this.iccid()?.replace(/[^0-9]/g, '').slice(-5) || undefined,
+  }));
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       const iccidValue = history.state?.iccid;
       if (iccidValue) {
+        this.iccid.set(String(iccidValue));
         this.fetchMsisdn(iccidValue);
       }
     }

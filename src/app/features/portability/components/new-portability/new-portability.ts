@@ -1,4 +1,5 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { CustomerInformationData, CustomerInformationFormComponent } from '../customer-information-form/customer-information-form';
 import { PortabilityInformation, PortabilityInformationData } from '../portability-information-form/portability-information-form.component';
 import { DonorInformationData, DonorInformationFormComponent } from '../donor-information-form/donor-information-form.component';
@@ -21,6 +22,7 @@ interface PortabilityDraft {
   imports: [PortabilityInformation, DonorInformationFormComponent, CustomerInformationFormComponent]
 })
 export class NewPortabilityComponent {
+  private router = inject(Router);
 
   readonly steps = ['Tu SIM LOV', 'Número a traer', 'Tus datos'];
 
@@ -33,6 +35,7 @@ export class NewPortabilityComponent {
 
   constructor() {
     this.restoreDraft();
+    this.startFromActivation();
     effect(() => {
       const draft: PortabilityDraft = {
         step: this.currentStepIndex(),
@@ -87,6 +90,31 @@ export class NewPortabilityComponent {
     // Never past a step whose earlier data is missing.
     const reachable = !draft.portability ? 0 : !draft.donor ? 1 : 2;
     this.currentStepIndex.set(Math.min(draft.step ?? 0, reachable));
+  }
+
+  /**
+   * Coming from "Inicia una portabilidad" right after activating a SIM: the first step starts
+   * with that SIM's LOV number and serial digits. The customer still presses Continuar, which
+   * validates the SIM. A draft for another number is dropped; one for this number is kept.
+   */
+  private startFromActivation(): void {
+    let state: { lovNumber?: unknown; iccidDigits?: unknown } | null = null;
+    try {
+      // During the navigation the state is on the router; after a reload, in history.
+      state = this.router.getCurrentNavigation()?.extras?.state
+        ?? (typeof history !== 'undefined' ? history.state : null);
+    } catch { return; }
+    const lovNumber = typeof state?.lovNumber === 'string' && /^333[0-9]{7}$/.test(state.lovNumber) ? state.lovNumber : '';
+    const iccidDigits = typeof state?.iccidDigits === 'string' && /^[0-9]{5}$/.test(state.iccidDigits) ? state.iccidDigits : '';
+    if (!lovNumber && !iccidDigits) return;
+    // Reloading the page keeps the router state: never wipe progress already made for it.
+    const current = this.portabilityData();
+    if (current && (!lovNumber || current.lovNumber === lovNumber)) return;
+
+    this.portabilityData.set({ lovNumber, iccidDigits });
+    this.donorData.set(null);
+    this.customerDraft.set(null);
+    this.currentStepIndex.set(0);
   }
 
 }
