@@ -5,7 +5,7 @@
 <div class="plans-dashboard-container">
     <div class="plans-grid">
         @for (plan of sortedPlans; track plan.id; let i = $index) {
-        <app-plan-item [plan]="plan"></app-plan-item>
+        <app-plan-item [plan]="plan" [accentIndex]="i"></app-plan-item>
         }
     </div>
 </div>
