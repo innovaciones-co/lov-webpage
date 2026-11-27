@@ -1,3 +1,15 @@
+## [1.86.1](https://github.com/innovaciones-co/lov-webpage/compare/v1.86.0...v1.86.1) (2026-11-27)
+
+
+### Bug Fixes
+
+* **plans:** bring back the dark plan cards ([b31a760](https://github.com/innovaciones-co/lov-webpage/commit/b31a760da1643190c797f5950e7475ae55e476f0))
+
+
+### Reverts
+
+* plan cards back to the dark design ([9b2147b](https://github.com/innovaciones-co/lov-webpage/commit/9b2147b1f06714b501495c6ffa537c2e08dfe4f1))
+
 # [1.86.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.85.0...v1.86.0) (2026-11-27)
 
 
