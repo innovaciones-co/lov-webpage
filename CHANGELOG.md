@@ -1,3 +1,10 @@
+# [1.86.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.85.0...v1.86.0) (2026-11-27)
+
+
+### Features
+
+* **plans:** plan cards in brand-color bands, as LOV asked ([e247256](https://github.com/innovaciones-co/lov-webpage/commit/e24725616ae707976ffab961ded324913a817434))
+
 # [1.85.0](https://github.com/innovaciones-co/lov-webpage/compare/v1.84.0...v1.85.0) (2026-11-25)
 
 
